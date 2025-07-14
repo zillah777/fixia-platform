@@ -1,6 +1,6 @@
 const express = require('express');
 const { pool } = require('../config/database');
-const authMiddleware = require('../middleware/auth');
+const { authMiddleware } = require('../middleware/auth');
 const { formatResponse, formatError } = require('../utils/helpers');
 const crypto = require('crypto');
 

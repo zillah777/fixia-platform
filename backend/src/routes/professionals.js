@@ -2,8 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const { pool } = require('../config/database');
-const authMiddleware = require('../middleware/auth');
-const { requireProvider } = require('../middleware/auth');
+const { authMiddleware, requireProvider } = require('../middleware/auth');
 const { formatResponse, formatError, sanitizeUser } = require('../utils/helpers');
 
 const router = express.Router();
