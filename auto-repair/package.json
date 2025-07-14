@@ -1,0 +1,17 @@
+{
+  "name": "fixia-auto-repair",
+  "version": "1.0.0",
+  "description": "Sistema autorreparable para Fixia con Playwright MCP",
+  "main": "fixia-monitor.js",
+  "scripts": {
+    "start": "node fixia-monitor.js",
+    "monitor": "node fixia-monitor.js",
+    "health": "node health-check.js"
+  },
+  "dependencies": {
+    "playwright": "^1.40.0"
+  },
+  "keywords": ["fixia", "auto-repair", "playwright", "mcp", "monitoring"],
+  "author": "Claude Code",
+  "license": "MIT"
+}
