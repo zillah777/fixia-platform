@@ -266,13 +266,13 @@ const ASSolicitudes: NextPage = () => {
                 <p className="text-gray-600">
                   {filterStatus === 'all' 
                     ? 'Aún no has recibido solicitudes de servicios.'
-                    : `No hay solicitudes con estado "${statusMap[filterStatus as BookingStatus]?.label || filterStatus}".`
+                    : `No hay solicitudes con estado "${(statusMap as any)[filterStatus]?.label || filterStatus}".`
                   }
                 </p>
               </div>
             ) : (
               filteredBookings.map((booking) => {
-                const statusInfo = statusMap[booking.status];
+                const statusInfo = (statusMap as any)[booking.status];
                 const StatusIcon = statusInfo.icon;
                 
                 return (
@@ -323,15 +323,15 @@ const ASSolicitudes: NextPage = () => {
                             <div className="space-y-2 text-sm">
                               <div className="flex items-center">
                                 <CalendarDaysIcon className="h-4 w-4 text-gray-400 mr-2" />
-                                <span>{new Date(booking.scheduled_date).toLocaleDateString('es-AR')} a las {booking.scheduled_time}</span>
+                                <span>{new Date(booking.scheduled_date || '').toLocaleDateString('es-AR')} a las {booking.scheduled_time}</span>
                               </div>
                               <div className="flex items-center">
                                 <ClockIcon className="h-4 w-4 text-gray-400 mr-2" />
-                                <span>{Math.floor(booking.duration_minutes / 60)}h {booking.duration_minutes % 60}min</span>
+                                <span>{Math.floor((booking.duration_minutes || 60) / 60)}h {(booking.duration_minutes || 60) % 60}min</span>
                               </div>
                               <div className="flex items-center">
                                 <CurrencyDollarIcon className="h-4 w-4 text-gray-400 mr-2" />
-                                <span className="font-medium">${booking.total_amount.toLocaleString()}</span>
+                                <span className="font-medium">${booking.total_amount?.toLocaleString() || '0'}</span>
                               </div>
                               <div className="flex items-start">
                                 <MapPinIcon className="h-4 w-4 text-gray-400 mr-2 mt-0.5" />

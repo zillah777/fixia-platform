@@ -366,7 +366,7 @@ const ASServicios: NextPage = () => {
                 </div>
               ) : (
                 filteredServices.map((service) => {
-                  const categoryInfo = getCategoryInfo(service.category);
+                  const categoryInfo = getCategoryInfo(service.category || '');
                   
                   return (
                     <div key={service.id} className="p-6">
@@ -395,11 +395,11 @@ const ASServicios: NextPage = () => {
                           <div className="flex items-center space-x-6 text-sm text-gray-500">
                             <div className="flex items-center">
                               <CurrencyDollarIcon className="h-4 w-4 mr-1" />
-                              <span className="font-medium">${service.price.toLocaleString()}</span>
+                              <span className="font-medium">${service.price?.toLocaleString() || '0'}</span>
                             </div>
                             <div className="flex items-center">
                               <ClockIcon className="h-4 w-4 mr-1" />
-                              <span>{Math.floor(service.duration_minutes / 60)}h {service.duration_minutes % 60}min</span>
+                              <span>{Math.floor((service.duration_minutes || 60) / 60)}h {(service.duration_minutes || 60) % 60}min</span>
                             </div>
                             {service.address && (
                               <div className="flex items-center">
@@ -407,7 +407,7 @@ const ASServicios: NextPage = () => {
                                 <span>{service.address}</span>
                               </div>
                             )}
-                            {service.total_reviews > 0 && (
+                            {(service.total_reviews || 0) > 0 && (
                               <div className="flex items-center">
                                 <StarIcon className="h-4 w-4 mr-1 text-yellow-400" />
                                 <span>{service.average_rating} ({service.total_reviews} reseñas)</span>
