@@ -20,7 +20,8 @@
     "seed": "node scripts/seed.js",
     "db:setup": "node scripts/migrate-postgresql.js",
     "db:reset": "node scripts/reset-db.js",
-    "build": "npm run db:setup"
+    "build": "echo 'Build completed - migrations will run at startup'",
+    "prestart": "npm run db:setup"
   },
   "keywords": [
     "fixia",

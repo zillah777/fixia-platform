@@ -13,8 +13,7 @@ RUN npm ci
 # Copiar el código fuente
 COPY . .
 
-# Ejecutar build (incluye migraciones de base de datos)
-RUN npm run build
+# No ejecutar migraciones durante build - se ejecutarán al iniciar
 
 # Crear directorio para uploads
 RUN mkdir -p uploads/profiles uploads/services uploads/portfolios uploads/verifications uploads/certificates
