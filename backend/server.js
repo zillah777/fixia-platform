@@ -12,6 +12,12 @@ const { testConnection } = require('./src/config/database');
 const { authMiddleware } = require('./src/middleware/auth');
 
 const app = express();
+
+// Trust proxy for Railway deployment
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
