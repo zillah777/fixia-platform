@@ -1,0 +1,47 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  
+  // Configuración para evitar problemas de SSR con AuthProvider
+  experimental: {
+    esmExternals: false,
+  },
+  
+  // Deshabilitar SSG para páginas que usan useAuth
+  trailingSlash: false,
+  
+  // Configuración de exportación
+  output: 'standalone',
+  
+  // Configuraciones adicionales
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
+  },
+  
+  // Configuración de redirects si es necesario
+  async redirects() {
+    return []
+  },
+  
+  // Configuración de headers
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+        ],
+      },
+    ]
+  },
+}
+
+module.exports = nextConfig

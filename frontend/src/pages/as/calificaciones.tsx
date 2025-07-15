@@ -442,4 +442,11 @@ const ASCalificaciones: NextPage = () => {
   );
 };
 
+// Deshabilitar SSG para evitar errores de AuthProvider
+export async function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
+
 export default ASCalificaciones;
