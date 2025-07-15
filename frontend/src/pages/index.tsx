@@ -174,16 +174,16 @@ const LandingPage: NextPage = () => {
               <Logo size="lg" variant="gradient" />
               
               <nav className="hidden md:flex items-center gap-1">
-                <a href="#como-funciona" className="nav-link">
+                <a href="#como-funciona" className="nav-link hover-lift hover-magnetic">
                   Cómo funciona
                 </a>
-                <a href="#servicios" className="nav-link">
+                <a href="#servicios" className="nav-link hover-lift hover-magnetic">
                   Servicios
                 </a>
-                <a href="#profesionales" className="nav-link">
-                  Profesionales
+                <a href="#profesionales" className="nav-link hover-lift hover-magnetic">
+                  AS Destacados
                 </a>
-                <a href="#contacto" className="nav-link">
+                <a href="#contacto" className="nav-link hover-lift hover-magnetic">
                   Contacto
                 </a>
               </nav>
@@ -254,11 +254,11 @@ const LandingPage: NextPage = () => {
           <div className="container">
             <div className="text-center fade-in-on-scroll">
               <h1 className="hero-title animate-fade-in">
-                Servicios Profesionales de Calidad
+                Las Páginas Amarillas del Futuro
               </h1>
               <p className="hero-subtitle animate-slide-up stagger-1">
-                Conecta con profesionales verificados para todos tus proyectos del hogar. 
-                Desde plomería hasta electricidad, encuentra el experto perfecto para ti.
+                Marketplace inteligente que automatiza la búsqueda de servicios. 
+                Conectamos <strong>Exploradores</strong> con <strong>AS</strong> usando algoritmos de matchmaking avanzados.
               </p>
 
               {/* Modern Search Bar */}
@@ -270,7 +270,7 @@ const LandingPage: NextPage = () => {
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="¿Qué servicio necesitas? Ej: plomería, electricidad..."
+                      placeholder="¿Qué servicio necesitas? Nuestro algoritmo encuentra el AS perfecto..."
                       className="form-input pl-12 pr-4 py-4 text-lg border-0 glass"
                     />
                   </div>
@@ -286,33 +286,33 @@ const LandingPage: NextPage = () => {
               {/* CTA Buttons */}
               <div className="hero-cta animate-slide-up stagger-3">
                 <Link href="/auth/registro?type=customer">
-                  <button className="btn btn-primary btn-lg hover-lift">
-                    <UserGroupIcon className="h-5 w-5 mr-2" />
-                    Buscar Servicios
+                  <button className="btn btn-primary btn-lg btn-magnetic hover-lift">
+                    <MagnifyingGlassIcon className="h-5 w-5 mr-2" />
+                    Soy Explorador
                     <ArrowRightIcon className="h-5 w-5 ml-2" />
                   </button>
                 </Link>
                 <Link href="/auth/registro?type=provider">
-                  <button className="btn btn-secondary btn-lg hover-lift">
+                  <button className="btn btn-secondary btn-lg btn-magnetic hover-lift">
                     <BriefcaseIcon className="h-5 w-5 mr-2" />
-                    Ofrecer Servicios
+                    Soy AS (Anunciante)
                   </button>
                 </Link>
               </div>
 
               {/* Trust Indicators */}
               <div className="mt-16 flex flex-wrap justify-center items-center gap-8 animate-fade-in stagger-4">
-                <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity">
-                  <CheckCircleIcon className="h-6 w-6 text-success-400 mr-3" />
-                  <span className="font-medium">Profesionales Verificados</span>
+                <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity cursor-pointer hover-lift hover-magnetic">
+                  <CheckCircleIcon className="h-6 w-6 text-success-400 mr-3 hover-bounce" />
+                  <span className="font-medium">Búsqueda Automatizada</span>
                 </div>
-                <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity">
-                  <ShieldCheckIcon className="h-6 w-6 text-primary-400 mr-3" />
-                  <span className="font-medium">Pagos Seguros</span>
+                <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity cursor-pointer hover-lift hover-magnetic">
+                  <ShieldCheckIcon className="h-6 w-6 text-primary-400 mr-3 hover-bounce" />
+                  <span className="font-medium">Sistema de Confianza</span>
                 </div>
-                <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity">
-                  <StarIcon className="h-6 w-6 text-warning-400 mr-3" />
-                  <span className="font-medium">Calificaciones Reales</span>
+                <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity cursor-pointer hover-lift hover-magnetic">
+                  <StarIcon className="h-6 w-6 text-warning-400 mr-3 hover-bounce" />
+                  <span className="font-medium">Matchmaking Inteligente</span>
                 </div>
               </div>
             </div>
@@ -334,8 +334,8 @@ const LandingPage: NextPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {serviceCategoriesData.map((category, index) => (
                 <Link key={category.id} href={`/explorador/buscar-servicio?category=${category.id}`}>
-                  <div className={`card hover-lift cursor-pointer scale-in-on-scroll stagger-${index + 1}`}>
-                    <div className="feature-icon text-4xl mb-4 mx-auto animate-float">
+                  <div className={`card hover-lift hover-magnetic ripple cursor-pointer scale-in-on-scroll stagger-${index + 1}`}>
+                    <div className="feature-icon text-4xl mb-4 mx-auto animate-float hover-bounce">
                       {category.icon}
                     </div>
                     <h3 className="card-title text-center">
@@ -343,7 +343,7 @@ const LandingPage: NextPage = () => {
                     </h3>
                     <p className="text-secondary text-center mb-4">{category.description}</p>
                     <div className="flex items-center justify-center text-primary-600 font-medium hover:text-primary-700 transition-colors">
-                      <span>Ver profesionales</span>
+                      <span>Ver AS disponibles</span>
                       <ArrowRightIcon className="h-4 w-4 ml-2" />
                     </div>
                   </div>
@@ -359,55 +359,55 @@ const LandingPage: NextPage = () => {
           <div className="container relative">
             <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
-                ¿Cómo Funciona Fixia?
+                ¿Cómo Funciona Nuestro Matchmaking?
               </h2>
               <p className="text-xl text-secondary">
-                Tres simples pasos para conectar con el profesional perfecto
+                Algoritmos inteligentes que conectan automáticamente Exploradores con AS
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center scale-in-on-scroll stagger-1">
-                <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg hover:shadow-xl transition-shadow animate-pulse">
+              <div className="text-center scale-in-on-scroll stagger-1 hover-lift cursor-pointer hover-tilt">
+                <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg hover:shadow-xl transition-shadow animate-pulse hover-bounce hover-magnetic">
                   <MagnifyingGlassIcon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-primary mb-4">
-                  Busca el Servicio
+                <h3 className="text-xl font-semibold text-primary mb-4 hover-bounce">
+                  Búsqueda Automatizada
                 </h3>
                 <p className="text-secondary">
-                  Describe qué necesitas y encuentra profesionales en tu zona con las mejores calificaciones.
+                  Nuestro algoritmo analiza tu solicitud y encuentra automáticamente los AS más compatibles.
                 </p>
               </div>
 
-              <div className="text-center scale-in-on-scroll stagger-2">
-                <div className="w-20 h-20 bg-gradient-secondary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg hover:shadow-xl transition-shadow animate-pulse">
+              <div className="text-center scale-in-on-scroll stagger-2 hover-lift cursor-pointer hover-tilt">
+                <div className="w-20 h-20 bg-gradient-secondary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg hover:shadow-xl transition-shadow animate-pulse hover-bounce hover-magnetic">
                   <UserGroupIcon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-primary mb-4">
-                  Conecta y Negocia
+                <h3 className="text-xl font-semibold text-primary mb-4 hover-bounce">
+                  Matchmaking Inteligente
                 </h3>
                 <p className="text-secondary">
-                  Chatea directamente con el profesional, acuerda detalles, precio y fecha del servicio.
+                  Te conectamos con el AS perfecto basado en compatibilidad, ubicación y reputación.
                 </p>
               </div>
 
-              <div className="text-center scale-in-on-scroll stagger-3">
-                <div className="w-20 h-20 bg-gradient-success rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg hover:shadow-xl transition-shadow animate-pulse">
+              <div className="text-center scale-in-on-scroll stagger-3 hover-lift cursor-pointer hover-tilt">
+                <div className="w-20 h-20 bg-gradient-success rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg hover:shadow-xl transition-shadow animate-pulse hover-bounce hover-magnetic">
                   <CheckCircleIcon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-primary mb-4">
-                  Recibe el Servicio
+                <h3 className="text-xl font-semibold text-primary mb-4 hover-bounce">
+                  Sistema de Confianza
                 </h3>
                 <p className="text-secondary">
-                  El profesional realiza el trabajo, pagas de forma segura y calificas la experiencia.
+                  Facilitamos el contacto seguro, generamos confianza mutua y mejoramos el algoritmo.
                 </p>
               </div>
             </div>
 
             <div className="text-center mt-12 fade-in-on-scroll">
               <Link href="/auth/registro">
-                <button className="btn btn-primary btn-xl hover-lift animate-glow">
-                  Comenzar Ahora
+                <button className="btn btn-primary btn-xl btn-magnetic hover-lift animate-glow">
+                  Probar el Algoritmo
                 </button>
               </Link>
             </div>
@@ -419,19 +419,19 @@ const LandingPage: NextPage = () => {
           <div className="container">
             <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
-                Profesionales Destacados
+                AS Destacados
               </h2>
               <p className="text-xl text-secondary">
-                Conoce algunos de nuestros profesionales mejor calificados en la plataforma
+                Anunciantes de Servicios verificados por nuestro algoritmo de confianza
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {featuredProfessionals.map((professional, index) => (
-                <div key={professional.id} className={`card hover-lift scale-in-on-scroll stagger-${index + 1}`}>
+                <div key={professional.id} className={`card hover-lift hover-magnetic ripple cursor-pointer scale-in-on-scroll stagger-${index + 1} hover-tilt`}>
                   <div className="card-header">
                     <div className="flex items-center">
-                      <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mr-4 shadow-lg">
+                      <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mr-4 shadow-lg hover:shadow-xl transition-shadow hover-bounce">
                         <UserGroupIcon className="h-8 w-8 text-white" />
                       </div>
                       <div>
@@ -474,8 +474,8 @@ const LandingPage: NextPage = () => {
 
             <div className="text-center mt-12 fade-in-on-scroll">
               <Link href="/explorador/navegar-profesionales">
-                <button className="btn btn-outline btn-lg hover-lift">
-                  Ver Todos los Profesionales
+                <button className="btn btn-outline btn-lg btn-magnetic hover-lift">
+                  Ver Todos los AS
                 </button>
               </Link>
             </div>
@@ -488,18 +488,18 @@ const LandingPage: NextPage = () => {
           <div className="container relative">
             <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
-                Lo Que Dicen Nuestros Usuarios
+                Lo Que Dicen Nuestros Exploradores
               </h2>
               <p className="text-xl text-secondary">
-                Testimonios reales de clientes satisfechos en toda la plataforma
+                Experiencias reales de usuarios que encontraron el AS perfecto con nuestro algoritmo
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {testimonials.map((testimonial, index) => (
-                <div key={testimonial.id} className={`card glass hover-lift scale-in-on-scroll stagger-${index + 1}`}>
+                <div key={testimonial.id} className={`card glass hover-lift hover-magnetic ripple cursor-pointer scale-in-on-scroll stagger-${index + 1} hover-tilt animate-glow`}>
                   <div className="card-header">
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center hover-bounce">
                       {renderStars(testimonial.rating)}
                     </div>
                   </div>
@@ -525,21 +525,21 @@ const LandingPage: NextPage = () => {
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="container relative">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-              <div className="scale-in-on-scroll stagger-1">
-                <div className="text-5xl font-bold text-white mb-3 animate-pulse">500+</div>
-                <div className="text-primary-200 font-medium">Profesionales</div>
+              <div className="scale-in-on-scroll stagger-1 hover-lift cursor-pointer hover-magnetic">
+                <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">500+</div>
+                <div className="text-primary-200 font-medium">AS Verificados</div>
               </div>
-              <div className="scale-in-on-scroll stagger-2">
-                <div className="text-5xl font-bold text-white mb-3 animate-pulse">2,000+</div>
-                <div className="text-primary-200 font-medium">Servicios Completados</div>
+              <div className="scale-in-on-scroll stagger-2 hover-lift cursor-pointer hover-magnetic">
+                <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">2,000+</div>
+                <div className="text-primary-200 font-medium">Conexiones Exitosas</div>
               </div>
-              <div className="scale-in-on-scroll stagger-3">
-                <div className="text-5xl font-bold text-white mb-3 animate-pulse">4.8</div>
+              <div className="scale-in-on-scroll stagger-3 hover-lift cursor-pointer hover-magnetic">
+                <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">4.8</div>
                 <div className="text-primary-200 font-medium">Calificación Promedio</div>
               </div>
-              <div className="scale-in-on-scroll stagger-4">
-                <div className="text-5xl font-bold text-white mb-3 animate-pulse">98%</div>
-                <div className="text-primary-200 font-medium">Satisfacción del Cliente</div>
+              <div className="scale-in-on-scroll stagger-4 hover-lift cursor-pointer hover-magnetic">
+                <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">98%</div>
+                <div className="text-primary-200 font-medium">Satisfacción Exploradores</div>
               </div>
             </div>
           </div>
@@ -553,19 +553,19 @@ const LandingPage: NextPage = () => {
                 ¿Listo para Comenzar?
               </h2>
               <p className="text-xl text-secondary mb-8">
-                Únete a miles de usuarios que ya confían en Fixia para sus proyectos del hogar
+                Únete a la plataforma de matchmaking más inteligente del mercado
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/auth/registro?type=customer">
-                  <button className="btn btn-primary btn-lg hover-lift animate-glow">
-                    Necesito un Servicio
+                  <button className="btn btn-primary btn-lg btn-magnetic hover-lift animate-glow">
+                    Soy Explorador
                     <ArrowRightIcon className="h-5 w-5 ml-2" />
                   </button>
                 </Link>
                 <Link href="/auth/registro?type=provider">
-                  <button className="btn btn-outline btn-lg hover-lift">
-                    Soy un Profesional
+                  <button className="btn btn-outline btn-lg btn-magnetic hover-lift">
+                    Soy AS
                     <BriefcaseIcon className="h-5 w-5 ml-2" />
                   </button>
                 </Link>
@@ -582,7 +582,7 @@ const LandingPage: NextPage = () => {
               <div className="fade-in-on-scroll">
                 <Logo size="lg" variant="white" className="mb-4" />
                 <p className="text-neutral-300 mb-4 leading-relaxed">
-                  Conectando profesionales con clientes en todo el país.
+                  Las páginas amarillas del futuro. Conectando Exploradores con AS através de algoritmos inteligentes.
                 </p>
                 <div className="flex space-x-4">
                   <span className="text-neutral-400 font-medium">Síguenos:</span>
@@ -591,36 +591,36 @@ const LandingPage: NextPage = () => {
               </div>
 
               <div className="fade-in-on-scroll stagger-1">
-                <h4 className="font-semibold mb-4 text-lg">Para Clientes</h4>
+                <h4 className="font-semibold mb-4 text-lg">Para Exploradores</h4>
                 <ul className="space-y-3 text-neutral-300">
                   <li>
-                    <Link href="/explorador/buscar-servicio" className="hover:text-primary-400 transition-colors">
-                      Buscar Servicios
+                    <Link href="/explorador/buscar-servicio" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                      Búsqueda Automatizada
                     </Link>
                   </li>
                   <li>
-                    <Link href="/explorador/navegar-profesionales" className="hover:text-primary-400 transition-colors">
-                      Ver Profesionales
+                    <Link href="/explorador/navegar-profesionales" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                      Ver AS Disponibles
                     </Link>
                   </li>
                   <li>
-                    <Link href="/auth/registro?type=customer" className="hover:text-primary-400 transition-colors">
-                      Registro Cliente
+                    <Link href="/auth/registro?type=customer" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                      Registro Explorador
                     </Link>
                   </li>
                 </ul>
               </div>
 
               <div className="fade-in-on-scroll stagger-2">
-                <h4 className="font-semibold mb-4 text-lg">Para Profesionales</h4>
+                <h4 className="font-semibold mb-4 text-lg">Para AS</h4>
                 <ul className="space-y-3 text-neutral-300">
                   <li>
-                    <Link href="/auth/registro?type=provider" className="hover:text-primary-400 transition-colors">
-                      Registro Profesional
+                    <Link href="/auth/registro?type=provider" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                      Registro AS
                     </Link>
                   </li>
                   <li>
-                    <Link href="/explorador/cambiar-a-as" className="hover:text-primary-400 transition-colors">
+                    <Link href="/explorador/cambiar-a-as" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
                       Convertirse en AS
                     </Link>
                   </li>
@@ -630,16 +630,16 @@ const LandingPage: NextPage = () => {
               <div className="fade-in-on-scroll stagger-3">
                 <h4 className="font-semibold mb-4 text-lg">Contacto</h4>
                 <div className="space-y-3 text-neutral-300">
-                  <div className="flex items-center hover:text-primary-400 transition-colors">
-                    <EnvelopeIcon className="h-5 w-5 mr-3" />
+                  <div className="flex items-center hover:text-primary-400 transition-colors cursor-pointer hover-lift hover-magnetic">
+                    <EnvelopeIcon className="h-5 w-5 mr-3 hover-bounce" />
                     <span>info@fixia.com.ar</span>
                   </div>
-                  <div className="flex items-center hover:text-primary-400 transition-colors">
-                    <PhoneIcon className="h-5 w-5 mr-3" />
+                  <div className="flex items-center hover:text-primary-400 transition-colors cursor-pointer hover-lift hover-magnetic">
+                    <PhoneIcon className="h-5 w-5 mr-3 hover-bounce" />
                     <span>+54 11 1234-5678</span>
                   </div>
-                  <div className="flex items-center hover:text-primary-400 transition-colors">
-                    <MapPinIcon className="h-5 w-5 mr-3" />
+                  <div className="flex items-center hover:text-primary-400 transition-colors cursor-pointer hover-lift hover-magnetic">
+                    <MapPinIcon className="h-5 w-5 mr-3 hover-bounce" />
                     <span>Argentina</span>
                   </div>
                 </div>
@@ -653,17 +653,17 @@ const LandingPage: NextPage = () => {
                 </p>
                 <div className="flex space-x-6 mt-4 md:mt-0">
                   <Link href="/legal/terms">
-                    <span className="text-neutral-400 hover:text-primary-400 transition-colors">
+                    <span className="text-neutral-400 hover:text-primary-400 transition-colors hover-lift hover-magnetic">
                       Términos
                     </span>
                   </Link>
                   <Link href="/legal/privacy">
-                    <span className="text-neutral-400 hover:text-primary-400 transition-colors">
+                    <span className="text-neutral-400 hover:text-primary-400 transition-colors hover-lift hover-magnetic">
                       Privacidad
                     </span>
                   </Link>
                   <Link href="/company/contact">
-                    <span className="text-neutral-400 hover:text-primary-400 transition-colors">
+                    <span className="text-neutral-400 hover:text-primary-400 transition-colors hover-lift hover-magnetic">
                       Contacto
                     </span>
                   </Link>
