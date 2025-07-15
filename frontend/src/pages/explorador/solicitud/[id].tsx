@@ -21,7 +21,7 @@ import {
   StarIcon as StarIconSolid 
 } from '@heroicons/react/24/solid';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
 import { ExplorerServiceRequest, ASServiceInterest } from '@/types/explorer';
 
@@ -36,7 +36,7 @@ const SolicitudDetailPage: NextPage = () => {
   const [acceptingAS, setAcceptingAS] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!loading && user?.user_type !== 'client') {
+    if (!loading && user?.user_type !== 'customer') {
       router.push('/auth/login');
       return;
     }

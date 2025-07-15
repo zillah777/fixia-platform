@@ -12,10 +12,10 @@ import {
   MapPinIcon,
   ClockIcon,
   CheckIcon,
-  CheckCheckIcon
+  CheckCircleIcon
 } from '@heroicons/react/24/outline';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { Message, Chat } from '@/types';
 
 const ASChatDetail: NextPage = () => {
@@ -317,7 +317,7 @@ const ASChatDetail: NextPage = () => {
                             {isOwn && (
                               <div className="text-gray-400">
                                 {message.is_read ? (
-                                  <CheckCheckIcon className="h-3 w-3" />
+                                  <CheckCircleIcon className="h-3 w-3" />
                                 ) : (
                                   <CheckIcon className="h-3 w-3" />
                                 )}

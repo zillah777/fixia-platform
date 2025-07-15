@@ -34,10 +34,13 @@ export const reportsService = {
       params.append('status', status);
     }
 
-    const response = await api.get<PaginatedResponse<UserReport[]>>(
+    const response = await api.get<PaginatedResponse<UserReport>>(
       `/api/reports/my-reports?${params.toString()}`
     );
-    return response.data.data;
+    return {
+      reports: response.data.data.items,
+      pagination: response.data.data.pagination
+    };
   },
 
   // Get reports against me
@@ -59,10 +62,13 @@ export const reportsService = {
       params.append('status', status);
     }
 
-    const response = await api.get<PaginatedResponse<UserReport[]>>(
+    const response = await api.get<PaginatedResponse<UserReport>>(
       `/api/reports/against-me?${params.toString()}`
     );
-    return response.data.data;
+    return {
+      reports: response.data.data.items,
+      pagination: response.data.data.pagination
+    };
   },
 
   // Get report types

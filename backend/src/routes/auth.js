@@ -1,8 +1,12 @@
 const express = require('express');
 const authController = require('../controllers/authController');
 const { authMiddleware } = require('../middleware/auth');
+const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
 
 const router = express.Router();
+
+// Apply user type transformation to all routes
+router.use(userTypeTransformMiddleware);
 
 // POST /api/auth/register
 router.post('/register', authController.register);

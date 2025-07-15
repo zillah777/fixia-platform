@@ -15,7 +15,7 @@ import {
   VideoCameraIcon
 } from '@heroicons/react/24/outline';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
 import { ChatMessage, ExplorerASConnection } from '@/types/explorer';
 import { io, Socket } from 'socket.io-client';
@@ -38,7 +38,7 @@ const ChatPage: NextPage = () => {
   const messageInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!loading && user?.user_type !== 'client') {
+    if (!loading && user?.user_type !== 'customer') {
       router.push('/auth/login');
       return;
     }

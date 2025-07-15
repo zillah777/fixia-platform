@@ -3,99 +3,32 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { 
-  PlusIcon, 
-  MagnifyingGlassIcon, 
+import {
+  ArrowPathIcon,
+  MagnifyingGlassIcon,
+  BriefcaseIcon,
   ChatBubbleLeftRightIcon,
   StarIcon,
-  ClockIcon,
-  ExclamationTriangleIcon,
-  ArrowPathIcon,
-  UserGroupIcon,
-  DocumentTextIcon,
-  ArrowRightIcon
+  MapPinIcon
 } from '@heroicons/react/24/outline';
-import { 
-  StarIcon as StarIconSolid,
-  FireIcon
-} from '@heroicons/react/24/solid';
 
-import { useAuth } from '@/hooks/useAuth';
-import { explorerService } from '@/services/explorer';
-import { 
-  ExplorerProfile, 
-  ExplorerServiceRequest, 
-  ExplorerReviewObligation,
-  ExplorerASConnection 
-} from '@/types/explorer';
+import { useAuth } from '@/contexts/AuthContext';
 
 const ExplorerDashboard: NextPage = () => {
   const { user, loading } = useAuth();
   const router = useRouter();
-  
-  const [profile, setProfile] = useState<ExplorerProfile | null>(null);
-  const [activeRequests, setActiveRequests] = useState<ExplorerServiceRequest[]>([]);
-  const [recentConnections, setRecentConnections] = useState<ExplorerASConnection[]>([]);
-  const [pendingReviews, setPendingReviews] = useState<ExplorerReviewObligation[]>([]);
-  const [blockingStatus, setBlockingStatus] = useState<any>(null);
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
-    if (!loading && user?.user_type !== 'client') {
+    if (!loading && user?.user_type !== 'customer') {
       router.push('/auth/login');
       return;
     }
-    
-    if (user) {
-      loadDashboardData();
-    }
-  }, [user, loading]);
 
-  const loadDashboardData = async () => {
-    try {
-      setLoadingData(true);
-      
-      const [profileRes, requestsRes, connectionsRes, reviewsRes, blockingRes] = await Promise.all([
-        explorerService.getProfile(),
-        explorerService.getMyServiceRequests('active'),
-        explorerService.getChatConnections(),
-        explorerService.getPendingReviewObligations(),
-        explorerService.getBlockingStatus()
-      ]);
-
-      if (profileRes.success) setProfile(profileRes.data);
-      if (requestsRes.success) setActiveRequests(requestsRes.data);
-      if (connectionsRes.success) setRecentConnections(connectionsRes.data.slice(0, 3));
-      if (reviewsRes.success) setPendingReviews(reviewsRes.data.obligations);
-      if (blockingRes.success) setBlockingStatus(blockingRes.data);
-      
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
-    } finally {
+    if (!loading && user?.user_type === 'customer') {
       setLoadingData(false);
     }
-  };
-
-  const getUrgencyBadge = (urgency: string) => {
-    const badges = {
-      low: { text: 'Baja', color: 'bg-gray-100 text-gray-800' },
-      medium: { text: 'Media', color: 'bg-blue-100 text-blue-800' },
-      high: { text: 'Alta', color: 'bg-orange-100 text-orange-800' },
-      emergency: { text: 'Emergencia', color: 'bg-red-100 text-red-800' }
-    };
-    return badges[urgency as keyof typeof badges] || badges.medium;
-  };
-
-  const formatTimeAgo = (dateString: string) => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return 'Hace menos de 1 hora';
-    if (diffInHours < 24) return `Hace ${diffInHours} horas`;
-    const days = Math.floor(diffInHours / 24);
-    return `Hace ${days} día${days > 1 ? 's' : ''}`;
-  };
+  }, [user, loading, router]);
 
   if (loading || loadingData) {
     return (
@@ -115,368 +48,81 @@ const ExplorerDashboard: NextPage = () => {
         <meta name="description" content="Busca y contrata los mejores servicios profesionales en Chubut" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
-        </div>
-
-        {/* Modern Glassmorphism Header */}
-        <div className="relative z-10 backdrop-blur-xl bg-white/70 shadow-2xl border-b border-white/20">
+      <div className="min-h-screen bg-gray-50">
+        <div className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-8">
-              <div className="flex items-center space-x-6">
-                {/* Profile Avatar with Status */}
-                <div className="relative group">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-105 transition-all duration-300">
-                    <span className="text-white font-bold text-xl">
-                      {profile?.first_name?.[0] || 'F'}
-                    </span>
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-green-600 border-3 border-white rounded-full animate-pulse shadow-lg"></div>
-                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-bounce">
-                    ⭐
-                  </div>
-                </div>
-
-                <div>
-                  <h1 className="text-4xl font-extrabold bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 bg-clip-text text-transparent">
-                    ¡Hola, {profile?.first_name}! 
-                    <span className="inline-block animate-bounce ml-3 text-yellow-500">👋</span>
-                  </h1>
-                  <p className="text-slate-600 mt-2 font-semibold text-lg">
-                    🚀 Encuentra los mejores profesionales de Chubut para tus proyectos
-                  </p>
-                  <div className="flex items-center mt-2 space-x-4">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 border border-blue-200">
-                      <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                      Explorador Activo
-                    </span>
-                    <span className="text-sm text-slate-500">⚡ Respuesta promedio: 5 minutos</span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Modern Stats Cards */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-2xl transform hover:scale-105 transition-all duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="relative z-10">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-3xl">🎯</span>
-                      <span className="text-xs font-semibold bg-white/20 px-2 py-1 rounded-full">TOTAL</span>
-                    </div>
-                    <div className="text-3xl font-black mb-1">{profile?.total_services_hired || 0}</div>
-                    <div className="text-sm font-medium opacity-90">Servicios contratados</div>
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 w-16 h-16 bg-white/10 rounded-full"></div>
-                </div>
-
-                <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 p-6 text-white shadow-2xl transform hover:scale-105 transition-all duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="relative z-10">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-3xl">⭐</span>
-                      <span className="text-xs font-semibold bg-white/20 px-2 py-1 rounded-full">RATING</span>
-                    </div>
-                    <div className="text-3xl font-black mb-1">
-                      {profile?.avg_rating ? profile.avg_rating.toFixed(1) : 'N/A'}
-                    </div>
-                    <div className="text-sm font-medium opacity-90">Tu calificación</div>
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 w-16 h-16 bg-white/10 rounded-full"></div>
-                </div>
-              </div>
+            <div className="flex items-center py-6">
+              <h1 className="text-2xl font-bold text-gray-900">
+                ¡Hola, {user?.first_name}!
+              </h1>
             </div>
           </div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Blocking Alert */}
-          {blockingStatus?.is_blocked && (
-            <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-              <div className="flex items-start">
-                <ExclamationTriangleIcon className="h-6 w-6 text-red-600 mt-0.5 mr-3" />
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-red-800 mb-2">
-                    ⚠️ CALIFICA A LOS AS PARA CONTINUAR BUSCANDO SERVICIOS
-                  </h3>
-                  <p className="text-red-700 mb-3">
-                    {blockingStatus.message}
-                  </p>
-                  <Link href="/explorador/calificaciones">
-                    <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
-                      Completar Calificaciones Pendientes
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Stunning Quick Actions */}
-          <div className="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Buscar Servicios */}
             <Link href="/explorador/buscar-servicio">
-              <div className="group relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 rounded-3xl p-8 text-white cursor-pointer shadow-2xl transform hover:scale-105 hover:-rotate-1 transition-all duration-500">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full transform group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="relative z-10">
-                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <PlusIcon className="h-7 w-7" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Buscar Servicio</h3>
-                  <p className="text-blue-100 text-sm font-medium">🚀 Encuentra profesionales ahora</p>
-                  <div className="mt-3 flex items-center text-xs">
-                    <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                    <span className="opacity-80">200+ AS disponibles</span>
-                  </div>
+              <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center mb-4">
+                  <MagnifyingGlassIcon className="h-8 w-8 text-blue-600 mr-3" />
+                  <h3 className="text-lg font-semibold text-gray-900">Buscar Servicios</h3>
                 </div>
+                <p className="text-gray-600">Encuentra profesionales para tus necesidades</p>
               </div>
             </Link>
 
-            <Link href="/explorador/navegar-profesionales">
-              <div className="group relative overflow-hidden bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 rounded-3xl p-8 text-white cursor-pointer shadow-2xl transform hover:scale-105 hover:rotate-1 transition-all duration-500">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="absolute -top-4 -left-4 w-24 h-24 bg-white/10 rounded-full transform group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="relative z-10">
-                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <MagnifyingGlassIcon className="h-7 w-7" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Explorar AS</h3>
-                  <p className="text-purple-100 text-sm font-medium">⭐ Ve perfiles de profesionales</p>
-                  <div className="mt-3 flex items-center text-xs">
-                    <span className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></span>
-                    <span className="opacity-80">Todos verificados</span>
-                  </div>
+            {/* Mis Solicitudes */}
+            <Link href="/explorador/mis-solicitudes">
+              <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center mb-4">
+                  <BriefcaseIcon className="h-8 w-8 text-green-600 mr-3" />
+                  <h3 className="text-lg font-semibold text-gray-900">Mis Solicitudes</h3>
                 </div>
+                <p className="text-gray-600">Gestiona tus servicios contratados</p>
               </div>
             </Link>
 
+            {/* Chats */}
             <Link href="/explorador/chats">
-              <div className="group relative overflow-hidden bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl p-8 text-white cursor-pointer shadow-2xl transform hover:scale-105 hover:-rotate-1 transition-all duration-500">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/10 rounded-full transform group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="relative z-10">
-                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <ChatBubbleLeftRightIcon className="h-7 w-7" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Mis Chats</h3>
-                  <p className="text-green-100 text-sm font-medium">💬 Conversaciones en tiempo real</p>
-                  <div className="mt-3 flex items-center text-xs">
-                    <span className="w-2 h-2 bg-orange-400 rounded-full mr-2 animate-pulse"></span>
-                    <span className="opacity-80">{recentConnections.length} conversaciones activas</span>
-                  </div>
+              <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center mb-4">
+                  <ChatBubbleLeftRightIcon className="h-8 w-8 text-purple-600 mr-3" />
+                  <h3 className="text-lg font-semibold text-gray-900">Chats</h3>
                 </div>
+                <p className="text-gray-600">Comunícate con profesionales</p>
               </div>
             </Link>
 
+            {/* Calificaciones */}
             <Link href="/explorador/calificaciones">
-              <div className="group relative overflow-hidden bg-gradient-to-br from-orange-600 via-amber-600 to-yellow-600 rounded-3xl p-8 text-white cursor-pointer shadow-2xl transform hover:scale-105 hover:rotate-1 transition-all duration-500">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-white/10 rounded-full transform group-hover:scale-150 transition-transform duration-700"></div>
-                <div className="relative z-10">
-                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <StarIcon className="h-7 w-7" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Calificaciones</h3>
-                  <p className="text-orange-100 text-sm font-medium">⭐ Valora a los profesionales</p>
-                  <div className="mt-3 flex items-center text-xs">
-                    <span className="w-2 h-2 bg-red-400 rounded-full mr-2 animate-pulse"></span>
-                    <span className="opacity-80">{pendingReviews.length} pendientes</span>
-                  </div>
+              <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center mb-4">
+                  <StarIcon className="h-8 w-8 text-yellow-600 mr-3" />
+                  <h3 className="text-lg font-semibold text-gray-900">Mis Calificaciones</h3>
                 </div>
+                <p className="text-gray-600">Revisa y deja reseñas</p>
               </div>
             </Link>
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Active Service Requests */}
-            <div className="lg:col-span-2">
-              <div className="relative backdrop-blur-xl bg-white/90 rounded-3xl shadow-2xl border border-white/20 p-8 overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full transform translate-x-8 -translate-y-8"></div>
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center">
-                        <DocumentTextIcon className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                          Mis Solicitudes Activas
-                        </h2>
-                        <p className="text-sm text-gray-500 font-medium">{activeRequests.length} solicitudes en progreso</p>
-                      </div>
-                    </div>
-                    <Link href="/explorador/mis-solicitudes">
-                      <button className="group flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 px-4 py-2 rounded-xl hover:from-blue-100 hover:to-purple-100 transition-all duration-300 border border-blue-200">
-                        <span className="text-sm font-semibold">Ver todas</span>
-                        <ArrowRightIcon className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                      </button>
-                    </Link>
-                  </div>
-
-                {activeRequests.length === 0 ? (
-                  <div className="text-center py-16">
-                    <div className="relative mb-6">
-                      <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl flex items-center justify-center mx-auto shadow-xl">
-                        <DocumentTextIcon className="h-12 w-12 text-blue-600" />
-                      </div>
-                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center animate-bounce">
-                        <span className="text-white text-xs font-bold">🚀</span>
-                      </div>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                      ¡Comienza tu primer proyecto!
-                    </h3>
-                    <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                      Encuentra profesionales verificados en Chubut para cualquier trabajo que necesites
-                    </p>
-                    <Link href="/explorador/buscar-servicio">
-                      <button className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-xl transform hover:scale-105">
-                        <span className="relative z-10 font-semibold flex items-center">
-                          <PlusIcon className="h-5 w-5 mr-2" />
-                          Crear Mi Primera Solicitud
-                        </span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      </button>
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {activeRequests.slice(0, 3).map((request) => (
-                      <div key={request.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-2">
-                              <h3 className="font-semibold text-gray-900">{request.title}</h3>
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getUrgencyBadge(request.urgency).color}`}>
-                                {getUrgencyBadge(request.urgency).text}
-                              </span>
-                            </div>
-                            <p className="text-gray-600 text-sm mb-2">{request.description}</p>
-                            <div className="flex items-center space-x-4 text-sm text-gray-500">
-                              <span>📍 {request.locality}</span>
-                              <span>📂 {request.category_name}</span>
-                              <span>⏰ {formatTimeAgo(request.created_at)}</span>
-                            </div>
-                          </div>
-                          <div className="ml-4 text-right">
-                            <div className="text-lg font-bold text-blue-600">
-                              {request.interested_as_count} AS
-                            </div>
-                            <div className="text-sm text-gray-500">interesados</div>
-                          </div>
-                        </div>
-                        
-                        {request.interested_as_count > 0 && (
-                          <div className="mt-3 pt-3 border-t">
-                            <Link href={`/explorador/solicitud/${request.id}`}>
-                              <button className="w-full bg-blue-50 text-blue-700 py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors font-medium">
-                                Ver {request.interested_as_count} Propuesta{request.interested_as_count > 1 ? 's' : ''}
-                              </button>
-                            </Link>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Pending Reviews Alert */}
-              {pendingReviews.length > 0 && (
-                <div className="bg-orange-50 border border-orange-200 rounded-xl p-6">
-                  <div className="flex items-center mb-4">
-                    <FireIcon className="h-6 w-6 text-orange-600 mr-2" />
-                    <h3 className="font-bold text-orange-800">
-                      Calificaciones Pendientes
-                    </h3>
-                  </div>
-                  <p className="text-orange-700 text-sm mb-4">
-                    Tienes {pendingReviews.length} AS esperando tu calificación
-                  </p>
-                  <div className="space-y-2 mb-4">
-                    {pendingReviews.slice(0, 2).map((review) => (
-                      <div key={review.id} className="bg-white rounded-lg p-3">
-                        <div className="font-medium text-sm">
-                          {review.as_name} {review.as_last_name}
-                        </div>
-                        <div className="text-xs text-gray-600">
-                          {review.service_title}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <Link href="/explorador/calificaciones">
-                    <button className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors text-sm font-medium">
-                      Calificar Ahora
-                    </button>
-                  </Link>
+            {/* Profesionales */}
+            <Link href="/explorador/navegar-profesionales">
+              <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
+                <div className="flex items-center mb-4">
+                  <MapPinIcon className="h-8 w-8 text-indigo-600 mr-3" />
+                  <h3 className="text-lg font-semibold text-gray-900">Profesionales</h3>
                 </div>
-              )}
-
-              {/* Recent Connections */}
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h3 className="font-bold text-gray-900 mb-4">Conexiones Recientes</h3>
-                {recentConnections.length === 0 ? (
-                  <div className="text-center py-8">
-                    <UserGroupIcon className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-500 text-sm">No hay conexiones recientes</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {recentConnections.map((connection) => (
-                      <div key={connection.id} className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                          {connection.as_profile_image ? (
-                            <img 
-                              src={connection.as_profile_image} 
-                              alt={connection.as_name}
-                              className="w-10 h-10 rounded-full object-cover"
-                            />
-                          ) : (
-                            <span className="text-gray-600 font-medium">
-                              {connection.as_name?.[0]}{connection.as_last_name?.[0]}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm truncate">
-                            {connection.as_name} {connection.as_last_name}
-                          </div>
-                          <div className="text-xs text-gray-500 truncate">
-                            {connection.service_title}
-                          </div>
-                        </div>
-                        <Link href={`/explorador/chat/${connection.chat_room_id}`}>
-                          <button className="text-blue-600 hover:text-blue-700">
-                            <ChatBubbleLeftRightIcon className="h-5 w-5" />
-                          </button>
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <p className="text-gray-600">Explora profesionales cercanos</p>
               </div>
+            </Link>
 
-              {/* Switch to AS */}
-              <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
-                <h3 className="font-bold mb-2">¿Querés ofrecer servicios?</h3>
-                <p className="text-indigo-100 text-sm mb-4">
-                  Convertite en AS y empezá a ganar dinero con tus habilidades
-                </p>
-                <Link href="/explorador/cambiar-a-as">
-                  <button className="w-full bg-white text-indigo-600 py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors text-sm font-medium">
-                    Convertirme en AS
-                  </button>
-                </Link>
+            {/* Convertirse en AS */}
+            <Link href="/explorador/cambiar-a-as">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-6 text-white hover:shadow-md transition-shadow cursor-pointer">
+                <h3 className="text-lg font-semibold mb-2">¿Querés ofrecer servicios?</h3>
+                <p className="text-blue-100">Convertite en AS y empezá a ganar dinero</p>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

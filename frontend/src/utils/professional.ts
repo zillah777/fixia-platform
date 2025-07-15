@@ -166,8 +166,8 @@ export const getCompletionProgress = (completion: ProfileCompletion): {
 };
 
 export const getNextCompletionStep = (completion: ProfileCompletion): string | null => {
-  if (completion.pending_steps.length === 0) return null;
-  return completion.pending_steps[0];
+  if (completion.missing_fields.length === 0) return null;
+  return completion.missing_fields[0];
 };
 
 export const formatMobilityStatus = (hasMobility: boolean): string => {

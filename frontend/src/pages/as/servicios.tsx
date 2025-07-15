@@ -17,15 +17,13 @@ import {
   TagIcon,
   CheckCircleIcon,
   XCircleIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
+  StarIcon
 } from '@heroicons/react/24/outline';
 
-import { useAuth } from '@/hooks/useAuth';
-import { Service, ServiceCategory } from '@/types';
+import { useAuth } from '@/contexts/AuthContext';
+import { Service, ServiceCategory, CreateServiceData } from '@/types';
 
-interface ServiceData extends Omit<Service, 'id' | 'provider_id' | 'created_at' | 'updated_at' | 'first_name' | 'last_name' | 'profile_photo_url' | 'is_verified' | 'average_rating' | 'total_reviews'> {
-  id?: number;
-}
 
 const categories = [
   { value: 'plomeria' as ServiceCategory, label: 'Plomería', icon: '🔧' },
@@ -48,7 +46,7 @@ const ASServicios: NextPage = () => {
   const [filterCategory, setFilterCategory] = useState<ServiceCategory | 'all'>('all');
   const [saving, setSaving] = useState(false);
   
-  const [newService, setNewService] = useState<ServiceData>({
+  const [newService, setNewService] = useState<CreateServiceData>({
     title: '',
     description: '',
     category: 'otros',
@@ -56,9 +54,7 @@ const ASServicios: NextPage = () => {
     duration_minutes: 60,
     address: '',
     latitude: undefined,
-    longitude: undefined,
-    is_active: true,
-    images: []
+    longitude: undefined
   });
 
   useEffect(() => {
@@ -91,6 +87,7 @@ const ASServicios: NextPage = () => {
         is_verified: true,
         average_rating: 4.8,
         total_reviews: 12,
+        views_count: 45,
         images: []
       },
       {
@@ -111,6 +108,7 @@ const ASServicios: NextPage = () => {
         is_verified: true,
         average_rating: 4.9,
         total_reviews: 8,
+        views_count: 32,
         images: []
       },
       {
@@ -131,6 +129,7 @@ const ASServicios: NextPage = () => {
         is_verified: true,
         average_rating: 4.6,
         total_reviews: 15,
+        views_count: 67,
         images: []
       }
     ]);
@@ -146,6 +145,7 @@ const ASServicios: NextPage = () => {
         id: Date.now(),
         provider_id: user?.id || 1,
         ...newService,
+        is_active: true,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         first_name: user?.first_name || '',
@@ -153,7 +153,9 @@ const ASServicios: NextPage = () => {
         profile_photo_url: user?.profile_photo_url,
         is_verified: true,
         average_rating: 0,
-        total_reviews: 0
+        total_reviews: 0,
+        views_count: 2,
+        images: []
       };
       
       setServices(prev => [createdService, ...prev]);
@@ -166,9 +168,7 @@ const ASServicios: NextPage = () => {
         duration_minutes: 60,
         address: '',
         latitude: undefined,
-        longitude: undefined,
-        is_active: true,
-        images: []
+        longitude: undefined
       });
       
       alert('Servicio creado exitosamente');

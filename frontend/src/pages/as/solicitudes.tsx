@@ -16,10 +16,10 @@ import {
   PhoneIcon,
   StarIcon,
   InformationCircleIcon,
-  FilterIcon
+  FunnelIcon
 } from '@heroicons/react/24/outline';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { Booking, BookingStatus } from '@/types';
 
 const statusMap = {
@@ -84,7 +84,7 @@ const ASSolicitudes: NextPage = () => {
         scheduled_time: '09:00',
         total_amount: 3800,
         status: 'confirmed',
-        payment_status: 'paid',
+        payment_status: 'approved',
         notes: 'Necesito instalar nuevos tomas en el living y la cocina.',
         customer_address: 'Belgrano 789, Trelew',
         customer_latitude: -43.2481,
@@ -239,7 +239,7 @@ const ASSolicitudes: NextPage = () => {
           {/* Filter */}
           <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
             <div className="flex items-center space-x-4">
-              <FilterIcon className="h-5 w-5 text-gray-400" />
+              <FunnelIcon className="h-5 w-5 text-gray-400" />
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as BookingStatus | 'all')}
@@ -420,11 +420,11 @@ const ASSolicitudes: NextPage = () => {
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600">Estado del Pago:</span>
                           <span className={`px-2 py-1 rounded text-xs font-medium ${
-                            booking.payment_status === 'paid' ? 'bg-green-100 text-green-800' :
+                            booking.payment_status === 'approved' ? 'bg-green-100 text-green-800' :
                             booking.payment_status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-red-100 text-red-800'
                           }`}>
-                            {booking.payment_status === 'paid' ? 'Pagado' :
+                            {booking.payment_status === 'approved' ? 'Pagado' :
                              booking.payment_status === 'pending' ? 'Pendiente' :
                              'Fallido'}
                           </span>

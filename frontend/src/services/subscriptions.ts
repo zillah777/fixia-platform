@@ -66,10 +66,13 @@ export const subscriptionsService = {
       pages: number;
     };
   }> {
-    const response = await api.get<PaginatedResponse<SubscriptionPayment[]>>(
+    const response = await api.get<PaginatedResponse<SubscriptionPayment>>(
       `/api/subscriptions/payment-history?page=${page}&limit=${limit}`
     );
-    return response.data.data;
+    return {
+      payments: response.data.data.items,
+      pagination: response.data.data.pagination
+    };
   },
 
   // Cancel subscription

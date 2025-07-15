@@ -25,9 +25,15 @@ export const professionalsService = {
   // Submit verification documents
   async submitVerification(documents: VerificationDocuments): Promise<{ dni_front_image: string; dni_back_image: string; selfie_with_dni_image: string }> {
     const formData = new FormData();
-    formData.append('dni_front', documents.dni_front);
-    formData.append('dni_back', documents.dni_back);
-    formData.append('selfie_with_dni', documents.selfie_with_dni);
+    if (documents.dni_front) {
+      formData.append('dni_front', documents.dni_front);
+    }
+    if (documents.dni_back) {
+      formData.append('dni_back', documents.dni_back);
+    }
+    if (documents.professional_license) {
+      formData.append('professional_license', documents.professional_license);
+    }
 
     const response = await api.post<ApiResponse<{ dni_front_image: string; dni_back_image: string; selfie_with_dni_image: string }>>(
       '/api/professionals/verification',
@@ -61,9 +67,13 @@ export const professionalsService = {
     const formData = new FormData();
     formData.append('title', data.title);
     if (data.description) formData.append('description', data.description);
-    if (data.work_date) formData.append('work_date', data.work_date);
-    if (data.category) formData.append('category', data.category);
-    if (data.image) formData.append('image', data.image);
+    if (data.completed_date) formData.append('completed_date', data.completed_date);
+    if (data.category_id) formData.append('category_id', data.category_id.toString());
+    if (data.images) {
+      data.images.forEach((image, index) => {
+        formData.append(`images[${index}]`, image);
+      });
+    }
 
     const response = await api.post<ApiResponse<PortfolioItem>>(
       '/api/professionals/portfolio',

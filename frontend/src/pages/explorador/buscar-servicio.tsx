@@ -14,7 +14,7 @@ import {
   FireIcon
 } from '@heroicons/react/24/outline';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
 import { categoriesService } from '@/services/categories';
 import { ExplorerServiceRequestForm } from '@/types/explorer';
@@ -54,7 +54,7 @@ const BuscarServicioPage: NextPage = () => {
   const [blockingStatus, setBlockingStatus] = useState<any>(null);
 
   useEffect(() => {
-    if (!loading && user?.user_type !== 'client') {
+    if (!loading && user?.user_type !== 'customer') {
       router.push('/auth/login');
       return;
     }
@@ -67,13 +67,11 @@ const BuscarServicioPage: NextPage = () => {
   const loadInitialData = async () => {
     try {
       const [categoriesRes, blockingRes] = await Promise.all([
-        categoriesService.getCategories(),
+        categoriesService.getAllCategories(),
         explorerService.getBlockingStatus()
       ]);
 
-      if (categoriesRes.success) {
-        setCategories(categoriesRes.data);
-      }
+      setCategories(categoriesRes);
       
       if (blockingRes.success) {
         setBlockingStatus(blockingRes.data);

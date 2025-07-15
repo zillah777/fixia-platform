@@ -10,10 +10,10 @@ import {
   MagnifyingGlassIcon,
   ClockIcon,
   CheckIcon,
-  CheckCheckIcon
+  CheckCircleIcon
 } from '@heroicons/react/24/outline';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { Chat } from '@/types';
 
 const ASChats: NextPage = () => {
@@ -251,7 +251,7 @@ const ASChats: NextPage = () => {
                             
                             {chat.unread_count === 0 && (
                               <div className="ml-2 text-gray-400">
-                                <CheckCheckIcon className="h-4 w-4" />
+                                <CheckCircleIcon className="h-4 w-4" />
                               </div>
                             )}
                           </div>

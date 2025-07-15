@@ -17,7 +17,7 @@ import {
   FireIcon
 } from '@heroicons/react/24/outline';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
 
 const CambiarAASPage: NextPage = () => {
@@ -28,7 +28,7 @@ const CambiarAASPage: NextPage = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
-    if (!loading && user?.user_type !== 'client') {
+    if (!loading && user?.user_type !== 'customer') {
       router.push('/auth/login');
       return;
     }

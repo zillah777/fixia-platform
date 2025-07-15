@@ -21,7 +21,7 @@ import {
   BriefcaseIcon
 } from '@heroicons/react/24/outline';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { RegisterData } from '@/types';
 
 const registerSchema = yup.object().shape({
@@ -60,9 +60,16 @@ const registerSchema = yup.object().shape({
   address: yup
     .string()
     .optional(),
+  latitude: yup
+    .number()
+    .optional(),
+  longitude: yup
+    .number()
+    .optional(),
   terms_accepted: yup
     .boolean()
     .oneOf([true], 'Debes aceptar los términos y condiciones')
+    .required('Debes aceptar los términos y condiciones')
 });
 
 interface RegisterFormData extends RegisterData {

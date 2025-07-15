@@ -23,9 +23,9 @@ import {
   StarIcon as StarIconSolid 
 } from '@heroicons/react/24/solid';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
-import { ASProfileForExplorer } from '@/types/explorer';
+import { ASProfileForExplorer, ExplorerASReview } from '@/types/explorer';
 
 const ProfesionalDetailPage: NextPage = () => {
   const { user, loading } = useAuth();
@@ -38,7 +38,7 @@ const ProfesionalDetailPage: NextPage = () => {
   const [showContactModal, setShowContactModal] = useState(false);
 
   useEffect(() => {
-    if (!loading && user?.user_type !== 'client') {
+    if (!loading && user?.user_type !== 'customer') {
       router.push('/auth/login');
       return;
     }
@@ -385,12 +385,12 @@ const ProfesionalDetailPage: NextPage = () => {
                                 <div className="flex items-center space-x-3">
                                   <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                                     <span className="text-gray-600 font-medium">
-                                      {review.explorer_name?.[0] || 'E'}
+                                      {review.as_name?.[0] || 'A'}
                                     </span>
                                   </div>
                                   <div>
                                     <div className="font-medium text-gray-900">
-                                      {review.explorer_name || 'Cliente'}
+                                      {`${review.as_name || ''} ${review.as_last_name || ''}`.trim() || 'Profesional'}
                                     </div>
                                     <div className="text-sm text-gray-500">
                                       {formatDate(review.created_at)}

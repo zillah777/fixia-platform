@@ -15,7 +15,7 @@ import {
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { LoginCredentials } from '@/types';
 
 const loginSchema = yup.object().shape({

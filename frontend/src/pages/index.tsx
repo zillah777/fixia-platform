@@ -20,7 +20,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 
 const serviceCategoriesData = [
   { id: 'plomeria', name: 'Plomería', icon: '🔧', description: 'Reparaciones e instalaciones' },

@@ -312,7 +312,7 @@ export interface PaginatedResponse<T> {
   success: boolean;
   message: string;
   data: {
-    [key: string]: T[];
+    items: T[];
     pagination: PaginationInfo;
   };
 }
@@ -366,4 +366,212 @@ export interface Category {
 export interface FormError {
   field: string;
   message: string;
+}
+
+// Professional Types (for backwards compatibility)
+export interface CompleteProfileData {
+  about_me?: string;
+  birth_date?: string;
+  city?: string;
+  dni?: string;
+  dni_procedure_number?: string;
+  has_mobility?: boolean;
+  professional_info?: {
+    profession?: string;
+    license_number?: string;
+    specialization?: string;
+    years_experience?: number;
+  };
+}
+
+export interface VerificationDocuments {
+  dni_front?: File;
+  dni_back?: File;
+  professional_license?: File;
+  selfie_with_dni?: File;
+  portfolio_images?: File[];
+}
+
+export interface CreateReferenceData {
+  name: string;
+  phone: string;
+  relationship: string;
+  comments?: string;
+}
+
+export interface UserReference {
+  id: number;
+  user_id: number;
+  name: string;
+  phone: string;
+  relationship: string;
+  comments?: string;
+  is_verified: boolean;
+  created_at: string;
+}
+
+export interface CreatePortfolioData {
+  title: string;
+  description: string;
+  category_id: number;
+  images?: File[];
+  completed_date?: string;
+}
+
+export interface PortfolioItem {
+  id: number;
+  user_id: number;
+  title: string;
+  description: string;
+  category_id: number;
+  category_name?: string;
+  images: string[];
+  completed_date?: string;
+  created_at: string;
+}
+
+export interface AvailabilitySchedule {
+  monday?: { start: string; end: string; available: boolean };
+  tuesday?: { start: string; end: string; available: boolean };
+  wednesday?: { start: string; end: string; available: boolean };
+  thursday?: { start: string; end: string; available: boolean };
+  friday?: { start: string; end: string; available: boolean };
+  saturday?: { start: string; end: string; available: boolean };
+  sunday?: { start: string; end: string; available: boolean };
+}
+
+export interface UserAvailability {
+  id: number;
+  user_id: number;
+  schedule: AvailabilitySchedule;
+  timezone: string;
+  updated_at: string;
+}
+
+export interface CreateWorkLocationData {
+  location_name: string;
+  is_primary?: boolean;
+}
+
+export interface WorkLocation {
+  id: number;
+  user_id: number;
+  location_name: string;
+  is_primary: boolean;
+  created_at: string;
+}
+
+export interface ProfileCompletion {
+  percentage: number;
+  missing_fields: string[];
+  completed_sections: string[];
+}
+
+// Ranking Types (for backwards compatibility)
+export interface TopProfessional {
+  id: number;
+  first_name: string;
+  last_name: string;
+  profile_image?: string;
+  average_rating: number;
+  total_reviews: number;
+  category_name: string;
+  locality?: string;
+  rank: number;
+}
+
+export interface TrendingProfessional {
+  id: number;
+  first_name: string;
+  last_name: string;
+  profile_image?: string;
+  category_name: string;
+  recent_bookings: number;
+  growth_rate: number;
+}
+
+export interface UserRanking {
+  user_id: number;
+  rank: number;
+  tier: RankingTier;
+  points: number;
+  category_id?: number;
+  category_name?: string;
+  period: string;
+}
+
+export interface RankingTier {
+  id: number;
+  name: string;
+  min_points: number;
+  max_points?: number;
+  color: string;
+  icon: string;
+  benefits: string[];
+}
+
+// Report Types (for backwards compatibility)
+export interface UserReport {
+  id: number;
+  reporter_id: number;
+  reported_id: number;
+  type: ReportType;
+  reason: string;
+  description?: string;
+  status: string;
+  admin_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateReportData {
+  reported_id: number;
+  type: ReportType;
+  reason: string;
+  description?: string;
+}
+
+export interface ReportStats {
+  total_reports: number;
+  pending_reports: number;
+  resolved_reports: number;
+  by_type: Record<ReportType, number>;
+}
+
+export type ReportType = 'user' | 'service' | 'booking' | 'review' | 'other';
+
+// Subscription Types (for backwards compatibility)
+export interface Subscription {
+  id: number;
+  user_id: number;
+  plan_type: 'free' | 'basic' | 'premium';
+  status: string;
+  started_at: string;
+  expires_at?: string;
+  auto_renew: boolean;
+  created_at: string;
+}
+
+export interface UserSubscription extends Subscription {
+  user_first_name?: string;
+  user_last_name?: string;
+  user_email?: string;
+}
+
+export interface SubscriptionPayment {
+  id: number;
+  subscription_id: number;
+  amount: number;
+  currency: string;
+  payment_date: string;
+  payment_method?: string;
+  transaction_id?: string;
+}
+
+export interface SubscriptionBenefits {
+  plan_type: 'free' | 'basic' | 'premium';
+  features: string[];
+  limits: Record<string, number>;
+  price_monthly?: number;
+  price_yearly?: number;
 }

@@ -2,9 +2,13 @@ const express = require('express');
 const { pool } = require('../config/database');
 const { authMiddleware } = require('../middleware/auth');
 const { formatResponse, formatError } = require('../utils/helpers');
+const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
 const crypto = require('crypto');
 
 const router = express.Router();
+
+// Apply user type transformation to all routes
+router.use(userTypeTransformMiddleware);
 
 // Middleware to ensure user is client (Explorer)
 const requireExplorer = async (req, res, next) => {

@@ -8,14 +8,14 @@ import {
   StarIcon,
   UserIcon,
   CalendarDaysIcon,
-  FilterIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  FunnelIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   MinusIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { Review, ReviewStats } from '@/types';
 
 const ASCalificaciones: NextPage = () => {
@@ -286,8 +286,8 @@ const ASCalificaciones: NextPage = () => {
                     trend.type === 'up' ? 'text-green-600' :
                     trend.type === 'down' ? 'text-red-600' : 'text-gray-600'
                   }`}>
-                    {trend.type === 'up' && <TrendingUpIcon className="h-4 w-4 mr-1" />}
-                    {trend.type === 'down' && <TrendingDownIcon className="h-4 w-4 mr-1" />}
+                    {trend.type === 'up' && <ArrowTrendingUpIcon className="h-4 w-4 mr-1" />}
+                    {trend.type === 'down' && <ArrowTrendingDownIcon className="h-4 w-4 mr-1" />}
                     {trend.type === 'stable' && <MinusIcon className="h-4 w-4 mr-1" />}
                     {trend.type === 'stable' ? 'Estable' : `${trend.value.toFixed(1)} vs anterior`}
                   </div>
@@ -342,7 +342,7 @@ const ASCalificaciones: NextPage = () => {
           {/* Filter */}
           <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
             <div className="flex items-center space-x-4">
-              <FilterIcon className="h-5 w-5 text-gray-400" />
+              <FunnelIcon className="h-5 w-5 text-gray-400" />
               <select
                 value={filterRating}
                 onChange={(e) => setFilterRating(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}

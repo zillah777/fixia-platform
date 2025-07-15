@@ -42,7 +42,7 @@ api.interceptors.response.use(
       toast.error('No tienes permisos para realizar esta acción.');
     } else if (error.response?.status === 404) {
       toast.error('Recurso no encontrado.');
-    } else if (error.response?.status >= 500) {
+    } else if (error.response?.status && error.response.status >= 500) {
       toast.error('Error del servidor. Intenta de nuevo más tarde.');
     } else if (error.code === 'ECONNABORTED') {
       toast.error('La solicitud tardó demasiado. Verifica tu conexión.');

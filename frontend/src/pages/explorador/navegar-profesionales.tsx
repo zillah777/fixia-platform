@@ -19,7 +19,7 @@ import {
   StarIcon as StarIconSolid 
 } from '@heroicons/react/24/solid';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
 import { categoriesService } from '@/services/categories';
 import { ExplorerBrowseParams } from '@/types/explorer';
@@ -57,7 +57,7 @@ const NavegarProfesionalesPage: NextPage = () => {
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
-    if (!loading && user?.user_type !== 'client') {
+    if (!loading && user?.user_type !== 'customer') {
       router.push('/auth/login');
       return;
     }
@@ -75,10 +75,8 @@ const NavegarProfesionalesPage: NextPage = () => {
 
   const loadInitialData = async () => {
     try {
-      const categoriesRes = await categoriesService.getCategories();
-      if (categoriesRes.success) {
-        setCategories(categoriesRes.data);
-      }
+      const categoriesRes = await categoriesService.getAllCategories();
+      setCategories(categoriesRes);
     } catch (error) {
       console.error('Error loading categories:', error);
     }

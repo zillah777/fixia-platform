@@ -405,6 +405,9 @@ export interface CompleteProfileData {
   years_experience?: number;
 }
 
+// Import base types
+import { ApiResponse, PaginatedResponse } from './index';
+
 // API Response Types for Professional Features
 export interface ProfessionalApiResponse<T = any> extends ApiResponse<T> {}
 

@@ -4,8 +4,12 @@ const path = require('path');
 const { pool } = require('../config/database');
 const { requireProvider } = require('../middleware/auth');
 const { formatResponse, formatError, sanitizeUser, paginate } = require('../utils/helpers');
+const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
 
 const router = express.Router();
+
+// Apply user type transformation to all routes
+router.use(userTypeTransformMiddleware);
 
 // Configure multer for profile photo uploads
 const storage = multer.diskStorage({
