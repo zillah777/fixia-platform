@@ -10,7 +10,6 @@ import {
   CalendarDaysIcon,
   FunnelIcon,
   ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon,
   MinusIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
@@ -287,7 +286,7 @@ const ASCalificaciones: NextPage = () => {
                     trend.type === 'down' ? 'text-red-600' : 'text-gray-600'
                   }`}>
                     {trend.type === 'up' && <ArrowTrendingUpIcon className="h-4 w-4 mr-1" />}
-                    {trend.type === 'down' && <ArrowTrendingDownIcon className="h-4 w-4 mr-1" />}
+                    {trend.type === 'down' && <MinusIcon className="h-4 w-4 mr-1" />}
                     {trend.type === 'stable' && <MinusIcon className="h-4 w-4 mr-1" />}
                     {trend.type === 'stable' ? 'Estable' : `${trend.value.toFixed(1)} vs anterior`}
                   </div>
