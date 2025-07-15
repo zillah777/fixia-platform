@@ -16,11 +16,14 @@ import {
   MapPinIcon,
   PhoneIcon,
   EnvelopeIcon,
-  PlayCircleIcon
+  PlayCircleIcon,
+  Bars3Icon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
 import { useAuth } from '@/contexts/AuthContext';
+import Logo from '@/components/Logo';
 
 const serviceCategoriesData = [
   { id: 'plomeria', name: 'Plomería', icon: '🔧', description: 'Reparaciones e instalaciones' },
@@ -40,7 +43,7 @@ const featuredProfessionals = [
     reviews: 127,
     image: undefined,
     services: ['Plomería', 'Instalaciones'],
-    location: 'Rawson, Chubut'
+    location: 'Zona Centro'
   },
   {
     id: 2,
@@ -50,7 +53,7 @@ const featuredProfessionals = [
     reviews: 89,
     image: undefined,
     services: ['Electricidad', 'Instalaciones'],
-    location: 'Trelew, Chubut'
+    location: 'Zona Norte'
   },
   {
     id: 3,
@@ -60,7 +63,7 @@ const featuredProfessionals = [
     reviews: 156,
     image: undefined,
     services: ['Reparaciones', 'Mantenimiento'],
-    location: 'Puerto Madryn, Chubut'
+    location: 'Zona Sur'
   }
 ];
 
@@ -95,6 +98,7 @@ const LandingPage: NextPage = () => {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && user) {
@@ -154,11 +158,11 @@ const LandingPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Fixia - Marketplace de Servicios en Chubut</title>
-        <meta name="description" content="Conecta con profesionales verificados en Chubut. Plomería, electricidad, limpieza y más. Servicios confiables a un clic de distancia." />
-        <meta name="keywords" content="servicios, Chubut, plomería, electricidad, limpieza, profesionales, Rawson, Trelew, Puerto Madryn" />
-        <meta property="og:title" content="Fixia - Marketplace de Servicios en Chubut" />
-        <meta property="og:description" content="Conecta con profesionales verificados en Chubut" />
+        <title>Fixia - Marketplace de Servicios Profesionales</title>
+        <meta name="description" content="Conecta con profesionales verificados para todos tus proyectos. Plomería, electricidad, limpieza y más. Servicios confiables a un clic de distancia." />
+        <meta name="keywords" content="servicios, profesionales, plomería, electricidad, limpieza, reparaciones, marketplace, fixia" />
+        <meta property="og:title" content="Fixia - Marketplace de Servicios Profesionales" />
+        <meta property="og:description" content="Conecta con profesionales verificados para todos tus proyectos del hogar" />
         <meta property="og:type" content="website" />
       </Head>
 
@@ -167,12 +171,7 @@ const LandingPage: NextPage = () => {
         <header className="nav">
           <div className="container">
             <div className="flex items-center justify-between h-20">
-              <div className="flex items-center">
-                <h1 className="text-3xl font-extrabold bg-gradient-primary bg-clip-text text-transparent">
-                  Fixia
-                </h1>
-                <span className="ml-3 text-sm text-secondary-600 font-medium">Chubut</span>
-              </div>
+              <Logo size="lg" variant="gradient" />
               
               <nav className="hidden md:flex items-center gap-1">
                 <a href="#como-funciona" className="nav-link">
@@ -189,9 +188,54 @@ const LandingPage: NextPage = () => {
                 </a>
               </nav>
 
-              <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-3">
                 <Link href="/auth/login">
                   <button className="btn btn-ghost">
+                    Iniciar Sesión
+                  </button>
+                </Link>
+                <Link href="/auth/registro">
+                  <button className="btn btn-primary">
+                    Registrarse
+                  </button>
+                </Link>
+              </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden nav-hamburger"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? (
+                  <XMarkIcon className="h-6 w-6 text-primary-600" />
+                ) : (
+                  <Bars3Icon className="h-6 w-6 text-primary-600" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Menu */}
+          <div className={`nav-mobile-menu ${mobileMenuOpen ? 'active' : ''}`}>
+            <div className="nav-mobile-content">
+              <Logo size="xl" variant="white" className="mb-8" />
+              <nav className="flex flex-col">
+                <a href="#como-funciona" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                  Cómo funciona
+                </a>
+                <a href="#servicios" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                  Servicios
+                </a>
+                <a href="#profesionales" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                  Profesionales
+                </a>
+                <a href="#contacto" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+                  Contacto
+                </a>
+              </nav>
+              <div className="mt-8 flex flex-col gap-4">
+                <Link href="/auth/login">
+                  <button className="btn btn-ghost text-white border-white hover:bg-white hover:text-primary-600">
                     Iniciar Sesión
                   </button>
                 </Link>
@@ -206,15 +250,15 @@ const LandingPage: NextPage = () => {
         </header>
 
         {/* Hero Section */}
-        <section className="hero">
+        <section className="hero section-padding-lg">
           <div className="container">
             <div className="text-center fade-in-on-scroll">
               <h1 className="hero-title animate-fade-in">
-                Servicios Profesionales en Chubut
+                Servicios Profesionales de Calidad
               </h1>
               <p className="hero-subtitle animate-slide-up stagger-1">
                 Conecta con profesionales verificados para todos tus proyectos del hogar. 
-                Desde plomería hasta electricidad, encuentra el experto que necesitas.
+                Desde plomería hasta electricidad, encuentra el experto perfecto para ti.
               </p>
 
               {/* Modern Search Bar */}
@@ -276,13 +320,13 @@ const LandingPage: NextPage = () => {
         </section>
 
         {/* Service Categories */}
-        <section id="servicios" className="py-24 bg-white relative">
+        <section id="servicios" className="section-padding bg-white relative">
           <div className="container">
-            <div className="text-center mb-16 slide-up-on-scroll">
+            <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
                 Servicios Populares
               </h2>
-              <p className="text-xl text-secondary max-w-2xl mx-auto">
+              <p className="text-xl text-secondary">
                 Encuentra profesionales especializados en las categorías más demandadas
               </p>
             </div>
@@ -310,14 +354,14 @@ const LandingPage: NextPage = () => {
         </section>
 
         {/* How It Works */}
-        <section id="como-funciona" className="py-24 bg-gradient-to-br from-primary-50 to-secondary-50 relative overflow-hidden">
+        <section id="como-funciona" className="section-padding bg-gradient-to-br from-primary-50 to-secondary-50 relative overflow-hidden">
           <div className="absolute inset-0 bg-white/50 backdrop-blur-sm"></div>
           <div className="container relative">
-            <div className="text-center mb-16 slide-up-on-scroll">
+            <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
                 ¿Cómo Funciona Fixia?
               </h2>
-              <p className="text-xl text-secondary max-w-2xl mx-auto">
+              <p className="text-xl text-secondary">
                 Tres simples pasos para conectar con el profesional perfecto
               </p>
             </div>
@@ -371,14 +415,14 @@ const LandingPage: NextPage = () => {
         </section>
 
         {/* Featured Professionals */}
-        <section id="profesionales" className="py-24 bg-white">
+        <section id="profesionales" className="section-padding bg-white">
           <div className="container">
-            <div className="text-center mb-16 slide-up-on-scroll">
+            <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
                 Profesionales Destacados
               </h2>
-              <p className="text-xl text-secondary max-w-2xl mx-auto">
-                Conoce algunos de nuestros profesionales mejor calificados en Chubut
+              <p className="text-xl text-secondary">
+                Conoce algunos de nuestros profesionales mejor calificados en la plataforma
               </p>
             </div>
 
@@ -439,15 +483,15 @@ const LandingPage: NextPage = () => {
         </section>
 
         {/* Testimonials */}
-        <section className="py-24 bg-gradient-to-br from-secondary-50 to-primary-50 relative overflow-hidden">
+        <section className="section-padding bg-gradient-to-br from-secondary-50 to-primary-50 relative overflow-hidden">
           <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
           <div className="container relative">
-            <div className="text-center mb-16 slide-up-on-scroll">
+            <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
                 Lo Que Dicen Nuestros Usuarios
               </h2>
-              <p className="text-xl text-secondary max-w-2xl mx-auto">
-                Testimonios reales de clientes satisfechos en toda la provincia
+              <p className="text-xl text-secondary">
+                Testimonios reales de clientes satisfechos en toda la plataforma
               </p>
             </div>
 
@@ -477,7 +521,7 @@ const LandingPage: NextPage = () => {
         </section>
 
         {/* Stats Section */}
-        <section className="py-24 bg-gradient-primary relative overflow-hidden">
+        <section className="section-padding bg-gradient-primary relative overflow-hidden">
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="container relative">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
@@ -494,16 +538,16 @@ const LandingPage: NextPage = () => {
                 <div className="text-primary-200 font-medium">Calificación Promedio</div>
               </div>
               <div className="scale-in-on-scroll stagger-4">
-                <div className="text-5xl font-bold text-white mb-3 animate-pulse">15</div>
-                <div className="text-primary-200 font-medium">Ciudades Cubiertas</div>
+                <div className="text-5xl font-bold text-white mb-3 animate-pulse">98%</div>
+                <div className="text-primary-200 font-medium">Satisfacción del Cliente</div>
               </div>
             </div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 bg-white">
-          <div className="container-md text-center">
+        <section className="section-padding bg-white">
+          <div className="content-medium text-center">
             <div className="slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
                 ¿Listo para Comenzar?
@@ -531,16 +575,14 @@ const LandingPage: NextPage = () => {
         </section>
 
         {/* Footer */}
-        <footer id="contacto" className="bg-dark text-white py-16 relative overflow-hidden">
+        <footer id="contacto" className="bg-dark text-white section-padding relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary-900/20 to-secondary-900/20"></div>
           <div className="container relative">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div className="fade-in-on-scroll">
-                <h3 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">
-                  Fixia
-                </h3>
+                <Logo size="lg" variant="white" className="mb-4" />
                 <p className="text-neutral-300 mb-4 leading-relaxed">
-                  Conectando profesionales con clientes en toda la provincia de Chubut.
+                  Conectando profesionales con clientes en todo el país.
                 </p>
                 <div className="flex space-x-4">
                   <span className="text-neutral-400 font-medium">Síguenos:</span>
@@ -594,11 +636,11 @@ const LandingPage: NextPage = () => {
                   </div>
                   <div className="flex items-center hover:text-primary-400 transition-colors">
                     <PhoneIcon className="h-5 w-5 mr-3" />
-                    <span>+54 280 123-4567</span>
+                    <span>+54 11 1234-5678</span>
                   </div>
                   <div className="flex items-center hover:text-primary-400 transition-colors">
                     <MapPinIcon className="h-5 w-5 mr-3" />
-                    <span>Rawson, Chubut</span>
+                    <span>Argentina</span>
                   </div>
                 </div>
               </div>
