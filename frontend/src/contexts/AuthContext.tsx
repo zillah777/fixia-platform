@@ -1,7 +1,5 @@
-'use client';
-
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
 import { authService } from '@/services/auth';
 import { User, LoginCredentials, RegisterData } from '@/types';
@@ -26,9 +24,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
+
+  // Detectar cuando estamos en el cliente
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Initialize auth state
   useEffect(() => {
+    if (!isClient) return; // Solo ejecutar en el cliente
+    
     const initializeAuth = async () => {
       try {
         if (authService.isAuthenticated()) {
@@ -57,7 +63,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     initializeAuth();
-  }, []);
+  }, [isClient]);
 
   const login = async (credentials: LoginCredentials) => {
     try {
@@ -123,6 +129,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
+    // Durante SSR, devolver un estado por defecto en lugar de lanzar error
+    if (typeof window === 'undefined') {
+      return {
+        user: null,
+        loading: true,
+        login: async () => {},
+        register: async () => {},
+        logout: () => {},
+        updateUser: () => {},
+        isAuthenticated: false,
+      };
+    }
     throw new Error('useAuth debe ser usado dentro de un AuthProvider');
   }
   return context;
