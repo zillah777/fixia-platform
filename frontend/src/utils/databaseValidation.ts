@@ -1,7 +1,7 @@
 // Database-aligned validation utilities
 // These validators match the exact constraints from PostgreSQL
 
-import { ValidationRules } from '@/types/index-updated';
+import { ValidationRules } from '@/types';
 
 export interface ValidationError {
   field: string;

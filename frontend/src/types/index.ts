@@ -1,51 +1,27 @@
-// User Types
+// Updated types that align with database structure
+// These types use the exact field names and constraints from PostgreSQL
+
+// User Types - Aligned with users table
 export interface User {
   id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  user_type: 'customer' | 'provider';
-  phone?: string;
-  profile_photo_url?: string;
-  address?: string;
-  latitude?: number;
-  longitude?: number;
-  is_verified: boolean;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  last_login?: string;
-  stats?: {
-    total_services: number;
-    total_reviews: number;
-    average_rating: number;
-    completed_bookings: number;
-  };
-}
-
-// Extended User for Professional features
-export interface ExtendedUser extends User {
-  birth_date?: string;
-  city?: string;
-  dni?: string;
-  dni_procedure_number?: string;
-  about_me?: string;
-  has_mobility?: boolean;
-  verification_status: 'pending' | 'in_review' | 'verified' | 'rejected';
-  verification_score: number;
-  subscription_type: 'free' | 'basic' | 'premium';
-  subscription_expires_at?: string;
-  total_rating_points: number;
-  total_ratings_count: number;
-  profile_completion_percentage: number;
-  created_services_count: number;
-  completed_bookings_count: number;
-  professional_info?: {
-    profession?: string;
-    license_number?: string;
-    specialization?: string;
-    years_experience?: number;
-  };
+  first_name: string; // VARCHAR(100) NOT NULL
+  last_name: string; // VARCHAR(100) NOT NULL  
+  email: string; // VARCHAR(255) UNIQUE NOT NULL
+  phone?: string; // VARCHAR(20)
+  user_type: 'customer' | 'provider' | 'admin'; // Frontend uses 'customer', backend transforms to 'client'
+  profile_image?: string; // TEXT (was profile_photo_url)
+  profile_photo_url?: string; // Backwards compatibility
+  date_of_birth?: string; // DATE
+  gender?: string; // VARCHAR(10)
+  locality?: string; // VARCHAR(100)
+  address?: string; // TEXT
+  verification_status: string; // VARCHAR(20) DEFAULT 'pending'
+  email_verified: boolean; // BOOLEAN DEFAULT false
+  email_verified_at?: string; // TIMESTAMP
+  is_active: boolean; // BOOLEAN DEFAULT true
+  last_login?: string; // TIMESTAMP
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updated_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 }
 
 // Auth Types
@@ -55,238 +31,272 @@ export interface AuthUser {
 }
 
 export interface LoginCredentials {
-  email: string;
-  password: string;
+  email: string; // Required, max 255 chars
+  password: string; // Required
 }
 
 export interface RegisterData {
-  email: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  user_type: 'customer' | 'provider';
-  phone?: string;
-  address?: string;
-  latitude?: number;
-  longitude?: number;
+  first_name: string; // Required, max 100 chars
+  last_name: string; // Required, max 100 chars
+  email: string; // Required, max 255 chars, must be valid email
+  password: string; // Required, will be hashed
+  phone?: string; // Optional, max 20 chars
+  user_type: 'customer' | 'provider'; // Required, maps to 'client'|'provider' in DB
+  profile_image?: string; // Optional
+  date_of_birth?: string; // Optional, format: YYYY-MM-DD
+  gender?: string; // Optional, max 10 chars
+  locality?: string; // Optional, max 100 chars
+  address?: string; // Optional
 }
 
-// Service Types
-export type ServiceCategory = 'plomeria' | 'electricidad' | 'limpieza' | 'reparaciones' | 'belleza' | 'otros';
+// Category Types - Aligned with categories table
+export interface Category {
+  id: number;
+  name: string; // VARCHAR(100) NOT NULL
+  description?: string; // TEXT
+  icon?: string; // VARCHAR(50)
+  group_name?: string; // VARCHAR(100)
+  is_active: boolean; // BOOLEAN DEFAULT true
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+}
 
+// Service Types - Aligned with services table
 export interface Service {
   id: number;
-  provider_id: number;
-  title: string;
-  description: string;
-  category: ServiceCategory;
-  price: number;
-  duration_minutes: number;
-  latitude?: number;
-  longitude?: number;
-  address?: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  first_name: string;
-  last_name: string;
+  user_id?: number; // INTEGER REFERENCES users(id) (was provider_id)
+  provider_id?: number; // Backwards compatibility
+  category_id?: number; // INTEGER REFERENCES categories(id)
+  category?: string; // Backwards compatibility
+  title: string; // VARCHAR(200) NOT NULL
+  description: string; // TEXT NOT NULL
+  price?: number; // DECIMAL(10,2)
+  currency?: string; // VARCHAR(3) DEFAULT 'ARS'
+  duration_hours?: number; // INTEGER (was duration_minutes)
+  duration_minutes?: number; // Backwards compatibility
+  location?: string; // VARCHAR(200) (was address)
+  address?: string; // Backwards compatibility
+  is_active: boolean; // BOOLEAN DEFAULT true
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updated_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  // Additional fields for compatibility
+  first_name?: string;
+  last_name?: string;
   profile_photo_url?: string;
-  is_verified: boolean;
-  average_rating: number;
-  total_reviews: number;
-  views_count: number;
-  images: string[];
+  is_verified?: boolean;
+  average_rating?: number;
+  total_reviews?: number;
+  views_count?: number;
+  images?: string[];
 }
 
 export interface CreateServiceData {
-  title: string;
-  description: string;
-  category: ServiceCategory;
-  price: number;
-  duration_minutes: number;
-  address?: string;
-  latitude?: number;
-  longitude?: number;
+  category_id?: number; // Optional reference to categories
+  category?: string; // Backwards compatibility
+  title: string; // Required, max 200 chars
+  description: string; // Required
+  price?: number; // Optional, positive decimal
+  currency?: string; // Optional, defaults to 'ARS', max 3 chars
+  duration_hours?: number; // Optional, positive integer
+  duration_minutes?: number; // Backwards compatibility
+  location?: string; // Optional, max 200 chars
+  address?: string; // Backwards compatibility
+  latitude?: number; // Backwards compatibility
+  longitude?: number; // Backwards compatibility
 }
 
-// Booking Types
-export type BookingStatus = 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
-export type PaymentStatus = 'pending' | 'approved' | 'rejected' | 'cancelled' | 'refunded';
+// Service Images - New table not in old types
+export interface ServiceImage {
+  id: number;
+  service_id: number; // INTEGER REFERENCES services(id)
+  image_url: string; // TEXT NOT NULL
+  caption?: string; // TEXT
+  is_primary: boolean; // BOOLEAN DEFAULT false
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+}
 
+// Booking Types - Aligned with bookings table  
 export interface Booking {
   id: number;
-  customer_id: number;
-  provider_id: number;
-  service_id: number;
-  scheduled_date: string;
-  scheduled_time: string;
-  total_amount: number;
-  status: BookingStatus;
-  payment_status: PaymentStatus;
-  notes?: string;
-  customer_address: string;
-  customer_latitude: number;
-  customer_longitude: number;
-  created_at: string;
-  updated_at: string;
-  service_title: string;
+  client_id?: number; // INTEGER REFERENCES users(id) (was customer_id)
+  customer_id?: number; // Backwards compatibility
+  provider_id: number; // INTEGER REFERENCES users(id)
+  service_id: number; // INTEGER REFERENCES services(id)
+  booking_date?: string; // DATE NOT NULL (was scheduled_date)
+  scheduled_date?: string; // Backwards compatibility
+  booking_time?: string; // TIME NOT NULL (was scheduled_time)
+  scheduled_time?: string; // Backwards compatibility
+  status: string; // VARCHAR(20) DEFAULT 'pending'
+  total_amount?: number; // DECIMAL(10,2)
+  currency?: string; // VARCHAR(3) DEFAULT 'ARS'
+  notes?: string; // TEXT
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updated_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  // Additional fields for compatibility
+  payment_status?: string;
+  service_title?: string;
   service_description?: string;
-  category: ServiceCategory;
-  duration_minutes: number;
-  customer_first_name: string;
-  customer_last_name: string;
+  category?: string;
+  duration_minutes?: number;
+  customer_first_name?: string;
+  customer_last_name?: string;
   customer_photo?: string;
   customer_phone?: string;
-  provider_first_name: string;
-  provider_last_name: string;
+  customer_address?: string;
+  customer_latitude?: number;
+  customer_longitude?: number;
+  provider_first_name?: string;
+  provider_last_name?: string;
   provider_photo?: string;
   provider_phone?: string;
 }
 
 export interface CreateBookingData {
-  service_id: number;
-  scheduled_date: string;
-  scheduled_time: string;
-  notes?: string;
-  customer_address: string;
-  customer_latitude: number;
-  customer_longitude: number;
+  provider_id: number; // Required
+  service_id: number; // Required
+  booking_date: string; // Required, format: YYYY-MM-DD
+  booking_time: string; // Required, format: HH:MM
+  total_amount?: number; // Optional
+  notes?: string; // Optional
 }
 
-// Review Types
+// Review Types - Aligned with reviews table
 export interface Review {
   id: number;
-  customer_id: number;
-  provider_id: number;
-  service_id: number;
-  booking_id: number;
-  rating: number;
-  comment?: string;
-  created_at: string;
-  updated_at: string;
-  customer_first_name: string;
-  customer_last_name: string;
+  booking_id: number; // INTEGER REFERENCES bookings(id)
+  reviewer_id?: number; // INTEGER REFERENCES users(id) (was customer_id)
+  customer_id?: number; // Backwards compatibility
+  reviewed_id?: number; // INTEGER REFERENCES users(id) (was provider_id)  
+  provider_id?: number; // Backwards compatibility
+  service_id?: number; // Backwards compatibility
+  rating: number; // INTEGER CHECK (rating >= 1 AND rating <= 5) NOT NULL
+  comment?: string; // TEXT
+  is_public?: boolean; // BOOLEAN DEFAULT true
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updated_at?: string; // Backwards compatibility
+  // Additional fields for compatibility
+  customer_first_name?: string;
+  customer_last_name?: string;
   customer_photo?: string;
   provider_first_name?: string;
   provider_last_name?: string;
   provider_photo?: string;
-  service_title: string;
+  service_title?: string;
 }
 
 export interface CreateReviewData {
-  booking_id: number;
-  rating: number;
-  comment?: string;
+  booking_id: number; // Required
+  reviewed_id: number; // Required
+  rating: number; // Required, 1-5
+  comment?: string; // Optional
+  is_public?: boolean; // Optional, defaults to true
 }
 
-export interface ReviewStats {
-  average_rating: number;
-  total_reviews: number;
-  rating_distribution: {
-    1: number;
-    2: number;
-    3: number;
-    4: number;
-    5: number;
-  };
+// Chat Types - Aligned with chat_messages and chat_rooms tables
+export interface ChatRoom {
+  id: string; // VARCHAR(100) PRIMARY KEY
+  connection_id: number; // INTEGER REFERENCES explorer_as_connections(id)
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 }
 
-// Chat Types
-export interface Chat {
+export interface ChatMessage {
   id: number;
-  customer_id: number;
-  provider_id: number;
-  booking_id?: number;
-  created_at: string;
-  updated_at: string;
-  other_user_first_name: string;
-  other_user_last_name: string;
-  other_user_photo?: string;
-  service_title?: string;
-  last_message?: string;
-  last_message_time?: string;
-  unread_count: number;
-}
-
-export interface Message {
-  id: number;
-  chat_id: number;
-  sender_id: number;
-  content: string;
-  message_type: 'text' | 'image';
-  is_read: boolean;
-  created_at: string;
-  sender_first_name: string;
-  sender_last_name: string;
-  sender_photo?: string;
+  chat_room_id: string; // VARCHAR(100) REFERENCES chat_rooms(id)
+  sender_id: number; // INTEGER REFERENCES users(id)
+  message: string; // TEXT NOT NULL
+  message_type: string; // VARCHAR(20) DEFAULT 'text'
+  attachment_url?: string; // TEXT
+  is_read: boolean; // BOOLEAN DEFAULT false
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 }
 
 export interface SendMessageData {
-  content: string;
-  message_type?: 'text' | 'image';
+  chat_room_id: string; // Required
+  message: string; // Required
+  message_type?: string; // Optional, defaults to 'text'
+  attachment_url?: string; // Optional
 }
 
-// Notification Types
-export type NotificationType = 'booking' | 'payment' | 'review' | 'chat' | 'system';
-
+// Notification Types - Aligned with notifications table
 export interface Notification {
   id: number;
-  user_id: number;
-  title: string;
-  message: string;
-  type: NotificationType;
-  related_id?: number;
-  is_read: boolean;
-  read_at?: string;
-  created_at: string;
+  user_id: number; // INTEGER REFERENCES users(id)
+  title: string; // VARCHAR(200) NOT NULL
+  message: string; // TEXT NOT NULL
+  type: string; // VARCHAR(50) DEFAULT 'info'
+  is_read: boolean; // BOOLEAN DEFAULT false
+  action_url?: string; // TEXT
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 }
 
-export interface NotificationPreferences {
-  email_notifications: boolean;
-  push_notifications: boolean;
-  sms_notifications: boolean;
-  booking_updates: boolean;
-  payment_updates: boolean;
-  chat_messages: boolean;
-  marketing_emails: boolean;
-}
-
-// Payment Types
+// Payment Types - Aligned with payments table
 export interface Payment {
   id: number;
-  booking_id: number;
-  customer_id: number;
-  amount: number;
-  payment_method: string;
-  external_id?: string;
-  status: 'pending' | 'approved' | 'rejected' | 'cancelled' | 'refunded';
-  created_at: string;
-  updated_at: string;
-  scheduled_date: string;
-  scheduled_time: string;
-  service_title: string;
-  other_user_name: string;
+  booking_id: number; // INTEGER REFERENCES bookings(id)
+  amount: number; // DECIMAL(10,2) NOT NULL
+  currency: string; // VARCHAR(3) DEFAULT 'ARS'
+  payment_method?: string; // VARCHAR(50)
+  payment_status: string; // VARCHAR(20) DEFAULT 'pending'
+  transaction_id?: string; // VARCHAR(100)
+  processed_at?: string; // TIMESTAMP
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 }
 
-export interface PaymentIntent {
-  payment_id: number;
-  payment_url: string;
-  external_id: string;
-  amount: number;
+// Subscription Types - Aligned with subscriptions table
+export interface Subscription {
+  id: number;
+  user_id: number; // INTEGER REFERENCES users(id)
+  plan_type: 'free' | 'basic' | 'premium'; // CHECK constraint
+  status: string; // VARCHAR(20) DEFAULT 'active'
+  started_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  expires_at?: string; // TIMESTAMP
+  auto_renew: boolean; // BOOLEAN DEFAULT false
+  created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 }
 
-export interface EarningsSummary {
-  total_earnings: number;
-  completed_payments: number;
-  pending_payments: number;
-  average_payment: number;
-  monthly_breakdown: Array<{
-    year: number;
-    month: number;
-    earnings: number;
-    payments: number;
-  }>;
-}
+// Validation rules that match database constraints
+export const ValidationRules = {
+  user: {
+    first_name: { required: true, maxLength: 100, minLength: 2 },
+    last_name: { required: true, maxLength: 100, minLength: 2 },
+    email: { required: true, maxLength: 255, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
+    phone: { maxLength: 20, pattern: /^\+?[1-9]\d{1,14}$/ },
+    user_type: { required: true },
+    locality: { maxLength: 100 },
+    address: { maxLength: 1000 },
+    gender: { maxLength: 10 },
+    verification_status: { maxLength: 20 }
+  },
+  service: {
+    title: { required: true, maxLength: 200, minLength: 5 },
+    description: { required: true, minLength: 20 },
+    price: { min: 0, max: 999999.99 },
+    currency: { maxLength: 3 },
+    duration_hours: { min: 0, max: 24 },
+    location: { maxLength: 200 }
+  },
+  category: {
+    name: { required: true, maxLength: 100 },
+    description: { maxLength: 1000 },
+    icon: { maxLength: 50 },
+    group_name: { maxLength: 100 }
+  },
+  booking: {
+    booking_date: { required: true, pattern: /^\d{4}-\d{2}-\d{2}$/ },
+    booking_time: { required: true, pattern: /^\d{2}:\d{2}$/ },
+    total_amount: { min: 0, max: 999999.99 },
+    currency: { maxLength: 3 },
+    notes: { maxLength: 1000 }
+  },
+  review: {
+    rating: { required: true, min: 1, max: 5 },
+    comment: { maxLength: 1000 }
+  },
+  notification: {
+    title: { required: true, maxLength: 200 },
+    message: { required: true, maxLength: 1000 },
+    type: { maxLength: 50 }
+  }
+};
 
 // API Response Types
 export interface ApiResponse<T = any> {
@@ -317,261 +327,84 @@ export interface PaginatedResponse<T> {
   };
 }
 
-// Search and Filter Types
-export interface ServiceFilters {
-  category?: ServiceCategory;
-  latitude?: number;
-  longitude?: number;
-  radius?: number;
-  min_price?: number;
-  max_price?: number;
-  min_rating?: number;
-  search?: string;
-  page?: number;
-  limit?: number;
+// Legacy compatibility types (deprecated, use updated types above)
+export type ServiceCategory = string; // Now dynamic from categories table
+export type BookingStatus = string; // Now flexible from database
+export type PaymentStatus = string; // Now flexible from database  
+export type NotificationType = string; // Now flexible from database
+
+// Extended types for complex operations
+export interface ServiceWithDetails extends Service {
+  category_name?: string;
+  category_icon?: string;
+  user_first_name?: string;
+  user_last_name?: string;
+  user_profile_image?: string;
+  user_verification_status?: string;
+  service_images?: ServiceImage[];
+  average_rating?: number;
+  total_reviews?: number;
 }
 
-export interface ProviderFilters {
-  category?: ServiceCategory;
-  latitude?: number;
-  longitude?: number;
-  radius?: number;
-  min_rating?: number;
-  page?: number;
-  limit?: number;
+export interface BookingWithDetails extends Booking {
+  service_title?: string;
+  service_description?: string;
+  category_name?: string;
+  client_first_name?: string;
+  client_last_name?: string;
+  client_phone?: string;
+  provider_first_name?: string;
+  provider_last_name?: string;
+  provider_phone?: string;
 }
 
-// Map Types
-export interface MapLocation {
-  lat: number;
-  lng: number;
-  address?: string;
+export interface ReviewWithDetails extends Review {
+  reviewer_first_name?: string;
+  reviewer_last_name?: string;
+  reviewed_first_name?: string;
+  reviewed_last_name?: string;
+  service_title?: string;
+  category_name?: string;
 }
 
-// Form Types
-export interface ContactForm {
-  name: string;
-  email: string;
-  phone?: string;
-  message: string;
-}
-
-// Category Types
-export interface Category {
-  value: ServiceCategory;
-  label: string;
-}
-
-// Error Types
-export interface FormError {
-  field: string;
-  message: string;
-}
-
-// Professional Types (for backwards compatibility)
-export interface CompleteProfileData {
-  about_me?: string;
-  birth_date?: string;
-  city?: string;
-  dni?: string;
-  dni_procedure_number?: string;
-  has_mobility?: boolean;
-  professional_info?: {
-    profession?: string;
-    license_number?: string;
-    specialization?: string;
-    years_experience?: number;
+// Additional types for backwards compatibility
+export interface ReviewStats {
+  average_rating: number;
+  total_reviews: number;
+  rating_distribution: {
+    1: number;
+    2: number;
+    3: number;
+    4: number;
+    5: number;
   };
 }
 
-export interface VerificationDocuments {
-  dni_front?: File;
-  dni_back?: File;
-  professional_license?: File;
-  selfie_with_dni?: File;
-  portfolio_images?: File[];
-}
-
-export interface CreateReferenceData {
-  name: string;
-  phone: string;
-  relationship: string;
-  comments?: string;
-}
-
-export interface UserReference {
+export interface Chat {
   id: number;
-  user_id: number;
-  name: string;
-  phone: string;
-  relationship: string;
-  comments?: string;
-  is_verified: boolean;
-  created_at: string;
-}
-
-export interface CreatePortfolioData {
-  title: string;
-  description: string;
-  category_id: number;
-  images?: File[];
-  completed_date?: string;
-}
-
-export interface PortfolioItem {
-  id: number;
-  user_id: number;
-  title: string;
-  description: string;
-  category_id: number;
-  category_name?: string;
-  images: string[];
-  completed_date?: string;
-  created_at: string;
-}
-
-export interface AvailabilitySchedule {
-  monday?: { start: string; end: string; available: boolean };
-  tuesday?: { start: string; end: string; available: boolean };
-  wednesday?: { start: string; end: string; available: boolean };
-  thursday?: { start: string; end: string; available: boolean };
-  friday?: { start: string; end: string; available: boolean };
-  saturday?: { start: string; end: string; available: boolean };
-  sunday?: { start: string; end: string; available: boolean };
-}
-
-export interface UserAvailability {
-  id: number;
-  user_id: number;
-  schedule: AvailabilitySchedule;
-  timezone: string;
-  updated_at: string;
-}
-
-export interface CreateWorkLocationData {
-  location_name: string;
-  is_primary?: boolean;
-}
-
-export interface WorkLocation {
-  id: number;
-  user_id: number;
-  location_name: string;
-  is_primary: boolean;
-  created_at: string;
-}
-
-export interface ProfileCompletion {
-  percentage: number;
-  missing_fields: string[];
-  completed_sections: string[];
-}
-
-// Ranking Types (for backwards compatibility)
-export interface TopProfessional {
-  id: number;
-  first_name: string;
-  last_name: string;
-  profile_image?: string;
-  average_rating: number;
-  total_reviews: number;
-  category_name: string;
-  locality?: string;
-  rank: number;
-}
-
-export interface TrendingProfessional {
-  id: number;
-  first_name: string;
-  last_name: string;
-  profile_image?: string;
-  category_name: string;
-  recent_bookings: number;
-  growth_rate: number;
-}
-
-export interface UserRanking {
-  user_id: number;
-  rank: number;
-  tier: RankingTier;
-  points: number;
-  category_id?: number;
-  category_name?: string;
-  period: string;
-}
-
-export interface RankingTier {
-  id: number;
-  name: string;
-  min_points: number;
-  max_points?: number;
-  color: string;
-  icon: string;
-  benefits: string[];
-}
-
-// Report Types (for backwards compatibility)
-export interface UserReport {
-  id: number;
-  reporter_id: number;
-  reported_id: number;
-  type: ReportType;
-  reason: string;
-  description?: string;
-  status: string;
-  admin_notes?: string;
+  customer_id: number;
+  provider_id: number;
+  booking_id?: number;
   created_at: string;
   updated_at: string;
+  other_user_first_name: string;
+  other_user_last_name: string;
+  other_user_photo?: string;
+  service_title?: string;
+  last_message?: string;
+  last_message_time?: string;
+  unread_count: number;
 }
 
-export interface CreateReportData {
-  reported_id: number;
-  type: ReportType;
-  reason: string;
-  description?: string;
-}
-
-export interface ReportStats {
-  total_reports: number;
-  pending_reports: number;
-  resolved_reports: number;
-  by_type: Record<ReportType, number>;
-}
-
-export type ReportType = 'user' | 'service' | 'booking' | 'review' | 'other';
-
-// Subscription Types (for backwards compatibility)
-export interface Subscription {
+export interface Message {
   id: number;
-  user_id: number;
-  plan_type: 'free' | 'basic' | 'premium';
-  status: string;
-  started_at: string;
-  expires_at?: string;
-  auto_renew: boolean;
+  chat_id: number;
+  sender_id: number;
+  content: string;
+  message_type: 'text' | 'image';
+  is_read: boolean;
   created_at: string;
-}
-
-export interface UserSubscription extends Subscription {
-  user_first_name?: string;
-  user_last_name?: string;
-  user_email?: string;
-}
-
-export interface SubscriptionPayment {
-  id: number;
-  subscription_id: number;
-  amount: number;
-  currency: string;
-  payment_date: string;
-  payment_method?: string;
-  transaction_id?: string;
-}
-
-export interface SubscriptionBenefits {
-  plan_type: 'free' | 'basic' | 'premium';
-  features: string[];
-  limits: Record<string, number>;
-  price_monthly?: number;
-  price_yearly?: number;
+  sender_first_name: string;
+  sender_last_name: string;
+  sender_photo?: string;
 }

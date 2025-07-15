@@ -2,12 +2,12 @@ import { Category } from '@/types';
 
 // Service Categories
 export const SERVICE_CATEGORIES: Category[] = [
-  { value: 'plomeria', label: 'Plomería' },
-  { value: 'electricidad', label: 'Electricidad' },
-  { value: 'limpieza', label: 'Limpieza' },
-  { value: 'reparaciones', label: 'Reparaciones' },
-  { value: 'belleza', label: 'Belleza' },
-  { value: 'otros', label: 'Otros' },
+  { id: 1, name: 'Plomería', description: 'Servicios de plomería', is_active: true, created_at: '' },
+  { id: 2, name: 'Electricidad', description: 'Servicios eléctricos', is_active: true, created_at: '' },
+  { id: 3, name: 'Limpieza', description: 'Servicios de limpieza', is_active: true, created_at: '' },
+  { id: 4, name: 'Reparaciones', description: 'Servicios de reparación', is_active: true, created_at: '' },
+  { id: 5, name: 'Belleza', description: 'Servicios de belleza', is_active: true, created_at: '' },
+  { id: 6, name: 'Otros', description: 'Otros servicios', is_active: true, created_at: '' },
 ];
 
 // Booking Status
