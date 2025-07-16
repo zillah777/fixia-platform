@@ -1,3 +1,8 @@
+/* Tailwind CSS Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Import AssetClass-inspired Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&display=swap');
@@ -2083,4 +2088,99 @@ a:focus {
   0%, 100% { transform: translateX(0); }
   10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
   20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+/* Custom component classes for the new dashboard features */
+@layer components {
+  .card {
+    @apply bg-white rounded-xl shadow-sm border p-6;
+  }
+  
+  .card.glass {
+    @apply bg-white/80 backdrop-blur-sm border-white/20;
+  }
+  
+  .btn {
+    @apply inline-flex items-center px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer;
+  }
+  
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow-md;
+  }
+  
+  .btn-secondary {
+    @apply bg-purple-600 text-white hover:bg-purple-700 shadow-sm hover:shadow-md;
+  }
+  
+  .btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700 shadow-sm hover:shadow-md;
+  }
+  
+  .btn-warning {
+    @apply bg-yellow-600 text-white hover:bg-yellow-700 shadow-sm hover:shadow-md;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-900;
+  }
+  
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm;
+  }
+  
+  .btn-icon {
+    @apply p-2 rounded-md;
+  }
+  
+  .btn-magnetic {
+    @apply transform hover:scale-105;
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1;
+  }
+  
+  .hover-magnetic {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+  
+  .hover-bounce {
+    @apply transition-transform duration-200 hover:scale-110;
+  }
+  
+  .bg-gradient-primary {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600;
+  }
+  
+  .bg-gradient-secondary {
+    @apply bg-gradient-to-r from-purple-500 to-purple-600;
+  }
+  
+  .bg-gradient-success {
+    @apply bg-gradient-to-r from-green-500 to-green-600;
+  }
+  
+  .text-primary {
+    @apply text-gray-900;
+  }
+  
+  .text-secondary {
+    @apply text-gray-600;
+  }
+  
+  .text-tertiary {
+    @apply text-gray-500;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
 }
