@@ -27,6 +27,7 @@ const comparePassword = async (password, hash) => {
 // POST /api/auth/register
 exports.register = async (req, res) => {
   try {
+    console.log('Registration request body:', req.body);
     const { 
       first_name, 
       last_name, 
@@ -38,8 +39,11 @@ exports.register = async (req, res) => {
       address
     } = req.body;
 
+    console.log('Parsed user_type:', user_type, 'Type:', typeof user_type);
+
     // Validation
     if (!first_name || !last_name || !email || !password) {
+      console.log('Missing required fields:', { first_name, last_name, email, password: !!password });
       return res.status(400).json({
         success: false,
         error: 'Todos los campos requeridos deben ser proporcionados'
@@ -47,6 +51,7 @@ exports.register = async (req, res) => {
     }
 
     if (!validateEmail(email)) {
+      console.log('Invalid email:', email);
       return res.status(400).json({
         success: false,
         error: 'Email inválido'
@@ -54,6 +59,7 @@ exports.register = async (req, res) => {
     }
 
     if (!validatePassword(password)) {
+      console.log('Invalid password length or format');
       return res.status(400).json({
         success: false,
         error: 'La contraseña debe tener al menos 8 caracteres'
@@ -61,6 +67,7 @@ exports.register = async (req, res) => {
     }
 
     if (!['customer', 'provider'].includes(user_type)) {
+      console.log('Invalid user_type:', user_type, 'Expected: customer or provider');
       return res.status(400).json({
         success: false,
         error: 'Tipo de usuario inválido'
