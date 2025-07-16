@@ -3,9 +3,10 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
-  env: {
-    NEXT_PUBLIC_API_URL: 'http://localhost:5000',
-  },
+  // Environment variables are handled by .env.local file
+  // env: {
+  //   NEXT_PUBLIC_API_URL: 'http://localhost:5000',
+  // },
   // Optimize build for Vercel
   experimental: {
     optimizePackageImports: ['lucide-react', '@heroicons/react'],

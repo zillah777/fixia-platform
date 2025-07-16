@@ -3,6 +3,9 @@ import { toast } from 'react-hot-toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
+// Debug log to verify environment variable is loaded
+console.log('🔗 API_URL configured as:', API_URL);
+
 // Create axios instance
 const api: AxiosInstance = axios.create({
   baseURL: API_URL,
