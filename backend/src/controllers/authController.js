@@ -27,7 +27,10 @@ const comparePassword = async (password, hash) => {
 // POST /api/auth/register
 exports.register = async (req, res) => {
   try {
-    console.log('Registration request body:', req.body);
+    console.log('Registration request body:', JSON.stringify(req.body, null, 2));
+    console.log('req.body.user_type:', req.body.user_type);
+    console.log('req.body.user_type type:', typeof req.body.user_type);
+    
     const { 
       first_name, 
       last_name, 
@@ -39,7 +42,7 @@ exports.register = async (req, res) => {
       address
     } = req.body;
 
-    console.log('Parsed user_type:', user_type, 'Type:', typeof user_type);
+    console.log('After destructuring - user_type:', user_type, 'Type:', typeof user_type);
 
     // Validation
     if (!first_name || !last_name || !email || !password) {
@@ -66,8 +69,10 @@ exports.register = async (req, res) => {
       });
     }
 
-    if (!['customer', 'provider'].includes(user_type)) {
-      console.log('Invalid user_type:', user_type, 'Expected: customer or provider');
+    // Ensure user_type is a valid string
+    const validUserTypes = ['customer', 'provider'];
+    if (!user_type || !validUserTypes.includes(user_type)) {
+      console.log('Invalid user_type:', user_type, 'Type:', typeof user_type, 'Expected: customer or provider');
       return res.status(400).json({
         success: false,
         error: 'Tipo de usuario inválido'
