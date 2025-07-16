@@ -17,6 +17,7 @@ import {
 
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginCredentials } from '@/types';
+import Logo from '@/components/Logo';
 
 const loginSchema = yup.object().shape({
   email: yup
@@ -75,10 +76,12 @@ const LoginPage: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Verificando sesión...</p>
+      <div className="hero section-padding-lg">
+        <div className="container">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-6"></div>
+            <p className="text-secondary font-medium">Verificando sesión...</p>
+          </div>
         </div>
       </div>
     );
@@ -86,10 +89,12 @@ const LoginPage: NextPage = () => {
 
   if (user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Redirigiendo...</p>
+      <div className="hero section-padding-lg">
+        <div className="container">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-6"></div>
+            <p className="text-secondary font-medium">Redirigiendo...</p>
+          </div>
         </div>
       </div>
     );
@@ -102,162 +107,174 @@ const LoginPage: NextPage = () => {
         <meta name="description" content="Inicia sesión en tu cuenta de Fixia para acceder a todos nuestros servicios" />
       </Head>
 
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          {/* Header */}
-          <div className="text-center">
-            <Link href="/">
-              <h2 className="text-3xl font-bold text-blue-600 mb-2 cursor-pointer">Fixia</h2>
-            </Link>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
-              Iniciar Sesión
-            </h3>
-            <p className="text-gray-600">
-              Accede a tu cuenta para gestionar tus servicios
-            </p>
-          </div>
-
-          {/* Login Form */}
-          <div className="bg-white rounded-xl shadow-sm border p-8">
-            {loginError && (
-              <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-                <div className="flex items-center">
-                  <ExclamationTriangleIcon className="h-5 w-5 text-red-600 mr-2" />
-                  <p className="text-sm text-red-700">{loginError}</p>
+      {/* Background with Gradient */}
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm"></div>
+        <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-primary opacity-10 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-secondary opacity-10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
+        
+        <div className="relative flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-md w-full space-y-8">
+            {/* Header */}
+            <div className="text-center animate-fade-in">
+              <Link href="/">
+                <div className="hover-lift cursor-pointer inline-block mb-6">
+                  <Logo size="xl" variant="gradient" />
                 </div>
-              </div>
-            )}
+              </Link>
+              <h1 className="text-3xl font-bold text-primary mb-4">
+                Bienvenido de vuelta
+              </h1>
+              <p className="text-secondary text-lg">
+                Accede a tu cuenta en las páginas amarillas del futuro
+              </p>
+            </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Email Field */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
-                </label>
-                <div className="relative">
-                  <EnvelopeIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    {...register('email')}
-                    type="email"
-                    id="email"
-                    autoComplete="email"
-                    className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.email ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                    placeholder="tu@email.com"
-                  />
+            {/* Login Form */}
+            <div className="card glass hover-lift animate-scale-in" style={{animationDelay: '0.2s'}}>
+              {loginError && (
+                <div className="mb-6 bg-gradient-to-r from-error-50 to-error-100 border border-error-200 rounded-xl p-4 animate-shake">
+                  <div className="flex items-center">
+                    <ExclamationTriangleIcon className="h-5 w-5 text-error-600 mr-3 animate-bounce" />
+                    <p className="text-sm text-error-700 font-medium">{loginError}</p>
+                  </div>
                 </div>
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-                )}
-              </div>
+              )}
 
-              {/* Password Field */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                  Contraseña
-                </label>
-                <div className="relative">
-                  <LockClosedIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    {...register('password')}
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    autoComplete="current-password"
-                    className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                      errors.password ? 'border-red-300' : 'border-gray-300'
-                    }`}
-                    placeholder="••••••••"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showPassword ? (
-                      <EyeSlashIcon className="h-5 w-5" />
-                    ) : (
-                      <EyeIcon className="h-5 w-5" />
-                    )}
-                  </button>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {/* Email Field */}
+                <div className="space-y-2">
+                  <label htmlFor="email" className="form-label">
+                    Email
+                  </label>
+                  <div className="relative">
+                    <EnvelopeIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400 transition-colors" />
+                    <input
+                      {...register('email')}
+                      type="email"
+                      id="email"
+                      autoComplete="email"
+                      className={`form-input pl-12 pr-4 py-4 glass hover-lift w-full ${
+                        errors.email ? 'border-error-300 focus:border-error-500 focus:ring-error-500' : ''
+                      }`}
+                      placeholder="tu@email.com"
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="form-error animate-slide-down">{errors.email.message}</p>
+                  )}
                 </div>
-                {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
-                )}
-              </div>
 
-              {/* Forgot Password Link */}
-              <div className="text-right">
-                <Link href="/recuperar-password">
-                  <span className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer">
-                    ¿Olvidaste tu contraseña?
+                {/* Password Field */}
+                <div className="space-y-2">
+                  <label htmlFor="password" className="form-label">
+                    Contraseña
+                  </label>
+                  <div className="relative">
+                    <LockClosedIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400 transition-colors" />
+                    <input
+                      {...register('password')}
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
+                      autoComplete="current-password"
+                      className={`form-input pl-12 pr-12 py-4 glass hover-lift w-full ${
+                        errors.password ? 'border-error-300 focus:border-error-500 focus:ring-error-500' : ''
+                      }`}
+                      placeholder="••••••••"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-primary-600 transition-colors hover-bounce p-1"
+                    >
+                      {showPassword ? (
+                        <EyeSlashIcon className="h-5 w-5" />
+                      ) : (
+                        <EyeIcon className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="form-error animate-slide-down">{errors.password.message}</p>
+                  )}
+                </div>
+
+                {/* Forgot Password Link */}
+                <div className="text-right">
+                  <Link href="/recuperar-password">
+                    <span className="text-sm text-primary-600 hover:text-primary-700 cursor-pointer hover-lift hover-magnetic font-medium transition-colors">
+                      ¿Olvidaste tu contraseña?
+                    </span>
+                  </Link>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn btn-primary btn-lg w-full btn-magnetic hover-lift animate-glow"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                      Iniciando sesión...
+                    </>
+                  ) : (
+                    <>
+                      Iniciar Sesión
+                      <ArrowRightIcon className="h-5 w-5 ml-2" />
+                    </>
+                  )}
+                </button>
+
+                {/* Demo Accounts */}
+                <div className="mt-8 pt-6 border-t border-neutral-200">
+                  <p className="text-sm text-secondary text-center mb-4 font-medium">Acceso rápido para pruebas:</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        reset({ email: 'explorador@demo.com', password: 'demo123' });
+                      }}
+                      className="btn btn-ghost btn-sm hover-lift hover-magnetic"
+                    >
+                      🔍 Explorador Demo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        reset({ email: 'as@demo.com', password: 'demo123' });
+                      }}
+                      className="btn btn-ghost btn-sm hover-lift hover-magnetic"
+                    >
+                      🛠️ AS Demo
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            {/* Register Link */}
+            <div className="text-center animate-fade-in" style={{animationDelay: '0.4s'}}>
+              <p className="text-secondary">
+                ¿No tienes una cuenta?{' '}
+                <Link href="/auth/registro">
+                  <span className="text-primary-600 hover:text-primary-700 font-semibold cursor-pointer hover-lift hover-magnetic">
+                    Regístrate aquí
                   </span>
                 </Link>
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Iniciando sesión...
-                  </>
-                ) : (
-                  <>
-                    Iniciar Sesión
-                    <ArrowRightIcon className="h-5 w-5 ml-2" />
-                  </>
-                )}
-              </button>
-            </form>
-
-            {/* Demo Accounts */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-600 text-center mb-4">Cuentas de demostración:</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <button
-                  onClick={() => {
-                    reset({ email: 'cliente@demo.com', password: 'demo123' });
-                  }}
-                  className="px-3 py-2 text-xs border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  👤 Cliente Demo
-                </button>
-                <button
-                  onClick={() => {
-                    reset({ email: 'profesional@demo.com', password: 'demo123' });
-                  }}
-                  className="px-3 py-2 text-xs border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  🔧 Profesional Demo
-                </button>
-              </div>
+              </p>
             </div>
-          </div>
 
-          {/* Register Link */}
-          <div className="text-center">
-            <p className="text-gray-600">
-              ¿No tienes una cuenta?{' '}
-              <Link href="/auth/registro">
-                <span className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
-                  Regístrate aquí
+            {/* Back to Home */}
+            <div className="text-center animate-fade-in" style={{animationDelay: '0.6s'}}>
+              <Link href="/">
+                <span className="text-tertiary hover:text-secondary text-sm cursor-pointer hover-lift hover-magnetic inline-flex items-center">
+                  ← Volver al inicio
                 </span>
               </Link>
-            </p>
-          </div>
-
-          {/* Back to Home */}
-          <div className="text-center">
-            <Link href="/">
-              <span className="text-gray-500 hover:text-gray-700 text-sm cursor-pointer">
-                ← Volver al inicio
-              </span>
-            </Link>
+            </div>
           </div>
         </div>
       </div>
