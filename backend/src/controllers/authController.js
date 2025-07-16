@@ -27,134 +27,15 @@ const comparePassword = async (password, hash) => {
 // POST /api/auth/register
 exports.register = async (req, res) => {
   try {
-    console.log('=== REGISTRATION START ===');
-    console.log('Request body:', req.body);
-    
-    const { 
-      first_name, 
-      last_name, 
-      email, 
-      password, 
-      user_type = 'customer',
-      phone,
-      location,
-      address
-    } = req.body;
-    
-    console.log('Extracted data:', { first_name, last_name, email, user_type, phone, location, address });
-
-    // Validation
-    console.log('Starting validation...');
-    if (!first_name || !last_name || !email || !password) {
-      console.log('Missing required fields');
-      return res.status(400).json({
-        success: false,
-        error: 'Todos los campos requeridos deben ser proporcionados'
-      });
-    }
-
-    console.log('Validating email...');
-    if (!validateEmail(email)) {
-      console.log('Invalid email');
-      return res.status(400).json({
-        success: false,
-        error: 'Email inválido'
-      });
-    }
-
-    console.log('Validating password...');
-    if (!validatePassword(password)) {
-      console.log('Invalid password');
-      return res.status(400).json({
-        success: false,
-        error: 'La contraseña debe tener al menos 8 caracteres'
-      });
-    }
-
-    // Transform customer to client for database compatibility
-    console.log('Transforming user_type...');
-    const dbUserType = user_type === 'customer' ? 'client' : user_type;
-    console.log('Original user_type:', user_type, 'Database user_type:', dbUserType);
-    
-    if (!['client', 'provider'].includes(dbUserType)) {
-      console.log('Invalid user_type');
-      return res.status(400).json({
-        success: false,
-        error: 'Tipo de usuario inválido'
-      });
-    }
-
-    // Check if user already exists
-    console.log('Checking existing user...');
-    const existingUser = await query(
-      'SELECT id FROM users WHERE email = $1',
-      [email]
-    );
-
-    if (existingUser.rows.length > 0) {
-      console.log('User already exists');
-      return res.status(400).json({
-        success: false,
-        error: 'Este email ya está registrado'
-      });
-    }
-
-    // Hash password
-    console.log('Hashing password...');
-    const password_hash = await hashPassword(password);
-
-    // Create user
-    console.log('Creating user in database...');
-    const result = await query(`
-      INSERT INTO users (
-        first_name, last_name, email, password_hash, user_type,
-        phone, locality, address
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      RETURNING *
-    `, [
-      first_name, last_name, email, password_hash, dbUserType,
-      phone || null, location || null, address || null
-    ]);
-
-    console.log('User created successfully:', result.rows[0]);
-    const user = result.rows[0];
-    
-    console.log('Sanitizing user...');
-    const sanitizedUser = sanitizeUser(user);
-    console.log('Sanitized user:', sanitizedUser);
-    
-    // Transform client back to customer for frontend
-    if (sanitizedUser.user_type === 'client') {
-      sanitizedUser.user_type = 'customer';
-    }
-    console.log('Transformed user:', sanitizedUser);
-
-    // Generate token
-    console.log('Generating token...');
-    const token = generateToken({ 
-      id: user.id, 
-      email: user.email, 
-      user_type: user.user_type 
-    });
-    console.log('Token generated successfully');
-
-    // Skip notification preferences for now - not critical for registration
-
-    console.log('Sending success response...');
-    res.status(201).json({
+    // Test 1: Basic response
+    return res.status(200).json({
       success: true,
-      message: 'Usuario registrado exitosamente',
-      data: {
-        user: sanitizedUser,
-        token
-      }
+      message: 'Test response - registration endpoint working',
+      data: req.body
     });
-    console.log('=== REGISTRATION SUCCESS ===');
-
+    
   } catch (error) {
-    console.error('=== REGISTRATION ERROR ===');
-    console.error('Error details:', error);
-    console.error('Error stack:', error.stack);
+    console.error('Registration error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
