@@ -34,9 +34,8 @@ exports.register = async (req, res) => {
       password, 
       user_type = 'customer',
       phone,
-      address,
-      latitude,
-      longitude 
+      location,
+      address
     } = req.body;
 
     // Validation
@@ -88,12 +87,12 @@ exports.register = async (req, res) => {
     const result = await query(`
       INSERT INTO users (
         first_name, last_name, email, password_hash, user_type, 
-        phone, address, latitude, longitude
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        phone, locality, address
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
     `, [
       first_name, last_name, email, password_hash, user_type,
-      phone, address, latitude, longitude
+      phone, location, address
     ]);
 
     const user = result.rows[0];
