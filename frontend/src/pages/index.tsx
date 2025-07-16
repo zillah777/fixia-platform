@@ -253,11 +253,11 @@ const LandingPage: NextPage = () => {
         <section className="hero section-padding-lg">
           <div className="container">
             <div className="text-center fade-in-on-scroll">
-              <h1 className="hero-title animate-fade-in">
-                Donde la Innovación Encuentra la Experiencia
+              <h1 className="hero-title animate-fade-in text-white">
+                Conectando Ases y Exploradores
               </h1>
-              <p className="hero-subtitle animate-slide-up stagger-1">
-                Bienvenido al futuro de los servicios profesionales. Una plataforma que no solo conecta, sino que <strong>revoluciona</strong> la manera en que <strong>Exploradores</strong> y <strong>Especialistas</strong> crean valor juntos.
+              <p className="hero-subtitle animate-slide-up stagger-1 text-white">
+                La plataforma que conecta a los mejores en sus oficios y habilidades con personas que necesitan servicios de calidad. <strong>Sin comisiones, sin intermediarios.</strong>
               </p>
 
               {/* Modern Search Bar */}
