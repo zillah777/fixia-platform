@@ -98,7 +98,7 @@ const RegistroPage: NextPage = () => {
   } = useForm<RegisterFormData>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
-      user_type: (router.query.type as string) || 'customer'
+      user_type: (router.query.type === 'provider' ? 'provider' : 'customer') as 'customer' | 'provider'
     }
   });
 
