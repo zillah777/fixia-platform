@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { dashboardService, landingService, DashboardStats } from '@/services/dashboard';
+import { dashboardService, landingService, DashboardStats, ServiceCategory, FeaturedProfessional, Testimonial } from '@/services/dashboard';
 
 /**
  * Custom Hook for AS Dashboard Data
@@ -40,9 +40,9 @@ export const useASDashboardData = () => {
  * Manages service categories, professionals, and testimonials
  */
 export const useLandingData = () => {
-  const [categories, setCategories] = useState([]);
-  const [professionals, setProfessionals] = useState([]);
-  const [testimonials, setTestimonials] = useState([]);
+  const [categories, setCategories] = useState<ServiceCategory[]>([]);
+  const [professionals, setProfessionals] = useState<FeaturedProfessional[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
