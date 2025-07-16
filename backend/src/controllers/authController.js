@@ -27,7 +27,6 @@ const comparePassword = async (password, hash) => {
 // POST /api/auth/register
 exports.register = async (req, res) => {
   try {
-    console.log('Registration request body:', req.body);
     const { 
       first_name, 
       last_name, 
@@ -87,13 +86,11 @@ exports.register = async (req, res) => {
     // Create user
     const result = await query(`
       INSERT INTO users (
-        first_name, last_name, email, password_hash, user_type, 
-        phone, locality, address
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        first_name, last_name, email, password_hash, user_type
+      ) VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     `, [
-      first_name, last_name, email, password_hash, user_type,
-      phone, location || null, address || null
+      first_name, last_name, email, password_hash, user_type
     ]);
 
     const user = result.rows[0];
