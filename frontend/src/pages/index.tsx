@@ -197,16 +197,44 @@ const LandingPage: NextPage = () => {
               <Logo size="md" variant="primary" />
               
               <nav className="hidden md:flex items-center gap-8">
-                <a href="#como-funciona" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <a 
+                  href="#como-funciona" 
+                  className="text-gray-600 hover:text-primary-600 transition-colors duration-200 hover:underline underline-offset-4"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
                   Cómo funciona
                 </a>
-                <a href="#servicios" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <a 
+                  href="#servicios" 
+                  className="text-gray-600 hover:text-primary-600 transition-colors duration-200 hover:underline underline-offset-4"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
                   Servicios
                 </a>
-                <a href="#profesionales" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <a 
+                  href="#profesionales" 
+                  className="text-gray-600 hover:text-primary-600 transition-colors duration-200 hover:underline underline-offset-4"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('profesionales')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
                   Especialistas
                 </a>
-                <a href="#contacto" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <a 
+                  href="#contacto" 
+                  className="text-gray-600 hover:text-primary-600 transition-colors duration-200 hover:underline underline-offset-4"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
                   Contacto
                 </a>
               </nav>
@@ -306,7 +334,7 @@ const LandingPage: NextPage = () => {
                     <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-tight">
                       Conectando
                       <br />
-                      <GradientText variant="rainbow" className="text-6xl md:text-7xl lg:text-8xl" animate>
+                      <GradientText variant="brand" className="text-6xl md:text-7xl lg:text-8xl" animate>
                         Ases y Exploradores
                       </GradientText>
                     </h1>
@@ -336,8 +364,14 @@ const LandingPage: NextPage = () => {
                             className="w-full pl-12 pr-4 py-6 text-lg bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all placeholder-white/60 text-white"
                           />
                         </div>
-                        <Button variant="gradient" size="lg" className="w-full" type="submit">
-                          <RocketLaunchIcon className="h-5 w-5 mr-2" />
+                        <Button 
+                          variant="gradient" 
+                          size="lg" 
+                          className="w-full group" 
+                          type="submit"
+                          disabled={!searchQuery.trim()}
+                        >
+                          <RocketLaunchIcon className="h-5 w-5 mr-2 group-hover:animate-pulse" />
                           Buscar Ahora
                         </Button>
                       </form>
@@ -369,7 +403,7 @@ const LandingPage: NextPage = () => {
         <section className="py-20 bg-gradient-to-br from-white to-gray-50">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center mb-16">
-              <GradientText variant="primary" className="text-4xl md:text-5xl mb-4">
+              <GradientText variant="brand" className="text-4xl md:text-5xl mb-4">
                 Por qué somos diferentes
               </GradientText>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -407,7 +441,7 @@ const LandingPage: NextPage = () => {
           <AnimatedBackground variant="particles" className="absolute inset-0" />
           <div className="max-w-6xl mx-auto px-4 relative z-10">
             <div className="text-center mb-16">
-              <GradientText variant="sunset" className="text-5xl md:text-6xl mb-6">
+              <GradientText variant="professional" className="text-5xl md:text-6xl mb-6">
                 Servicios que Transforman
               </GradientText>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -502,7 +536,7 @@ const LandingPage: NextPage = () => {
         <section id="profesionales" className="py-20 bg-gradient-to-br from-gray-50 to-white relative">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center mb-16">
-              <GradientText variant="primary" className="text-5xl md:text-6xl mb-6">
+              <GradientText variant="brand" className="text-5xl md:text-6xl mb-6">
                 Especialistas de Elite
               </GradientText>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -608,7 +642,7 @@ const LandingPage: NextPage = () => {
           <AnimatedBackground variant="geometric" className="absolute inset-0" />
           <div className="max-w-6xl mx-auto px-4 relative z-10">
             <div className="text-center mb-16">
-              <GradientText variant="ocean" className="text-4xl md:text-5xl mb-4">
+              <GradientText variant="trust" className="text-4xl md:text-5xl mb-4">
                 Resultados que Hablan
               </GradientText>
               <p className="text-xl text-white/80">Números que demuestran nuestra excelencia</p>
@@ -616,25 +650,25 @@ const LandingPage: NextPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <Card variant="glass" className="p-8 text-center group hover:scale-105 transition-transform">
                 <div className="text-5xl font-bold text-white mb-3 group-hover:animate-bounce">
-                  <GradientText variant="sunset">500+</GradientText>
+                  <GradientText variant="brand">500+</GradientText>
                 </div>
                 <div className="text-white/80 font-medium">Especialistas de Elite</div>
               </Card>
               <Card variant="glass" className="p-8 text-center group hover:scale-105 transition-transform">
                 <div className="text-5xl font-bold text-white mb-3 group-hover:animate-bounce">
-                  <GradientText variant="sunset">2,000+</GradientText>
+                  <GradientText variant="brand">2,000+</GradientText>
                 </div>
                 <div className="text-white/80 font-medium">Proyectos Transformados</div>
               </Card>
               <Card variant="glass" className="p-8 text-center group hover:scale-105 transition-transform">
                 <div className="text-5xl font-bold text-white mb-3 group-hover:animate-bounce">
-                  <GradientText variant="sunset">4.8</GradientText>
+                  <GradientText variant="brand">4.8</GradientText>
                 </div>
                 <div className="text-white/80 font-medium">Calificación Promedio</div>
               </Card>
               <Card variant="glass" className="p-8 text-center group hover:scale-105 transition-transform">
                 <div className="text-5xl font-bold text-white mb-3 group-hover:animate-bounce">
-                  <GradientText variant="sunset">98%</GradientText>
+                  <GradientText variant="brand">98%</GradientText>
                 </div>
                 <div className="text-white/80 font-medium">Resultados Excepcionales</div>
               </Card>
@@ -652,7 +686,7 @@ const LandingPage: NextPage = () => {
                 <span className="text-sm font-medium text-primary-800">¡Únete a la Revolución!</span>
               </div>
               
-              <GradientText variant="rainbow" className="text-5xl md:text-6xl mb-6">
+              <GradientText variant="professional" className="text-5xl md:text-6xl mb-6">
                 Tu Proyecto Excepcional Te Espera
               </GradientText>
               
@@ -691,7 +725,7 @@ const LandingPage: NextPage = () => {
                   La evolución digital de los servicios profesionales. Donde cada conexión es el inicio de algo extraordinario.
                 </p>
                 <div className="flex space-x-4">
-                  <GradientText variant="sunset" className="font-medium">Síguenos:</GradientText>
+                  <GradientText variant="brand" className="font-medium">Síguenos:</GradientText>
                 </div>
               </div>
 
