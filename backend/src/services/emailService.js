@@ -41,7 +41,14 @@ class EmailService {
         <div style="padding: 24px;">
             <div class="container">
                 <div class="header">
-                    <div class="logo">🔧 Fixia</div>
+                    <div class="logo">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                            <rect x="2" y="2" width="28" height="28" rx="6" fill="white" />
+                            <path d="M9 9 L9 23 L11 23 L11 17 L18 17 L18 15 L11 15 L11 11 L19 11 L19 9 Z" fill="#2563eb" />
+                            <path d="M20 15 L22.5 12.5 L24 14 L21.5 16.5 L24 19 L22.5 20.5 L20 18 L17.5 20.5 L16 19 L18.5 16.5 L16 14 L17.5 12.5 Z" fill="#2563eb" />
+                        </svg>
+                        Fixia
+                    </div>
                     <div class="tagline">El marketplace de servicios profesionales de Chubut</div>
                 </div>
                 <div class="content">
