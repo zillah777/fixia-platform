@@ -103,13 +103,7 @@ const Logo: React.FC<LogoProps> = ({
             className={`font-bold tracking-tight ${colors.textColor}`}
             style={{ fontSize }}
           >
-            fixia
-          </span>
-          <span 
-            className={`font-medium tracking-wide uppercase ${colors.subtextColor}`}
-            style={{ fontSize: `${parseFloat(fontSize) * 0.6}rem` }}
-          >
-            platform
+            <span className={`font-light ${colors.subtextColor} mr-1`}>Fx</span>Fixia
           </span>
         </div>
       )}

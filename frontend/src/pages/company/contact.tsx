@@ -172,7 +172,7 @@ const ContactPage: NextPage = () => {
             </div>
 
             {/* Contact Form */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 max-w-2xl lg:max-w-none">
               <div className="bg-white rounded-lg shadow-sm p-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Envíanos un Mensaje</h2>
                 

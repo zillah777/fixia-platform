@@ -158,11 +158,11 @@ const LandingPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Fixia - Marketplace de Servicios Profesionales</title>
-        <meta name="description" content="Conecta con profesionales verificados para todos tus proyectos. Plomería, electricidad, limpieza y más. Servicios confiables a un clic de distancia." />
+        <title>Fx Fixia - La Evolución Digital de los Servicios Profesionales</title>
+        <meta name="description" content="Donde la innovación encuentra la experiencia. Conectamos talento excepcional con proyectos que trascienden lo ordinario. La próxima generación de servicios profesionales está aquí." />
         <meta name="keywords" content="servicios, profesionales, plomería, electricidad, limpieza, reparaciones, marketplace, fixia" />
-        <meta property="og:title" content="Fixia - Marketplace de Servicios Profesionales" />
-        <meta property="og:description" content="Conecta con profesionales verificados para todos tus proyectos del hogar" />
+        <meta property="og:title" content="Fx Fixia - La Evolución Digital de los Servicios Profesionales" />
+        <meta property="og:description" content="Donde la innovación encuentra la experiencia. Revolucionamos la forma en que conectas con talento excepcional." />
         <meta property="og:type" content="website" />
       </Head>
 
@@ -254,11 +254,10 @@ const LandingPage: NextPage = () => {
           <div className="container">
             <div className="text-center fade-in-on-scroll">
               <h1 className="hero-title animate-fade-in">
-                Las Páginas Amarillas del Futuro
+                Donde la Innovación Encuentra la Experiencia
               </h1>
               <p className="hero-subtitle animate-slide-up stagger-1">
-                Marketplace inteligente que automatiza la búsqueda de servicios. 
-                Conectamos <strong>Exploradores</strong> con <strong>AS</strong> usando algoritmos de matchmaking avanzados.
+                Bienvenido al futuro de los servicios profesionales. Una plataforma que no solo conecta, sino que <strong>revoluciona</strong> la manera en que <strong>Exploradores</strong> y <strong>Especialistas</strong> crean valor juntos.
               </p>
 
               {/* Modern Search Bar */}
@@ -270,7 +269,7 @@ const LandingPage: NextPage = () => {
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="¿Qué servicio necesitas? Nuestro algoritmo encuentra el AS perfecto..."
+                      placeholder="Describe tu visión. Nuestro sistema inteligente encuentra el talento perfecto..."
                       className="form-input pl-12 pr-4 py-4 text-lg border-0 glass"
                     />
                   </div>
@@ -295,7 +294,7 @@ const LandingPage: NextPage = () => {
                 <Link href="/auth/registro?type=provider">
                   <button className="btn btn-secondary btn-lg btn-magnetic hover-lift">
                     <BriefcaseIcon className="h-5 w-5 mr-2" />
-                    Soy AS (Anunciante)
+                    Soy Especialista
                   </button>
                 </Link>
               </div>
@@ -304,15 +303,15 @@ const LandingPage: NextPage = () => {
               <div className="mt-16 flex flex-wrap justify-center items-center gap-8 animate-fade-in stagger-4">
                 <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity cursor-pointer hover-lift hover-magnetic">
                   <CheckCircleIcon className="h-6 w-6 text-success-400 mr-3 hover-bounce" />
-                  <span className="font-medium">Búsqueda Automatizada</span>
+                  <span className="font-medium">Algoritmos Inteligentes</span>
                 </div>
                 <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity cursor-pointer hover-lift hover-magnetic">
                   <ShieldCheckIcon className="h-6 w-6 text-primary-400 mr-3 hover-bounce" />
-                  <span className="font-medium">Sistema de Confianza</span>
+                  <span className="font-medium">Confianza Verificada</span>
                 </div>
                 <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity cursor-pointer hover-lift hover-magnetic">
                   <StarIcon className="h-6 w-6 text-warning-400 mr-3 hover-bounce" />
-                  <span className="font-medium">Matchmaking Inteligente</span>
+                  <span className="font-medium">Conexiones Perfectas</span>
                 </div>
               </div>
             </div>
@@ -324,10 +323,10 @@ const LandingPage: NextPage = () => {
           <div className="container">
             <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
-                Servicios Populares
+                Excelencia en Cada Categoría
               </h2>
               <p className="text-xl text-secondary">
-                Encuentra profesionales especializados en las categorías más demandadas
+                Cada especialista es cuidadosamente seleccionado. Cada proyecto, una oportunidad de crear algo extraordinario.
               </p>
             </div>
 
@@ -343,7 +342,7 @@ const LandingPage: NextPage = () => {
                     </h3>
                     <p className="text-secondary text-center mb-4">{category.description}</p>
                     <div className="flex items-center justify-center text-primary-600 font-medium hover:text-primary-700 transition-colors">
-                      <span>Ver AS disponibles</span>
+                      <span>Explorar Especialistas</span>
                       <ArrowRightIcon className="h-4 w-4 ml-2" />
                     </div>
                   </div>
@@ -359,10 +358,10 @@ const LandingPage: NextPage = () => {
           <div className="container relative">
             <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
-                ¿Cómo Funciona Nuestro Matchmaking?
+                Tres Pasos Hacia la Excelencia
               </h2>
               <p className="text-xl text-secondary">
-                Algoritmos inteligentes que conectan automáticamente Exploradores con AS
+                Una metodología diseñada para garantizar que cada conexión sea perfecta, cada resultado extraordinario.
               </p>
             </div>
 
@@ -372,10 +371,10 @@ const LandingPage: NextPage = () => {
                   <MagnifyingGlassIcon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-4 hover-bounce">
-                  Búsqueda Automatizada
+                  Descubrimiento Inteligente
                 </h3>
                 <p className="text-secondary">
-                  Nuestro algoritmo analiza tu solicitud y encuentra automáticamente los AS más compatibles.
+                  Nuestra tecnología comprende tu visión y localiza especialistas que no solo ejecutan, sino que elevan tu proyecto.
                 </p>
               </div>
 
@@ -384,10 +383,10 @@ const LandingPage: NextPage = () => {
                   <UserGroupIcon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-4 hover-bounce">
-                  Matchmaking Inteligente
+                  Conexión Estratégica
                 </h3>
                 <p className="text-secondary">
-                  Te conectamos con el AS perfecto basado en compatibilidad, ubicación y reputación.
+                  Más que una coincidencia: una alianza estratégica entre tu necesidad y el talento excepcional que la materializa.
                 </p>
               </div>
 
@@ -396,10 +395,10 @@ const LandingPage: NextPage = () => {
                   <CheckCircleIcon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-4 hover-bounce">
-                  Sistema de Confianza
+                  Garantía de Excelencia
                 </h3>
                 <p className="text-secondary">
-                  Facilitamos el contacto seguro, generamos confianza mutua y mejoramos el algoritmo.
+                  Un ecosistema de confianza que asegura resultados superiores y relaciones duraderas.
                 </p>
               </div>
             </div>
@@ -407,7 +406,7 @@ const LandingPage: NextPage = () => {
             <div className="text-center mt-12 fade-in-on-scroll">
               <Link href="/auth/registro">
                 <button className="btn btn-primary btn-xl btn-magnetic hover-lift animate-glow">
-                  Probar el Algoritmo
+                  Experimentar la Diferencia
                 </button>
               </Link>
             </div>
@@ -419,10 +418,10 @@ const LandingPage: NextPage = () => {
           <div className="container">
             <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
-                AS Destacados
+                Especialistas de Elite
               </h2>
               <p className="text-xl text-secondary">
-                Anunciantes de Servicios verificados por nuestro algoritmo de confianza
+                Profesionales excepcionales que han sido rigurosamente evaluados y que consistentemente superan expectativas.
               </p>
             </div>
 
@@ -488,10 +487,10 @@ const LandingPage: NextPage = () => {
           <div className="container relative">
             <div className="content-medium text-center mb-16 slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
-                Lo Que Dicen Nuestros Exploradores
+                Historias de Transformación
               </h2>
               <p className="text-xl text-secondary">
-                Experiencias reales de usuarios que encontraron el AS perfecto con nuestro algoritmo
+                Cada testimonio es una prueba de que cuando la innovación encuentra la experiencia, surgen resultados extraordinarios.
               </p>
             </div>
 
@@ -527,11 +526,11 @@ const LandingPage: NextPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
               <div className="scale-in-on-scroll stagger-1 hover-lift cursor-pointer hover-magnetic">
                 <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">500+</div>
-                <div className="text-primary-200 font-medium">AS Verificados</div>
+                <div className="text-primary-200 font-medium">Especialistas de Elite</div>
               </div>
               <div className="scale-in-on-scroll stagger-2 hover-lift cursor-pointer hover-magnetic">
                 <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">2,000+</div>
-                <div className="text-primary-200 font-medium">Conexiones Exitosas</div>
+                <div className="text-primary-200 font-medium">Proyectos Transformados</div>
               </div>
               <div className="scale-in-on-scroll stagger-3 hover-lift cursor-pointer hover-magnetic">
                 <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">4.8</div>
@@ -539,7 +538,7 @@ const LandingPage: NextPage = () => {
               </div>
               <div className="scale-in-on-scroll stagger-4 hover-lift cursor-pointer hover-magnetic">
                 <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">98%</div>
-                <div className="text-primary-200 font-medium">Satisfacción Exploradores</div>
+                <div className="text-primary-200 font-medium">Resultados Excepcionales</div>
               </div>
             </div>
           </div>
@@ -550,10 +549,10 @@ const LandingPage: NextPage = () => {
           <div className="content-medium text-center">
             <div className="slide-up-on-scroll">
               <h2 className="text-4xl font-bold text-primary mb-6">
-                ¿Listo para Comenzar?
+                Tu Proyecto Excepcional Te Espera
               </h2>
               <p className="text-xl text-secondary mb-8">
-                Únete a la plataforma de matchmaking más inteligente del mercado
+                Únete a la comunidad de visionarios que han elegido la excelencia como estándar.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -565,7 +564,7 @@ const LandingPage: NextPage = () => {
                 </Link>
                 <Link href="/auth/registro?type=provider">
                   <button className="btn btn-outline btn-lg btn-magnetic hover-lift">
-                    Soy AS
+                    Soy Especialista
                     <BriefcaseIcon className="h-5 w-5 ml-2" />
                   </button>
                 </Link>
@@ -582,7 +581,7 @@ const LandingPage: NextPage = () => {
               <div className="fade-in-on-scroll">
                 <Logo size="lg" variant="white" className="mb-4" />
                 <p className="text-neutral-300 mb-4 leading-relaxed">
-                  Las páginas amarillas del futuro. Conectando Exploradores con AS através de algoritmos inteligentes.
+                  La evolución digital de los servicios profesionales. Donde cada conexión es el inicio de algo extraordinario.
                 </p>
                 <div className="flex space-x-4">
                   <span className="text-neutral-400 font-medium">Síguenos:</span>
@@ -595,12 +594,12 @@ const LandingPage: NextPage = () => {
                 <ul className="space-y-3 text-neutral-300">
                   <li>
                     <Link href="/explorador/buscar-servicio" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
-                      Búsqueda Automatizada
+                      Descubrimiento Inteligente
                     </Link>
                   </li>
                   <li>
                     <Link href="/explorador/navegar-profesionales" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
-                      Ver AS Disponibles
+                      Explorar Talento
                     </Link>
                   </li>
                   <li>
@@ -612,11 +611,11 @@ const LandingPage: NextPage = () => {
               </div>
 
               <div className="fade-in-on-scroll stagger-2">
-                <h4 className="font-semibold mb-4 text-lg">Para AS</h4>
+                <h4 className="font-semibold mb-4 text-lg">Para Especialistas</h4>
                 <ul className="space-y-3 text-neutral-300">
                   <li>
                     <Link href="/auth/registro?type=provider" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
-                      Registro AS
+                      Unirse como Especialista
                     </Link>
                   </li>
                   <li>

@@ -40,24 +40,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (authService.isAuthenticated()) {
           const storedUser = authService.getStoredUser();
           if (storedUser) {
+            // Establecer usuario inmediatamente para evitar flashing
             setUser(storedUser);
+            setLoading(false);
             
-            // Optionally verify token with server
+            // Verificar token en background sin afectar UI
             try {
               const currentUser = await authService.getCurrentUser();
               setUser(currentUser);
               authService.updateStoredUser(currentUser);
             } catch (error) {
-              // Token might be invalid, clear local storage
-              authService.logout();
-              setUser(null);
+              // Solo limpiar si hay error real de autenticación
+              console.warn('Token verification failed, keeping stored user');
             }
+          } else {
+            setLoading(false);
           }
+        } else {
+          setLoading(false);
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
-        setUser(null);
-      } finally {
         setLoading(false);
       }
     };
