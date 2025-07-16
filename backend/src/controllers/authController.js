@@ -60,7 +60,10 @@ exports.register = async (req, res) => {
       });
     }
 
-    if (!['customer', 'provider'].includes(user_type)) {
+    // Transform customer to client for database compatibility
+    const dbUserType = user_type === 'customer' ? 'client' : user_type;
+    
+    if (!['client', 'provider'].includes(dbUserType)) {
       return res.status(400).json({
         success: false,
         error: 'Tipo de usuario inválido'
@@ -87,16 +90,21 @@ exports.register = async (req, res) => {
     const result = await query(`
       INSERT INTO users (
         first_name, last_name, email, password_hash, user_type,
-        phone, address
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+        phone, locality, address
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
     `, [
-      first_name, last_name, email, password_hash, user_type,
-      phone || null, address || null
+      first_name, last_name, email, password_hash, dbUserType,
+      phone || null, location || null, address || null
     ]);
 
     const user = result.rows[0];
     const sanitizedUser = sanitizeUser(user);
+    
+    // Transform client back to customer for frontend
+    if (sanitizedUser.user_type === 'client') {
+      sanitizedUser.user_type = 'customer';
+    }
 
     // Generate token
     const token = generateToken({ 
