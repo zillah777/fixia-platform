@@ -167,35 +167,35 @@ const LandingPage: NextPage = () => {
       </Head>
 
       <div className="min-h-screen">
-        {/* Modern Header */}
-        <header className="nav">
-          <div className="container">
-            <div className="flex items-center justify-between h-20">
-              <Logo size="lg" variant="gradient" />
+        {/* Minimal Header - AssetClass Inspired */}
+        <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 z-50">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="flex items-center justify-between h-16">
+              <Logo size="md" variant="primary" />
               
-              <nav className="hidden md:flex items-center gap-1">
-                <a href="#como-funciona" className="nav-link hover-lift hover-magnetic">
+              <nav className="hidden md:flex items-center gap-8">
+                <a href="#como-funciona" className="text-gray-600 hover:text-gray-900 transition-colors">
                   Cómo funciona
                 </a>
-                <a href="#servicios" className="nav-link hover-lift hover-magnetic">
+                <a href="#servicios" className="text-gray-600 hover:text-gray-900 transition-colors">
                   Servicios
                 </a>
-                <a href="#profesionales" className="nav-link hover-lift hover-magnetic">
-                  AS Destacados
+                <a href="#profesionales" className="text-gray-600 hover:text-gray-900 transition-colors">
+                  Especialistas
                 </a>
-                <a href="#contacto" className="nav-link hover-lift hover-magnetic">
+                <a href="#contacto" className="text-gray-600 hover:text-gray-900 transition-colors">
                   Contacto
                 </a>
               </nav>
 
               <div className="hidden md:flex items-center gap-3">
                 <Link href="/auth/login">
-                  <button className="btn btn-ghost">
+                  <button className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors">
                     Iniciar Sesión
                   </button>
                 </Link>
                 <Link href="/auth/registro">
-                  <button className="btn btn-primary">
+                  <button className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
                     Registrarse
                   </button>
                 </Link>
@@ -249,100 +249,109 @@ const LandingPage: NextPage = () => {
           </div>
         </header>
 
-        {/* Hero Section */}
-        <section className="hero section-padding-lg">
-          <div className="container">
-            <div className="text-center fade-in-on-scroll">
-              <h1 className="hero-title animate-fade-in text-white">
-                Conectando Ases y Exploradores
-              </h1>
-              <p className="hero-subtitle animate-slide-up stagger-1 text-white">
-                La plataforma que conecta a los mejores en sus oficios y habilidades con personas que necesitan servicios de calidad. <strong>Sin comisiones, sin intermediarios.</strong>
-              </p>
+        {/* Hero Section - AssetClass Inspired */}
+        <section className="min-h-screen bg-white flex items-center justify-center px-4 pt-16">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="space-y-8">
+              <div className="space-y-6">
+                <h1 className="text-6xl md:text-7xl lg:text-8xl font-light tracking-tight text-gray-900">
+                  Conectando
+                  <span className="block font-semibold">Ases y Exploradores</span>
+                </h1>
+                <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed">
+                  La plataforma que conecta a los mejores en sus oficios y habilidades con personas que necesitan servicios de calidad.
+                </p>
+                <p className="text-lg text-gray-900 font-medium">
+                  Sin comisiones, sin intermediarios.
+                </p>
+              </div>
 
-              {/* Modern Search Bar */}
-              <div className="max-w-2xl mx-auto mb-8 animate-scale-in stagger-2">
-                <form onSubmit={handleSearch} className="input-group">
-                  <div className="flex-1 relative">
-                    <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400" />
+              {/* Minimal Search Bar */}
+              <div className="max-w-2xl mx-auto space-y-4">
+                <form onSubmit={handleSearch} className="relative">
+                  <div className="relative">
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Describe tu visión. Nuestro sistema inteligente encuentra el talento perfecto..."
-                      className="form-input pl-12 pr-4 py-4 text-lg border-0 glass"
+                      placeholder="Buscar servicios..."
+                      className="w-full px-6 py-4 text-lg bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
                     />
+                    <button
+                      type="submit"
+                      className="absolute right-2 top-2 px-6 py-2 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors"
+                    >
+                      Buscar
+                    </button>
                   </div>
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-lg px-8"
-                  >
-                    Buscar
-                  </button>
                 </form>
-              </div>
 
-              {/* CTA Buttons */}
-              <div className="hero-cta animate-slide-up stagger-3">
-                <Link href="/auth/registro?type=customer">
-                  <button className="btn btn-primary btn-lg btn-magnetic hover-lift">
-                    <MagnifyingGlassIcon className="h-5 w-5 mr-2" />
-                    Soy Explorador
-                    <ArrowRightIcon className="h-5 w-5 ml-2" />
-                  </button>
-                </Link>
-                <Link href="/auth/registro?type=provider">
-                  <button className="btn btn-secondary btn-lg btn-magnetic hover-lift">
-                    <BriefcaseIcon className="h-5 w-5 mr-2" />
-                    Soy Especialista
-                  </button>
-                </Link>
-              </div>
-
-              {/* Trust Indicators */}
-              <div className="mt-16 flex flex-wrap justify-center items-center gap-8 animate-fade-in stagger-4">
-                <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity cursor-pointer hover-lift hover-magnetic">
-                  <CheckCircleIcon className="h-6 w-6 text-success-400 mr-3 hover-bounce" />
-                  <span className="font-medium">Algoritmos Inteligentes</span>
-                </div>
-                <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity cursor-pointer hover-lift hover-magnetic">
-                  <ShieldCheckIcon className="h-6 w-6 text-primary-400 mr-3 hover-bounce" />
-                  <span className="font-medium">Confianza Verificada</span>
-                </div>
-                <div className="flex items-center text-text-inverse opacity-90 hover:opacity-100 transition-opacity cursor-pointer hover-lift hover-magnetic">
-                  <StarIcon className="h-6 w-6 text-warning-400 mr-3 hover-bounce" />
-                  <span className="font-medium">Conexiones Perfectas</span>
+                {/* Clean CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                  <Link href="/auth/registro?type=customer">
+                    <button className="px-8 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors font-medium">
+                      Soy Explorador
+                    </button>
+                  </Link>
+                  <Link href="/auth/registro?type=provider">
+                    <button className="px-8 py-3 border border-gray-300 text-gray-900 rounded-xl hover:bg-gray-50 transition-colors font-medium">
+                      Soy Especialista
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Service Categories */}
-        <section id="servicios" className="section-padding bg-white relative">
-          <div className="container">
-            <div className="content-medium text-center mb-16 slide-up-on-scroll">
-              <h2 className="text-4xl font-bold text-primary mb-6">
-                Excelencia en Cada Categoría
+        {/* Trust Indicators - Minimal */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+              <div className="space-y-2">
+                <CheckCircleIcon className="h-8 w-8 text-gray-900 mx-auto" />
+                <h3 className="font-medium text-gray-900">Algoritmos Inteligentes</h3>
+                <p className="text-gray-600 text-sm">Conexiones precisas y automáticas</p>
+              </div>
+              <div className="space-y-2">
+                <ShieldCheckIcon className="h-8 w-8 text-gray-900 mx-auto" />
+                <h3 className="font-medium text-gray-900">Confianza Verificada</h3>
+                <p className="text-gray-600 text-sm">Profesionales validados y evaluados</p>
+              </div>
+              <div className="space-y-2">
+                <StarIcon className="h-8 w-8 text-gray-900 mx-auto" />
+                <h3 className="font-medium text-gray-900">Conexiones Perfectas</h3>
+                <p className="text-gray-600 text-sm">Matchmaking basado en compatibilidad</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Service Categories - Minimal */}
+        <section id="servicios" className="py-20 bg-white">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-4">
+                Excelencia en cada categoría
               </h2>
-              <p className="text-xl text-secondary">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Cada especialista es cuidadosamente seleccionado. Cada proyecto, una oportunidad de crear algo extraordinario.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {serviceCategoriesData.map((category, index) => (
                 <Link key={category.id} href={`/explorador/buscar-servicio?category=${category.id}`}>
-                  <div className={`card hover-lift hover-magnetic ripple cursor-pointer scale-in-on-scroll stagger-${index + 1}`}>
-                    <div className="feature-icon text-4xl mb-4 mx-auto animate-float hover-bounce">
+                  <div className="group p-8 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 transition-all duration-200 cursor-pointer">
+                    <div className="text-4xl mb-6">
                       {category.icon}
                     </div>
-                    <h3 className="card-title text-center">
+                    <h3 className="text-xl font-medium text-gray-900 mb-3">
                       {category.name}
                     </h3>
-                    <p className="text-secondary text-center mb-4">{category.description}</p>
-                    <div className="flex items-center justify-center text-primary-600 font-medium hover:text-primary-700 transition-colors">
-                      <span>Explorar Especialistas</span>
+                    <p className="text-gray-600 mb-6">{category.description}</p>
+                    <div className="flex items-center text-gray-900 font-medium group-hover:translate-x-1 transition-transform">
+                      <span>Explorar especialistas</span>
                       <ArrowRightIcon className="h-4 w-4 ml-2" />
                     </div>
                   </div>

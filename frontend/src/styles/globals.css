@@ -1,5 +1,6 @@
-/* Import Modern Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap');
+/* Import AssetClass-inspired Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 
 /* CSS Variables - Modern Color System */
@@ -88,11 +89,12 @@
   --brand-secondary: #7c3aed;
   --brand-accent: #06b6d4;
   
-  /* Text Colors */
-  --text-primary: #18181b;
-  --text-secondary: #52525b;
-  --text-tertiary: #71717a;
+  /* Text Colors - AssetClass inspired */
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
   --text-inverse: #ffffff;
+  --text-muted: #f3f4f6;
   
   /* Border Colors */
   --border-light: #e4e4e7;
@@ -158,7 +160,7 @@
 }
 
 html {
-  font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   scroll-behavior: smooth;
   font-size: 16px;
   line-height: 1.5;
