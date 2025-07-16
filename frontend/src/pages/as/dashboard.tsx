@@ -204,8 +204,85 @@ const ASDashboard: NextPage = () => {
               </div>
             )}
 
+            {/* Revenue Analytics */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              <div className="lg:col-span-2">
+                <div className="card glass">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold text-primary">Análisis de Ingresos</h2>
+                    <div className="flex space-x-2">
+                      <button className="btn btn-sm btn-ghost">7 días</button>
+                      <button className="btn btn-sm btn-primary">30 días</button>
+                      <button className="btn btn-sm btn-ghost">90 días</button>
+                    </div>
+                  </div>
+                  <div className="mb-6">
+                    <div className="flex items-center space-x-6">
+                      <div>
+                        <p className="text-sm text-secondary">Ingresos del mes</p>
+                        <p className="text-3xl font-bold text-primary">${(stats?.total_earnings || 0).toLocaleString()}</p>
+                        <p className="text-sm text-success-600">+12% vs mes anterior</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-secondary">Servicios completados</p>
+                        <p className="text-2xl font-bold text-primary">{stats?.completed_bookings || 0}</p>
+                        <p className="text-sm text-success-600">+5 este mes</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="h-48 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl flex items-center justify-center">
+                    <div className="text-center">
+                      <ArrowTrendingUpIcon className="h-12 w-12 text-primary-400 mx-auto mb-2" />
+                      <p className="text-secondary">Gráfico de ingresos próximamente</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="card glass">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold text-primary">Rendimiento</h3>
+                    <ArrowTrendingUpIcon className="h-5 w-5 text-secondary" />
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-secondary">Tasa de conversión</span>
+                      <span className="text-sm font-medium text-primary">68%</span>
+                    </div>
+                    <div className="w-full bg-neutral-200 rounded-full h-2">
+                      <div className="bg-gradient-primary h-2 rounded-full" style={{width: '68%'}}></div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-secondary">Tiempo respuesta</span>
+                      <span className="text-sm font-medium text-primary">2.3h</span>
+                    </div>
+                    <div className="w-full bg-neutral-200 rounded-full h-2">
+                      <div className="bg-gradient-success h-2 rounded-full" style={{width: '85%'}}></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="card glass">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold text-primary">Calificación</h3>
+                    <StarIcon className="h-5 w-5 text-warning-500" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-4xl font-bold text-primary">{stats?.average_rating || 0}</p>
+                    <div className="flex justify-center space-x-1 my-2">
+                      {[...Array(5)].map((_, i) => (
+                        <StarIcon key={i} className="h-5 w-5 text-warning-500 fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-sm text-secondary">{stats?.total_reviews || 0} reseñas</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Quick Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               {statCards.map((stat, index) => (
                 <div 
                   key={stat.title}
@@ -274,6 +351,133 @@ const ASDashboard: NextPage = () => {
                   <p className="text-secondary text-sm">Ve tus reseñas</p>
                 </div>
               </Link>
+            </div>
+
+            {/* Service Management & Calendar */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <div className="card glass">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-semibold text-primary">Mis Servicios</h2>
+                  <Link href="/as/servicios?action=create">
+                    <button className="btn btn-primary btn-sm">
+                      <PlusIcon className="h-4 w-4 mr-2" />
+                      Nuevo
+                    </button>
+                  </Link>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                      <div>
+                        <p className="font-medium text-gray-900">Reparación de Plomería</p>
+                        <p className="text-sm text-gray-500">$2,500 - $5,000</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Activo</span>
+                      <button className="text-gray-400 hover:text-gray-600">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                      <div>
+                        <p className="font-medium text-gray-900">Instalación Eléctrica</p>
+                        <p className="text-sm text-gray-500">$3,000 - $8,000</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Activo</span>
+                      <button className="text-gray-400 hover:text-gray-600">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+                      <div>
+                        <p className="font-medium text-gray-900">Carpintería General</p>
+                        <p className="text-sm text-gray-500">$1,500 - $4,000</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">Pausado</span>
+                      <button className="text-gray-400 hover:text-gray-600">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <Link href="/as/servicios">
+                    <button className="w-full text-primary hover:text-primary-700 text-sm font-medium">
+                      Administrar todos los servicios
+                    </button>
+                  </Link>
+                </div>
+              </div>
+              
+              <div className="card glass">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-semibold text-primary">Calendario</h2>
+                  <CalendarDaysIcon className="h-6 w-6 text-secondary" />
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        16
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">Reparación de plomería</p>
+                        <p className="text-sm text-gray-500">14:00 - 16:00 • Juan García</p>
+                      </div>
+                    </div>
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Hoy</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        17
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">Instalación eléctrica</p>
+                        <p className="text-sm text-gray-500">10:00 - 12:00 • María López</p>
+                      </div>
+                    </div>
+                    <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Mañana</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        20
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">Limpieza del hogar</p>
+                        <p className="text-sm text-gray-500">09:00 - 11:00 • Carlos Ruiz</p>
+                      </div>
+                    </div>
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Viernes</span>
+                  </div>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <button className="w-full text-primary hover:text-primary-700 text-sm font-medium">
+                    Ver calendario completo
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* Quick Actions */}

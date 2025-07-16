@@ -26,6 +26,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { RegisterData } from '@/types';
 import Logo from '@/components/Logo';
+import MultiStepForm from '@/components/MultiStepForm';
 
 const registerSchema = yup.object().shape({
   first_name: yup

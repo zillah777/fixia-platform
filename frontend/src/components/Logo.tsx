@@ -98,14 +98,12 @@ const Logo: React.FC<LogoProps> = ({
       </svg>
       
       {showText && (
-        <div className="flex flex-col leading-none">
-          <span 
-            className={`font-bold tracking-tight ${colors.textColor}`}
-            style={{ fontSize }}
-          >
-            <span className={`font-light ${colors.subtextColor} mr-1`}>Fx</span>Fixia
-          </span>
-        </div>
+        <span 
+          className={`font-bold tracking-tight ${colors.textColor}`}
+          style={{ fontSize }}
+        >
+          Fixia
+        </span>
       )}
     </div>
   );

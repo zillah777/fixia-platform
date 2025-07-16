@@ -9,7 +9,17 @@ import {
   BriefcaseIcon,
   ChatBubbleLeftRightIcon,
   StarIcon,
-  MapPinIcon
+  MapPinIcon,
+  HomeIcon,
+  UserIcon,
+  CogIcon,
+  BellIcon,
+  Bars3Icon,
+  XMarkIcon,
+  ChartBarIcon,
+  ClockIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,6 +28,14 @@ const ExplorerDashboard: NextPage = () => {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [loadingData, setLoadingData] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [stats, setStats] = useState({
+    activeBookings: 3,
+    completedBookings: 12,
+    totalSpent: 2450,
+    favoriteServices: 8,
+    unreadMessages: 2
+  });
 
   useEffect(() => {
     if (!loading && user?.user_type !== 'customer') {
@@ -41,6 +59,46 @@ const ExplorerDashboard: NextPage = () => {
     );
   }
 
+  const sidebarItems = [
+    { name: 'Dashboard', href: '/explorador/dashboard', icon: HomeIcon, current: true },
+    { name: 'Buscar Servicios', href: '/explorador/buscar-servicio', icon: MagnifyingGlassIcon, current: false },
+    { name: 'Mis Solicitudes', href: '/explorador/mis-solicitudes', icon: BriefcaseIcon, current: false },
+    { name: 'Mensajes', href: '/explorador/chats', icon: ChatBubbleLeftRightIcon, current: false, badge: stats.unreadMessages },
+    { name: 'Calificaciones', href: '/explorador/calificaciones', icon: StarIcon, current: false },
+    { name: 'Profesionales', href: '/explorador/navegar-profesionales', icon: MapPinIcon, current: false },
+  ];
+
+  const statCards = [
+    {
+      title: 'Servicios Activos',
+      value: stats.activeBookings,
+      icon: ClockIcon,
+      color: 'bg-gradient-to-r from-blue-500 to-blue-600',
+      textColor: 'text-white'
+    },
+    {
+      title: 'Completados',
+      value: stats.completedBookings,
+      icon: CheckCircleIcon,
+      color: 'bg-gradient-to-r from-green-500 to-green-600',
+      textColor: 'text-white'
+    },
+    {
+      title: 'Total Gastado',
+      value: `$${stats.totalSpent.toLocaleString()}`,
+      icon: ChartBarIcon,
+      color: 'bg-gradient-to-r from-purple-500 to-purple-600',
+      textColor: 'text-white'
+    },
+    {
+      title: 'Favoritos',
+      value: stats.favoriteServices,
+      icon: StarIcon,
+      color: 'bg-gradient-to-r from-yellow-500 to-yellow-600',
+      textColor: 'text-white'
+    }
+  ];
+
   return (
     <>
       <Head>
@@ -49,80 +107,275 @@ const ExplorerDashboard: NextPage = () => {
       </Head>
 
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center py-6">
-              <h1 className="text-2xl font-bold text-gray-900">
-                ¡Hola, {user?.first_name}!
-              </h1>
-            </div>
+        {/* Sidebar */}
+        <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
+          <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
+            <Link href="/">
+              <div className="flex items-center cursor-pointer">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                  F
+                </div>
+                <span className="ml-2 text-xl font-bold text-gray-900">Fixia</span>
+              </div>
+            </Link>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500"
+            >
+              <XMarkIcon className="h-6 w-6" />
+            </button>
           </div>
+          
+          <nav className="mt-4 px-2">
+            <div className="space-y-2">
+              {sidebarItems.map((item) => (
+                <Link key={item.name} href={item.href}>
+                  <div className={`flex items-center px-3 py-2 text-sm font-medium rounded-md cursor-pointer transition-colors ${
+                    item.current
+                      ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-500'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  }`}>
+                    <item.icon className="h-5 w-5 mr-3" />
+                    {item.name}
+                    {item.badge && (
+                      <span className="ml-auto bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+            
+            <div className="mt-8 pt-8 border-t border-gray-200">
+              <Link href="/explorador/cambiar-a-as">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-white cursor-pointer hover:from-blue-600 hover:to-purple-700 transition-all">
+                  <h3 className="font-semibold text-sm mb-1">¿Querés ofrecer servicios?</h3>
+                  <p className="text-xs text-blue-100">Convertite en AS y empezá a ganar dinero</p>
+                </div>
+              </Link>
+            </div>
+          </nav>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Buscar Servicios */}
-            <Link href="/explorador/buscar-servicio">
-              <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
-                <div className="flex items-center mb-4">
-                  <MagnifyingGlassIcon className="h-8 w-8 text-blue-600 mr-3" />
-                  <h3 className="text-lg font-semibold text-gray-900">Buscar Servicios</h3>
+        {/* Main Content */}
+        <div className="lg:ml-64">
+          {/* Top Navigation */}
+          <div className="bg-white shadow-sm border-b">
+            <div className="px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between h-16">
+                <div className="flex items-center">
+                  <button
+                    onClick={() => setSidebarOpen(true)}
+                    className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500"
+                  >
+                    <Bars3Icon className="h-6 w-6" />
+                  </button>
+                  <h1 className="ml-2 text-2xl font-bold text-gray-900">
+                    ¡Hola, {user?.first_name}!
+                  </h1>
                 </div>
-                <p className="text-gray-600">Encuentra profesionales para tus necesidades</p>
-              </div>
-            </Link>
-
-            {/* Mis Solicitudes */}
-            <Link href="/explorador/mis-solicitudes">
-              <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
-                <div className="flex items-center mb-4">
-                  <BriefcaseIcon className="h-8 w-8 text-green-600 mr-3" />
-                  <h3 className="text-lg font-semibold text-gray-900">Mis Solicitudes</h3>
+                
+                <div className="flex items-center space-x-4">
+                  <button className="p-2 text-gray-400 hover:text-gray-500">
+                    <BellIcon className="h-6 w-6" />
+                  </button>
+                  <Link href="/explorador/cambiar-a-as">
+                    <button className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+                      Cambiar a AS
+                    </button>
+                  </Link>
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                      <UserIcon className="h-5 w-5 text-gray-600" />
+                    </div>
+                  </div>
                 </div>
-                <p className="text-gray-600">Gestiona tus servicios contratados</p>
               </div>
-            </Link>
+            </div>
+          </div>
 
-            {/* Chats */}
-            <Link href="/explorador/chats">
-              <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
-                <div className="flex items-center mb-4">
-                  <ChatBubbleLeftRightIcon className="h-8 w-8 text-purple-600 mr-3" />
-                  <h3 className="text-lg font-semibold text-gray-900">Chats</h3>
+          {/* Dashboard Content */}
+          <div className="p-4 sm:p-6 lg:p-8">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              {statCards.map((card, index) => (
+                <div key={card.title} className="bg-white rounded-xl shadow-sm border overflow-hidden">
+                  <div className={`${card.color} p-6`}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-white/80 text-sm font-medium">{card.title}</p>
+                        <p className="text-2xl font-bold text-white mt-1">{card.value}</p>
+                      </div>
+                      <card.icon className="h-8 w-8 text-white/80" />
+                    </div>
+                  </div>
                 </div>
-                <p className="text-gray-600">Comunícate con profesionales</p>
-              </div>
-            </Link>
+              ))}
+            </div>
 
-            {/* Calificaciones */}
-            <Link href="/explorador/calificaciones">
-              <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
-                <div className="flex items-center mb-4">
-                  <StarIcon className="h-8 w-8 text-yellow-600 mr-3" />
-                  <h3 className="text-lg font-semibold text-gray-900">Mis Calificaciones</h3>
+            {/* Quick Search */}
+            <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
+              <div className="flex items-center mb-4">
+                <MagnifyingGlassIcon className="h-6 w-6 text-blue-600 mr-3" />
+                <h2 className="text-lg font-semibold text-gray-900">Buscar Servicios</h2>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    placeholder="¿Qué servicio necesitás?"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
                 </div>
-                <p className="text-gray-600">Revisa y deja reseñas</p>
-              </div>
-            </Link>
-
-            {/* Profesionales */}
-            <Link href="/explorador/navegar-profesionales">
-              <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
-                <div className="flex items-center mb-4">
-                  <MapPinIcon className="h-8 w-8 text-indigo-600 mr-3" />
-                  <h3 className="text-lg font-semibold text-gray-900">Profesionales</h3>
+                <div className="flex-1">
+                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option>Todas las categorías</option>
+                    <option>Plomería</option>
+                    <option>Electricidad</option>
+                    <option>Carpintería</option>
+                    <option>Limpieza</option>
+                    <option>Jardinería</option>
+                  </select>
                 </div>
-                <p className="text-gray-600">Explora profesionales cercanos</p>
+                <Link href="/explorador/buscar-servicio">
+                  <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                    Buscar
+                  </button>
+                </Link>
               </div>
-            </Link>
+            </div>
 
-            {/* Convertirse en AS */}
-            <Link href="/explorador/cambiar-a-as">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-6 text-white hover:shadow-md transition-shadow cursor-pointer">
-                <h3 className="text-lg font-semibold mb-2">¿Querés ofrecer servicios?</h3>
-                <p className="text-blue-100">Convertite en AS y empezá a ganar dinero</p>
+            {/* Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              <Link href="/explorador/buscar-servicio">
+                <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <MagnifyingGlassIcon className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 ml-3">Buscar Servicios</h3>
+                  </div>
+                  <p className="text-gray-600">Encuentra profesionales para tus necesidades</p>
+                </div>
+              </Link>
+
+              <Link href="/explorador/mis-solicitudes">
+                <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                      <BriefcaseIcon className="h-6 w-6 text-green-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 ml-3">Mis Solicitudes</h3>
+                  </div>
+                  <p className="text-gray-600">Gestiona tus servicios contratados</p>
+                </div>
+              </Link>
+
+              <Link href="/explorador/chats">
+                <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <ChatBubbleLeftRightIcon className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 ml-3">Mensajes</h3>
+                    {stats.unreadMessages > 0 && (
+                      <span className="ml-auto bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">
+                        {stats.unreadMessages}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-gray-600">Comunícate con profesionales</p>
+                </div>
+              </Link>
+            </div>
+
+            {/* Booking Management */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <div className="bg-white rounded-xl shadow-sm border">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-lg font-semibold text-gray-900">Servicios Activos</h2>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div>
+                          <p className="font-medium text-gray-900">Reparación de plomería</p>
+                          <p className="text-sm text-gray-500">Juan García • Hoy 14:00</p>
+                        </div>
+                      </div>
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">En progreso</span>
+                    </div>
+                    <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                        <div>
+                          <p className="font-medium text-gray-900">Instalación eléctrica</p>
+                          <p className="text-sm text-gray-500">María López • Mañana 10:00</p>
+                        </div>
+                      </div>
+                      <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Programado</span>
+                    </div>
+                    <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <div>
+                          <p className="font-medium text-gray-900">Limpieza del hogar</p>
+                          <p className="text-sm text-gray-500">Carlos Ruiz • Viernes 09:00</p>
+                        </div>
+                      </div>
+                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Confirmado</span>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <Link href="/explorador/mis-solicitudes">
+                      <button className="w-full text-blue-600 hover:text-blue-700 text-sm font-medium">
+                        Ver todas las solicitudes
+                      </button>
+                    </Link>
+                  </div>
+                </div>
               </div>
-            </Link>
+
+              <div className="bg-white rounded-xl shadow-sm border">
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-lg font-semibold text-gray-900">Actividad Reciente</h2>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                        <CheckCircleIcon className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-900">Servicio de plomería completado</p>
+                        <p className="text-xs text-gray-500">Hace 2 horas</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <ChatBubbleLeftRightIcon className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-900">Nuevo mensaje de Juan García</p>
+                        <p className="text-xs text-gray-500">Hace 4 horas</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <StarIcon className="h-5 w-5 text-yellow-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-900">Calificación pendiente para María López</p>
+                        <p className="text-xs text-gray-500">Hace 1 día</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
