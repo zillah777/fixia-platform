@@ -61,7 +61,7 @@ exports.register = async (req, res) => {
       });
     }
 
-    if (!['customer', 'provider'].includes(user_type)) {
+    if (!['client', 'provider'].includes(user_type)) {
       return res.status(400).json({
         success: false,
         error: 'Tipo de usuario inválido'
