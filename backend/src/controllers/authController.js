@@ -107,10 +107,15 @@ exports.register = async (req, res) => {
     });
 
     // Create default notification preferences for new user
-    await query(`
-      INSERT INTO notification_preferences (user_id)
-      VALUES ($1)
-    `, [user.id]);
+    try {
+      await query(`
+        INSERT INTO notification_preferences (user_id)
+        VALUES ($1)
+      `, [user.id]);
+    } catch (error) {
+      console.warn('Could not create notification preferences:', error.message);
+      // Continue without notification preferences - not critical for registration
+    }
 
     res.status(201).json({
       success: true,
