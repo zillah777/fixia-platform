@@ -87,12 +87,12 @@ exports.register = async (req, res) => {
     const result = await query(`
       INSERT INTO users (
         first_name, last_name, email, password_hash, user_type,
-        phone, locality, address
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        phone, address
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
     `, [
       first_name, last_name, email, password_hash, user_type,
-      phone || null, location || null, address || null
+      phone || null, address || null
     ]);
 
     const user = result.rows[0];
