@@ -105,11 +105,12 @@ exports.register = async (req, res) => {
       user_type: user.user_type 
     });
 
-    // Create notification preferences for new user
-    await query(`
-      INSERT INTO notification_preferences (user_id)
-      VALUES ($1)
-    `, [user.id]);
+    // TODO: Create notification preferences for new user
+    // Table notification_preferences needs to be created in migration first
+    // await query(`
+    //   INSERT INTO notification_preferences (user_id)
+    //   VALUES ($1)
+    // `, [user.id]);
 
     res.status(201).json({
       success: true,
