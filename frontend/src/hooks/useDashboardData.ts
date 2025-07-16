@@ -10,21 +10,21 @@ export const useASDashboardData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await dashboardService.getASDashboardStats();
-        setStats(data);
-      } catch (err: any) {
-        setError(err.message || 'Error al cargar estadísticas');
-        console.error('Dashboard stats error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await dashboardService.getASDashboardStats();
+      setStats(data);
+    } catch (err: any) {
+      setError(err.message || 'Error al cargar estadísticas');
+      console.error('Dashboard stats error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchStats();
   }, []);
 
@@ -84,21 +84,21 @@ export const useExploradorDashboardData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await dashboardService.getExploradorDashboardStats();
-        setStats(data);
-      } catch (err: any) {
-        setError(err.message || 'Error al cargar estadísticas');
-        console.error('Explorador dashboard stats error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await dashboardService.getExploradorDashboardStats();
+      setStats(data);
+    } catch (err: any) {
+      setError(err.message || 'Error al cargar estadísticas');
+      console.error('Explorador dashboard stats error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchStats();
   }, []);
 
