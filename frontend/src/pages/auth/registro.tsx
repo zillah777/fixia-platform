@@ -95,7 +95,8 @@ const RegistroPage: NextPage = () => {
     handleSubmit,
     formState: { errors },
     watch,
-    trigger
+    trigger,
+    setValue
   } = useForm<RegisterFormData>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
@@ -139,9 +140,11 @@ const RegistroPage: NextPage = () => {
 
     try {
       const { confirm_password, terms_accepted, ...registerData } = data;
+      console.log('Registration data being sent:', registerData);
       await registerUser(registerData);
       // Navigation will be handled by useEffect above
     } catch (error: any) {
+      console.error('Registration error:', error);
       setRegisterError(
         error.response?.data?.error || 
         'Error al crear la cuenta. Inténtalo nuevamente.'
@@ -439,7 +442,7 @@ const RegistroPage: NextPage = () => {
                             ? 'border-primary-500 bg-primary-50 shadow-lg' 
                             : 'border-neutral-200 hover:border-primary-300'
                         }`}
-                        onClick={() => register('user_type').onChange({target: {value: 'customer'}})}
+                        onClick={() => setValue('user_type', 'customer', { shouldValidate: true })}
                       >
                         <input
                           {...register('user_type')}
@@ -472,7 +475,7 @@ const RegistroPage: NextPage = () => {
                             ? 'border-primary-500 bg-primary-50 shadow-lg' 
                             : 'border-neutral-200 hover:border-primary-300'
                         }`}
-                        onClick={() => register('user_type').onChange({target: {value: 'provider'}})}
+                        onClick={() => setValue('user_type', 'provider', { shouldValidate: true })}
                       >
                         <input
                           {...register('user_type')}
