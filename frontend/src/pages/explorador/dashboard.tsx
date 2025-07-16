@@ -23,32 +23,31 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { useExploradorDashboardData } from '@/hooks/useDashboardData';
 
 const ExplorerDashboard: NextPage = () => {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [loadingData, setLoadingData] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [stats, setStats] = useState({
-    activeBookings: 3,
-    completedBookings: 12,
-    totalSpent: 2450,
-    favoriteServices: 8,
-    unreadMessages: 2
-  });
+  const { stats, loading: statsLoading, error } = useExploradorDashboardData();
 
   useEffect(() => {
     if (!loading && user?.user_type !== 'customer') {
       router.push('/auth/login');
       return;
     }
-
-    if (!loading && user?.user_type === 'customer') {
-      setLoadingData(false);
-    }
   }, [user, loading, router]);
 
-  if (loading || loadingData) {
+  // Default stats if none loaded
+  const displayStats = stats || {
+    activeBookings: 0,
+    completedBookings: 0,
+    totalSpent: 0,
+    favoriteServices: 0,
+    unreadMessages: 0
+  };
+
+  if (loading || statsLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -63,7 +62,7 @@ const ExplorerDashboard: NextPage = () => {
     { name: 'Dashboard', href: '/explorador/dashboard', icon: HomeIcon, current: true },
     { name: 'Buscar Servicios', href: '/explorador/buscar-servicio', icon: MagnifyingGlassIcon, current: false },
     { name: 'Mis Solicitudes', href: '/explorador/mis-solicitudes', icon: BriefcaseIcon, current: false },
-    { name: 'Mensajes', href: '/explorador/chats', icon: ChatBubbleLeftRightIcon, current: false, badge: stats.unreadMessages },
+    { name: 'Mensajes', href: '/explorador/chats', icon: ChatBubbleLeftRightIcon, current: false, badge: displayStats.unreadMessages },
     { name: 'Calificaciones', href: '/explorador/calificaciones', icon: StarIcon, current: false },
     { name: 'Profesionales', href: '/explorador/navegar-profesionales', icon: MapPinIcon, current: false },
   ];
@@ -71,28 +70,28 @@ const ExplorerDashboard: NextPage = () => {
   const statCards = [
     {
       title: 'Servicios Activos',
-      value: stats.activeBookings,
+      value: displayStats.activeBookings,
       icon: ClockIcon,
       color: 'bg-gradient-to-r from-blue-500 to-blue-600',
       textColor: 'text-white'
     },
     {
       title: 'Completados',
-      value: stats.completedBookings,
+      value: displayStats.completedBookings,
       icon: CheckCircleIcon,
       color: 'bg-gradient-to-r from-green-500 to-green-600',
       textColor: 'text-white'
     },
     {
       title: 'Total Gastado',
-      value: `$${stats.totalSpent.toLocaleString()}`,
+      value: `$${displayStats.totalSpent.toLocaleString()}`,
       icon: ChartBarIcon,
       color: 'bg-gradient-to-r from-purple-500 to-purple-600',
       textColor: 'text-white'
     },
     {
       title: 'Favoritos',
-      value: stats.favoriteServices,
+      value: displayStats.favoriteServices,
       icon: StarIcon,
       color: 'bg-gradient-to-r from-yellow-500 to-yellow-600',
       textColor: 'text-white'
@@ -279,9 +278,9 @@ const ExplorerDashboard: NextPage = () => {
                       <ChatBubbleLeftRightIcon className="h-6 w-6 text-purple-600" />
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900 ml-3">Mensajes</h3>
-                    {stats.unreadMessages > 0 && (
+                    {displayStats.unreadMessages > 0 && (
                       <span className="ml-auto bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">
-                        {stats.unreadMessages}
+                        {displayStats.unreadMessages}
                       </span>
                     )}
                   </div>

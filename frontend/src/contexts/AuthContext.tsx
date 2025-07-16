@@ -74,7 +74,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const authData = await authService.login(credentials);
       setUser(authData.user);
       toast.success(`¡Bienvenido, ${authData.user.first_name}!`);
-      router.push('/dashboard');
+      
+      // Redirect based on user type
+      if (authData.user.user_type === 'provider') {
+        router.push('/as/dashboard');
+      } else {
+        router.push('/explorador/dashboard');
+      }
     } catch (error: any) {
       const message = error.response?.data?.error || 'Error al iniciar sesión';
       toast.error(message);
@@ -90,7 +96,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const authData = await authService.register(data);
       setUser(authData.user);
       toast.success(`¡Cuenta creada exitosamente! Bienvenido, ${authData.user.first_name}!`);
-      router.push('/dashboard');
+      
+      // Redirect based on user type
+      if (authData.user.user_type === 'provider') {
+        router.push('/as/dashboard');
+      } else {
+        router.push('/explorador/dashboard');
+      }
     } catch (error: any) {
       const message = error.response?.data?.error || 'Error al crear cuenta';
       toast.error(message);

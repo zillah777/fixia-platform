@@ -2,6 +2,8 @@
 const nextConfig = {
   images: {
     domains: ['localhost'],
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 60,
   },
   // Environment variables are handled by .env.local file
   // env: {
@@ -11,6 +13,9 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', '@heroicons/react'],
   },
+  // Compression and optimization
+  compress: true,
+  poweredByHeader: false,
   // Exclude problematic patterns
   webpack: (config, { isServer }) => {
     // Avoid processing certain file patterns that can cause micromatch issues
@@ -27,6 +32,18 @@ const nextConfig = {
         '**/tsconfig.tsbuildinfo',
       ],
     };
+    
+    // Bundle analyzer in development
+    if (process.env.ANALYZE === 'true') {
+      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          openAnalyzer: false,
+        })
+      );
+    }
+    
     return config;
   },
 };

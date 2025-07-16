@@ -17,6 +17,7 @@
     "migrate-explorer": "node scripts/migrate-explorer-system.js",
     "migrate-chat": "node scripts/migrate-chat-system.js",
     "migrate-mutual": "node scripts/migrate-mutual-confirmation.js",
+    "migrate-notifications": "node scripts/migrate-notification-preferences.js",
     "seed": "node scripts/seed.js",
     "db:setup": "node scripts/migrate-postgresql.js",
     "db:reset": "node scripts/reset-db.js",

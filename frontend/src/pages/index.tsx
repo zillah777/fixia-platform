@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import MetaTags from '@/components/seo/MetaTags';
 import {
   ArrowRightIcon,
   MagnifyingGlassIcon,
@@ -155,16 +156,28 @@ const LandingPage: NextPage = () => {
     );
   }
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Fixia",
+    "description": "Marketplace de servicios profesionales en Chubut, Argentina",
+    "url": "https://fixia.com.ar",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://fixia.com.ar/explorador/buscar-servicio?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <>
-      <Head>
-        <title>Fx Fixia - La Evolución Digital de los Servicios Profesionales</title>
-        <meta name="description" content="Donde la innovación encuentra la experiencia. Conectamos talento excepcional con proyectos que trascienden lo ordinario. La próxima generación de servicios profesionales está aquí." />
-        <meta name="keywords" content="servicios, profesionales, plomería, electricidad, limpieza, reparaciones, marketplace, fixia" />
-        <meta property="og:title" content="Fx Fixia - La Evolución Digital de los Servicios Profesionales" />
-        <meta property="og:description" content="Donde la innovación encuentra la experiencia. Revolucionamos la forma en que conectas con talento excepcional." />
-        <meta property="og:type" content="website" />
-      </Head>
+      <MetaTags
+        title="Fx Fixia - La Evolución Digital de los Servicios Profesionales"
+        description="Donde la innovación encuentra la experiencia. Conectamos talento excepcional con proyectos que trascienden lo ordinario. La próxima generación de servicios profesionales está aquí."
+        keywords="servicios profesionales, plomería, electricidad, limpieza, reparaciones, marketplace, fixia, chubut, argentina"
+        ogType="website"
+        structuredData={structuredData}
+      />
 
       <div className="min-h-screen">
         {/* Minimal Header - AssetClass Inspired */}

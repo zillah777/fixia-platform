@@ -60,7 +60,7 @@ exports.register = async (req, res) => {
       });
     }
 
-    if (!['client', 'provider'].includes(user_type)) {
+    if (!['customer', 'provider'].includes(user_type)) {
       return res.status(400).json({
         success: false,
         error: 'Tipo de usuario inválido'
@@ -105,12 +105,11 @@ exports.register = async (req, res) => {
       user_type: user.user_type 
     });
 
-    // TODO: Create notification preferences for new user
-    // Table notification_preferences needs to be created in migration first
-    // await query(`
-    //   INSERT INTO notification_preferences (user_id)
-    //   VALUES ($1)
-    // `, [user.id]);
+    // Create default notification preferences for new user
+    await query(`
+      INSERT INTO notification_preferences (user_id)
+      VALUES ($1)
+    `, [user.id]);
 
     res.status(201).json({
       success: true,

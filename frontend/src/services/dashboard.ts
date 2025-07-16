@@ -49,53 +49,39 @@ export const dashboardService = {
   // AS Dashboard Stats
   async getASDashboardStats(): Promise<DashboardStats> {
     try {
-      // TODO: Replace with real API call
-      // const response = await api.get('/as/dashboard/stats');
-      // return response.data;
-      
-      // Mock data for now - remove when backend is ready
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            total_services: 3,
-            active_services: 2,
-            pending_requests: 5,
-            completed_bookings: 12,
-            total_earnings: 25000,
-            average_rating: 4.8,
-            total_reviews: 8,
-            profile_completion: 75
-          });
-        }, 500); // Simulate network delay
-      });
+      const response = await api.get('/dashboard/as-stats');
+      return response.data.data.stats;
     } catch (error) {
       console.error('Error fetching AS dashboard stats:', error);
-      throw error;
+      // Fallback to default values if API fails
+      return {
+        total_services: 0,
+        active_services: 0,
+        pending_requests: 0,
+        completed_bookings: 0,
+        total_earnings: 0,
+        average_rating: 0,
+        total_reviews: 0,
+        profile_completion: 50
+      };
     }
   },
 
   // Explorador Dashboard Stats
   async getExploradorDashboardStats(): Promise<any> {
     try {
-      // TODO: Replace with real API call
-      // const response = await api.get('/explorador/dashboard/stats');
-      // return response.data;
-      
-      // Mock data for now
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            active_requests: 2,
-            completed_services: 8,
-            saved_services: 4,
-            total_spent: 15000,
-            average_rating_given: 4.9
-          });
-        }, 500);
-      });
+      const response = await api.get('/dashboard/explorer-stats');
+      return response.data.data.stats;
     } catch (error) {
       console.error('Error fetching Explorador dashboard stats:', error);
-      throw error;
+      // Fallback to default values if API fails
+      return {
+        activeBookings: 0,
+        completedBookings: 0,
+        totalSpent: 0,
+        favoriteServices: 0,
+        unreadMessages: 0
+      };
     }
   }
 };

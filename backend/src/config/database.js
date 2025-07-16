@@ -10,7 +10,12 @@ const dbConfig = {
   max: 20, // Maximum number of clients in the pool
   idleTimeoutMillis: 30000, // How long a client is allowed to remain idle before being closed
   connectionTimeoutMillis: 2000, // Return an error after timeout if connection could not be established
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  // Performance optimizations
+  statement_timeout: 30000, // 30 seconds
+  query_timeout: 30000,
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 0,
 };
 
 const pool = new Pool(dbConfig);
