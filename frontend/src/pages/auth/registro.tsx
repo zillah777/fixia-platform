@@ -140,11 +140,9 @@ const RegistroPage: NextPage = () => {
 
     try {
       const { confirm_password, terms_accepted, ...registerData } = data;
-      console.log('Registration data being sent:', registerData);
       await registerUser(registerData);
       // Navigation will be handled by useEffect above
     } catch (error: any) {
-      console.error('Registration error:', error);
       setRegisterError(
         error.response?.data?.error || 
         'Error al crear la cuenta. Inténtalo nuevamente.'
