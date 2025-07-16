@@ -661,15 +661,19 @@ async function createIndexes() {
     'CREATE INDEX IF NOT EXISTS idx_users_type ON users(user_type)',
     'CREATE INDEX IF NOT EXISTS idx_services_category ON services(category_id)',
     'CREATE INDEX IF NOT EXISTS idx_services_user ON services(user_id)',
-    'CREATE INDEX IF NOT EXISTS idx_bookings_customer ON bookings(customer_id)',
-    'CREATE INDEX IF NOT EXISTS idx_bookings_provider ON bookings(provider_id)',
-    'CREATE INDEX IF NOT EXISTS idx_reviews_booking ON reviews(booking_id)',
     'CREATE INDEX IF NOT EXISTS idx_chat_messages_room ON chat_messages(chat_room_id)',
     'CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id)',
     'CREATE INDEX IF NOT EXISTS idx_explorer_requests_category ON explorer_service_requests(category_id)',
+    'CREATE INDEX IF NOT EXISTS idx_explorer_requests_explorer ON explorer_service_requests(explorer_id)',
     'CREATE INDEX IF NOT EXISTS idx_as_interests_request ON as_service_interests(request_id)',
+    'CREATE INDEX IF NOT EXISTS idx_as_interests_as ON as_service_interests(as_id)',
     'CREATE INDEX IF NOT EXISTS idx_connections_explorer ON explorer_as_connections(explorer_id)',
-    'CREATE INDEX IF NOT EXISTS idx_connections_as ON explorer_as_connections(as_id)'
+    'CREATE INDEX IF NOT EXISTS idx_connections_as ON explorer_as_connections(as_id)',
+    'CREATE INDEX IF NOT EXISTS idx_explorer_reviews_connection ON explorer_as_reviews(connection_id)',
+    'CREATE INDEX IF NOT EXISTS idx_explorer_reviews_explorer ON explorer_as_reviews(explorer_id)',
+    'CREATE INDEX IF NOT EXISTS idx_explorer_reviews_as ON explorer_as_reviews(as_id)',
+    'CREATE INDEX IF NOT EXISTS idx_smart_search_explorer ON smart_search_requests(explorer_id)',
+    'CREATE INDEX IF NOT EXISTS idx_smart_search_category ON smart_search_requests(category_id)'
   ];
 
   for (const indexSQL of indexes) {
