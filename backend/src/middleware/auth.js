@@ -2,18 +2,8 @@ const jwt = require('jsonwebtoken');
 const { query } = require('../config/database');
 const crypto = require('crypto');
 
-// Token blacklist (usar Redis en producción)
-const tokenBlacklist = new Set();
-
-// Función para verificar token en blacklist
-const isTokenBlacklisted = async (token) => {
-  return tokenBlacklist.has(token);
-};
-
-// Función para agregar token a blacklist
-const blacklistToken = async (token) => {
-  tokenBlacklist.add(token);
-};
+// Import blacklist functions from auth controller
+const { isTokenBlacklisted, blacklistToken } = require('../controllers/authController');
 
 // Función para generar token con JTI
 const generateToken = (payload) => {
@@ -42,7 +32,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     // Verificar si el token está en blacklist
-    if (await isTokenBlacklisted(token)) {
+    if (isTokenBlacklisted(token)) {
       return res.status(401).json({
         success: false,
         error: 'Token revocado'

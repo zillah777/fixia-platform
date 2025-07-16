@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsClient(true);
   }, []);
 
-  // Initialize auth state
+  // Initialize auth state with improved session persistence
   useEffect(() => {
     if (!isClient) return; // Solo ejecutar en el cliente
     
@@ -44,14 +44,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setUser(storedUser);
             setLoading(false);
             
-            // Verificar token en background sin afectar UI
-            try {
-              const currentUser = await authService.getCurrentUser();
-              setUser(currentUser);
-              authService.updateStoredUser(currentUser);
-            } catch (error) {
-              // Solo limpiar si hay error real de autenticación
-              console.warn('Token verification failed, keeping stored user');
+            // Validar sesión en background
+            const isValidSession = await authService.validateSession();
+            if (!isValidSession) {
+              // Sesión inválida, hacer logout limpio
+              handleLogout();
             }
           } else {
             setLoading(false);
@@ -67,6 +64,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     initializeAuth();
   }, [isClient]);
+
+  // Session validation on page focus
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const handleFocus = async () => {
+      if (user && authService.isAuthenticated()) {
+        const isValidSession = await authService.validateSession();
+        if (!isValidSession) {
+          handleLogout();
+        }
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [user, isClient]);
+
+  // Helper function for clean logout
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      setUser(null);
+      toast.success('Sesión cerrada exitosamente');
+      router.push('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still clear user state even if logout fails
+      setUser(null);
+      router.push('/');
+    }
+  };
 
   const login = async (credentials: LoginCredentials) => {
     try {
@@ -113,10 +142,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    authService.logout();
-    setUser(null);
-    toast.success('Sesión cerrada exitosamente');
-    router.push('/');
+    handleLogout();
   };
 
   const updateUser = (updatedUser: User) => {

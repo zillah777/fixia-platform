@@ -296,13 +296,52 @@ exports.getCurrentUser = async (req, res) => {
   }
 };
 
+// In-memory blacklist for revoked tokens (in production, use Redis or database)
+const tokenBlacklist = new Set();
+
+// Helper function to add token to blacklist
+const blacklistToken = (token) => {
+  tokenBlacklist.add(token);
+  // Optional: Set timeout to remove token after expiration
+  // This helps prevent memory leaks
+  setTimeout(() => {
+    tokenBlacklist.delete(token);
+  }, 7 * 24 * 60 * 60 * 1000); // 7 days
+};
+
+// Helper function to check if token is blacklisted
+const isTokenBlacklisted = (token) => {
+  return tokenBlacklist.has(token);
+};
+
 // POST /api/auth/logout
 exports.logout = (req, res) => {
-  res.json({
-    success: true,
-    message: 'Sesión cerrada exitosamente'
-  });
+  try {
+    // Get token from request
+    const token = req.headers.authorization?.replace('Bearer ', '') || req.token;
+    
+    if (token) {
+      // Add token to blacklist
+      blacklistToken(token);
+      console.log('Token added to blacklist for logout');
+    }
+    
+    res.json({
+      success: true,
+      message: 'Sesión cerrada exitosamente'
+    });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error al cerrar sesión'
+    });
+  }
 };
+
+// Export blacklist helper functions for use in auth middleware
+exports.isTokenBlacklisted = isTokenBlacklisted;
+exports.blacklistToken = blacklistToken;
 
 // PUT /api/auth/profile
 exports.updateProfile = async (req, res) => {
