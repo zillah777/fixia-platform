@@ -9,28 +9,52 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
         },
         secondary: {
-          50: '#faf5ff',
-          100: '#f3e8ff',
-          200: '#e9d5ff',
-          300: '#d8b4fe',
-          400: '#c084fc',
-          500: '#a855f7',
-          600: '#9333ea',
-          700: '#7c3aed',
-          800: '#6b21a8',
-          900: '#581c87',
+          50: '#fdf4ff',
+          100: '#fae8ff',
+          200: '#f5d0fe',
+          300: '#f0abfc',
+          400: '#e879f9',
+          500: '#d946ef',
+          600: '#c026d3',
+          700: '#a21caf',
+          800: '#86198f',
+          900: '#701a75',
+        },
+        accent: {
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+        },
+        dark: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
         },
         success: {
           50: '#ecfdf5',
@@ -75,6 +99,13 @@ module.exports = {
         'slide-in': 'slideIn 0.3s ease-out',
         'bounce-in': 'bounceIn 0.5s ease-out',
         'float': 'float 3s ease-in-out infinite',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'gradient-x': 'gradientX 15s ease infinite',
+        'gradient-y': 'gradientY 15s ease infinite',
+        'gradient-xy': 'gradientXY 15s ease infinite',
+        'bounce-slow': 'bounce 3s infinite',
+        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+        'spin-slow': 'spin 8s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -98,6 +129,46 @@ module.exports = {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-10px)' },
+        },
+        pulseGlow: {
+          '0%, 100%': { 
+            opacity: '1',
+            boxShadow: '0 0 20px rgba(14, 165, 233, 0.4)'
+          },
+          '50%': { 
+            opacity: '.8',
+            boxShadow: '0 0 40px rgba(14, 165, 233, 0.8)'
+          },
+        },
+        gradientX: {
+          '0%, 100%': {
+            transform: 'translateX(0%)',
+          },
+          '50%': {
+            transform: 'translateX(100%)',
+          },
+        },
+        gradientY: {
+          '0%, 100%': {
+            transform: 'translateY(0%)',
+          },
+          '50%': {
+            transform: 'translateY(100%)',
+          },
+        },
+        gradientXY: {
+          '0%, 100%': {
+            transform: 'translate(0%, 0%)',
+          },
+          '25%': {
+            transform: 'translate(100%, 0%)',
+          },
+          '50%': {
+            transform: 'translate(100%, 100%)',
+          },
+          '75%': {
+            transform: 'translate(0%, 100%)',
+          },
         },
       },
     },

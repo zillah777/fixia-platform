@@ -19,12 +19,22 @@ import {
   EnvelopeIcon,
   PlayCircleIcon,
   Bars3Icon,
-  XMarkIcon
+  XMarkIcon,
+  SparklesIcon,
+  RocketLaunchIcon,
+  BoltIcon,
+  FireIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
 import { useAuth } from '@/contexts/AuthContext';
 import Logo from '@/components/Logo';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import GradientText from '@/components/ui/GradientText';
+import FloatingElement from '@/components/ui/FloatingElement';
+import GlowingOrb from '@/components/ui/GlowingOrb';
+import AnimatedBackground from '@/components/ui/AnimatedBackground';
 
 const serviceCategoriesData = [
   { id: 'plomeria', name: 'Plomería', icon: '🔧', description: 'Reparaciones e instalaciones' },
@@ -262,112 +272,165 @@ const LandingPage: NextPage = () => {
           </div>
         </header>
 
-        {/* Hero Section - AssetClass Inspired */}
-        <section className="min-h-screen bg-white flex items-center justify-center px-4 pt-16">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="space-y-8">
-              <div className="space-y-6">
-                <h1 className="text-6xl md:text-7xl lg:text-8xl font-light tracking-tight text-gray-900">
-                  Conectando
-                  <span className="block font-semibold">Ases y Exploradores</span>
-                </h1>
-                <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-light leading-relaxed">
-                  La plataforma que conecta a los mejores en sus oficios y habilidades con personas que necesitan servicios de calidad.
-                </p>
-                <p className="text-lg text-gray-900 font-medium">
-                  Sin comisiones, sin intermediarios.
-                </p>
-              </div>
+        {/* Hero Section - Ultra Modern & Impactful */}
+        <section className="min-h-screen relative overflow-hidden">
+          <AnimatedBackground variant="gradient" className="min-h-screen">
+            {/* Floating Elements */}
+            <div className="absolute inset-0">
+              <FloatingElement delay={0} className="absolute top-20 left-10">
+                <GlowingOrb size="lg" color="primary" />
+              </FloatingElement>
+              <FloatingElement delay={1} className="absolute top-40 right-20">
+                <GlowingOrb size="md" color="secondary" />
+              </FloatingElement>
+              <FloatingElement delay={2} className="absolute bottom-40 left-20">
+                <GlowingOrb size="sm" color="accent" />
+              </FloatingElement>
+              <FloatingElement delay={0.5} className="absolute bottom-20 right-10">
+                <GlowingOrb size="lg" color="primary" />
+              </FloatingElement>
+            </div>
 
-              {/* Minimal Search Bar */}
-              <div className="max-w-2xl mx-auto space-y-4">
-                <form onSubmit={handleSearch} className="relative">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Buscar servicios..."
-                      className="w-full px-6 py-4 text-lg bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                    />
-                    <button
-                      type="submit"
-                      className="absolute right-2 top-2 px-6 py-2 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors"
-                    >
-                      Buscar
-                    </button>
+            {/* Main Content */}
+            <div className="relative z-10 flex items-center justify-center min-h-screen px-4 pt-16">
+              <div className="max-w-6xl mx-auto text-center">
+                <div className="space-y-12">
+                  {/* Badge */}
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 text-white">
+                    <SparklesIcon className="h-4 w-4" />
+                    <span className="text-sm font-medium">La Revolución Digital de los Servicios</span>
                   </div>
-                </form>
 
-                {/* Clean CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                  <Link href="/auth/registro?type=customer">
-                    <button className="px-8 py-3 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors font-medium">
-                      Soy Explorador
-                    </button>
-                  </Link>
-                  <Link href="/auth/registro?type=provider">
-                    <button className="px-8 py-3 border border-gray-300 text-gray-900 rounded-xl hover:bg-gray-50 transition-colors font-medium">
-                      Soy Especialista
-                    </button>
-                  </Link>
+                  {/* Hero Title */}
+                  <div className="space-y-6">
+                    <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-tight">
+                      Conectando
+                      <br />
+                      <GradientText variant="rainbow" className="text-6xl md:text-7xl lg:text-8xl" animate>
+                        Ases y Exploradores
+                      </GradientText>
+                    </h1>
+                    <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto font-light leading-relaxed">
+                      La plataforma que conecta a los mejores en sus oficios y habilidades con personas que necesitan servicios de calidad.
+                    </p>
+                    <div className="flex items-center justify-center gap-4 text-white/80">
+                      <BoltIcon className="h-5 w-5" />
+                      <span className="text-lg font-medium">Sin comisiones, sin intermediarios</span>
+                      <BoltIcon className="h-5 w-5" />
+                    </div>
+                  </div>
+
+                  {/* Search Section */}
+                  <div className="max-w-3xl mx-auto space-y-8">
+                    <Card variant="glass" className="p-8">
+                      <form onSubmit={handleSearch} className="space-y-6">
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <MagnifyingGlassIcon className="h-6 w-6 text-white/60" />
+                          </div>
+                          <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="¿Qué servicio necesitas hoy?"
+                            className="w-full pl-12 pr-4 py-6 text-lg bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all placeholder-white/60 text-white"
+                          />
+                        </div>
+                        <Button variant="gradient" size="lg" className="w-full" type="submit">
+                          <RocketLaunchIcon className="h-5 w-5 mr-2" />
+                          Buscar Ahora
+                        </Button>
+                      </form>
+                    </Card>
+
+                    {/* CTA Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
+                      <Link href="/auth/registro?type=customer">
+                        <Button variant="glow" size="xl" className="min-w-[200px]">
+                          <UserGroupIcon className="h-6 w-6 mr-2" />
+                          Soy Explorador
+                        </Button>
+                      </Link>
+                      <Link href="/auth/registro?type=provider">
+                        <Button variant="outline" size="xl" className="min-w-[200px] border-white text-white hover:bg-white hover:text-primary-600">
+                          <BriefcaseIcon className="h-6 w-6 mr-2" />
+                          Soy Especialista
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </AnimatedBackground>
         </section>
 
-        {/* Trust Indicators - Minimal */}
-        <section className="py-16 bg-gray-50">
+        {/* Trust Indicators - Modern */}
+        <section className="py-20 bg-gradient-to-br from-white to-gray-50">
           <div className="max-w-6xl mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-              <div className="space-y-2">
-                <CheckCircleIcon className="h-8 w-8 text-gray-900 mx-auto" />
-                <h3 className="font-medium text-gray-900">Algoritmos Inteligentes</h3>
-                <p className="text-gray-600 text-sm">Conexiones precisas y automáticas</p>
-              </div>
-              <div className="space-y-2">
-                <ShieldCheckIcon className="h-8 w-8 text-gray-900 mx-auto" />
-                <h3 className="font-medium text-gray-900">Confianza Verificada</h3>
-                <p className="text-gray-600 text-sm">Profesionales validados y evaluados</p>
-              </div>
-              <div className="space-y-2">
-                <StarIcon className="h-8 w-8 text-gray-900 mx-auto" />
-                <h3 className="font-medium text-gray-900">Conexiones Perfectas</h3>
-                <p className="text-gray-600 text-sm">Matchmaking basado en compatibilidad</p>
-              </div>
+            <div className="text-center mb-16">
+              <GradientText variant="primary" className="text-4xl md:text-5xl mb-4">
+                Por qué somos diferentes
+              </GradientText>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Tecnología de vanguardia al servicio de conexiones humanas auténticas
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Card variant="interactive" hover glow className="p-8 text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <BoltIcon className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Algoritmos Inteligentes</h3>
+                <p className="text-gray-600">IA avanzada que conecta necesidades específicas con el talento perfecto</p>
+              </Card>
+              <Card variant="interactive" hover glow className="p-8 text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <ShieldCheckIcon className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Confianza Verificada</h3>
+                <p className="text-gray-600">Profesionales validados con certificaciones y reseñas auténticas</p>
+              </Card>
+              <Card variant="interactive" hover glow className="p-8 text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-accent-500 to-accent-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <StarIcon className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Resultados Excepcionales</h3>
+                <p className="text-gray-600">98% de satisfacción garantizada en cada conexión</p>
+              </Card>
             </div>
           </div>
         </section>
 
-        {/* Service Categories - Minimal */}
-        <section id="servicios" className="py-20 bg-white">
-          <div className="max-w-6xl mx-auto px-4">
+        {/* Service Categories - Ultra Modern */}
+        <section id="servicios" className="py-20 bg-gradient-to-br from-dark-900 to-dark-800 relative overflow-hidden">
+          <AnimatedBackground variant="particles" className="absolute inset-0" />
+          <div className="max-w-6xl mx-auto px-4 relative z-10">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-4">
-                Excelencia en cada categoría
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <GradientText variant="sunset" className="text-5xl md:text-6xl mb-6">
+                Servicios que Transforman
+              </GradientText>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
                 Cada especialista es cuidadosamente seleccionado. Cada proyecto, una oportunidad de crear algo extraordinario.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {serviceCategoriesData.map((category, index) => (
                 <Link key={category.id} href={`/explorador/buscar-servicio?category=${category.id}`}>
-                  <div className="group p-8 bg-white border border-gray-200 rounded-2xl hover:border-gray-300 transition-all duration-200 cursor-pointer">
-                    <div className="text-4xl mb-6">
+                  <Card variant="glass" hover className="p-8 group cursor-pointer">
+                    <div className="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
                       {category.icon}
                     </div>
-                    <h3 className="text-xl font-medium text-gray-900 mb-3">
+                    <h3 className="text-2xl font-bold text-white mb-4">
                       {category.name}
                     </h3>
-                    <p className="text-gray-600 mb-6">{category.description}</p>
-                    <div className="flex items-center text-gray-900 font-medium group-hover:translate-x-1 transition-transform">
+                    <p className="text-gray-300 mb-6">{category.description}</p>
+                    <div className="flex items-center text-white font-medium group-hover:translate-x-2 transition-transform">
                       <span>Explorar especialistas</span>
-                      <ArrowRightIcon className="h-4 w-4 ml-2" />
+                      <ArrowRightIcon className="h-5 w-5 ml-2" />
                     </div>
-                  </div>
+                  </Card>
                 </Link>
               ))}
             </div>
@@ -435,40 +498,38 @@ const LandingPage: NextPage = () => {
           </div>
         </section>
 
-        {/* Featured Professionals */}
-        <section id="profesionales" className="section-padding bg-white">
-          <div className="container">
-            <div className="content-medium text-center mb-16 slide-up-on-scroll">
-              <h2 className="text-4xl font-bold text-primary mb-6">
+        {/* Featured Professionals - Ultra Modern */}
+        <section id="profesionales" className="py-20 bg-gradient-to-br from-gray-50 to-white relative">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <GradientText variant="primary" className="text-5xl md:text-6xl mb-6">
                 Especialistas de Elite
-              </h2>
-              <p className="text-xl text-secondary">
+              </GradientText>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Profesionales excepcionales que han sido rigurosamente evaluados y que consistentemente superan expectativas.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {featuredProfessionals.map((professional, index) => (
-                <div key={professional.id} className={`card hover-lift hover-magnetic ripple cursor-pointer scale-in-on-scroll stagger-${index + 1} hover-tilt`}>
-                  <div className="card-header">
-                    <div className="flex items-center">
-                      <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mr-4 shadow-lg hover:shadow-xl transition-shadow hover-bounce">
-                        <UserGroupIcon className="h-8 w-8 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="card-title">{professional.name}</h3>
-                        <p className="card-subtitle">{professional.profession}</p>
-                      </div>
+                <Card key={professional.id} variant="elevated" hover glow className="p-8 group cursor-pointer">
+                  <div className="flex items-center mb-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mr-4 shadow-lg group-hover:shadow-xl transition-shadow">
+                      <UserGroupIcon className="h-8 w-8 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">{professional.name}</h3>
+                      <p className="text-gray-600">{professional.profession}</p>
                     </div>
                   </div>
 
-                  <div className="card-body">
+                  <div className="mb-6">
                     <div className="flex items-center mb-4">
                       {renderStars(Math.round(professional.rating))}
-                      <span className="ml-2 text-sm font-medium text-primary">
+                      <span className="ml-2 text-sm font-medium text-primary-600">
                         {professional.rating}
                       </span>
-                      <span className="ml-1 text-sm text-tertiary">
+                      <span className="ml-1 text-sm text-gray-500">
                         ({professional.reviews} reseñas)
                       </span>
                     </div>
@@ -484,20 +545,21 @@ const LandingPage: NextPage = () => {
                       ))}
                     </div>
 
-                    <div className="flex items-center text-sm text-tertiary">
+                    <div className="flex items-center text-sm text-gray-500">
                       <MapPinIcon className="h-4 w-4 mr-2" />
                       <span>{professional.location}</span>
                     </div>
                   </div>
-                </div>
+                </Card>
               ))}
             </div>
 
-            <div className="text-center mt-12 fade-in-on-scroll">
+            <div className="text-center mt-12">
               <Link href="/explorador/navegar-profesionales">
-                <button className="btn btn-outline btn-lg btn-magnetic hover-lift">
-                  Ver Todos los AS
-                </button>
+                <Button variant="gradient" size="lg">
+                  Ver Todos los Especialistas
+                  <ArrowRightIcon className="h-5 w-5 ml-2" />
+                </Button>
               </Link>
             </div>
           </div>
@@ -541,150 +603,172 @@ const LandingPage: NextPage = () => {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="section-padding bg-gradient-primary relative overflow-hidden">
-          <div className="absolute inset-0 bg-black/20"></div>
-          <div className="container relative">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-              <div className="scale-in-on-scroll stagger-1 hover-lift cursor-pointer hover-magnetic">
-                <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">500+</div>
-                <div className="text-primary-200 font-medium">Especialistas de Elite</div>
-              </div>
-              <div className="scale-in-on-scroll stagger-2 hover-lift cursor-pointer hover-magnetic">
-                <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">2,000+</div>
-                <div className="text-primary-200 font-medium">Proyectos Transformados</div>
-              </div>
-              <div className="scale-in-on-scroll stagger-3 hover-lift cursor-pointer hover-magnetic">
-                <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">4.8</div>
-                <div className="text-primary-200 font-medium">Calificación Promedio</div>
-              </div>
-              <div className="scale-in-on-scroll stagger-4 hover-lift cursor-pointer hover-magnetic">
-                <div className="text-5xl font-bold text-white mb-3 animate-pulse hover-bounce">98%</div>
-                <div className="text-primary-200 font-medium">Resultados Excepcionales</div>
-              </div>
+        {/* Stats Section - Ultra Dynamic */}
+        <section className="py-20 bg-gradient-to-br from-dark-900 via-primary-900 to-secondary-900 relative overflow-hidden">
+          <AnimatedBackground variant="geometric" className="absolute inset-0" />
+          <div className="max-w-6xl mx-auto px-4 relative z-10">
+            <div className="text-center mb-16">
+              <GradientText variant="ocean" className="text-4xl md:text-5xl mb-4">
+                Resultados que Hablan
+              </GradientText>
+              <p className="text-xl text-white/80">Números que demuestran nuestra excelencia</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              <Card variant="glass" className="p-8 text-center group hover:scale-105 transition-transform">
+                <div className="text-5xl font-bold text-white mb-3 group-hover:animate-bounce">
+                  <GradientText variant="sunset">500+</GradientText>
+                </div>
+                <div className="text-white/80 font-medium">Especialistas de Elite</div>
+              </Card>
+              <Card variant="glass" className="p-8 text-center group hover:scale-105 transition-transform">
+                <div className="text-5xl font-bold text-white mb-3 group-hover:animate-bounce">
+                  <GradientText variant="sunset">2,000+</GradientText>
+                </div>
+                <div className="text-white/80 font-medium">Proyectos Transformados</div>
+              </Card>
+              <Card variant="glass" className="p-8 text-center group hover:scale-105 transition-transform">
+                <div className="text-5xl font-bold text-white mb-3 group-hover:animate-bounce">
+                  <GradientText variant="sunset">4.8</GradientText>
+                </div>
+                <div className="text-white/80 font-medium">Calificación Promedio</div>
+              </Card>
+              <Card variant="glass" className="p-8 text-center group hover:scale-105 transition-transform">
+                <div className="text-5xl font-bold text-white mb-3 group-hover:animate-bounce">
+                  <GradientText variant="sunset">98%</GradientText>
+                </div>
+                <div className="text-white/80 font-medium">Resultados Excepcionales</div>
+              </Card>
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="section-padding bg-white">
-          <div className="content-medium text-center">
-            <div className="slide-up-on-scroll">
-              <h2 className="text-4xl font-bold text-primary mb-6">
+        {/* CTA Section - Ultra Impactful */}
+        <section className="py-20 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
+          <AnimatedBackground variant="waves" className="absolute inset-0" />
+          <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <div className="space-y-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 rounded-full">
+                <FireIcon className="h-4 w-4 text-primary-600" />
+                <span className="text-sm font-medium text-primary-800">¡Únete a la Revolución!</span>
+              </div>
+              
+              <GradientText variant="rainbow" className="text-5xl md:text-6xl mb-6">
                 Tu Proyecto Excepcional Te Espera
-              </h2>
-              <p className="text-xl text-secondary mb-8">
+              </GradientText>
+              
+              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
                 Únete a la comunidad de visionarios que han elegido la excelencia como estándar.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
                 <Link href="/auth/registro?type=customer">
-                  <button className="btn btn-primary btn-lg btn-magnetic hover-lift animate-glow">
+                  <Button variant="gradient" size="xl" className="min-w-[250px]">
+                    <UserGroupIcon className="h-6 w-6 mr-2" />
                     Soy Explorador
                     <ArrowRightIcon className="h-5 w-5 ml-2" />
-                  </button>
+                  </Button>
                 </Link>
                 <Link href="/auth/registro?type=provider">
-                  <button className="btn btn-outline btn-lg btn-magnetic hover-lift">
+                  <Button variant="outline" size="xl" className="min-w-[250px]">
+                    <BriefcaseIcon className="h-6 w-6 mr-2" />
                     Soy Especialista
-                    <BriefcaseIcon className="h-5 w-5 ml-2" />
-                  </button>
+                    <ArrowRightIcon className="h-5 w-5 ml-2" />
+                  </Button>
                 </Link>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Footer */}
-        <footer id="contacto" className="bg-dark text-white section-padding relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-900/20 to-secondary-900/20"></div>
-          <div className="container relative">
+        {/* Footer - Ultra Modern */}
+        <footer id="contacto" className="bg-gradient-to-br from-dark-900 to-dark-800 text-white py-20 relative overflow-hidden">
+          <AnimatedBackground variant="gradient" className="absolute inset-0" />
+          <div className="max-w-6xl mx-auto px-4 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div className="fade-in-on-scroll">
+              <div className="space-y-4">
                 <Logo size="lg" variant="white" className="mb-4" />
-                <p className="text-neutral-300 mb-4 leading-relaxed">
+                <p className="text-gray-300 mb-4 leading-relaxed">
                   La evolución digital de los servicios profesionales. Donde cada conexión es el inicio de algo extraordinario.
                 </p>
                 <div className="flex space-x-4">
-                  <span className="text-neutral-400 font-medium">Síguenos:</span>
-                  {/* Social icons could go here */}
+                  <GradientText variant="sunset" className="font-medium">Síguenos:</GradientText>
                 </div>
               </div>
 
-              <div className="fade-in-on-scroll stagger-1">
-                <h4 className="font-semibold mb-4 text-lg">Para Exploradores</h4>
-                <ul className="space-y-3 text-neutral-300">
+              <div>
+                <h4 className="font-semibold mb-4 text-lg text-white">Para Exploradores</h4>
+                <ul className="space-y-3 text-gray-300">
                   <li>
-                    <Link href="/explorador/buscar-servicio" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                    <Link href="/explorador/buscar-servicio" className="hover:text-primary-400 transition-colors">
                       Descubrimiento Inteligente
                     </Link>
                   </li>
                   <li>
-                    <Link href="/explorador/navegar-profesionales" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                    <Link href="/explorador/navegar-profesionales" className="hover:text-primary-400 transition-colors">
                       Explorar Talento
                     </Link>
                   </li>
                   <li>
-                    <Link href="/auth/registro?type=customer" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                    <Link href="/auth/registro?type=customer" className="hover:text-primary-400 transition-colors">
                       Registro Explorador
                     </Link>
                   </li>
                 </ul>
               </div>
 
-              <div className="fade-in-on-scroll stagger-2">
-                <h4 className="font-semibold mb-4 text-lg">Para Especialistas</h4>
-                <ul className="space-y-3 text-neutral-300">
+              <div>
+                <h4 className="font-semibold mb-4 text-lg text-white">Para Especialistas</h4>
+                <ul className="space-y-3 text-gray-300">
                   <li>
-                    <Link href="/auth/registro?type=provider" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                    <Link href="/auth/registro?type=provider" className="hover:text-primary-400 transition-colors">
                       Unirse como Especialista
                     </Link>
                   </li>
                   <li>
-                    <Link href="/explorador/cambiar-a-as" className="hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                    <Link href="/explorador/cambiar-a-as" className="hover:text-primary-400 transition-colors">
                       Convertirse en AS
                     </Link>
                   </li>
                 </ul>
               </div>
 
-              <div className="fade-in-on-scroll stagger-3">
-                <h4 className="font-semibold mb-4 text-lg">Contacto</h4>
-                <div className="space-y-3 text-neutral-300">
-                  <div className="flex items-center hover:text-primary-400 transition-colors cursor-pointer hover-lift hover-magnetic">
-                    <EnvelopeIcon className="h-5 w-5 mr-3 hover-bounce" />
+              <div>
+                <h4 className="font-semibold mb-4 text-lg text-white">Contacto</h4>
+                <div className="space-y-3 text-gray-300">
+                  <div className="flex items-center hover:text-primary-400 transition-colors cursor-pointer">
+                    <EnvelopeIcon className="h-5 w-5 mr-3" />
                     <span>info@fixia.com.ar</span>
                   </div>
-                  <div className="flex items-center hover:text-primary-400 transition-colors cursor-pointer hover-lift hover-magnetic">
-                    <PhoneIcon className="h-5 w-5 mr-3 hover-bounce" />
+                  <div className="flex items-center hover:text-primary-400 transition-colors cursor-pointer">
+                    <PhoneIcon className="h-5 w-5 mr-3" />
                     <span>+54 11 1234-5678</span>
                   </div>
-                  <div className="flex items-center hover:text-primary-400 transition-colors cursor-pointer hover-lift hover-magnetic">
-                    <MapPinIcon className="h-5 w-5 mr-3 hover-bounce" />
+                  <div className="flex items-center hover:text-primary-400 transition-colors cursor-pointer">
+                    <MapPinIcon className="h-5 w-5 mr-3" />
                     <span>Argentina</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-neutral-800 mt-12 pt-8">
+            <div className="border-t border-gray-700 mt-12 pt-8">
               <div className="flex flex-col md:flex-row justify-between items-center">
-                <p className="text-neutral-400">
+                <p className="text-gray-400">
                   © 2024 Fixia. Todos los derechos reservados.
                 </p>
                 <div className="flex space-x-6 mt-4 md:mt-0">
                   <Link href="/legal/terms">
-                    <span className="text-neutral-400 hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                    <span className="text-gray-400 hover:text-primary-400 transition-colors">
                       Términos
                     </span>
                   </Link>
                   <Link href="/legal/privacy">
-                    <span className="text-neutral-400 hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                    <span className="text-gray-400 hover:text-primary-400 transition-colors">
                       Privacidad
                     </span>
                   </Link>
                   <Link href="/company/contact">
-                    <span className="text-neutral-400 hover:text-primary-400 transition-colors hover-lift hover-magnetic">
+                    <span className="text-gray-400 hover:text-primary-400 transition-colors">
                       Contacto
                     </span>
                   </Link>
