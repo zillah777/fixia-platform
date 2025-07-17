@@ -27,13 +27,61 @@ const comparePassword = async (password, hash) => {
 // POST /api/auth/register
 exports.register = async (req, res) => {
   try {
-    // Test 1: Basic response
-    return res.status(200).json({
-      success: true,
-      message: 'Test response - registration endpoint working',
-      data: req.body
-    });
+    const { 
+      first_name, 
+      last_name, 
+      email, 
+      password, 
+      user_type = 'customer'
+    } = req.body;
+
+    // Basic validation
+    if (!first_name || !last_name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Todos los campos requeridos deben ser proporcionados'
+      });
+    }
+
+    // Transform customer to client for database compatibility
+    const dbUserType = user_type === 'customer' ? 'client' : user_type;
     
+    // Hash password
+    const password_hash = await hashPassword(password);
+
+    // Create user with minimal fields
+    const result = await query(`
+      INSERT INTO users (
+        first_name, last_name, email, password_hash, user_type
+      ) VALUES ($1, $2, $3, $4, $5)
+      RETURNING id, first_name, last_name, email, user_type, created_at
+    `, [
+      first_name, last_name, email, password_hash, dbUserType
+    ]);
+
+    const user = result.rows[0];
+    
+    // Transform back to customer for frontend
+    if (user.user_type === 'client') {
+      user.user_type = 'customer';
+    }
+
+    // Generate token
+    const token = generateToken({ 
+      id: user.id, 
+      email: user.email, 
+      user_type: user.user_type 
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Usuario registrado exitosamente',
+      data: {
+        user,
+        token
+      }
+    });
+
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({
