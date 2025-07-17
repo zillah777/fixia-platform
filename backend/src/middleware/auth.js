@@ -40,8 +40,6 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET, {
-      issuer: process.env.JWT_ISSUER || 'fixia-api',
-      audience: process.env.JWT_AUDIENCE || 'fixia-app',
       clockTolerance: 60 // 1 minuto de tolerancia para clock skew
     });
 
