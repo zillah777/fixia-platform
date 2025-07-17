@@ -200,8 +200,15 @@ exports.login = async (req, res) => {
       completed_bookings: 0
     };
 
+    const sanitizedUser = sanitizeUser(user);
+    
+    // Transform client to customer for frontend compatibility
+    if (sanitizedUser.user_type === 'client') {
+      sanitizedUser.user_type = 'customer';
+    }
+
     const userWithStats = {
-      ...sanitizeUser(user),
+      ...sanitizedUser,
       stats: {
         total_services: parseInt(stats.total_services),
         total_reviews: parseInt(stats.total_reviews),
