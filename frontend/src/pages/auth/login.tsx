@@ -36,6 +36,7 @@ const LoginPage: NextPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [verificationMessage, setVerificationMessage] = useState<string | null>(null);
 
   const {
     register,
@@ -45,6 +46,13 @@ const LoginPage: NextPage = () => {
   } = useForm<LoginCredentials>({
     resolver: yupResolver(loginSchema)
   });
+
+  useEffect(() => {
+    // Check for verification message in URL
+    if (router.query.message === 'verification_required') {
+      setVerificationMessage('¡Cuenta creada exitosamente! Revisa tu email y haz clic en el enlace de verificación para activar tu cuenta.');
+    }
+  }, [router.query.message]);
 
   useEffect(() => {
     if (!loading && user) {
@@ -133,6 +141,17 @@ const LoginPage: NextPage = () => {
 
             {/* Login Form */}
             <div className="card glass hover-lift animate-scale-in" style={{animationDelay: '0.2s'}}>
+              {verificationMessage && (
+                <div className="mb-6 bg-gradient-to-r from-green-50 to-emerald-100 border border-green-200 rounded-xl p-4">
+                  <div className="flex items-center">
+                    <svg className="h-5 w-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p className="text-sm text-green-700 font-medium">{verificationMessage}</p>
+                  </div>
+                </div>
+              )}
+              
               {loginError && (
                 <div className="mb-6 bg-gradient-to-r from-error-50 to-error-100 border border-error-200 rounded-xl p-4 animate-shake">
                   <div className="flex items-center">

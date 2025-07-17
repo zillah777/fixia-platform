@@ -123,14 +123,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setLoading(true);
       const authData = await authService.register(data);
-      setUser(authData.user);
-      toast.success(`¡Cuenta creada exitosamente! Bienvenido, ${authData.user.first_name}!`);
       
-      // Redirect based on user type
-      if (authData.user.user_type === 'provider') {
-        router.push('/as/dashboard');
+      // Check if email verification is required
+      if (authData.requiresVerification || authData.emailVerificationRequired) {
+        // Don't set user or redirect, show verification message
+        toast.success('¡Cuenta creada! Revisa tu email para verificar tu cuenta antes de iniciar sesión.');
+        router.push('/auth/login?message=verification_required');
       } else {
-        router.push('/explorador/dashboard');
+        // Normal registration flow
+        setUser(authData.user);
+        toast.success(`¡Cuenta creada exitosamente! Bienvenido, ${authData.user.first_name}!`);
+        
+        // Redirect based on user type
+        if (authData.user.user_type === 'provider') {
+          router.push('/as/dashboard');
+        } else {
+          router.push('/explorador/dashboard');
+        }
       }
     } catch (error: any) {
       const message = error.response?.data?.error || 'Error al crear cuenta';

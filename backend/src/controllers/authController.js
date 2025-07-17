@@ -90,9 +90,9 @@ exports.register = async (req, res) => {
       success: true,
       message: 'Usuario registrado exitosamente. Revisa tu email para verificar tu cuenta.',
       data: {
-        user,
-        token,
-        emailVerificationRequired: true
+        user: sanitizeUser(user),
+        emailVerificationRequired: true,
+        requiresVerification: true
       }
     });
 
