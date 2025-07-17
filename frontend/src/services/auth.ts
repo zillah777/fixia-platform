@@ -176,9 +176,21 @@ export const authService = {
         return true;
       }
       return false;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Session validation failed:', error);
-      this.logout();
+      
+      // Only logout for auth-related errors, not network/server errors
+      if (error.response?.status === 401) {
+        const errorMessage = error.response?.data?.error || '';
+        if (errorMessage.includes('Token expirado') || 
+            errorMessage.includes('Token inválido') || 
+            errorMessage.includes('Token revocado') ||
+            errorMessage.includes('Usuario no encontrado') ||
+            errorMessage.includes('Cuenta desactivada')) {
+          this.logout();
+        }
+      }
+      
       return false;
     }
   }

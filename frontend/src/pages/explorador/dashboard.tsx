@@ -32,7 +32,8 @@ const ExplorerDashboard: NextPage = () => {
   const { stats, loading: statsLoading, error } = useExploradorDashboardData();
 
   useEffect(() => {
-    if (!loading && user?.user_type !== 'customer') {
+    if (!loading && user && user.user_type !== 'customer') {
+      console.warn('User type mismatch:', user.user_type, 'expected: customer');
       router.push('/auth/login');
       return;
     }

@@ -44,14 +44,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setUser(storedUser);
             setLoading(false);
             
-            // Delay session validation to avoid race conditions
-            setTimeout(async () => {
-              const isValidSession = await authService.validateSession();
-              if (!isValidSession) {
-                // Sesión inválida, hacer logout limpio
-                handleLogout();
-              }
-            }, 1000);
+            // Session validation disabled to prevent auto-logout issues
+            // setTimeout(async () => {
+            //   const isValidSession = await authService.validateSession();
+            //   if (!isValidSession) {
+            //     // Sesión inválida, hacer logout limpio
+            //     handleLogout();
+            //   }
+            // }, 1000);
           } else {
             setLoading(false);
           }
@@ -67,22 +67,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     initializeAuth();
   }, [isClient]);
 
-  // Session validation on page focus
-  useEffect(() => {
-    if (!isClient) return;
-    
-    const handleFocus = async () => {
-      if (user && authService.isAuthenticated()) {
-        const isValidSession = await authService.validateSession();
-        if (!isValidSession) {
-          handleLogout();
-        }
-      }
-    };
+  // Session validation on page focus - disabled to prevent auto-logout issues
+  // useEffect(() => {
+  //   if (!isClient) return;
+  //   
+  //   const handleFocus = async () => {
+  //     if (user && authService.isAuthenticated()) {
+  //       const isValidSession = await authService.validateSession();
+  //       if (!isValidSession) {
+  //         handleLogout();
+  //       }
+  //     }
+  //   };
 
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
-  }, [user, isClient]);
+  //   window.addEventListener('focus', handleFocus);
+  //   return () => window.removeEventListener('focus', handleFocus);
+  // }, [user, isClient]);
 
   // Helper function for clean logout
   const handleLogout = async () => {
