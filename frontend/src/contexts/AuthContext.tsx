@@ -44,12 +44,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setUser(storedUser);
             setLoading(false);
             
-            // Validar sesión en background
-            const isValidSession = await authService.validateSession();
-            if (!isValidSession) {
-              // Sesión inválida, hacer logout limpio
-              handleLogout();
-            }
+            // Delay session validation to avoid race conditions
+            setTimeout(async () => {
+              const isValidSession = await authService.validateSession();
+              if (!isValidSession) {
+                // Sesión inválida, hacer logout limpio
+                handleLogout();
+              }
+            }, 1000);
           } else {
             setLoading(false);
           }

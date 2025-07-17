@@ -36,11 +36,24 @@ api.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/auth/login';
-      toast.error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+      // Only auto-logout for specific 401 errors, not all of them
+      const errorMessage = error.response?.data?.error || '';
+      
+      // Auto-logout only for these specific errors
+      if (errorMessage.includes('Token expirado') || 
+          errorMessage.includes('Token inválido') || 
+          errorMessage.includes('Token revocado') ||
+          errorMessage.includes('Usuario no encontrado') ||
+          errorMessage.includes('Cuenta desactivada')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('loginTime');
+        window.location.href = '/auth/login';
+        toast.error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+      } else {
+        // For other 401 errors, just reject without auto-logout
+        console.warn('401 error without auto-logout:', errorMessage);
+      }
     } else if (error.response?.status === 403) {
       toast.error('No tienes permisos para realizar esta acción.');
     } else if (error.response?.status === 404) {

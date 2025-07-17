@@ -74,8 +74,8 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // Verificar si el token fue emitido antes del último login
-    if (user.last_login && decoded.iat * 1000 < new Date(user.last_login).getTime()) {
+    // Verificar si el token fue emitido antes del último login (con tolerancia de 5 minutos)
+    if (user.last_login && decoded.iat * 1000 < new Date(user.last_login).getTime() - 300000) {
       return res.status(401).json({
         success: false,
         error: 'Token obsoleto. Inicia sesión nuevamente.'
