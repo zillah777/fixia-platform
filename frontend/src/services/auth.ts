@@ -53,16 +53,25 @@ export const authService = {
   },
 
   // Register
-  async register(data: RegisterData): Promise<AuthUser> {
-    const response = await api.post<ApiResponse<AuthUser>>('/api/auth/register', data);
-    const { user, token } = response.data.data;
+  async register(data: RegisterData): Promise<any> {
+    const response = await api.post<ApiResponse<any>>('/api/auth/register', data);
+    const responseData = response.data.data;
     
-    // Store in localStorage securely
-    safeLocalStorage.setItem('token', token);
-    safeLocalStorage.setItem('user', JSON.stringify(user));
-    safeLocalStorage.setItem('loginTime', new Date().toISOString());
+    // Check if email verification is required
+    if (responseData.requiresVerification || responseData.emailVerificationRequired) {
+      // Don't store token or user for unverified accounts
+      return responseData;
+    }
     
-    return response.data.data;
+    // Normal registration flow (if verification not required)
+    const { user, token } = responseData;
+    if (token) {
+      safeLocalStorage.setItem('token', token);
+      safeLocalStorage.setItem('user', JSON.stringify(user));
+      safeLocalStorage.setItem('loginTime', new Date().toISOString());
+    }
+    
+    return responseData;
   },
 
   // Get current user
