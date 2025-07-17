@@ -89,7 +89,7 @@ app.use('/api/explorer-reviews', require('./src/routes/explorer-reviews'));
 app.use('/api/as-reviews', require('./src/routes/as-reviews'));
 app.use('/api/mutual-confirmation', require('./src/routes/mutual-confirmation'));
 app.use('/api/role-switching', require('./src/routes/role-switching'));
-app.use('/api/dashboard', authMiddleware, require('./src/routes/dashboard'));
+app.use('/api/dashboard', require('./src/routes/dashboard'));
 app.use('/api/verification', require('./src/routes/verification'));
 
 // Socket.IO connection handling
