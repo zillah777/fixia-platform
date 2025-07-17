@@ -10,8 +10,10 @@ const sanitizeUser = (user) => {
   return sanitizedUser;
 };
 
-// Import generateToken from auth middleware to ensure consistency
-const { generateToken } = require('../middleware/auth');
+// Generate JWT token
+const generateToken = (payload) => {
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || '7d' });
+};
 
 // Hash password
 const hashPassword = async (password) => {
