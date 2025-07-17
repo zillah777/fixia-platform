@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
 const { query } = require('../config/database');
 const { validateEmail, validatePassword } = require('../utils/validation');
 const EmailService = require('../services/emailService');
@@ -12,6 +11,7 @@ const sanitizeUser = (user) => {
 };
 
 // Generate JWT token with consistent parameters
+const crypto = require('crypto');
 const generateToken = (payload) => {
   const jti = crypto.randomUUID();
   return jwt.sign(
