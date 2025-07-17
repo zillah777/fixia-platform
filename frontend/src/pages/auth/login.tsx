@@ -58,12 +58,15 @@ const LoginPage: NextPage = () => {
     if (!loading && user) {
       // Only redirect if we're actually on the login page (prevent redirect loops)
       if (router.pathname === '/auth/login') {
-        // Redirect based on user type
-        if (user.user_type === 'provider') {
-          router.push('/as/dashboard');
-        } else {
-          router.push('/explorador/dashboard');
-        }
+        // Add delay to prevent rapid redirects
+        setTimeout(() => {
+          // Redirect based on user type
+          if (user.user_type === 'provider') {
+            router.push('/as/dashboard');
+          } else {
+            router.push('/explorador/dashboard');
+          }
+        }, 100);
       }
     }
   }, [user, loading, router]);

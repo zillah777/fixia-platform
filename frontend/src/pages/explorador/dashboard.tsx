@@ -36,14 +36,20 @@ const ExplorerDashboard: NextPage = () => {
       if (!user) {
         // Only redirect to login if we're actually on the dashboard (prevent redirect loops)
         if (router.pathname === '/explorador/dashboard') {
-          router.push('/auth/login');
+          // Add delay to prevent rapid redirects
+          setTimeout(() => {
+            router.push('/auth/login');
+          }, 100);
         }
         return;
       }
       
       if (user.user_type !== 'customer') {
         console.warn('User type mismatch:', user.user_type, 'expected: customer');
-        router.push('/auth/login');
+        // Add delay to prevent rapid redirects
+        setTimeout(() => {
+          router.push('/auth/login');
+        }, 100);
         return;
       }
     }
