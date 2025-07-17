@@ -171,11 +171,11 @@ exports.login = async (req, res) => {
       [user.id]
     );
 
-    // Generate token
+    // Generate token with database user_type (client)
     const token = generateToken({ 
       id: user.id, 
       email: user.email, 
-      user_type: user.user_type 
+      user_type: user.user_type  // Keep as 'client' for database compatibility
     });
 
     // Get user stats

@@ -56,7 +56,8 @@ app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    version: 'v1.0.1-auth-fix' // Force Railway redeploy
   });
 });
 
