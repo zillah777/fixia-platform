@@ -16,14 +16,10 @@ router.get('/explorer-stats', authMiddleware, cacheMiddleware(120), async (req, 
         COUNT(DISTINCT b.id) FILTER (WHERE b.status IN ('pending', 'confirmed', 'in_progress')) as active_bookings,
         COUNT(DISTINCT b.id) FILTER (WHERE b.status = 'completed') as completed_bookings,
         COALESCE(SUM(b.total_amount) FILTER (WHERE b.status = 'completed'), 0) as total_spent,
-        COUNT(DISTINCT f.service_id) as favorite_services,
-        COUNT(DISTINCT m.id) FILTER (WHERE m.is_read = false AND m.sender_id != $1) as unread_messages
+        0 as favorite_services,
+        0 as unread_messages
       FROM users u
-      LEFT JOIN bookings b ON u.id = b.customer_id
-      LEFT JOIN favorites f ON u.id = f.user_id
-      LEFT JOIN messages m ON (m.chat_id IN (
-        SELECT id FROM chats WHERE customer_id = $1 OR provider_id = $1
-      ))
+      LEFT JOIN bookings b ON u.id = b.client_id
       WHERE u.id = $1
       GROUP BY u.id
     `;
@@ -42,16 +38,16 @@ router.get('/explorer-stats', authMiddleware, cacheMiddleware(120), async (req, 
       SELECT 
         b.id,
         b.status,
-        b.scheduled_date,
-        b.scheduled_time,
+        b.booking_date as scheduled_date,
+        b.booking_time as scheduled_time,
         b.total_amount,
-        s.title as service_title,
-        u.first_name as provider_name,
-        u.last_name as provider_last_name
+        COALESCE(s.title, 'Servicio') as service_title,
+        COALESCE(u.first_name, 'Proveedor') as provider_name,
+        COALESCE(u.last_name, '') as provider_last_name
       FROM bookings b
-      JOIN services s ON b.service_id = s.id
-      JOIN users u ON b.provider_id = u.id
-      WHERE b.customer_id = $1
+      LEFT JOIN services s ON b.service_id = s.id
+      LEFT JOIN users u ON b.provider_id = u.id
+      WHERE b.client_id = $1
       ORDER BY b.created_at DESC
       LIMIT 5
     `;
