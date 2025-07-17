@@ -49,7 +49,7 @@ export const dashboardService = {
   // AS Dashboard Stats
   async getASDashboardStats(): Promise<DashboardStats> {
     try {
-      const response = await api.get('/dashboard/as-stats');
+      const response = await api.get('/api/dashboard/as-stats');
       return response.data.data.stats;
     } catch (error) {
       console.error('Error fetching AS dashboard stats:', error);
@@ -70,7 +70,7 @@ export const dashboardService = {
   // Explorador Dashboard Stats
   async getExploradorDashboardStats(): Promise<any> {
     try {
-      const response = await api.get('/dashboard/explorer-stats');
+      const response = await api.get('/api/dashboard/explorer-stats');
       return response.data.data.stats;
     } catch (error) {
       console.error('Error fetching Explorador dashboard stats:', error);
