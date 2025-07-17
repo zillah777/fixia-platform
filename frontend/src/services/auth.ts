@@ -49,6 +49,11 @@ export const authService = {
     safeLocalStorage.setItem('user', JSON.stringify(user));
     safeLocalStorage.setItem('loginTime', new Date().toISOString());
     
+    // Also store token in cookie for middleware access
+    if (typeof document !== 'undefined') {
+      document.cookie = `auth-token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
+    }
+    
     return response.data.data;
   },
 
@@ -69,6 +74,11 @@ export const authService = {
       safeLocalStorage.setItem('token', token);
       safeLocalStorage.setItem('user', JSON.stringify(user));
       safeLocalStorage.setItem('loginTime', new Date().toISOString());
+      
+      // Also store token in cookie for middleware access
+      if (typeof document !== 'undefined') {
+        document.cookie = `auth-token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
+      }
     }
     
     return responseData;
@@ -93,6 +103,11 @@ export const authService = {
       safeLocalStorage.removeItem('token');
       safeLocalStorage.removeItem('user');
       safeLocalStorage.removeItem('loginTime');
+      
+      // Clear auth cookie
+      if (typeof document !== 'undefined') {
+        document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      }
       
       // Clear any cached API data
       if (api.defaults.headers.common.Authorization) {
