@@ -57,7 +57,8 @@ api.interceptors.response.use(
     } else if (error.response?.status === 403) {
       toast.error('No tienes permisos para realizar esta acción.');
     } else if (error.response?.status === 404) {
-      toast.error('Recurso no encontrado.');
+      // Only show 404 toasts for critical endpoints, not all API calls
+      console.warn('404 error:', error.config?.url);
     } else if (error.response?.status && error.response.status >= 500) {
       toast.error('Error del servidor. Intenta de nuevo más tarde.');
     } else if (error.code === 'ECONNABORTED') {

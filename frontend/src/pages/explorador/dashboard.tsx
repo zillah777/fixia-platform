@@ -32,10 +32,20 @@ const ExplorerDashboard: NextPage = () => {
   const { stats, loading: statsLoading, error } = useExploradorDashboardData();
 
   useEffect(() => {
-    if (!loading && user && user.user_type !== 'customer') {
-      console.warn('User type mismatch:', user.user_type, 'expected: customer');
-      router.push('/auth/login');
-      return;
+    if (!loading) {
+      if (!user) {
+        // Only redirect to login if we're actually on the dashboard (prevent redirect loops)
+        if (router.pathname === '/explorador/dashboard') {
+          router.push('/auth/login');
+        }
+        return;
+      }
+      
+      if (user.user_type !== 'customer') {
+        console.warn('User type mismatch:', user.user_type, 'expected: customer');
+        router.push('/auth/login');
+        return;
+      }
     }
   }, [user, loading, router]);
 

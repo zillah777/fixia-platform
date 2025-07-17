@@ -56,11 +56,14 @@ const LoginPage: NextPage = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      // Redirect based on user type
-      if (user.user_type === 'provider') {
-        router.push('/as/dashboard');
-      } else {
-        router.push('/explorador/dashboard');
+      // Only redirect if we're actually on the login page (prevent redirect loops)
+      if (router.pathname === '/auth/login') {
+        // Redirect based on user type
+        if (user.user_type === 'provider') {
+          router.push('/as/dashboard');
+        } else {
+          router.push('/explorador/dashboard');
+        }
       }
     }
   }, [user, loading, router]);

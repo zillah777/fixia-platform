@@ -106,12 +106,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(authData.user);
       toast.success(`¡Bienvenido, ${authData.user.first_name}!`);
       
-      // Redirect based on user type
-      if (authData.user.user_type === 'provider') {
-        router.push('/as/dashboard');
-      } else {
-        router.push('/explorador/dashboard');
-      }
+      // Small delay to ensure state is updated before redirect
+      setTimeout(() => {
+        // Redirect based on user type
+        if (authData.user.user_type === 'provider') {
+          router.push('/as/dashboard');
+        } else {
+          router.push('/explorador/dashboard');
+        }
+      }, 100);
     } catch (error: any) {
       const message = error.response?.data?.error || 'Error al iniciar sesión';
       toast.error(message);
