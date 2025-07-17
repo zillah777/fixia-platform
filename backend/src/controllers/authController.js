@@ -165,18 +165,18 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Update last login
-    await query(
-      'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1',
-      [user.id]
-    );
-
     // Generate token with database user_type (client)
     const token = generateToken({ 
       id: user.id, 
       email: user.email, 
       user_type: user.user_type  // Keep as 'client' for database compatibility
     });
+
+    // Update last login AFTER token generation
+    await query(
+      'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1',
+      [user.id]
+    );
 
     // Get user stats
     const statsResult = await query(`
