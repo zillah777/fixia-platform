@@ -10,21 +10,8 @@ const sanitizeUser = (user) => {
   return sanitizedUser;
 };
 
-// Generate JWT token with consistent parameters
-const crypto = require('crypto');
-const generateToken = (payload) => {
-  const jti = crypto.randomUUID();
-  return jwt.sign(
-    { ...payload, jti },
-    process.env.JWT_SECRET,
-    { 
-      expiresIn: process.env.JWT_EXPIRE || '7d',
-      jwtid: jti,
-      issuer: process.env.JWT_ISSUER || 'fixia-api',
-      audience: process.env.JWT_AUDIENCE || 'fixia-app'
-    }
-  );
-};
+// Import generateToken from auth middleware to ensure consistency
+const { generateToken } = require('../middleware/auth');
 
 // Hash password
 const hashPassword = async (password) => {
