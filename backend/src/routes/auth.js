@@ -6,7 +6,13 @@ const { authMiddleware } = require('../middleware/auth');
 const router = express.Router();
 
 // POST /api/auth/register
-router.post('/register', testController.testRegister);
+router.post('/register', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Inline handler working',
+    timestamp: new Date().toISOString()
+  });
+});
 
 // POST /api/auth/login
 router.post('/login', authController.login);
