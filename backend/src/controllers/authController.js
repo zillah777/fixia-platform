@@ -44,6 +44,19 @@ exports.register = async (req, res) => {
       });
     }
 
+    // Check if email already exists
+    const existingUser = await query(
+      'SELECT id FROM users WHERE email = $1',
+      [email]
+    );
+    
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Ya existe una cuenta con este email'
+      });
+    }
+
     // Transform customer to client for database compatibility
     const dbUserType = user_type === 'customer' ? 'client' : user_type;
     
