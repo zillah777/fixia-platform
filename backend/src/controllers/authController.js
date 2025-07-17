@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { query } = require('../config/database');
 const { validateEmail, validatePassword } = require('../utils/validation');
+const EmailService = require('../services/emailService');
 
 // Helper function to sanitize user data
 const sanitizeUser = (user) => {
@@ -73,12 +74,25 @@ exports.register = async (req, res) => {
       user_type: user.user_type 
     });
 
+    // Send verification email
+    try {
+      const emailResult = await EmailService.sendVerificationEmail(user, user.user_type);
+      if (emailResult.success) {
+        console.log(`✅ Verification email sent to ${user.email}`);
+      } else {
+        console.error('⚠️ Failed to send verification email:', emailResult.error);
+      }
+    } catch (emailError) {
+      console.error('⚠️ Error sending verification email:', emailError);
+    }
+
     res.status(201).json({
       success: true,
-      message: 'Usuario registrado exitosamente',
+      message: 'Usuario registrado exitosamente. Revisa tu email para verificar tu cuenta.',
       data: {
         user,
-        token
+        token,
+        emailVerificationRequired: true
       }
     });
 
@@ -125,6 +139,16 @@ exports.login = async (req, res) => {
       return res.status(401).json({
         success: false,
         error: 'Credenciales inválidas'
+      });
+    }
+
+    // Check if email is verified
+    if (!user.email_verified) {
+      return res.status(403).json({
+        success: false,
+        error: 'Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.',
+        code: 'EMAIL_NOT_VERIFIED',
+        email: user.email
       });
     }
 
