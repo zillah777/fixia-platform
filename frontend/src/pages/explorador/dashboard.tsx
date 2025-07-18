@@ -57,13 +57,15 @@ const ExplorerDashboard: NextPage = () => {
   }, [user, loading, router]);
 
   // Default stats if none loaded
-  const displayStats = stats || {
+  const displayStats = stats?.stats || {
     activeBookings: 0,
     completedBookings: 0,
     totalSpent: 0,
     favoriteServices: 0,
     unreadMessages: 0
   };
+
+  const recentActivity = stats?.recentActivity || [];
 
   if (loading || statsLoading) {
     return (
@@ -87,31 +89,31 @@ const ExplorerDashboard: NextPage = () => {
 
   const statCards = [
     {
-      title: 'Servicios Activos',
+      title: 'Solicitudes Activas',
       value: displayStats.activeBookings,
       icon: ClockIcon,
       color: 'bg-gradient-to-r from-blue-500 to-blue-600',
       textColor: 'text-white'
     },
     {
-      title: 'Completados',
+      title: 'Servicios Completados',
       value: displayStats.completedBookings,
       icon: CheckCircleIcon,
       color: 'bg-gradient-to-r from-green-500 to-green-600',
       textColor: 'text-white'
     },
     {
-      title: 'Total Gastado',
+      title: 'Total Invertido',
       value: `$${displayStats.totalSpent.toLocaleString()}`,
       icon: ChartBarIcon,
       color: 'bg-gradient-to-r from-purple-500 to-purple-600',
       textColor: 'text-white'
     },
     {
-      title: 'Favoritos',
+      title: 'Total Solicitudes',
       value: displayStats.favoriteServices,
-      icon: StarIcon,
-      color: 'bg-gradient-to-r from-yellow-500 to-yellow-600',
+      icon: BriefcaseIcon,
+      color: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
       textColor: 'text-white'
     }
   ];
@@ -370,33 +372,81 @@ const ExplorerDashboard: NextPage = () => {
                 </div>
                 <div className="p-6">
                   <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <CheckCircleIcon className="h-5 w-5 text-green-600" />
+                    {recentActivity.length > 0 ? (
+                      recentActivity.map((activity, index) => (
+                        <div key={index} className="flex items-start space-x-3">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                            activity.activity_type === 'service_request' 
+                              ? activity.status === 'active' 
+                                ? 'bg-blue-100' 
+                                : activity.status === 'completed' 
+                                ? 'bg-green-100' 
+                                : 'bg-gray-100'
+                              : 'bg-purple-100'
+                          }`}>
+                            {activity.activity_type === 'service_request' ? (
+                              activity.status === 'active' ? (
+                                <ClockIcon className={`h-5 w-5 ${
+                                  activity.status === 'active' ? 'text-blue-600' : 'text-gray-600'
+                                }`} />
+                              ) : activity.status === 'completed' ? (
+                                <CheckCircleIcon className="h-5 w-5 text-green-600" />
+                              ) : (
+                                <BriefcaseIcon className="h-5 w-5 text-gray-600" />
+                              )
+                            ) : (
+                              <ChatBubbleLeftRightIcon className="h-5 w-5 text-purple-600" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm text-gray-900">
+                              {activity.service_title}
+                              {activity.activity_type === 'service_request' && activity.interest_count > 0 && (
+                                <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                                  {activity.interest_count} interesados
+                                </span>
+                              )}
+                            </p>
+                            <div className="flex items-center space-x-2 mt-1">
+                              <p className="text-xs text-gray-500">
+                                {new Date(activity.created_at).toLocaleDateString('es-AR', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                              {activity.category_name && (
+                                <span className="text-xs text-gray-400">•</span>
+                              )}
+                              {activity.category_name && (
+                                <span className="text-xs text-gray-500">{activity.category_name}</span>
+                              )}
+                              {activity.urgency && activity.urgency !== 'medium' && (
+                                <>
+                                  <span className="text-xs text-gray-400">•</span>
+                                  <span className={`text-xs px-1.5 py-0.5 rounded ${
+                                    activity.urgency === 'high' ? 'bg-orange-100 text-orange-700' :
+                                    activity.urgency === 'emergency' ? 'bg-red-100 text-red-700' :
+                                    'bg-gray-100 text-gray-700'
+                                  }`}>
+                                    {activity.urgency === 'high' ? 'Urgente' :
+                                     activity.urgency === 'emergency' ? 'Emergencia' :
+                                     activity.urgency === 'low' ? 'Baja' : 'Normal'}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        <BriefcaseIcon className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                        <p className="text-sm">No hay actividad reciente</p>
+                        <p className="text-xs mt-1">Comenzá creando tu primera solicitud de servicio</p>
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-900">Servicio de plomería completado</p>
-                        <p className="text-xs text-gray-500">Hace 2 horas</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <ChatBubbleLeftRightIcon className="h-5 w-5 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-900">Nuevo mensaje de Juan García</p>
-                        <p className="text-xs text-gray-500">Hace 4 horas</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                        <StarIcon className="h-5 w-5 text-yellow-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-900">Calificación pendiente para María López</p>
-                        <p className="text-xs text-gray-500">Hace 1 día</p>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>

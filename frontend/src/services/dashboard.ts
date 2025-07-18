@@ -71,16 +71,19 @@ export const dashboardService = {
   async getExploradorDashboardStats(): Promise<any> {
     try {
       const response = await api.get('/api/dashboard/explorer-stats');
-      return response.data.data.stats;
+      return response.data.data; // Return full data including stats and recentActivity
     } catch (error) {
       console.error('Error fetching Explorador dashboard stats:', error);
       // Fallback to default values if API fails
       return {
-        activeBookings: 0,
-        completedBookings: 0,
-        totalSpent: 0,
-        favoriteServices: 0,
-        unreadMessages: 0
+        stats: {
+          activeBookings: 0,
+          completedBookings: 0,
+          totalSpent: 0,
+          favoriteServices: 0,
+          unreadMessages: 0
+        },
+        recentActivity: []
       };
     }
   }

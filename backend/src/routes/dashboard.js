@@ -1,5 +1,5 @@
 const express = require('express');
-const { query } = require('../config/database');
+const { pool } = require('../config/database');
 const { authMiddleware } = require('../middleware/auth');
 const { cacheMiddleware } = require('../middleware/cache');
 
@@ -10,62 +10,82 @@ router.get('/explorer-stats', authMiddleware, cacheMiddleware(120), async (req, 
   try {
     const userId = req.user.id;
 
-    // Get explorer statistics
-    const statsQuery = `
+    // Get explorer statistics from real Fixia tables (MySQL syntax)
+    const [statsResult] = await pool.execute(`
       SELECT 
-        COUNT(DISTINCT b.id) FILTER (WHERE b.status IN ('pending', 'confirmed', 'in_progress')) as active_bookings,
-        COUNT(DISTINCT b.id) FILTER (WHERE b.status = 'completed') as completed_bookings,
-        COALESCE(SUM(b.total_amount) FILTER (WHERE b.status = 'completed'), 0) as total_spent,
-        0 as favorite_services,
-        0 as unread_messages
+        COALESCE(SUM(CASE WHEN esr.status = 'active' THEN 1 ELSE 0 END), 0) as active_service_requests,
+        COALESCE(SUM(CASE WHEN eac.status = 'service_in_progress' THEN 1 ELSE 0 END), 0) as active_connections,
+        COALESCE(SUM(CASE WHEN eac.status = 'completed' THEN 1 ELSE 0 END), 0) as completed_services,
+        COALESCE(SUM(CASE WHEN eac.status = 'completed' THEN eac.final_agreed_price ELSE 0 END), 0) as total_spent,
+        COUNT(DISTINCT esr.id) as total_requests,
+        COALESCE((
+          SELECT COUNT(*) 
+          FROM chat_messages cm 
+          INNER JOIN explorer_as_connections eac2 ON cm.chat_room_id = eac2.chat_room_id 
+          WHERE eac2.explorer_id = ? AND cm.is_read = false AND cm.sender_id != ?
+        ), 0) as unread_messages
       FROM users u
-      LEFT JOIN bookings b ON u.id = b.client_id
-      WHERE u.id = $1
-      GROUP BY u.id
-    `;
+      LEFT JOIN explorer_service_requests esr ON u.id = esr.explorer_id
+      LEFT JOIN explorer_as_connections eac ON u.id = eac.explorer_id
+      WHERE u.id = ?
+    `, [userId, userId, userId]);
 
-    const result = await query(statsQuery, [userId]);
-    const stats = result.rows[0] || {
-      active_bookings: 0,
-      completed_bookings: 0,
+    const stats = statsResult[0] || {
+      active_service_requests: 0,
+      active_connections: 0,
+      completed_services: 0,
       total_spent: 0,
-      favorite_services: 0,
+      total_requests: 0,
       unread_messages: 0
     };
 
-    // Get recent bookings for activity feed
-    const recentBookingsQuery = `
+    // Get recent activity from real Fixia data (MySQL syntax)
+    const [recentActivity] = await pool.execute(`
       SELECT 
-        b.id,
-        b.status,
-        b.booking_date as scheduled_date,
-        b.booking_time as scheduled_time,
-        b.total_amount,
-        COALESCE(s.title, 'Servicio') as service_title,
-        COALESCE(u.first_name, 'Proveedor') as provider_name,
-        COALESCE(u.last_name, '') as provider_last_name
-      FROM bookings b
-      LEFT JOIN services s ON b.service_id = s.id
-      LEFT JOIN users u ON b.provider_id = u.id
-      WHERE b.client_id = $1
-      ORDER BY b.created_at DESC
-      LIMIT 5
-    `;
-
-    const recentBookings = await query(recentBookingsQuery, [userId]);
+        'service_request' as activity_type,
+        esr.id,
+        esr.title as service_title,
+        esr.status,
+        esr.created_at,
+        esr.urgency,
+        c.name as category_name,
+        (SELECT COUNT(*) FROM as_service_interests asi WHERE asi.request_id = esr.id) as interest_count
+      FROM explorer_service_requests esr
+      LEFT JOIN categories c ON esr.category_id = c.id
+      WHERE esr.explorer_id = ?
+      
+      UNION ALL
+      
+      SELECT 
+        'connection' as activity_type,
+        eac.id,
+        CONCAT('Conexión con ', u.first_name, ' ', u.last_name) as service_title,
+        eac.status,
+        eac.created_at,
+        'medium' as urgency,
+        'Conexión AS' as category_name,
+        0 as interest_count
+      FROM explorer_as_connections eac
+      LEFT JOIN users u ON eac.as_id = u.id
+      WHERE eac.explorer_id = ?
+      
+      ORDER BY created_at DESC
+      LIMIT 10
+    `, [userId, userId]);
 
     res.json({
       success: true,
       message: 'Estadísticas obtenidas exitosamente',
       data: {
         stats: {
-          activeBookings: parseInt(stats.active_bookings) || 0,
-          completedBookings: parseInt(stats.completed_bookings) || 0,
+          activeBookings: parseInt(stats.active_service_requests) + parseInt(stats.active_connections) || 0,
+          completedBookings: parseInt(stats.completed_services) || 0,
           totalSpent: parseFloat(stats.total_spent) || 0,
-          favoriteServices: parseInt(stats.favorite_services) || 0,
+          favoriteServices: parseInt(stats.total_requests) || 0,
           unreadMessages: parseInt(stats.unread_messages) || 0
         },
-        recentBookings: recentBookings.rows
+        recentActivity: recentActivity,
+        recentBookings: recentActivity // Keep for compatibility
       }
     });
 
