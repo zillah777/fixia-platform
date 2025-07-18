@@ -1,5 +1,5 @@
 const express = require('express');
-const { pool } = require('../config/database');
+const { query } = require('../config/database');
 const { formatResponse, formatError } = require('../utils/helpers');
 
 const router = express.Router();
@@ -10,31 +10,33 @@ router.get('/', async (req, res) => {
     const { grouped = false } = req.query;
 
     if (grouped === 'true') {
-      // Get categories grouped by parent category
-      const [categories] = await pool.execute(`
+      // Get categories grouped by group_name
+      const result = await query(`
         SELECT * FROM categories 
-        ORDER BY parent_category ASC, sort_order ASC, name ASC
+        WHERE is_active = TRUE
+        ORDER BY group_name ASC, name ASC
       `);
 
-      // Group categories by parent_category
-      const groupedCategories = categories.reduce((acc, category) => {
-        const parentCategory = category.parent_category || 'Sin categoría';
-        if (!acc[parentCategory]) {
-          acc[parentCategory] = [];
+      // Group categories by group_name
+      const groupedCategories = result.rows.reduce((acc, category) => {
+        const groupName = category.group_name || 'Sin categoría';
+        if (!acc[groupName]) {
+          acc[groupName] = [];
         }
-        acc[parentCategory].push(category);
+        acc[groupName].push(category);
         return acc;
       }, {});
 
       res.json(formatResponse(groupedCategories, 'Categorías agrupadas obtenidas exitosamente'));
     } else {
       // Get all categories in a flat list
-      const [categories] = await pool.execute(`
+      const result = await query(`
         SELECT * FROM categories 
-        ORDER BY sort_order ASC, name ASC
+        WHERE is_active = TRUE
+        ORDER BY name ASC
       `);
 
-      res.json(formatResponse(categories, 'Categorías obtenidas exitosamente'));
+      res.json(formatResponse(result.rows, 'Categorías obtenidas exitosamente'));
     }
   } catch (error) {
     console.error('Get categories error:', error);

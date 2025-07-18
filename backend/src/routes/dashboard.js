@@ -1,5 +1,5 @@
 const express = require('express');
-const { pool } = require('../config/database');
+const { query } = require('../config/database');
 const { authMiddleware } = require('../middleware/auth');
 const { cacheMiddleware } = require('../middleware/cache');
 
@@ -10,27 +10,28 @@ router.get('/explorer-stats', authMiddleware, cacheMiddleware(120), async (req, 
   try {
     const userId = req.user.id;
 
-    // Get explorer statistics from real Fixia tables (MySQL syntax)
-    const [statsResult] = await pool.execute(`
+    // Get explorer statistics from real Fixia tables (PostgreSQL syntax)
+    const statsQuery = `
       SELECT 
-        COALESCE(SUM(CASE WHEN esr.status = 'active' THEN 1 ELSE 0 END), 0) as active_service_requests,
-        COALESCE(SUM(CASE WHEN eac.status = 'service_in_progress' THEN 1 ELSE 0 END), 0) as active_connections,
-        COALESCE(SUM(CASE WHEN eac.status = 'completed' THEN 1 ELSE 0 END), 0) as completed_services,
-        COALESCE(SUM(CASE WHEN eac.status = 'completed' THEN eac.final_agreed_price ELSE 0 END), 0) as total_spent,
-        COUNT(DISTINCT esr.id) as total_requests,
+        COALESCE(COUNT(DISTINCT esr.id) FILTER (WHERE esr.status = 'active'), 0) as active_service_requests,
+        COALESCE(COUNT(DISTINCT eac.id) FILTER (WHERE eac.status = 'service_in_progress'), 0) as active_connections,
+        COALESCE(COUNT(DISTINCT eac.id) FILTER (WHERE eac.status = 'completed'), 0) as completed_services,
+        COALESCE(SUM(eac.final_agreed_price) FILTER (WHERE eac.status = 'completed'), 0) as total_spent,
+        COALESCE(COUNT(DISTINCT esr.id), 0) as total_requests,
         COALESCE((
           SELECT COUNT(*) 
           FROM chat_messages cm 
           INNER JOIN explorer_as_connections eac2 ON cm.chat_room_id = eac2.chat_room_id 
-          WHERE eac2.explorer_id = ? AND cm.is_read = false AND cm.sender_id != ?
+          WHERE eac2.explorer_id = $1 AND cm.is_read = false AND cm.sender_id != $1
         ), 0) as unread_messages
       FROM users u
       LEFT JOIN explorer_service_requests esr ON u.id = esr.explorer_id
       LEFT JOIN explorer_as_connections eac ON u.id = eac.explorer_id
-      WHERE u.id = ?
-    `, [userId, userId, userId]);
+      WHERE u.id = $1
+    `;
 
-    const stats = statsResult[0] || {
+    const result = await query(statsQuery, [userId]);
+    const stats = result.rows[0] || {
       active_service_requests: 0,
       active_connections: 0,
       completed_services: 0,
@@ -39,8 +40,8 @@ router.get('/explorer-stats', authMiddleware, cacheMiddleware(120), async (req, 
       unread_messages: 0
     };
 
-    // Get recent activity from real Fixia data (MySQL syntax)
-    const [recentActivity] = await pool.execute(`
+    // Get recent activity from real Fixia data (PostgreSQL syntax)
+    const recentActivityQuery = `
       SELECT 
         'service_request' as activity_type,
         esr.id,
@@ -52,7 +53,7 @@ router.get('/explorer-stats', authMiddleware, cacheMiddleware(120), async (req, 
         (SELECT COUNT(*) FROM as_service_interests asi WHERE asi.request_id = esr.id) as interest_count
       FROM explorer_service_requests esr
       LEFT JOIN categories c ON esr.category_id = c.id
-      WHERE esr.explorer_id = ?
+      WHERE esr.explorer_id = $1
       
       UNION ALL
       
@@ -67,11 +68,13 @@ router.get('/explorer-stats', authMiddleware, cacheMiddleware(120), async (req, 
         0 as interest_count
       FROM explorer_as_connections eac
       LEFT JOIN users u ON eac.as_id = u.id
-      WHERE eac.explorer_id = ?
+      WHERE eac.explorer_id = $1
       
       ORDER BY created_at DESC
       LIMIT 10
-    `, [userId, userId]);
+    `;
+
+    const recentActivity = await query(recentActivityQuery, [userId]);
 
     res.json({
       success: true,
@@ -84,8 +87,8 @@ router.get('/explorer-stats', authMiddleware, cacheMiddleware(120), async (req, 
           favoriteServices: parseInt(stats.total_requests) || 0,
           unreadMessages: parseInt(stats.unread_messages) || 0
         },
-        recentActivity: recentActivity,
-        recentBookings: recentActivity // Keep for compatibility
+        recentActivity: recentActivity.rows,
+        recentBookings: recentActivity.rows // Keep for compatibility
       }
     });
 
