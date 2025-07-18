@@ -8,91 +8,145 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Fixia Brand Colors - Professional & Trustworthy
+        // FIXIA 2025 - Corporate Professional Brand Colors
+        // Primary: Deep Corporate Blue - Trust & Authority
         primary: {
-          50: '#f0f7ff',
-          100: '#e0efff',
-          200: '#b9dcff',
-          300: '#7cc4ff',
-          400: '#36a7ff',
-          500: '#0084ff', // Main brand color - Professional Blue
-          600: '#0066cc',
-          700: '#0052a3',
-          800: '#004785',
-          900: '#003366',
+          50: '#f0f4ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe', 
+          300: '#a5b4fc',
+          400: '#818cf8',
+          500: '#1e40af', // Main corporate blue - Professional & Trustworthy
+          600: '#1d4ed8',
+          700: '#1e3a8a',
+          800: '#1e3a8a',
+          900: '#1e293b',
+          950: '#0f172a',
         },
+        
+        // Secondary: Sophisticated Slate - Modern Corporate
         secondary: {
           50: '#f8fafc',
           100: '#f1f5f9',
           200: '#e2e8f0',
           300: '#cbd5e1',
           400: '#94a3b8',
-          500: '#64748b', // Neutral gray for balance
+          500: '#64748b', // Perfect neutral for corporate
           600: '#475569',
           700: '#334155',
           800: '#1e293b',
           900: '#0f172a',
+          950: '#020617',
         },
+
+        // Accent: Premium Emerald - Success & Growth
         accent: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e', // Success green - trust indicator
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
-        },
-        // Simplified color system
-        trust: {
-          50: '#f0f7ff',
-          100: '#e0efff',
-          200: '#b9dcff',
-          300: '#7cc4ff',
-          400: '#36a7ff',
-          500: '#0084ff',
-          600: '#0066cc',
-          700: '#0052a3',
-          800: '#004785',
-          900: '#003366',
-        },
-        success: {
           50: '#ecfdf5',
           100: '#d1fae5',
           200: '#a7f3d0',
           300: '#6ee7b7',
           400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
+          500: '#059669', // Professional emerald for success states
+          600: '#047857',
+          700: '#065f46',
+          800: '#064e3b',
+          900: '#022c22',
         },
+
+        // Trust: Corporate Azure - Professional Trust
+        trust: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9', // Corporate trust blue
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+
+        // Corporate Gradients System
+        corporate: {
+          50: '#f8fafc',
+          100: '#f1f5f9', 
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+        },
+
+        // Status Colors - Modern Professional
+        success: {
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e', // Modern success green
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+        },
+
         warning: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
+          50: '#fefce8',
+          100: '#fef9c3',
+          200: '#fef08a',
+          300: '#fde047',
+          400: '#facc15',
+          500: '#eab308', // Professional amber warning
+          600: '#ca8a04',
+          700: '#a16207',
+          800: '#854d0e',
+          900: '#713f12',
         },
+
         error: {
           50: '#fef2f2',
           100: '#fee2e2',
           200: '#fecaca',
           300: '#fca5a5',
           400: '#f87171',
-          500: '#ef4444',
+          500: '#ef4444', // Clear error red
           600: '#dc2626',
           700: '#b91c1c',
           800: '#991b1b',
           900: '#7f1d1d',
+        },
+
+        // Premium Extras for Corporate Feel
+        platinum: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+        },
+
+        // Future-forward accent
+        tech: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
         },
       },
       animation: {

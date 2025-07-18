@@ -1,0 +1,55 @@
+<svg width="16" height="16" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="corporateGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e40af" />
+      <stop offset="50%" stop-color="#1d4ed8" />
+      <stop offset="100%" stop-color="#0ea5e9" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0ea5e9" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <filter id="corporateShadow">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#1e40af" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Professional Corporate Container -->
+  <rect
+    x="2"
+    y="2"
+    width="28"
+    height="28"
+    rx="7"
+    fill="url(#corporateGradient)"
+    filter="url(#corporateShadow)"
+  />
+  
+  <!-- Inner Professional Border -->
+  <rect
+    x="3"
+    y="3"
+    width="26"
+    height="26"
+    rx="6"
+    fill="none"
+    stroke="rgba(255,255,255,0.2)"
+    stroke-width="0.5"
+  />
+  
+  <!-- Modern F - Geometric & Professional -->
+  <g fill="white" opacity="0.95">
+    <rect x="9" y="9" width="2" height="14" rx="0.5" />
+    <rect x="9" y="9" width="10" height="2" rx="0.5" />
+    <rect x="9" y="15" width="7" height="2" rx="0.5" />
+  </g>
+  
+  <!-- Modern X - Clean Professional Symbol -->
+  <g fill="white" opacity="0.9">
+    <rect x="19" y="13" width="6" height="1.5" rx="0.75" transform="rotate(45 22 13.75)" />
+    <rect x="19" y="17" width="6" height="1.5" rx="0.75" transform="rotate(-45 22 17.75)" />
+  </g>
+  
+  <!-- Professional Accent Dot -->
+  <circle cx="24" cy="10" r="1" fill="url(#accentGradient)" opacity="0.8" />
+</svg>

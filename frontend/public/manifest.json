@@ -1,11 +1,11 @@
 {
   "name": "Fixia - Servicios Profesionales",
   "short_name": "Fixia",
-  "description": "La plataforma líder para conectar con profesionales verificados en Chubut. Las páginas amarillas del futuro.",
+  "description": "Plataforma profesional de servicios certificados en Chubut. Conecta con AS verificados para tu proyecto.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
+  "theme_color": "#1e40af",
   "orientation": "portrait-primary",
   "icons": [
     {

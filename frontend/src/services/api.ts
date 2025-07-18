@@ -71,4 +71,22 @@ api.interceptors.response.use(
   }
 );
 
+// Localities service
+export const localitiesService = {
+  async getChubutLocalities(): Promise<any[]> {
+    try {
+      const response = await api.get('/localities/chubut');
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fetching Chubut localities:', error);
+      // Fallback to default localities if API fails
+      return [
+        { name: 'Rawson' }, { name: 'Trelew' }, { name: 'Puerto Madryn' },
+        { name: 'Comodoro Rivadavia' }, { name: 'Esquel' }, { name: 'Gaiman' },
+        { name: 'Dolavon' }, { name: 'Rada Tilly' }, { name: 'Trevelin' }
+      ];
+    }
+  }
+};
+
 export default api;

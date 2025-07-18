@@ -20,11 +20,19 @@ import {
   ClockIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  BoltIcon,
+  ShieldCheckIcon,
+  UsersIcon,
+  SparklesIcon,
+  BuildingOfficeIcon,
+  CurrencyDollarIcon
 } from '@heroicons/react/24/outline';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useExploradorDashboardData } from '@/hooks/useDashboardData';
+import { CorporateHeader, CorporateCard, CorporateButton, CorporateInput } from '@/components/ui';
+import Logo from '@/components/Logo';
 
 const ExplorerDashboard: NextPage = () => {
   const { user, loading, logout } = useAuth();
@@ -69,10 +77,11 @@ const ExplorerDashboard: NextPage = () => {
 
   if (loading || statsLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50 flex items-center justify-center">
         <div className="text-center">
-          <ArrowPathIcon className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Cargando tu panel de explorador...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-3 border-primary-600 mx-auto mb-6"></div>
+          <p className="text-secondary-600 font-semibold text-lg">Cargando Panel Profesional...</p>
+          <p className="text-secondary-500 text-sm mt-2">Iniciando sistema de gestión</p>
         </div>
       </div>
     );
@@ -91,73 +100,75 @@ const ExplorerDashboard: NextPage = () => {
     {
       title: 'Solicitudes Activas',
       value: displayStats.activeBookings,
-      icon: ClockIcon,
-      color: 'bg-gradient-to-r from-blue-500 to-blue-600',
-      textColor: 'text-white'
+      icon: BoltIcon,
+      color: 'bg-gradient-to-r from-primary-500 to-primary-600',
+      textColor: 'text-white',
+      description: 'En progreso'
     },
     {
       title: 'Servicios Completados',
       value: displayStats.completedBookings,
       icon: CheckCircleIcon,
-      color: 'bg-gradient-to-r from-green-500 to-green-600',
-      textColor: 'text-white'
+      color: 'bg-gradient-to-r from-success-500 to-success-600',
+      textColor: 'text-white',
+      description: 'Finalizados exitosamente'
     },
     {
-      title: 'Total Invertido',
+      title: 'Inversión Total',
       value: `$${displayStats.totalSpent.toLocaleString()}`,
-      icon: ChartBarIcon,
-      color: 'bg-gradient-to-r from-purple-500 to-purple-600',
-      textColor: 'text-white'
+      icon: CurrencyDollarIcon,
+      color: 'bg-gradient-to-r from-trust-500 to-trust-600',
+      textColor: 'text-white',
+      description: 'Presupuesto utilizado'
     },
     {
       title: 'Total Solicitudes',
       value: displayStats.favoriteServices,
       icon: BriefcaseIcon,
-      color: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
-      textColor: 'text-white'
+      color: 'bg-gradient-to-r from-secondary-500 to-secondary-600',
+      textColor: 'text-white',
+      description: 'Historial completo'
     }
   ];
 
   return (
     <>
       <Head>
-        <title>Panel de Explorador - Fixia</title>
-        <meta name="description" content="Busca y contrata los mejores servicios profesionales en Chubut" />
+        <title>Panel Profesional de Explorador | Fixia</title>
+        <meta name="description" content="Gestiona tus servicios profesionales, solicitudes y comunicación con AS certificados en Chubut" />
+        <meta name="keywords" content="panel explorador, gestión servicios, AS certificados, Chubut" />
       </Head>
 
-      <div className="min-h-screen bg-gray-50">
-        {/* Sidebar */}
-        <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
-          <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
+      <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50">
+        {/* iOS-Style Professional Sidebar */}
+        <div className={`fixed inset-y-0 left-0 z-50 w-80 bg-white/95 backdrop-blur-3xl shadow-2xl border-r border-secondary-200/30 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-500 ease-out lg:translate-x-0 lg:static lg:inset-0`}>
+          <div className="flex items-center justify-between h-20 px-6 border-b border-secondary-200/50 bg-gradient-to-r from-primary-50 to-trust-50">
             <Link href="/">
               <div className="flex items-center cursor-pointer">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                  F
-                </div>
-                <span className="ml-2 text-xl font-bold text-gray-900">Fixia</span>
+                <Logo size="sm" />
               </div>
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500"
+              className="lg:hidden p-2 rounded-xl text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 transition-all"
             >
               <XMarkIcon className="h-6 w-6" />
             </button>
           </div>
           
-          <nav className="mt-4 px-2">
+          <nav className="mt-6 px-4">
             <div className="space-y-2">
               {sidebarItems.map((item) => (
                 <Link key={item.name} href={item.href}>
-                  <div className={`flex items-center px-3 py-2 text-sm font-medium rounded-md cursor-pointer transition-colors ${
+                  <div className={`flex items-center px-4 py-3 text-sm font-semibold rounded-xl cursor-pointer transition-all duration-200 ${
                     item.current
-                      ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-500'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-gradient-to-r from-primary-500 to-trust-500 text-white shadow-lg border-l-4 border-l-primary-600'
+                      : 'text-secondary-700 hover:bg-primary-50 hover:text-primary-700 hover:shadow-sm'
                   }`}>
                     <item.icon className="h-5 w-5 mr-3" />
                     {item.name}
                     {item.badge && (
-                      <span className="ml-auto bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">
+                      <span className="ml-auto bg-error-100 text-error-800 text-xs px-2 py-1 rounded-full font-bold">
                         {item.badge}
                       </span>
                     )}
@@ -166,55 +177,74 @@ const ExplorerDashboard: NextPage = () => {
               ))}
             </div>
             
-            <div className="mt-8 pt-8 border-t border-gray-200">
+            <div className="mt-8 pt-8 border-t border-secondary-200/50">
               <Link href="/explorador/cambiar-a-as">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-white cursor-pointer hover:from-blue-600 hover:to-purple-700 transition-all mb-4">
-                  <h3 className="font-semibold text-sm mb-1">¿Querés ofrecer servicios?</h3>
-                  <p className="text-xs text-blue-100">Convertite en AS y empezá a ganar dinero</p>
+                <div className="bg-gradient-to-r from-accent-500 to-success-500 rounded-xl p-5 text-white cursor-pointer hover:from-accent-600 hover:to-success-600 transition-all mb-6 shadow-lg">
+                  <div className="flex items-center mb-2">
+                    <BuildingOfficeIcon className="h-5 w-5 mr-2" />
+                    <h3 className="font-bold text-sm">¿Querés ofrecer servicios?</h3>
+                  </div>
+                  <p className="text-xs text-white/90 font-medium">Convertite en AS certificado y empezá a ganar dinero con tus habilidades</p>
+                  <div className="flex items-center mt-3 text-xs font-semibold">
+                    <SparklesIcon className="h-4 w-4 mr-1" />
+                    <span>Proceso de verificación gratuito</span>
+                  </div>
                 </div>
               </Link>
               
-              <button
+              <CorporateButton
                 onClick={logout}
-                className="w-full flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+                variant="ghost"
+                size="md"
+                className="w-full justify-start text-error-600 hover:text-error-700 hover:bg-error-50"
+                leftIcon={<ArrowRightOnRectangleIcon className="h-5 w-5" />}
               >
-                <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
-                Cerrar Sesión
-              </button>
+                Cerrar Sesión Segura
+              </CorporateButton>
             </div>
           </nav>
         </div>
 
         {/* Main Content */}
-        <div className="lg:ml-64">
-          {/* Top Navigation */}
-          <div className="bg-white shadow-sm border-b">
-            <div className="px-4 sm:px-6 lg:px-8">
-              <div className="flex items-center justify-between h-16">
+        <div className="lg:ml-80">
+          {/* Corporate Professional Header */}
+          <div className="bg-white/90 backdrop-blur-xl shadow-sm border-b border-secondary-200/50">
+            <div className="px-6 sm:px-8 lg:px-10">
+              <div className="flex items-center justify-between h-20">
                 <div className="flex items-center">
                   <button
                     onClick={() => setSidebarOpen(true)}
-                    className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500"
+                    className="lg:hidden p-3 rounded-xl text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 transition-all"
                   >
                     <Bars3Icon className="h-6 w-6" />
                   </button>
-                  <h1 className="ml-2 text-2xl font-bold text-gray-900">
-                    ¡Hola, {user?.first_name}!
-                  </h1>
+                  <div className="ml-2">
+                    <h1 className="text-2xl font-bold text-secondary-900">
+                      ¡Bienvenido, {user?.first_name}!
+                    </h1>
+                    <p className="text-sm text-secondary-600 font-medium mt-1">
+                      Panel Profesional de Gestión • Explorador Certificado
+                    </p>
+                  </div>
                 </div>
                 
                 <div className="flex items-center space-x-4">
-                  <button className="p-2 text-gray-400 hover:text-gray-500">
+                  <button className="p-3 text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 rounded-xl transition-all relative">
                     <BellIcon className="h-6 w-6" />
+                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-error-500 rounded-full"></span>
                   </button>
                   <Link href="/explorador/cambiar-a-as">
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
-                      Cambiar a AS
-                    </button>
+                    <CorporateButton
+                      variant="primary"
+                      size="sm"
+                      leftIcon={<BuildingOfficeIcon className="h-4 w-4" />}
+                    >
+                      Convertirse en AS
+                    </CorporateButton>
                   </Link>
                   <div className="flex items-center">
-                    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                      <UserIcon className="h-5 w-5 text-gray-600" />
+                    <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-trust-500 rounded-xl flex items-center justify-center shadow-lg">
+                      <UserIcon className="h-5 w-5 text-white" />
                     </div>
                   </div>
                 </div>
@@ -222,193 +252,275 @@ const ExplorerDashboard: NextPage = () => {
             </div>
           </div>
 
+          {/* Professional Stats Bar */}
+          <div className="bg-white/80 backdrop-blur-xl border-b border-secondary-200/50">
+            <div className="px-6 sm:px-8 lg:px-10 py-4">
+              <div className="flex items-center justify-center space-x-8">
+                <div className="flex items-center space-x-2">
+                  <ShieldCheckIcon className="h-5 w-5 text-success-600" />
+                  <span className="text-sm font-semibold text-secondary-700">Explorador Verificado</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <UsersIcon className="h-5 w-5 text-primary-600" />
+                  <span className="text-sm font-semibold text-secondary-700">AS Disponibles 24/7</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <BoltIcon className="h-5 w-5 text-warning-600" />
+                  <span className="text-sm font-semibold text-secondary-700">Respuesta Instantánea</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Dashboard Content */}
-          <div className="p-4 sm:p-6 lg:p-8">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="p-6 sm:p-8 lg:p-10">
+            {/* Professional Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
               {statCards.map((card, index) => (
-                <div key={card.title} className="bg-white rounded-xl shadow-sm border overflow-hidden">
-                  <div className={`${card.color} p-6`}>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-white/80 text-sm font-medium">{card.title}</p>
-                        <p className="text-2xl font-bold text-white mt-1">{card.value}</p>
+                <CorporateCard key={card.title} variant="elevated" className="overflow-hidden group hover:shadow-2xl transition-all duration-300">
+                  <div className={`${card.color} p-6 relative`}>
+                    <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-white/10 -translate-y-10 translate-x-10"></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                          <card.icon className="h-6 w-6 text-white" />
+                        </div>
+                        <div className="text-right">
+                          <p className="text-3xl font-bold text-white">{card.value}</p>
+                        </div>
                       </div>
-                      <card.icon className="h-8 w-8 text-white/80" />
+                      <h3 className="text-white font-bold text-sm mb-1">{card.title}</h3>
+                      <p className="text-white/80 text-xs font-medium">{card.description}</p>
                     </div>
                   </div>
-                </div>
+                </CorporateCard>
               ))}
             </div>
 
-            {/* Quick Search */}
-            <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
-              <div className="flex items-center mb-4">
-                <MagnifyingGlassIcon className="h-6 w-6 text-blue-600 mr-3" />
-                <h2 className="text-lg font-semibold text-gray-900">Buscar Servicios</h2>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <input
-                    type="text"
-                    placeholder="¿Qué servicio necesitás?"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
+            {/* iOS-Style Professional Quick Search */}
+            <CorporateCard variant="glass" className="mb-10 backdrop-blur-2xl bg-white/90 border border-white/50 shadow-2xl">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-trust-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <MagnifyingGlassIcon className="h-6 w-6 text-white" />
                 </div>
-                <div className="flex-1">
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option>Todas las categorías</option>
-                    <option>Plomería</option>
-                    <option>Electricidad</option>
-                    <option>Carpintería</option>
-                    <option>Limpieza</option>
-                    <option>Jardinería</option>
+                <div>
+                  <h2 className="text-xl font-bold text-secondary-900">Búsqueda Profesional</h2>
+                  <p className="text-sm text-secondary-600 font-medium">Encuentra AS certificados para tu proyecto</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <CorporateInput
+                    placeholder="¿Qué servicio profesional necesitás?"
+                    value=""
+                    onChange={() => {}}
+                    variant="glass"
+                    className="backdrop-blur-sm"
+                    leftIcon={<MagnifyingGlassIcon className="h-4 w-4" />}
+                  />
+                  <select className="w-full border-2 border-white/30 rounded-2xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white/50 backdrop-blur-sm hover:bg-white/70">
+                    <option>Todas las categorías profesionales</option>
+                    <option>🔧 Plomería y Sanitarios</option>
+                    <option>⚡ Electricidad y Automatización</option>
+                    <option>🏗️ Carpintería y Muebles</option>
+                    <option>✨ Limpieza Profesional</option>
+                    <option>🌿 Jardinería y Paisajismo</option>
                   </select>
                 </div>
-                <Link href="/explorador/buscar-servicio">
-                  <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                    Buscar
-                  </button>
-                </Link>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              <Link href="/explorador/buscar-servicio">
-                <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <MagnifyingGlassIcon className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900 ml-3">Buscar Servicios</h3>
-                  </div>
-                  <p className="text-gray-600">Encuentra profesionales para tus necesidades</p>
+                <div className="flex justify-center">
+                  <Link href="/explorador/buscar-servicio">
+                    <CorporateButton
+                      size="lg"
+                      className="px-8 shadow-xl hover:shadow-2xl"
+                      rightIcon={<SparklesIcon className="h-4 w-4" />}
+                    >
+                      Buscar Profesionales
+                    </CorporateButton>
+                  </Link>
                 </div>
+              </div>
+            </CorporateCard>
+
+            {/* iOS-Style Professional Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              <Link href="/explorador/buscar-servicio">
+                <CorporateCard variant="glass" className="group hover:scale-105 transition-all duration-300 cursor-pointer bg-gradient-to-br from-primary-50/80 to-trust-50/80 backdrop-blur-xl border border-primary-200/50 hover:shadow-2xl">
+                  <div className="flex items-center mb-6">
+                    <div className="w-14 h-14 bg-gradient-to-r from-primary-500 to-trust-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all">
+                      <MagnifyingGlassIcon className="h-7 w-7 text-white" />
+                    </div>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-bold text-secondary-900">Buscar Servicios</h3>
+                      <div className="flex items-center mt-1">
+                        <ShieldCheckIcon className="h-3 w-3 text-success-600 mr-1" />
+                        <span className="text-xs text-success-600 font-semibold">AS Verificados</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-secondary-700 font-medium text-sm leading-relaxed">Conecta con profesionales certificados para tu proyecto</p>
+                </CorporateCard>
               </Link>
 
               <Link href="/explorador/mis-solicitudes">
-                <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                      <BriefcaseIcon className="h-6 w-6 text-green-600" />
+                <CorporateCard variant="glass" className="group hover:scale-105 transition-all duration-300 cursor-pointer bg-gradient-to-br from-success-50/80 to-accent-50/80 backdrop-blur-xl border border-success-200/50 hover:shadow-2xl">
+                  <div className="flex items-center mb-6">
+                    <div className="w-14 h-14 bg-gradient-to-r from-success-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all">
+                      <BriefcaseIcon className="h-7 w-7 text-white" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 ml-3">Mis Solicitudes</h3>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-bold text-secondary-900">Mis Solicitudes</h3>
+                      <div className="flex items-center mt-1">
+                        <BoltIcon className="h-3 w-3 text-warning-600 mr-1" />
+                        <span className="text-xs text-warning-600 font-semibold">Gestión Completa</span>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-gray-600">Gestiona tus servicios contratados</p>
-                </div>
+                  <p className="text-secondary-700 font-medium text-sm leading-relaxed">Administra y monitorea todos tus servicios profesionales</p>
+                </CorporateCard>
               </Link>
 
               <Link href="/explorador/chats">
-                <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <ChatBubbleLeftRightIcon className="h-6 w-6 text-purple-600" />
+                <CorporateCard variant="glass" className="group hover:scale-105 transition-all duration-300 cursor-pointer bg-gradient-to-br from-trust-50/80 to-secondary-50/80 backdrop-blur-xl border border-trust-200/50 hover:shadow-2xl relative">
+                  <div className="flex items-center mb-6">
+                    <div className="w-14 h-14 bg-gradient-to-r from-trust-500 to-secondary-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all relative">
+                      <ChatBubbleLeftRightIcon className="h-7 w-7 text-white" />
+                      {displayStats.unreadMessages > 0 && (
+                        <span className="absolute -top-2 -right-2 w-6 h-6 bg-error-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg">
+                          {displayStats.unreadMessages}
+                        </span>
+                      )}
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 ml-3">Mensajes</h3>
-                    {displayStats.unreadMessages > 0 && (
-                      <span className="ml-auto bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">
-                        {displayStats.unreadMessages}
-                      </span>
-                    )}
+                    <div className="ml-4">
+                      <h3 className="text-lg font-bold text-secondary-900">Mensajes</h3>
+                      <div className="flex items-center mt-1">
+                        <UsersIcon className="h-3 w-3 text-trust-600 mr-1" />
+                        <span className="text-xs text-trust-600 font-semibold">Comunicación Directa</span>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-gray-600">Comunícate con profesionales</p>
-                </div>
+                  <p className="text-secondary-700 font-medium text-sm leading-relaxed">Chat seguro y verificado con profesionales</p>
+                </CorporateCard>
               </Link>
             </div>
 
-            {/* Booking Management */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <div className="bg-white rounded-xl shadow-sm border">
-                <div className="px-6 py-4 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900">Servicios Activos</h2>
+            {/* iOS-Style Professional Management */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+              <CorporateCard variant="glass" className="backdrop-blur-2xl bg-white/90 border border-white/50 shadow-2xl">
+                <div className="flex items-center space-x-4 pb-6 border-b border-secondary-200/50">
+                  <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-trust-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <BoltIcon className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-secondary-900">Servicios Activos</h2>
+                    <p className="text-sm text-secondary-600 font-medium">Proyectos en curso y programados</p>
+                  </div>
                 </div>
-                <div className="p-6">
+                <div className="pt-6">
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <div className="flex items-center justify-between p-5 bg-gradient-to-r from-primary-50 to-trust-50 rounded-2xl border border-primary-200/50 hover:shadow-lg transition-all">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-3 h-3 bg-gradient-to-r from-primary-500 to-trust-500 rounded-full shadow-lg"></div>
                         <div>
-                          <p className="font-medium text-gray-900">Reparación de plomería</p>
-                          <p className="text-sm text-gray-500">Juan García • Hoy 14:00</p>
+                          <p className="font-bold text-secondary-900">Reparación Plomería Profesional</p>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <ShieldCheckIcon className="h-3 w-3 text-success-600" />
+                            <p className="text-sm text-secondary-600 font-medium">Juan García AS • Hoy 14:00</p>
+                          </div>
                         </div>
                       </div>
-                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">En progreso</span>
+                      <span className="text-xs bg-primary-100 text-primary-800 px-3 py-2 rounded-full font-bold shadow-sm">En Progreso</span>
                     </div>
-                    <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <div className="flex items-center justify-between p-5 bg-gradient-to-r from-warning-50 to-yellow-50 rounded-2xl border border-warning-200/50 hover:shadow-lg transition-all">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-3 h-3 bg-gradient-to-r from-warning-500 to-yellow-500 rounded-full shadow-lg"></div>
                         <div>
-                          <p className="font-medium text-gray-900">Instalación eléctrica</p>
-                          <p className="text-sm text-gray-500">María López • Mañana 10:00</p>
+                          <p className="font-bold text-secondary-900">Instalación Eléctrica Certificada</p>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <ShieldCheckIcon className="h-3 w-3 text-success-600" />
+                            <p className="text-sm text-secondary-600 font-medium">María López AS • Mañana 10:00</p>
+                          </div>
                         </div>
                       </div>
-                      <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Programado</span>
+                      <span className="text-xs bg-warning-100 text-warning-800 px-3 py-2 rounded-full font-bold shadow-sm">Programado</span>
                     </div>
-                    <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <div className="flex items-center justify-between p-5 bg-gradient-to-r from-success-50 to-accent-50 rounded-2xl border border-success-200/50 hover:shadow-lg transition-all">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-3 h-3 bg-gradient-to-r from-success-500 to-accent-500 rounded-full shadow-lg"></div>
                         <div>
-                          <p className="font-medium text-gray-900">Limpieza del hogar</p>
-                          <p className="text-sm text-gray-500">Carlos Ruiz • Viernes 09:00</p>
+                          <p className="font-bold text-secondary-900">Limpieza Profesional Premium</p>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <ShieldCheckIcon className="h-3 w-3 text-success-600" />
+                            <p className="text-sm text-secondary-600 font-medium">Carlos Ruiz AS • Viernes 09:00</p>
+                          </div>
                         </div>
                       </div>
-                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Confirmado</span>
+                      <span className="text-xs bg-success-100 text-success-800 px-3 py-2 rounded-full font-bold shadow-sm">Confirmado</span>
                     </div>
                   </div>
-                  <div className="mt-4">
+                  <div className="mt-6">
                     <Link href="/explorador/mis-solicitudes">
-                      <button className="w-full text-blue-600 hover:text-blue-700 text-sm font-medium">
-                        Ver todas las solicitudes
-                      </button>
+                      <CorporateButton
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        rightIcon={<SparklesIcon className="h-4 w-4" />}
+                      >
+                        Ver Gestión Completa
+                      </CorporateButton>
                     </Link>
                   </div>
                 </div>
-              </div>
+              </CorporateCard>
 
-              <div className="bg-white rounded-xl shadow-sm border">
-                <div className="px-6 py-4 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900">Actividad Reciente</h2>
+              <CorporateCard variant="glass" className="backdrop-blur-2xl bg-white/90 border border-white/50 shadow-2xl">
+                <div className="flex items-center space-x-4 pb-6 border-b border-secondary-200/50">
+                  <div className="w-12 h-12 bg-gradient-to-r from-trust-500 to-secondary-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <SparklesIcon className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-secondary-900">Actividad Reciente</h2>
+                    <p className="text-sm text-secondary-600 font-medium">Historial y notificaciones</p>
+                  </div>
                 </div>
-                <div className="p-6">
-                  <div className="space-y-4">
+                <div className="pt-6">
+                  <div className="space-y-5">
                     {recentActivity.length > 0 ? (
                       recentActivity.map((activity, index) => (
-                        <div key={index} className="flex items-start space-x-3">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        <div key={index} className="flex items-start space-x-4 p-4 rounded-2xl bg-gradient-to-r from-secondary-50/80 to-white/80 backdrop-blur-sm border border-secondary-200/30 hover:shadow-lg transition-all">
+                          <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg ${
                             activity.activity_type === 'service_request' 
                               ? activity.status === 'active' 
-                                ? 'bg-blue-100' 
+                                ? 'bg-gradient-to-r from-primary-500 to-trust-500' 
                                 : activity.status === 'completed' 
-                                ? 'bg-green-100' 
-                                : 'bg-gray-100'
-                              : 'bg-purple-100'
+                                ? 'bg-gradient-to-r from-success-500 to-accent-500' 
+                                : 'bg-gradient-to-r from-secondary-400 to-secondary-500'
+                              : 'bg-gradient-to-r from-trust-500 to-secondary-500'
                           }`}>
                             {activity.activity_type === 'service_request' ? (
                               activity.status === 'active' ? (
-                                <ClockIcon className={`h-5 w-5 ${
-                                  activity.status === 'active' ? 'text-blue-600' : 'text-gray-600'
-                                }`} />
+                                <BoltIcon className="h-5 w-5 text-white" />
                               ) : activity.status === 'completed' ? (
-                                <CheckCircleIcon className="h-5 w-5 text-green-600" />
+                                <CheckCircleIcon className="h-5 w-5 text-white" />
                               ) : (
-                                <BriefcaseIcon className="h-5 w-5 text-gray-600" />
+                                <BriefcaseIcon className="h-5 w-5 text-white" />
                               )
                             ) : (
-                              <ChatBubbleLeftRightIcon className="h-5 w-5 text-purple-600" />
+                              <ChatBubbleLeftRightIcon className="h-5 w-5 text-white" />
                             )}
                           </div>
                           <div className="flex-1">
-                            <p className="text-sm text-gray-900">
-                              {activity.service_title}
+                            <div className="flex items-center justify-between mb-2">
+                              <p className="font-bold text-secondary-900 text-sm">
+                                {activity.service_title}
+                              </p>
                               {activity.activity_type === 'service_request' && activity.interest_count > 0 && (
-                                <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
-                                  {activity.interest_count} interesados
+                                <span className="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded-full font-bold">
+                                  {activity.interest_count} AS interesados
                                 </span>
                               )}
-                            </p>
-                            <div className="flex items-center space-x-2 mt-1">
-                              <p className="text-xs text-gray-500">
+                            </div>
+                            <div className="flex items-center space-x-3">
+                              <p className="text-xs text-secondary-600 font-medium">
                                 {new Date(activity.created_at).toLocaleDateString('es-AR', {
                                   day: 'numeric',
                                   month: 'short',
@@ -417,36 +529,54 @@ const ExplorerDashboard: NextPage = () => {
                                 })}
                               </p>
                               {activity.category_name && (
-                                <span className="text-xs text-gray-400">•</span>
-                              )}
-                              {activity.category_name && (
-                                <span className="text-xs text-gray-500">{activity.category_name}</span>
+                                <span className="text-xs bg-secondary-100 text-secondary-700 px-2 py-1 rounded-full font-semibold">{activity.category_name}</span>
                               )}
                               {activity.urgency && activity.urgency !== 'medium' && (
-                                <>
-                                  <span className="text-xs text-gray-400">•</span>
-                                  <span className={`text-xs px-1.5 py-0.5 rounded ${
-                                    activity.urgency === 'high' ? 'bg-orange-100 text-orange-700' :
-                                    activity.urgency === 'emergency' ? 'bg-red-100 text-red-700' :
-                                    'bg-gray-100 text-gray-700'
-                                  }`}>
-                                    {activity.urgency === 'high' ? 'Urgente' :
-                                     activity.urgency === 'emergency' ? 'Emergencia' :
-                                     activity.urgency === 'low' ? 'Baja' : 'Normal'}
-                                  </span>
-                                </>
+                                <span className={`text-xs px-2 py-1 rounded-full font-bold ${
+                                  activity.urgency === 'high' ? 'bg-warning-100 text-warning-700' :
+                                  activity.urgency === 'emergency' ? 'bg-error-100 text-error-700' :
+                                  'bg-secondary-100 text-secondary-700'
+                                }`}>
+                                  {activity.urgency === 'high' ? '⚡ Urgente' :
+                                   activity.urgency === 'emergency' ? '🚨 Emergencia' :
+                                   activity.urgency === 'low' ? '⏰ Flexible' : 'Normal'}
+                                </span>
                               )}
                             </div>
                           </div>
                         </div>
                       ))
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <BriefcaseIcon className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-                        <p className="text-sm">No hay actividad reciente</p>
-                        <p className="text-xs mt-1">Comenzá creando tu primera solicitud de servicio</p>
+                      <div className="text-center py-12">
+                        <div className="w-20 h-20 bg-gradient-to-r from-secondary-100 to-secondary-200 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                          <BriefcaseIcon className="h-10 w-10 text-secondary-400" />
+                        </div>
+                        <h3 className="font-bold text-secondary-700 mb-2">Sin Actividad Reciente</h3>
+                        <p className="text-sm text-secondary-600 font-medium mb-4">Comenzá creando tu primera solicitud profesional</p>
+                        <Link href="/explorador/buscar-servicio">
+                          <CorporateButton
+                            size="sm"
+                            rightIcon={<SparklesIcon className="h-4 w-4" />}
+                          >
+                            Crear Primera Solicitud
+                          </CorporateButton>
+                        </Link>
                       </div>
                     )}
+                  </div>
+                </div>
+              </CorporateCard>
+            </div>
+
+            {/* iOS-Style Professional Trust Footer */}
+            <div className="mt-12 text-center">
+              <div className="inline-flex items-center justify-center space-x-3 bg-white/80 backdrop-blur-xl rounded-2xl px-8 py-4 shadow-2xl border border-white/50">
+                <Logo size="sm" showText={false} />
+                <div className="text-center">
+                  <p className="text-sm font-bold text-secondary-800">Sistema Profesional Certificado</p>
+                  <div className="flex items-center justify-center space-x-2 mt-1">
+                    <ShieldCheckIcon className="h-3 w-3 text-success-600" />
+                    <span className="text-xs text-secondary-600 font-semibold">Verificación garantizada</span>
                   </div>
                 </div>
               </div>

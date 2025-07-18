@@ -1,6 +1,13 @@
-// Fixia Design System - UI Components
-// Professional & Trustworthy Brand Identity
+// FIXIA 2025 - Corporate Design System
+// Professional & Trustworthy Brand Identity - Apple-like Cohesion
 
+// New Corporate 2025 Design System
+export { default as CorporateHeader } from './CorporateHeader';
+export { default as CorporateCard } from './CorporateCard';
+export { default as CorporateButton } from './CorporateButton';
+export { default as CorporateInput } from './CorporateInput';
+
+// Legacy components (being phased out)
 export { default as Button } from './Button';
 export { default as Card } from './Card';
 export { default as GradientText } from './GradientText';
@@ -11,8 +18,3 @@ export { default as LazyImage } from './LazyImage';
 export { default as Toast } from './Toast';
 export { default as LoadingSpinner } from './LoadingSpinner';
 export { default as Modal } from './Modal';
-
-// Re-export types if needed
-export type { default as ButtonProps } from './Button';
-export type { default as CardProps } from './Card';
-export type { default as GradientTextProps } from './GradientText';

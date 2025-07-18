@@ -11,30 +11,31 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
   CalendarDaysIcon,
-  FireIcon,
-  ArrowRightOnRectangleIcon
+  BoltIcon,
+  ArrowRightOnRectangleIcon,
+  MagnifyingGlassIcon,
+  BuildingOfficeIcon,
+  ShieldCheckIcon,
+  UsersIcon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
 import { categoriesService } from '@/services/categories';
+import { localitiesService } from '@/services/api';
 import { ExplorerServiceRequestForm } from '@/types/explorer';
+import { CorporateHeader, CorporateCard, CorporateButton, CorporateInput } from '@/components/ui';
+import Logo from '@/components/Logo';
 
-// Localidades de Chubut
-const CHUBUT_LOCALITIES = [
-  'Rawson', 'Trelew', 'Puerto Madryn', 'Comodoro Rivadavia', 'Esquel',
-  'Gaiman', 'Dolavon', 'Rada Tilly', 'Trevelin', 'Puerto Pirámides',
-  'Sarmiento', 'Río Mayo', 'Alto Río Senguer', 'Gobernador Costa',
-  'Las Plumas', 'Gastre', 'Paso de Indios', 'Tecka', 'Gualjaina',
-  'El Maitén', 'El Hoyo', 'Epuyén', 'Cholila', 'Lago Puelo',
-  'José de San Martín', 'Facundo', 'Playa Unión', 'Playa Magagna'
-];
+// Localidades de Chubut - ahora se cargan desde la API
 
 const BuscarServicioPage: NextPage = () => {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
   
   const [categories, setCategories] = useState<any[]>([]);
+  const [localities, setLocalities] = useState<string[]>([]);
   const [formData, setFormData] = useState<ExplorerServiceRequestForm>({
     category_id: '',
     title: '',
@@ -69,15 +70,18 @@ const BuscarServicioPage: NextPage = () => {
 
   const loadInitialData = async () => {
     try {
-      const [categoriesRes, blockingRes] = await Promise.all([
+      const [categoriesRes, blockingRes, localitiesRes] = await Promise.all([
         categoriesService.getAllCategories(),
-        explorerService.getBlockingStatus()
+        explorerService.getBlockingStatus(),
+        localitiesService.getChubutLocalities()
       ]);
 
       console.log('Categories loaded:', categoriesRes);
       console.log('Blocking status loaded:', blockingRes);
+      console.log('Localities loaded:', localitiesRes);
 
       setCategories(categoriesRes);
+      setLocalities(localitiesRes.map(loc => loc.name));
       
       if (blockingRes.success) {
         setBlockingStatus(blockingRes.data);
@@ -139,28 +143,40 @@ const BuscarServicioPage: NextPage = () => {
   const getUrgencyInfo = (urgency: string) => {
     const info = {
       low: { 
-        label: 'Baja - Tengo tiempo', 
-        color: 'text-gray-600',
-        description: 'Expira en 7 días',
-        icon: '⏰'
+        label: 'Flexible - Tengo tiempo', 
+        color: 'text-secondary-600',
+        bgColor: 'bg-secondary-100',
+        borderColor: 'border-secondary-300',
+        description: 'Sin prisa, cuando puedas',
+        icon: ClockIcon,
+        badge: 'Flexible'
       },
       medium: { 
-        label: 'Media - En unos días', 
-        color: 'text-blue-600',
-        description: 'Expira en 5 días',
-        icon: '📅'
+        label: 'Normal - En unos días', 
+        color: 'text-primary-600',
+        bgColor: 'bg-primary-100',
+        borderColor: 'border-primary-300',
+        description: 'Plazo estándar de servicio',
+        icon: CalendarDaysIcon,
+        badge: 'Normal'
       },
       high: { 
-        label: 'Alta - Lo necesito pronto', 
-        color: 'text-orange-600',
-        description: 'Expira en 3 días',
-        icon: '⚡'
+        label: 'Urgente - Lo necesito pronto', 
+        color: 'text-warning-600',
+        bgColor: 'bg-warning-100',
+        borderColor: 'border-warning-300',
+        description: 'Prioridad alta',
+        icon: BoltIcon,
+        badge: 'Urgente'
       },
       emergency: { 
-        label: 'Emergencia - ¡Ya!', 
-        color: 'text-red-600',
-        description: 'Expira en 24 horas',
-        icon: '🚨'
+        label: 'Emergencia - ¡Inmediato!', 
+        color: 'text-error-600',
+        bgColor: 'bg-error-100',
+        borderColor: 'border-error-300',
+        description: 'Atención inmediata requerida',
+        icon: ExclamationTriangleIcon,
+        badge: 'Emergencia'
       }
     };
     return info[urgency as keyof typeof info] || info.medium;
@@ -168,10 +184,10 @@ const BuscarServicioPage: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-3 border-primary-600 mx-auto mb-6"></div>
+          <p className="text-secondary-600 font-medium">Cargando sistema profesional...</p>
         </div>
       </div>
     );
@@ -179,19 +195,22 @@ const BuscarServicioPage: NextPage = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full mx-4 text-center">
-          <CheckCircleIcon className="h-16 w-16 text-green-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            ¡Solicitud Creada!
-          </h2>
-          <p className="text-gray-600 mb-4">
-            Los AS de tu zona serán notificados inmediatamente
-          </p>
-          <div className="animate-pulse text-blue-600">
-            Redirigiendo al panel...
+      <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50 flex items-center justify-center">
+        <CorporateCard variant="elevated" className="max-w-md w-full mx-4 text-center">
+          <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircleIcon className="h-10 w-10 text-white" />
           </div>
-        </div>
+          <h2 className="text-2xl font-bold text-secondary-900 mb-3">
+            ¡Solicitud Profesional Enviada!
+          </h2>
+          <p className="text-secondary-600 mb-6 font-medium">
+            Los AS certificados de tu zona han sido notificados y responderán en breve
+          </p>
+          <div className="flex items-center justify-center space-x-2 text-primary-600">
+            <SparklesIcon className="h-5 w-5 animate-pulse" />
+            <span className="font-medium">Redirigiendo al panel profesional...</span>
+          </div>
+        </CorporateCard>
       </div>
     );
   }
@@ -199,362 +218,459 @@ const BuscarServicioPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Buscar Servicio - Fixia Explorador</title>
-        <meta name="description" content="Encuentra profesionales para tu proyecto en Chubut" />
+        <title>Solicitar Servicio Profesional | Fixia</title>
+        <meta name="description" content="Conecta con profesionales certificados para tu proyecto en Chubut. Solicitudes seguras y respuestas garantizadas." />
+        <meta name="keywords" content="servicios profesionales, Chubut, AS certificados, solicitud servicio" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl animate-float"></div>
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-float animation-delay-2000"></div>
-          <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-float animation-delay-4000"></div>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50">
+        {/* Corporate Professional Header */}
+        <CorporateHeader
+          title="Solicitar Servicio Profesional"
+          subtitle="Conecta con AS certificados en Chubut para tu proyecto"
+          backUrl="/explorador/dashboard"
+          variant="featured"
+          rightActions={
+            <CorporateButton
+              variant="outline"
+              size="sm"
+              onClick={logout}
+              leftIcon={<ArrowRightOnRectangleIcon className="h-4 w-4" />}
+            >
+              Cerrar Sesión
+            </CorporateButton>
+          }
+        />
 
-        {/* Modern Glassmorphism Header */}
-        <div className="relative z-10 backdrop-blur-xl bg-white/80 shadow-2xl border-b border-white/20">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center py-8">
-              <Link href="/explorador/dashboard">
-                <button className="group mr-6 p-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 rounded-2xl transition-all duration-300 border border-transparent hover:border-blue-200">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" />
-                </button>
-              </Link>
-              <div className="flex-1">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
-                    <span className="text-white text-2xl">🔍</span>
-                  </div>
-                  <div>
-                    <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-900 via-purple-900 to-blue-900 bg-clip-text text-transparent">
-                      Buscar Servicio Profesional
-                    </h1>
-                    <p className="text-gray-600 mt-2 font-semibold text-lg">
-                      🚀 Describe lo que necesitás y conectate con los mejores AS de Chubut
-                    </p>
-                    <div className="flex items-center mt-2 space-x-4">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-green-100 to-blue-100 text-green-800 border border-green-200">
-                        <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                        200+ AS Disponibles
-                      </span>
-                      <span className="text-sm text-gray-500">⚡ Respuesta promedio en 5 minutos</span>
-                    </div>
-                  </div>
-                </div>
+        {/* Professional Stats Bar */}
+        <div className="bg-white/80 backdrop-blur-xl border-b border-secondary-200/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-center space-x-8">
+              <div className="flex items-center space-x-2">
+                <ShieldCheckIcon className="h-5 w-5 text-success-600" />
+                <span className="text-sm font-semibold text-secondary-700">126+ Servicios Disponibles</span>
               </div>
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={logout}
-                  className="flex items-center px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors border border-red-200 hover:border-red-300"
-                >
-                  <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
-                  Cerrar Sesión
-                </button>
+              <div className="flex items-center space-x-2">
+                <UsersIcon className="h-5 w-5 text-primary-600" />
+                <span className="text-sm font-semibold text-secondary-700">AS Certificados</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <BoltIcon className="h-5 w-5 text-warning-600" />
+                <span className="text-sm font-semibold text-secondary-700">Respuesta en 5 min</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Debug Info - Remove in production */}
+        {/* Main Content Container */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+          {/* Professional System Status */}
           {process.env.NODE_ENV === 'development' && (
-            <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <h4 className="font-semibold text-yellow-800">Debug Info:</h4>
-              <p className="text-sm text-yellow-700">
-                blockingStatus: {JSON.stringify(blockingStatus)} | 
-                categories: {categories.length} loaded | 
-                loadingInitialData: {loadingInitialData.toString()}
+            <CorporateCard variant="minimal" className="mb-6">
+              <div className="flex items-center space-x-3">
+                <BuildingOfficeIcon className="h-5 w-5 text-tech-600" />
+                <h4 className="font-semibold text-secondary-800">Sistema Profesional</h4>
+              </div>
+              <p className="text-sm text-secondary-600 mt-2">
+                Estado: {blockingStatus ? 'Conectado' : 'Iniciando'} | 
+                Categorías: {categories.length} | 
+                Localidades: {localities.length}
               </p>
-            </div>
+            </CorporateCard>
           )}
 
-          {/* Blocking Alert */}
+          {/* Professional Blocking Alert */}
           {blockingStatus?.is_blocked && (
-            <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-              <div className="flex items-start">
-                <ExclamationTriangleIcon className="h-6 w-6 text-red-600 mt-0.5 mr-3" />
+            <CorporateCard variant="elevated" className="mb-8 border-l-4 border-l-error-500">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <ExclamationTriangleIcon className="h-6 w-6 text-error-600" />
+                </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-red-800 mb-2">
-                    No podés crear nuevas solicitudes
+                  <h3 className="text-lg font-bold text-secondary-900 mb-2">
+                    Cuenta Temporalmente Suspendida
                   </h3>
-                  <p className="text-red-700 mb-3">
+                  <p className="text-secondary-700 mb-4 font-medium">
                     {blockingStatus.message}
                   </p>
                   <Link href="/explorador/calificaciones">
-                    <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
-                      Completar Calificaciones
-                    </button>
+                    <CorporateButton variant="danger">
+                      Completar Calificaciones Pendientes
+                    </CorporateButton>
                   </Link>
                 </div>
               </div>
-            </div>
+            </CorporateCard>
           )}
 
           {!blockingStatus?.is_blocked && (
             <form onSubmit={handleSubmit} className="space-y-8">
-              {/* Error Messages */}
+              {/* Professional Error Messages */}
               {errors.length > 0 && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <div className="flex">
-                    <ExclamationTriangleIcon className="h-5 w-5 text-red-600 mr-2" />
-                    <div className="text-sm text-red-700">
-                      <ul className="list-disc list-inside space-y-1">
+                <CorporateCard variant="elevated" className="border-l-4 border-l-error-500">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-10 h-10 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <ExclamationTriangleIcon className="h-5 w-5 text-error-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-secondary-900 mb-2">Errores de Validación</h3>
+                      <ul className="space-y-1">
                         {errors.map((error, index) => (
-                          <li key={index}>{error}</li>
+                          <li key={index} className="text-sm text-error-700 font-medium">• {error}</li>
                         ))}
                       </ul>
                     </div>
                   </div>
-                </div>
+                </CorporateCard>
               )}
 
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">
-                  ¿Qué servicio necesitás?
-                </h2>
+              {/* Service Selection Section */}
+              <CorporateCard variant="elevated" className="space-y-8">
+                <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
+                  <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-trust-500 rounded-xl flex items-center justify-center">
+                    <MagnifyingGlassIcon className="h-5 w-5 text-white" />
+                  </div>
+                  <h2 className="text-xl font-bold text-secondary-900">
+                    Detalles del Servicio Profesional
+                  </h2>
+                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Category */}
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Categoría del Servicio *
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Professional Service Category */}
+                  <div className="lg:col-span-2">
+                    <label className="block text-sm font-bold text-secondary-900 mb-3">
+                      Categoría del Servicio Profesional *
                     </label>
                     <select
                       value={formData.category_id}
                       onChange={(e) => setFormData(prev => ({ ...prev, category_id: e.target.value ? parseInt(e.target.value) : '' }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
                       required
                     >
-                      <option value="">Seleccionar categoría...</option>
+                      <option value="">Seleccionar categoría profesional...</option>
                       {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
+                        <option key={category.id} value={category.id} className="py-2">
                           {category.icon} {category.name}
                         </option>
                       ))}
                     </select>
+                    <p className="text-xs text-secondary-600 mt-2 font-medium">
+                      {categories.length} servicios profesionales disponibles
+                    </p>
                   </div>
 
-                  {/* Locality */}
+                  {/* Professional Location */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      <MapPinIcon className="h-4 w-4 inline mr-1" />
+                    <label className="block text-sm font-bold text-secondary-900 mb-3">
+                      <MapPinIcon className="h-4 w-4 inline mr-2 text-primary-600" />
                       Localidad en Chubut *
                     </label>
                     <select
                       value={formData.locality}
                       onChange={(e) => setFormData(prev => ({ ...prev, locality: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
                       required
                     >
                       <option value="">Seleccionar localidad...</option>
-                      {CHUBUT_LOCALITIES.map((locality) => (
-                        <option key={locality} value={locality}>
+                      {localities.map((locality) => (
+                        <option key={locality} value={locality} className="py-2">
                           {locality}
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  {/* Urgency */}
+                  {/* Professional Priority Level */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      <FireIcon className="h-4 w-4 inline mr-1" />
-                      Urgencia
+                    <label className="block text-sm font-bold text-secondary-900 mb-3">
+                      <BoltIcon className="h-4 w-4 inline mr-2 text-warning-600" />
+                      Nivel de Prioridad
                     </label>
                     <select
                       value={formData.urgency}
                       onChange={(e) => setFormData(prev => ({ ...prev, urgency: e.target.value as any }))}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
                     >
                       {['low', 'medium', 'high', 'emergency'].map((urgency) => {
                         const info = getUrgencyInfo(urgency);
+                        const IconComponent = info.icon;
                         return (
-                          <option key={urgency} value={urgency}>
-                            {info.icon} {info.label}
+                          <option key={urgency} value={urgency} className="py-2">
+                            {info.badge} - {info.label}
                           </option>
                         );
                       })}
                     </select>
-                    <p className={`text-xs mt-1 ${getUrgencyInfo(formData.urgency).color}`}>
+                    <div className={`mt-3 px-3 py-2 rounded-lg text-xs font-semibold ${getUrgencyInfo(formData.urgency).bgColor} ${getUrgencyInfo(formData.urgency).color} ${getUrgencyInfo(formData.urgency).borderColor} border`}>
                       {getUrgencyInfo(formData.urgency).description}
-                    </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Generated Title Preview */}
+                {/* Professional Title Preview */}
                 {formData.title && (
-                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <h3 className="font-medium text-blue-800 mb-2">Vista previa del título:</h3>
-                    <p className="text-blue-700 font-semibold">{formData.title}</p>
+                  <div className="mt-8 p-6 bg-gradient-to-r from-primary-50 to-trust-50 border-2 border-primary-200 rounded-xl">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <SparklesIcon className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-bold text-primary-800 mb-2">Título Generado Automáticamente</h3>
+                        <p className="text-primary-700 font-bold text-lg bg-white px-4 py-2 rounded-lg border border-primary-200">{formData.title}</p>
+                        <p className="text-xs text-primary-600 mt-2 font-medium">Este título será visible para todos los AS de la zona</p>
+                      </div>
+                    </div>
                   </div>
                 )}
-              </div>
+              </CorporateCard>
 
-              {/* Description */}
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">
-                  Describí tu proyecto
-                </h2>
+              {/* Project Description Section */}
+              <CorporateCard variant="elevated" className="space-y-8">
+                <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
+                  <div className="w-10 h-10 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center">
+                    <span className="text-white text-lg font-bold">📝</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-secondary-900">
+                    Descripción del Proyecto
+                  </h2>
+                </div>
 
-                <div className="space-y-6">
+                <div className="space-y-8">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Descripción detallada *
+                    <label className="block text-sm font-bold text-secondary-900 mb-3">
+                      Descripción Técnica Detallada *
                     </label>
                     <textarea
                       value={formData.description}
                       onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                      placeholder="Ejemplo: Necesito un albañil para construcción de pared de ladrillo de 3x2 metros en el patio de mi casa. Tengo los materiales pero necesito mano de obra especializada..."
-                      rows={4}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Describa detalladamente el trabajo requerido: materiales, dimensiones, especificaciones técnicas, herramientas necesarias, condiciones del lugar de trabajo..."
+                      rows={6}
+                      className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400 resize-none"
                       required
                     />
+                    <p className="text-xs text-secondary-600 mt-2 font-medium">
+                      Una descripción detallada ayuda a los AS a evaluar mejor el trabajo y dar presupuestos precisos
+                    </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Dirección específica (opcional)
+                    <label className="block text-sm font-bold text-secondary-900 mb-3">
+                      <MapPinIcon className="h-4 w-4 inline mr-2 text-primary-600" />
+                      Dirección Específica (Opcional)
                     </label>
                     <input
                       type="text"
                       value={formData.specific_address || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, specific_address: e.target.value }))}
-                      placeholder="Ejemplo: Barrio Centro, cerca del Municipio"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Ej: Barrio Centro, Av. San Martín 123, cerca del Banco Nación"
+                      className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
                     />
+                    <p className="text-xs text-secondary-600 mt-2 font-medium">
+                      Facilita la evaluación de distancia y logística para los profesionales
+                    </p>
                   </div>
                 </div>
-              </div>
+              </CorporateCard>
 
-              {/* Budget */}
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">
-                  <CurrencyDollarIcon className="h-6 w-6 inline mr-2" />
-                  Presupuesto (opcional)
-                </h2>
+              {/* Professional Budget Section */}
+              <CorporateCard variant="elevated" className="space-y-8">
+                <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
+                  <div className="w-10 h-10 bg-gradient-to-r from-success-500 to-success-600 rounded-xl flex items-center justify-center">
+                    <CurrencyDollarIcon className="h-5 w-5 text-white" />
+                  </div>
+                  <h2 className="text-xl font-bold text-secondary-900">
+                    Presupuesto Referencial (Opcional)
+                  </h2>
+                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-warning-50 border border-warning-200 rounded-xl p-4 mb-6">
+                  <p className="text-sm text-warning-800 font-medium">
+                    💡 <strong>Recomendación:</strong> Proporcionar un rango de presupuesto ayuda a los AS a evaluar si el proyecto se ajusta a sus servicios.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Presupuesto mínimo (ARS)
+                    <label className="block text-sm font-bold text-secondary-900 mb-3">
+                      Presupuesto Mínimo (ARS)
                     </label>
-                    <input
-                      type="number"
-                      value={formData.budget_min || ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, budget_min: e.target.value ? parseFloat(e.target.value) : undefined }))}
-                      placeholder="10000"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-secondary-500 font-bold">$</span>
+                      <input
+                        type="number"
+                        value={formData.budget_min || ''}
+                        onChange={(e) => setFormData(prev => ({ ...prev, budget_min: e.target.value ? parseFloat(e.target.value) : undefined }))}
+                        placeholder="15,000"
+                        className="w-full border-2 border-secondary-300 rounded-xl pl-8 pr-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
+                      />
+                    </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Presupuesto máximo (ARS)
+                    <label className="block text-sm font-bold text-secondary-900 mb-3">
+                      Presupuesto Máximo (ARS)
                     </label>
-                    <input
-                      type="number"
-                      value={formData.budget_max || ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, budget_max: e.target.value ? parseFloat(e.target.value) : undefined }))}
-                      placeholder="50000"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-secondary-500 font-bold">$</span>
+                      <input
+                        type="number"
+                        value={formData.budget_max || ''}
+                        onChange={(e) => setFormData(prev => ({ ...prev, budget_max: e.target.value ? parseFloat(e.target.value) : undefined }))}
+                        placeholder="50,000"
+                        className="w-full border-2 border-secondary-300 rounded-xl pl-8 pr-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Timing */}
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">
-                  <CalendarDaysIcon className="h-6 w-6 inline mr-2" />
-                  ¿Cuándo lo necesitás?
-                </h2>
+                {(formData.budget_min || formData.budget_max) && (
+                  <div className="bg-primary-50 border border-primary-200 rounded-xl p-4">
+                    <p className="text-sm text-primary-700 font-medium">
+                      🎯 Rango presupuestario: <strong>
+                        ${formData.budget_min ? formData.budget_min.toLocaleString() : '---'} - 
+                        ${formData.budget_max ? formData.budget_max.toLocaleString() : '---'}
+                      </strong>
+                    </p>
+                  </div>
+                )}
+              </CorporateCard>
+
+              {/* Professional Timing Section */}
+              <CorporateCard variant="elevated" className="space-y-8">
+                <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
+                  <div className="w-10 h-10 bg-gradient-to-r from-trust-500 to-trust-600 rounded-xl flex items-center justify-center">
+                    <CalendarDaysIcon className="h-5 w-5 text-white" />
+                  </div>
+                  <h2 className="text-xl font-bold text-secondary-900">
+                    Disponibilidad Horaria
+                  </h2>
+                </div>
 
                 <div className="space-y-6">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="flexible_timing"
-                      checked={formData.flexible_timing}
-                      onChange={(e) => setFormData(prev => ({ ...prev, flexible_timing: e.target.checked }))}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="flexible_timing" className="ml-2 block text-sm text-gray-900">
-                      Tengo horarios flexibles
-                    </label>
+                  <div className="bg-secondary-50 border border-secondary-200 rounded-xl p-6">
+                    <div className="flex items-start space-x-4">
+                      <input
+                        type="checkbox"
+                        id="flexible_timing"
+                        checked={formData.flexible_timing}
+                        onChange={(e) => setFormData(prev => ({ ...prev, flexible_timing: e.target.checked }))}
+                        className="mt-1 h-5 w-5 text-primary-600 focus:ring-primary-500 border-secondary-300 rounded"
+                      />
+                      <div className="flex-1">
+                        <label htmlFor="flexible_timing" className="block text-sm font-bold text-secondary-900 mb-1">
+                          Disponibilidad Flexible
+                        </label>
+                        <p className="text-xs text-secondary-600 font-medium">
+                          Me adapto a los horarios disponibles del profesional
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   {!formData.flexible_timing && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Fecha preferida
+                        <label className="block text-sm font-bold text-secondary-900 mb-3">
+                          Fecha Preferida
                         </label>
                         <input
                           type="date"
                           value={formData.preferred_date || ''}
                           onChange={(e) => setFormData(prev => ({ ...prev, preferred_date: e.target.value }))}
                           min={new Date().toISOString().split('T')[0]}
-                          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Hora preferida
+                        <label className="block text-sm font-bold text-secondary-900 mb-3">
+                          Hora Preferida
                         </label>
                         <input
                           type="time"
                           value={formData.preferred_time || ''}
                           onChange={(e) => setFormData(prev => ({ ...prev, preferred_time: e.target.value }))}
-                          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
                         />
                       </div>
                     </div>
                   )}
                 </div>
-              </div>
+              </CorporateCard>
 
-              {/* Submit */}
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Crear Solicitud de Servicio
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Los AS de tu zona serán notificados inmediatamente
-                    </p>
+              {/* Professional Submission Section */}
+              <CorporateCard variant="elevated" className="bg-gradient-to-br from-primary-50 via-white to-trust-50 border-2 border-primary-200">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-4 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-primary-600 to-trust-600 rounded-xl flex items-center justify-center">
+                        <CheckCircleIcon className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-secondary-900">
+                          Enviar Solicitud Profesional
+                        </h3>
+                        <p className="text-secondary-600 text-sm font-medium">
+                          Los AS certificados de tu zona serán notificados instantáneamente
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-xl p-4 border border-primary-200">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                        <div className="flex items-center justify-center space-x-2">
+                          <BoltIcon className="h-4 w-4 text-warning-600" />
+                          <span className="text-xs font-bold text-secondary-700">Respuesta en 5 min</span>
+                        </div>
+                        <div className="flex items-center justify-center space-x-2">
+                          <ShieldCheckIcon className="h-4 w-4 text-success-600" />
+                          <span className="text-xs font-bold text-secondary-700">AS Verificados</span>
+                        </div>
+                        <div className="flex items-center justify-center space-x-2">
+                          <SparklesIcon className="h-4 w-4 text-primary-600" />
+                          <span className="text-xs font-bold text-secondary-700">Garantía de Calidad</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   
-                  <div className="flex space-x-4">
+                  <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 lg:ml-8">
                     <Link href="/explorador/dashboard">
-                      <button 
-                        type="button"
-                        className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                      <CorporateButton 
+                        variant="outline"
+                        size="lg"
+                        className="w-full sm:w-auto"
                       >
                         Cancelar
-                      </button>
+                      </CorporateButton>
                     </Link>
                     
-                    <button
+                    <CorporateButton
                       type="submit"
                       disabled={submitting || blockingStatus?.is_blocked}
-                      className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                      size="lg"
+                      loading={submitting}
+                      className="w-full sm:w-auto px-8"
+                      rightIcon={!submitting ? <ArrowRightOnRectangleIcon className="h-4 w-4" /> : undefined}
                     >
-                      {submitting ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white inline mr-2"></div>
-                          Creando...
-                        </>
-                      ) : (
-                        'Crear Solicitud'
-                      )}
-                    </button>
+                      {submitting ? 'Enviando Solicitud...' : 'Enviar Solicitud Profesional'}
+                    </CorporateButton>
                   </div>
                 </div>
-              </div>
+              </CorporateCard>
             </form>
           )}
+
+          {/* Professional Trust Footer */}
+          <div className="mt-12 text-center">
+            <div className="inline-flex items-center justify-center space-x-2 bg-white rounded-xl px-6 py-3 shadow-md border border-secondary-200">
+              <Logo size="sm" showText={false} />
+              <span className="text-sm font-bold text-secondary-700">
+                Sistema Profesional Certificado
+              </span>
+              <ShieldCheckIcon className="h-4 w-4 text-success-600" />
+            </div>
+          </div>
         </div>
       </div>
     </>

@@ -23,32 +23,36 @@ const Logo: React.FC<LogoProps> = ({
 
   const { width, height, fontSize, gap } = sizes[size];
 
-  // Definir colores según el fondo
+  // Colores corporativos profesionales 2025
   const getColors = () => {
     switch (variant) {
       case 'white':
         return {
-          logoFill: '#ffffff',
+          primaryFill: '#ffffff',
+          secondaryFill: '#f8fafc',
           textColor: 'text-white',
-          subtextColor: 'text-white/80'
+          subtextColor: 'text-white/90'
         };
       case 'dark':
         return {
-          logoFill: '#1e293b',
-          textColor: 'text-neutral-900',
-          subtextColor: 'text-neutral-600'
+          primaryFill: '#1e293b',
+          secondaryFill: '#334155',
+          textColor: 'text-secondary-900',
+          subtextColor: 'text-secondary-600'
         };
       case 'gradient':
         return {
-          logoFill: 'url(#corporateGradient)',
-          textColor: 'text-neutral-900',
-          subtextColor: 'text-neutral-600'
+          primaryFill: 'url(#corporateGradient)',
+          secondaryFill: 'url(#trustGradient)',
+          textColor: 'text-secondary-900',
+          subtextColor: 'text-secondary-600'
         };
       default: // primary
         return {
-          logoFill: '#2563eb',
-          textColor: 'text-neutral-900',
-          subtextColor: 'text-neutral-600'
+          primaryFill: '#1e40af', // Primary 500 - Deep corporate blue
+          secondaryFill: '#0ea5e9', // Trust 500 - Professional trust
+          textColor: 'text-secondary-900',
+          subtextColor: 'text-secondary-600'
         };
     }
   };
@@ -67,43 +71,78 @@ const Logo: React.FC<LogoProps> = ({
       >
         <defs>
           <linearGradient id="corporateGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#2563eb" />
-            <stop offset="100%" stopColor="#1d4ed8" />
+            <stop offset="0%" stopColor="#1e40af" />
+            <stop offset="50%" stopColor="#1d4ed8" />
+            <stop offset="100%" stopColor="#0ea5e9" />
           </linearGradient>
+          <linearGradient id="trustGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#0ea5e9" />
+            <stop offset="100%" stopColor="#0284c7" />
+          </linearGradient>
+          <filter id="corporateShadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#1e40af" floodOpacity="0.15"/>
+          </filter>
         </defs>
         
-        {/* Professional Square Container */}
+        {/* Modern Corporate Container with Subtle Depth */}
+        <rect
+          x="1"
+          y="1"
+          width="30"
+          height="30"
+          rx="8"
+          fill={colors.primaryFill}
+          filter="url(#corporateShadow)"
+          className="transition-all duration-300"
+        />
+        
+        {/* Inner Accent Border */}
         <rect
           x="2"
           y="2"
           width="28"
           height="28"
-          rx="6"
-          fill={colors.logoFill}
-          className="drop-shadow-sm"
+          rx="7"
+          fill="none"
+          stroke={colors.secondaryFill}
+          strokeWidth="0.5"
+          opacity="0.3"
         />
         
-        {/* Letter F - Clean and Professional */}
-        <path
-          d="M9 9 L9 23 L11 23 L11 17 L18 17 L18 15 L11 15 L11 11 L19 11 L19 9 Z"
-          fill="white"
-          className="font-bold"
-        />
+        {/* Modern F - Geometric & Professional */}
+        <g fill="white">
+          <rect x="8" y="8" width="2.5" height="16" rx="0.5" />
+          <rect x="8" y="8" width="12" height="2.5" rx="0.5" />
+          <rect x="8" y="14.75" width="9" height="2.5" rx="0.5" />
+        </g>
         
-        {/* Letter x - Minimalist */}
-        <path
-          d="M20 15 L22.5 12.5 L24 14 L21.5 16.5 L24 19 L22.5 20.5 L20 18 L17.5 20.5 L16 19 L18.5 16.5 L16 14 L17.5 12.5 Z"
-          fill="white"
-        />
+        {/* Modern X - Clean Intersection Symbol */}
+        <g fill="white" opacity="0.95">
+          <rect x="21" y="12" width="8" height="2" rx="1" transform="rotate(45 25 13)" />
+          <rect x="21" y="18" width="8" height="2" rx="1" transform="rotate(-45 25 19)" />
+        </g>
+        
+        {/* Subtle Corporate Accent Dot */}
+        <circle cx="26" cy="9" r="1.5" fill={colors.secondaryFill} opacity="0.8" />
       </svg>
       
       {showText && (
-        <span 
-          className={`font-bold tracking-tight ${colors.textColor}`}
-          style={{ fontSize }}
-        >
-          Fixia
-        </span>
+        <div className="flex flex-col">
+          <span 
+            className={`font-bold tracking-tight ${colors.textColor}`}
+            style={{ fontSize, fontFamily: '"Inter", system-ui, sans-serif' }}
+          >
+            FIXIA
+          </span>
+          {size === 'lg' || size === 'xl' ? (
+            <span 
+              className={`${colors.subtextColor} tracking-wider uppercase`}
+              style={{ fontSize: `${parseFloat(fontSize) * 0.4}rem`, fontWeight: 500 }}
+            >
+              Servicios Profesionales
+            </span>
+          ) : null}
+        </div>
       )}
     </div>
   );
