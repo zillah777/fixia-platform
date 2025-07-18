@@ -11,7 +11,8 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
   CalendarDaysIcon,
-  FireIcon
+  FireIcon,
+  ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -30,7 +31,7 @@ const CHUBUT_LOCALITIES = [
 ];
 
 const BuscarServicioPage: NextPage = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
   
   const [categories, setCategories] = useState<any[]>([]);
@@ -230,6 +231,15 @@ const BuscarServicioPage: NextPage = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={logout}
+                  className="flex items-center px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors border border-red-200 hover:border-red-300"
+                >
+                  <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
+                  Cerrar Sesión
+                </button>
               </div>
             </div>
           </div>

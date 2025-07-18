@@ -19,14 +19,15 @@ import {
   ChartBarIcon,
   ClockIcon,
   CheckCircleIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useExploradorDashboardData } from '@/hooks/useDashboardData';
 
 const ExplorerDashboard: NextPage = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { stats, loading: statsLoading, error } = useExploradorDashboardData();
@@ -165,11 +166,19 @@ const ExplorerDashboard: NextPage = () => {
             
             <div className="mt-8 pt-8 border-t border-gray-200">
               <Link href="/explorador/cambiar-a-as">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-white cursor-pointer hover:from-blue-600 hover:to-purple-700 transition-all">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-white cursor-pointer hover:from-blue-600 hover:to-purple-700 transition-all mb-4">
                   <h3 className="font-semibold text-sm mb-1">¿Querés ofrecer servicios?</h3>
                   <p className="text-xs text-blue-100">Convertite en AS y empezá a ganar dinero</p>
                 </div>
               </Link>
+              
+              <button
+                onClick={logout}
+                className="w-full flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+              >
+                <ArrowRightOnRectangleIcon className="h-5 w-5 mr-3" />
+                Cerrar Sesión
+              </button>
             </div>
           </nav>
         </div>
