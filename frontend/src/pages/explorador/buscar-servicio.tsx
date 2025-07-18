@@ -74,13 +74,23 @@ const BuscarServicioPage: NextPage = () => {
         explorerService.getBlockingStatus()
       ]);
 
+      console.log('Categories loaded:', categoriesRes);
+      console.log('Blocking status loaded:', blockingRes);
+
       setCategories(categoriesRes);
       
       if (blockingRes.success) {
         setBlockingStatus(blockingRes.data);
+      } else {
+        // Set default non-blocked status if API fails
+        setBlockingStatus({ is_blocked: false, message: '' });
       }
     } catch (error) {
       console.error('Error loading initial data:', error);
+      // Set default non-blocked status if API fails
+      setBlockingStatus({ is_blocked: false, message: '' });
+    } finally {
+      setLoadingInitialData(false);
     }
   };
 
@@ -246,6 +256,18 @@ const BuscarServicioPage: NextPage = () => {
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Debug Info - Remove in production */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <h4 className="font-semibold text-yellow-800">Debug Info:</h4>
+              <p className="text-sm text-yellow-700">
+                blockingStatus: {JSON.stringify(blockingStatus)} | 
+                categories: {categories.length} loaded | 
+                loadingInitialData: {loadingInitialData.toString()}
+              </p>
+            </div>
+          )}
+
           {/* Blocking Alert */}
           {blockingStatus?.is_blocked && (
             <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
