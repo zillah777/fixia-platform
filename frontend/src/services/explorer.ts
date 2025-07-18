@@ -50,7 +50,11 @@ class ExplorerService {
 
   // Service Requests (BUSCO ALBAÑIL PARA TRABAJO EN RAWSON)
   async createServiceRequest(data: ExplorerServiceRequestForm): Promise<ExplorerApiResponse<{ request_id: number; expires_at: string }>> {
-    const response = await this.api.post('/explorer/service-request', data);
+    const requestData = {
+      ...data,
+      category_id: typeof data.category_id === 'string' ? parseInt(data.category_id) : data.category_id
+    };
+    const response = await this.api.post('/explorer/service-request', requestData);
     return response.data;
   }
 
@@ -240,7 +244,7 @@ class ExplorerService {
   validateServiceRequest(data: ExplorerServiceRequestForm): string[] {
     const errors: string[] = [];
     
-    if (!data.category_id) errors.push('Categoría es requerida');
+    if (!data.category_id || data.category_id === '') errors.push('Categoría es requerida');
     if (!data.title?.trim()) errors.push('Título es requerido');
     if (!data.description?.trim()) errors.push('Descripción es requerida');
     if (!data.locality?.trim()) errors.push('Localidad es requerida');

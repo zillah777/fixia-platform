@@ -287,7 +287,7 @@ export interface ASProfileForExplorer {
 
 // Form Types
 export interface ExplorerServiceRequestForm {
-  category_id: number;
+  category_id: number | string;
   title: string;
   description: string;
   locality: string;

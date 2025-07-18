@@ -35,7 +35,7 @@ const BuscarServicioPage: NextPage = () => {
   
   const [categories, setCategories] = useState<any[]>([]);
   const [formData, setFormData] = useState<ExplorerServiceRequestForm>({
-    category_id: 0,
+    category_id: '',
     title: '',
     description: '',
     locality: '',
@@ -52,6 +52,8 @@ const BuscarServicioPage: NextPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [blockingStatus, setBlockingStatus] = useState<any>(null);
+  const [loadingInitialData, setLoadingInitialData] = useState(true);
+  const [categoriesError, setCategoriesError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && user?.user_type !== 'customer') {
@@ -82,7 +84,7 @@ const BuscarServicioPage: NextPage = () => {
   };
 
   const generateTitle = () => {
-    const selectedCategory = categories.find(cat => cat.id === formData.category_id);
+    const selectedCategory = categories.find(cat => cat.id === parseInt(formData.category_id as string));
     if (selectedCategory && formData.locality) {
       const title = `BUSCO ${selectedCategory.name.toUpperCase()} PARA TRABAJO EN ${formData.locality.toUpperCase()}`;
       setFormData(prev => ({ ...prev, title }));
@@ -287,7 +289,7 @@ const BuscarServicioPage: NextPage = () => {
                     </label>
                     <select
                       value={formData.category_id}
-                      onChange={(e) => setFormData(prev => ({ ...prev, category_id: parseInt(e.target.value) }))}
+                      onChange={(e) => setFormData(prev => ({ ...prev, category_id: e.target.value ? parseInt(e.target.value) : '' }))}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
