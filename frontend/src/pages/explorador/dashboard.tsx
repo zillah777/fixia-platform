@@ -86,11 +86,11 @@ const ExplorerDashboard: NextPage = () => {
 
   if (loading || statsLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-3 border-primary-600 mx-auto mb-6"></div>
-          <p className="text-secondary-600 font-semibold text-lg">Cargando Panel Profesional...</p>
-          <p className="text-secondary-500 text-sm mt-2">Iniciando sistema de gestión</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-3 border-navy-600 mx-auto mb-6"></div>
+          <p className="text-gray-700 font-semibold text-lg">Cargando Panel Profesional...</p>
+          <p className="text-gray-600 text-sm mt-2">Iniciando sistema de gestión</p>
         </div>
       </div>
     );
@@ -189,7 +189,7 @@ const ExplorerDashboard: NextPage = () => {
                 <p className="text-gray-600 mt-1">Bienvenido, {user?.first_name}! Aquí tienes un resumen de tu actividad.</p>
               </div>
               <Link href="/explorador/buscar-servicio">
-                <button className="glass-cta text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 hover:scale-105 transition-all duration-300 shadow-lg">
+                <button className="bg-navy-600 hover:bg-navy-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 hover:scale-105 transition-all duration-300 shadow-lg">
                   <PlusIcon className="w-5 h-5" />
                   <span>Nueva Solicitud</span>
                 </button>
@@ -215,8 +215,8 @@ const ExplorerDashboard: NextPage = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="w-12 h-12 bg-forest-50 rounded-xl flex items-center justify-center">
-                      <stat.icon className="w-6 h-6 text-forest-600" />
+                    <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center">
+                      <stat.icon className="w-6 h-6 text-navy-600" />
                     </div>
                   </div>
                 </div>
@@ -228,9 +228,9 @@ const ExplorerDashboard: NextPage = () => {
               {/* Chart Card */}
               <div className="lg:col-span-2 bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Actividad Reciente</h3>
-                <div className="h-64 bg-gradient-to-br from-forest-50 to-teal-50 rounded-xl flex items-center justify-center">
+                <div className="h-64 bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl flex items-center justify-center">
                   <div className="text-center">
-                    <ChartBarIcon className="w-12 h-12 text-forest-500 mx-auto mb-4" />
+                    <ChartBarIcon className="w-12 h-12 text-navy-500 mx-auto mb-4" />
                     <p className="text-gray-600">Gráfico de actividad próximamente</p>
                   </div>
                 </div>
@@ -242,7 +242,7 @@ const ExplorerDashboard: NextPage = () => {
                 <div className="space-y-4">
                   {recentActivity.map((activity, index) => (
                     <div key={index} className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-forest-500 to-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 bg-gradient-to-br from-navy-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                         <span className="text-white font-medium text-xs">{activity.avatar}</span>
                       </div>
                       <div className="flex-1 min-w-0">
@@ -262,25 +262,25 @@ const ExplorerDashboard: NextPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Link href="/explorador/perfil">
                   <button className="h-20 rounded-xl border border-gray-200 hover:bg-gray-50 flex flex-col items-center justify-center bg-transparent transition-all w-full">
-                    <UserIcon className="w-6 h-6 mb-2 text-forest-600" />
+                    <UserIcon className="w-6 h-6 mb-2 text-navy-600" />
                     <span className="text-sm font-medium">Editar Perfil</span>
                   </button>
                 </Link>
                 <Link href="/explorador/cambiar-password">
                   <button className="h-20 rounded-xl border border-gray-200 hover:bg-gray-50 flex flex-col items-center justify-center bg-transparent transition-all w-full">
-                    <KeyIcon className="w-6 h-6 mb-2 text-teal-600" />
+                    <KeyIcon className="w-6 h-6 mb-2 text-blue-600" />
                     <span className="text-sm font-medium">Cambiar Contraseña</span>
                   </button>
                 </Link>
                 <Link href="/explorador/mis-solicitudes">
                   <button className="h-20 rounded-xl border border-gray-200 hover:bg-gray-50 flex flex-col items-center justify-center bg-transparent transition-all w-full">
-                    <DocumentTextIcon className="w-6 h-6 mb-2 text-gold-600" />
+                    <DocumentTextIcon className="w-6 h-6 mb-2 text-slate-600" />
                     <span className="text-sm font-medium">Mis Solicitudes</span>
                   </button>
                 </Link>
                 <Link href="/explorador/chats">
                   <button className="h-20 rounded-xl border border-gray-200 hover:bg-gray-50 flex flex-col items-center justify-center bg-transparent transition-all w-full">
-                    <ChatBubbleLeftRightIcon className="w-6 h-6 mb-2 text-coral-600" />
+                    <ChatBubbleLeftRightIcon className="w-6 h-6 mb-2 text-gray-600" />
                     <span className="text-sm font-medium">Mensajes</span>
                   </button>
                 </Link>

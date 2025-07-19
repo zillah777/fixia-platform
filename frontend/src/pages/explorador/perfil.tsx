@@ -133,7 +133,7 @@ const EditarPerfil: NextPage = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Profile Picture */}
                 <div className="flex items-center space-x-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-forest-500 to-teal-600 rounded-2xl flex items-center justify-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-navy-500 to-blue-600 rounded-2xl flex items-center justify-center">
                     <UserIcon className="w-10 h-10 text-white" />
                   </div>
                   <div>
@@ -163,7 +163,7 @@ const EditarPerfil: NextPage = () => {
                         required
                         value={formData.first_name}
                         onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
                         placeholder="Tu nombre"
                       />
                     </div>
@@ -180,7 +180,7 @@ const EditarPerfil: NextPage = () => {
                         required
                         value={formData.last_name}
                         onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
                         placeholder="Tu apellido"
                       />
                     </div>
@@ -197,7 +197,7 @@ const EditarPerfil: NextPage = () => {
                         required
                         value={formData.email}
                         onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
                         placeholder="tu@email.com"
                       />
                     </div>
@@ -213,7 +213,7 @@ const EditarPerfil: NextPage = () => {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
                         placeholder="+54 9 280 123-4567"
                       />
                     </div>
@@ -230,7 +230,7 @@ const EditarPerfil: NextPage = () => {
                       type="text"
                       value={formData.address}
                       onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
                       placeholder="Tu dirección en Chubut"
                     />
                   </div>
@@ -244,7 +244,7 @@ const EditarPerfil: NextPage = () => {
                     value={formData.bio}
                     onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
                     rows={4}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all resize-none"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all resize-none"
                     placeholder="Cuéntanos un poco sobre ti..."
                   />
                 </div>

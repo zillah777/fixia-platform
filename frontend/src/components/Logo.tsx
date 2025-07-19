@@ -35,24 +35,24 @@ const Logo: React.FC<LogoProps> = ({
         };
       case 'dark':
         return {
-          primaryFill: '#1e293b',
-          secondaryFill: '#334155',
-          textColor: 'text-secondary-900',
-          subtextColor: 'text-secondary-600'
+          primaryFill: '#1f2937',
+          secondaryFill: '#374151',
+          textColor: 'text-gray-900',
+          subtextColor: 'text-gray-600'
         };
       case 'gradient':
         return {
           primaryFill: 'url(#corporateGradient)',
-          secondaryFill: 'url(#trustGradient)',
-          textColor: 'text-secondary-900',
-          subtextColor: 'text-secondary-600'
+          secondaryFill: 'url(#professionalGradient)',
+          textColor: 'text-gray-900',
+          subtextColor: 'text-gray-600'
         };
       default: // primary
         return {
-          primaryFill: '#1e40af', // Primary 500 - Deep corporate blue
-          secondaryFill: '#0ea5e9', // Trust 500 - Professional trust
-          textColor: 'text-secondary-900',
-          subtextColor: 'text-secondary-600'
+          primaryFill: '#334155', // Professional navy
+          secondaryFill: '#3b82f6', // Professional blue
+          textColor: 'text-gray-900',
+          subtextColor: 'text-gray-600'
         };
     }
   };
@@ -71,16 +71,16 @@ const Logo: React.FC<LogoProps> = ({
       >
         <defs>
           <linearGradient id="corporateGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1e40af" />
-            <stop offset="50%" stopColor="#1d4ed8" />
-            <stop offset="100%" stopColor="#0ea5e9" />
+            <stop offset="0%" stopColor="#334155" />
+            <stop offset="50%" stopColor="#475569" />
+            <stop offset="100%" stopColor="#3b82f6" />
           </linearGradient>
-          <linearGradient id="trustGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#0ea5e9" />
-            <stop offset="100%" stopColor="#0284c7" />
+          <linearGradient id="professionalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#3b82f6" />
+            <stop offset="100%" stopColor="#2563eb" />
           </linearGradient>
           <filter id="corporateShadow">
-            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#1e40af" floodOpacity="0.15"/>
+            <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#334155" floodOpacity="0.15"/>
           </filter>
         </defs>
         

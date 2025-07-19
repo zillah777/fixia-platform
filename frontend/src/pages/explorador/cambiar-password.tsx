@@ -215,7 +215,7 @@ const CambiarPassword: NextPage = () => {
                       required
                       value={formData.currentPassword}
                       onChange={(e) => setFormData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                      className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all"
+                      className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
                       placeholder="Tu contraseña actual"
                     />
                     <button
@@ -240,7 +240,7 @@ const CambiarPassword: NextPage = () => {
                       required
                       value={formData.newPassword}
                       onChange={(e) => handlePasswordChange(e.target.value)}
-                      className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all"
+                      className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
                       placeholder="Tu nueva contraseña"
                     />
                     <button
@@ -295,7 +295,7 @@ const CambiarPassword: NextPage = () => {
                       required
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                      className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all"
+                      className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
                       placeholder="Confirma tu nueva contraseña"
                     />
                     <button

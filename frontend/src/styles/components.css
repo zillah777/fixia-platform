@@ -1,11 +1,11 @@
-/* FIXIA 2025 - Modern iOS-Style Design System */
+/* FIXIA 2025 - Professional Corporate Design System */
 /* 
-  Color Palette (5-color sophistication):
-  - Forest: #264653 (Primary brand - deep, trustworthy)
-  - Teal: #2a9d8f (Secondary - fresh, modern)
-  - Gold: #e9c46a (Accent - warm, premium)
-  - Coral: #f4a261 (Interactive - inviting)
-  - Terra: #e76f51 (States - bold, clear)
+  Color Palette (Professional corporate colors):
+  - Navy: #334155 (Primary brand - professional, trustworthy)
+  - Blue: #3b82f6 (Secondary - modern, reliable)
+  - Slate: #64748b (Accent - sophisticated)
+  - Gray: #6b7280 (Neutral - balanced)
+  - Success: #22c55e, Warning: #f59e0b, Error: #ef4444
 */
 
 /* =============================================================================
@@ -17,31 +17,31 @@
 }
 
 .btn-primary {
-  @apply bg-forest-500 text-white hover:bg-forest-600 focus:ring-forest-500 shadow-lg backdrop-blur-sm;
+  @apply bg-navy-500 text-white hover:bg-navy-600 focus:ring-navy-500 shadow-lg backdrop-blur-sm;
 }
 
 .btn-secondary {
-  @apply bg-teal-500 text-white hover:bg-teal-600 focus:ring-teal-500 shadow-lg backdrop-blur-sm;
+  @apply bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500 shadow-lg backdrop-blur-sm;
 }
 
 .btn-outline {
-  @apply border-forest-500 text-forest-500 hover:bg-forest-500 hover:text-white focus:ring-forest-500 backdrop-blur-sm;
+  @apply border-navy-500 text-navy-500 hover:bg-navy-500 hover:text-white focus:ring-navy-500 backdrop-blur-sm;
 }
 
 .btn-ghost {
-  @apply text-forest-500 hover:bg-forest-50 focus:ring-forest-500 backdrop-blur-sm;
+  @apply text-navy-500 hover:bg-slate-50 focus:ring-navy-500 backdrop-blur-sm;
 }
 
 .btn-success {
-  @apply bg-teal-500 text-white hover:bg-teal-600 focus:ring-teal-500;
+  @apply bg-success-500 text-white hover:bg-success-600 focus:ring-success-500;
 }
 
 .btn-warning {
-  @apply bg-gold-500 text-white hover:bg-gold-600 focus:ring-gold-500;
+  @apply bg-warning-500 text-white hover:bg-warning-600 focus:ring-warning-500;
 }
 
 .btn-error {
-  @apply bg-terra-500 text-white hover:bg-terra-600 focus:ring-terra-500;
+  @apply bg-error-500 text-white hover:bg-error-600 focus:ring-error-500;
 }
 
 /* Button Sizes */
@@ -156,15 +156,15 @@
 }
 
 .text-success {
-  @apply text-teal-500;
+  @apply text-blue-500;
 }
 
 .text-warning {
-  @apply text-gold-500;
+  @apply text-warning-500;
 }
 
 .text-error {
-  @apply text-terra-500;
+  @apply text-error-500;
 }
 
 /* =============================================================================
@@ -180,7 +180,7 @@
 }
 
 .gradient-success {
-  @apply bg-gradient-to-r from-teal-500 to-gold-500;
+  @apply bg-gradient-to-r from-navy-500 to-blue-500;
 }
 
 .gradient-brand {
@@ -188,7 +188,7 @@
 }
 
 .gradient-trust {
-  @apply bg-gradient-to-r from-trust-500 to-trust-600;
+  @apply bg-gradient-to-r from-blue-500 to-blue-600;
 }
 
 /* =============================================================================
@@ -204,7 +204,7 @@
 }
 
 .bg-success {
-  @apply bg-teal-500;
+  @apply bg-success-500;
 }
 
 .bg-brand {
@@ -212,7 +212,7 @@
 }
 
 .bg-trust {
-  @apply bg-trust-600;
+  @apply bg-blue-600;
 }
 
 /* =============================================================================
@@ -252,7 +252,7 @@
 }
 
 .glass-cta {
-  @apply bg-gradient-to-r from-forest-500/90 to-teal-500/90 backdrop-blur-md border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300;
+  @apply bg-gradient-to-r from-navy-500/90 to-blue-500/90 backdrop-blur-md border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300;
 }
 
 /* =============================================================================
@@ -360,7 +360,7 @@
    ============================================================================= */
 
 .form-input {
-  @apply w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all duration-300 bg-white/70 backdrop-blur-sm shadow-sm hover:shadow-md;
+  @apply w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all duration-300 bg-white/70 backdrop-blur-sm shadow-sm hover:shadow-md;
 }
 
 .form-label {
@@ -392,15 +392,15 @@
 }
 
 .badge-success {
-  @apply bg-teal-50 text-teal-800;
+  @apply bg-success-50 text-success-800;
 }
 
 .badge-warning {
-  @apply bg-gold-50 text-gold-800;
+  @apply bg-warning-50 text-warning-800;
 }
 
 .badge-error {
-  @apply bg-terra-50 text-terra-800;
+  @apply bg-error-50 text-error-800;
 }
 
 /* =============================================================================
