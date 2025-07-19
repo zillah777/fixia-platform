@@ -39,12 +39,12 @@ class ExplorerService {
 
   // Explorer Profile Management
   async getProfile(): Promise<ExplorerApiResponse<ExplorerProfile>> {
-    const response = await this.api.get('/explorer/profile');
+    const response = await this.api.get('/api/explorer/profile');
     return response.data;
   }
 
   async updateProfile(data: ExplorerProfileUpdateForm): Promise<ExplorerApiResponse<null>> {
-    const response = await this.api.put('/explorer/profile', data);
+    const response = await this.api.put('/api/explorer/profile', data);
     return response.data;
   }
 
@@ -54,22 +54,22 @@ class ExplorerService {
       ...data,
       category_id: typeof data.category_id === 'string' ? parseInt(data.category_id) : data.category_id
     };
-    const response = await this.api.post('/explorer/service-request', requestData);
+    const response = await this.api.post('/api/explorer/service-request', requestData);
     return response.data;
   }
 
   async getMyServiceRequests(status = 'active'): Promise<ExplorerApiResponse<ExplorerServiceRequest[]>> {
-    const response = await this.api.get(`/explorer/my-requests?status=${status}`);
+    const response = await this.api.get(`/api/explorer/my-requests?status=${status}`);
     return response.data;
   }
 
   async getServiceRequestInterests(requestId: number): Promise<ExplorerApiResponse<ASServiceInterest[]>> {
-    const response = await this.api.get(`/explorer/request/${requestId}/interests`);
+    const response = await this.api.get(`/api/explorer/request/${requestId}/interests`);
     return response.data;
   }
 
   async acceptASInterest(interestId: number, finalAgreedPrice?: number): Promise<ExplorerApiResponse<{ connection_id: number; chat_room_id: string }>> {
-    const response = await this.api.post('/explorer/accept-as', {
+    const response = await this.api.post('/api/explorer/accept-as', {
       interest_id: interestId,
       final_agreed_price: finalAgreedPrice
     });
@@ -83,28 +83,28 @@ class ExplorerService {
       if (value !== undefined) queryParams.append(key, String(value));
     });
     
-    const response = await this.api.get(`/explorer/browse-as?${queryParams}`);
+    const response = await this.api.get(`/api/explorer/browse-as?${queryParams}`);
     return response.data;
   }
 
   async getASProfile(asId: number): Promise<ExplorerApiResponse<ASProfileForExplorer>> {
-    const response = await this.api.get(`/explorer/as-profile/${asId}`);
+    const response = await this.api.get(`/api/explorer/as-profile/${asId}`);
     return response.data;
   }
 
   // Chat System
   async getChatConnections(): Promise<ExplorerApiResponse<ExplorerASConnection[]>> {
-    const response = await this.api.get('/explorer-chat/connections');
+    const response = await this.api.get('/api/explorer-chat/connections');
     return response.data;
   }
 
   async getChatMessages(chatRoomId: string, limit = 50, offset = 0): Promise<ExplorerApiResponse<ChatMessage[]>> {
-    const response = await this.api.get(`/explorer-chat/${chatRoomId}/messages?limit=${limit}&offset=${offset}`);
+    const response = await this.api.get(`/api/explorer-chat/${chatRoomId}/messages?limit=${limit}&offset=${offset}`);
     return response.data;
   }
 
   async sendChatMessage(chatRoomId: string, data: ChatMessageForm): Promise<ExplorerApiResponse<ChatMessage>> {
-    const response = await this.api.post(`/explorer-chat/${chatRoomId}/message`, data);
+    const response = await this.api.post(`/api/explorer-chat/${chatRoomId}/message`, data);
     return response.data;
   }
 
@@ -116,7 +116,7 @@ class ExplorerService {
     as_confirmed: boolean;
     confirmation_id?: number;
   }>> {
-    const response = await this.api.post(`/mutual-confirmation/confirm-completion/${connectionId}`, confirmationData || {});
+    const response = await this.api.post(`/api/mutual-confirmation/confirm-completion/${connectionId}`, confirmationData || {});
     return response.data;
   }
 
@@ -142,7 +142,7 @@ class ExplorerService {
       };
     };
   }>> {
-    const response = await this.api.get(`/mutual-confirmation/connection/${connectionId}/status`);
+    const response = await this.api.get(`/api/mutual-confirmation/connection/${connectionId}/status`);
     return response.data;
   }
 
@@ -152,28 +152,28 @@ class ExplorerService {
     pending_reviews_count: number;
     message: string;
   }>> {
-    const response = await this.api.get('/mutual-confirmation/blocking-status');
+    const response = await this.api.get('/api/mutual-confirmation/blocking-status');
     return response.data;
   }
 
   async getConnectionDetails(connectionId: number): Promise<ExplorerApiResponse<ExplorerASConnection>> {
-    const response = await this.api.get(`/explorer-chat/connection/${connectionId}`);
+    const response = await this.api.get(`/api/explorer-chat/connection/${connectionId}`);
     return response.data;
   }
 
   // Review System
   async getPendingReviewObligations(): Promise<ExplorerApiResponse<{ obligations: ExplorerReviewObligation[]; total_pending: number; blocking_count: number }>> {
-    const response = await this.api.get('/explorer-reviews/pending-obligations');
+    const response = await this.api.get('/api/explorer-reviews/pending-obligations');
     return response.data;
   }
 
   async submitReview(data: ExplorerReviewForm): Promise<ExplorerApiResponse<{ review_id: number }>> {
-    const response = await this.api.post('/explorer-reviews/submit', data);
+    const response = await this.api.post('/api/explorer-reviews/submit', data);
     return response.data;
   }
 
   async getMyReviews(limit = 20, offset = 0): Promise<ExplorerApiResponse<any[]>> {
-    const response = await this.api.get(`/explorer-reviews/my-reviews?limit=${limit}&offset=${offset}`);
+    const response = await this.api.get(`/api/explorer-reviews/my-reviews?limit=${limit}&offset=${offset}`);
     return response.data;
   }
 
@@ -183,12 +183,12 @@ class ExplorerService {
     pending_as_names: string; 
     message: string 
   }>> {
-    const response = await this.api.get('/explorer-reviews/blocking-status');
+    const response = await this.api.get('/api/explorer-reviews/blocking-status');
     return response.data;
   }
 
   async updateReview(reviewId: number, data: Partial<ExplorerReviewForm>): Promise<ExplorerApiResponse<null>> {
-    const response = await this.api.put(`/explorer-reviews/${reviewId}`, data);
+    const response = await this.api.put(`/api/explorer-reviews/${reviewId}`, data);
     return response.data;
   }
 
@@ -197,18 +197,18 @@ class ExplorerService {
     statistics: any;
     pagination: { limit: number; offset: number; has_more: boolean };
   }>> {
-    const response = await this.api.get(`/explorer-reviews/as/${asId}?limit=${limit}&offset=${offset}&sort_by=${sortBy}`);
+    const response = await this.api.get(`/api/explorer-reviews/as/${asId}?limit=${limit}&offset=${offset}&sort_by=${sortBy}`);
     return response.data;
   }
 
   // Role Switching
   async switchToProvider(reason?: string): Promise<ExplorerApiResponse<{ new_user_type: string; switched_at: string }>> {
-    const response = await this.api.post('/role-switching/switch-to-provider', { switch_reason: reason });
+    const response = await this.api.post('/api/role-switching/switch-to-provider', { switch_reason: reason });
     return response.data;
   }
 
   async switchToClient(reason?: string): Promise<ExplorerApiResponse<{ new_user_type: string; switched_at: string }>> {
-    const response = await this.api.post('/role-switching/switch-to-client', { switch_reason: reason });
+    const response = await this.api.post('/api/role-switching/switch-to-client', { switch_reason: reason });
     return response.data;
   }
 
@@ -219,24 +219,24 @@ class ExplorerService {
     blocking_reasons: string[];
     recommendations: string[];
   }>> {
-    const response = await this.api.get('/role-switching/can-switch');
+    const response = await this.api.get('/api/role-switching/can-switch');
     return response.data;
   }
 
   async getRoleSwitchHistory(): Promise<ExplorerApiResponse<any[]>> {
-    const response = await this.api.get('/role-switching/history');
+    const response = await this.api.get('/api/role-switching/history');
     return response.data;
   }
 
   async getRoleSwitchStats(): Promise<ExplorerApiResponse<any>> {
-    const response = await this.api.get('/role-switching/stats');
+    const response = await this.api.get('/api/role-switching/stats');
     return response.data;
   }
 
   // Utilities
   async getChubutLocalities(): Promise<ExplorerApiResponse<ChubutLocality[]>> {
     // This would need to be added to a localities endpoint
-    const response = await this.api.get('/localities/chubut');
+    const response = await this.api.get('/api/localities/chubut');
     return response.data;
   }
 

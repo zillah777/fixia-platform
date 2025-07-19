@@ -41,7 +41,9 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 
 const sanitizeUser = (user) => {
   const { password_hash, ...sanitized } = user;
-  return sanitized;
+  // Apply user type transformation for frontend
+  const { transformUserForFrontend } = require('./userTypeTransformer');
+  return transformUserForFrontend(sanitized);
 };
 
 const paginate = (page = 1, limit = 10) => {

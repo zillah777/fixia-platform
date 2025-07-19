@@ -1,9 +1,10 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const { pool } = require('../config/database');
+const { query } = require('../config/database');
 const { requireProvider } = require('../middleware/auth');
 const { formatResponse, formatError, sanitizeUser, paginate } = require('../utils/helpers');
+const { transformUserForFrontend } = require('../utils/userTypeTransformer');
 const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
 
 const router = express.Router();
@@ -41,16 +42,16 @@ const upload = multer({
 // GET /api/users/profile - Get current user profile
 router.get('/profile', async (req, res) => {
   try {
-    const [users] = await pool.execute(
-      'SELECT * FROM users WHERE id = ?',
+    const result = await query(
+      'SELECT * FROM users WHERE id = $1',
       [req.user.id]
     );
 
-    if (users.length === 0) {
+    if (result.rows.length === 0) {
       return res.status(404).json(formatError('Usuario no encontrado'));
     }
 
-    res.json(formatResponse(sanitizeUser(users[0]), 'Perfil obtenido exitosamente'));
+    res.json(formatResponse(sanitizeUser(result.rows[0]), 'Perfil obtenido exitosamente'));
 
   } catch (error) {
     console.error('Get profile error:', error);
@@ -63,25 +64,25 @@ router.put('/profile', async (req, res) => {
   try {
     const { first_name, last_name, phone, address, latitude, longitude } = req.body;
 
-    await pool.execute(
+    await query(
       `UPDATE users SET 
-        first_name = COALESCE(?, first_name),
-        last_name = COALESCE(?, last_name),
-        phone = COALESCE(?, phone),
-        address = COALESCE(?, address),
-        latitude = COALESCE(?, latitude),
-        longitude = COALESCE(?, longitude),
+        first_name = COALESCE($1, first_name),
+        last_name = COALESCE($2, last_name),
+        phone = COALESCE($3, phone),
+        address = COALESCE($4, address),
+        latitude = COALESCE($5, latitude),
+        longitude = COALESCE($6, longitude),
         updated_at = CURRENT_TIMESTAMP
-       WHERE id = ?`,
+       WHERE id = $7`,
       [first_name, last_name, phone, address, latitude, longitude, req.user.id]
     );
 
-    const [users] = await pool.execute(
-      'SELECT * FROM users WHERE id = ?',
+    const result = await query(
+      'SELECT * FROM users WHERE id = $1',
       [req.user.id]
     );
 
-    res.json(formatResponse(sanitizeUser(users[0]), 'Perfil actualizado exitosamente'));
+    res.json(formatResponse(sanitizeUser(result.rows[0]), 'Perfil actualizado exitosamente'));
 
   } catch (error) {
     console.error('Update profile error:', error);
@@ -98,8 +99,8 @@ router.post('/profile/photo', upload.single('photo'), async (req, res) => {
 
     const photoUrl = `/uploads/profiles/${req.file.filename}`;
 
-    await pool.execute(
-      'UPDATE users SET profile_photo_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+    await query(
+      'UPDATE users SET profile_photo_url = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
       [photoUrl, req.user.id]
     );
 
@@ -116,8 +117,8 @@ router.post('/profile/photo', upload.single('photo'), async (req, res) => {
 // DELETE /api/users/profile/photo - Remove profile photo
 router.delete('/profile/photo', async (req, res) => {
   try {
-    await pool.execute(
-      'UPDATE users SET profile_photo_url = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+    await query(
+      'UPDATE users SET profile_photo_url = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = $1',
       [req.user.id]
     );
 
@@ -134,12 +135,13 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [users] = await pool.execute(
+    const result = await query(
       `SELECT id, first_name, last_name, user_type, profile_photo_url, 
               address, latitude, longitude, is_verified, created_at
-       FROM users WHERE id = ? AND is_active = TRUE`,
+       FROM users WHERE id = $1 AND is_active = TRUE`,
       [id]
     );
+    const users = result.rows;
 
     if (users.length === 0) {
       return res.status(404).json(formatError('Usuario no encontrado'));
@@ -149,20 +151,23 @@ router.get('/:id', async (req, res) => {
 
     // If it's a provider, get additional stats
     if (user.user_type === 'provider') {
-      const [serviceStats] = await pool.execute(
-        'SELECT COUNT(*) as total_services FROM services WHERE provider_id = ? AND is_active = TRUE',
+      const serviceStatsResult = await query(
+        'SELECT COUNT(*) as total_services FROM services WHERE provider_id = $1 AND is_active = TRUE',
         [id]
       );
+      const serviceStats = serviceStatsResult.rows;
 
-      const [reviewStats] = await pool.execute(
-        'SELECT COUNT(*) as total_reviews, AVG(rating) as average_rating FROM reviews WHERE provider_id = ?',
+      const reviewStatsResult = await query(
+        'SELECT COUNT(*) as total_reviews, AVG(rating) as average_rating FROM reviews WHERE provider_id = $1',
         [id]
       );
+      const reviewStats = reviewStatsResult.rows;
 
-      const [completedBookings] = await pool.execute(
-        'SELECT COUNT(*) as completed_bookings FROM bookings WHERE provider_id = ? AND status = "completed"',
-        [id]
+      const completedBookingsResult = await query(
+        'SELECT COUNT(*) as completed_bookings FROM bookings WHERE provider_id = $1 AND status = $2',
+        [id, 'completed']
       );
+      const completedBookings = completedBookingsResult.rows;
 
       user.stats = {
         total_services: serviceStats[0].total_services,
@@ -195,7 +200,7 @@ router.get('/search/providers', async (req, res) => {
 
     const { limit: queryLimit, offset } = paginate(page, limit);
 
-    let query = `
+    let queryText = `
       SELECT DISTINCT u.id, u.first_name, u.last_name, u.profile_photo_url, 
              u.address, u.latitude, u.longitude, u.is_verified,
              AVG(r.rating) as average_rating,
@@ -208,36 +213,41 @@ router.get('/search/providers', async (req, res) => {
     `;
 
     const params = [];
+    let paramIndex = 1;
 
     if (category) {
-      query += ' AND s.category = ?';
+      queryText += ` AND s.category = $${paramIndex}`;
       params.push(category);
+      paramIndex++;
     }
 
     // Distance calculation if coordinates provided
     if (latitude && longitude) {
-      query += ` AND (
+      queryText += ` AND (
         6371 * acos(
-          cos(radians(?)) * cos(radians(u.latitude)) * 
-          cos(radians(u.longitude) - radians(?)) + 
-          sin(radians(?)) * sin(radians(u.latitude))
+          cos(radians($${paramIndex})) * cos(radians(u.latitude)) * 
+          cos(radians(u.longitude) - radians($${paramIndex + 1})) + 
+          sin(radians($${paramIndex + 2})) * sin(radians(u.latitude))
         )
-      ) <= ?`;
+      ) <= $${paramIndex + 3}`;
       params.push(latitude, longitude, latitude, radius);
+      paramIndex += 4;
     }
 
-    query += ' GROUP BY u.id';
+    queryText += ' GROUP BY u.id';
 
     if (min_rating > 0) {
-      query += ' HAVING average_rating >= ?';
+      queryText += ` HAVING average_rating >= $${paramIndex}`;
       params.push(min_rating);
+      paramIndex++;
     }
 
-    query += ' ORDER BY average_rating DESC, total_reviews DESC';
-    query += ' LIMIT ? OFFSET ?';
+    queryText += ' ORDER BY average_rating DESC, total_reviews DESC';
+    queryText += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
     params.push(queryLimit, offset);
 
-    const [providers] = await pool.execute(query, params);
+    const result = await query(queryText, params);
+    const providers = result.rows;
 
     res.json(formatResponse({
       providers,
