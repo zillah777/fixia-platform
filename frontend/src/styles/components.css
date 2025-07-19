@@ -356,11 +356,11 @@
 }
 
 .badge-warning {
-  @apply bg-warning-100 text-warning-800;
+  @apply bg-gold-50 text-gold-800;
 }
 
 .badge-error {
-  @apply bg-error-100 text-error-800;
+  @apply bg-terra-50 text-terra-800;
 }
 
 /* =============================================================================
