@@ -71,8 +71,8 @@ api.interceptors.response.use(
   }
 );
 
-// Localities service
-export const chubutLocalitiesService = {
+// Localities service for Chubut province
+export const apiLocalitiesService = {
   async getChubutLocalities(): Promise<any[]> {
     try {
       const response = await api.get('/api/localities/chubut');
