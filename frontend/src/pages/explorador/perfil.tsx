@@ -11,14 +11,15 @@ import {
   CameraIcon,
   ArrowLeftIcon,
   CheckCircleIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  TrashIcon
 } from '@heroicons/react/24/outline';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { CorporateNavigation } from '@/components/ui';
 
 const EditarPerfil: NextPage = () => {
-  const { user, loading, updateProfile } = useAuth();
+  const { user, loading, updateProfile, uploadProfilePhoto, removeProfilePhoto } = useAuth();
   const router = useRouter();
   
   const [formData, setFormData] = useState({
@@ -31,8 +32,10 @@ const EditarPerfil: NextPage = () => {
   });
   
   const [saving, setSaving] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && (!user || user.user_type !== 'customer')) {
@@ -49,6 +52,11 @@ const EditarPerfil: NextPage = () => {
         address: user.address || '',
         bio: user.bio || ''
       });
+    }
+    
+    // Set photo preview if user has profile photo
+    if (user?.profile_photo_url) {
+      setPhotoPreview(`${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`);
     }
   }, [user, loading, router]);
 
@@ -68,6 +76,77 @@ const EditarPerfil: NextPage = () => {
       setError(err.message || 'Error al actualizar el perfil');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Clear previous errors
+    setError('');
+    setMessage('');
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setError('Solo se permiten imágenes (JPEG, JPG, PNG, WebP)');
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('La imagen debe ser menor a 5MB');
+      return;
+    }
+
+    setUploadingPhoto(true);
+
+    try {
+      // Create temporary preview while uploading
+      const tempPreview = URL.createObjectURL(file);
+      setPhotoPreview(tempPreview);
+
+      // Upload photo
+      const photoUrl = await uploadProfilePhoto(file);
+      
+      // Update preview with server URL
+      URL.revokeObjectURL(tempPreview); // Clean up temp URL
+      setPhotoPreview(`${process.env.NEXT_PUBLIC_API_URL}${photoUrl}`);
+      
+    } catch (err: any) {
+      console.error('Photo upload error:', err);
+      setError(err.message || 'Error al subir la foto. Intenta de nuevo.');
+      
+      // Restore original photo on error
+      if (user?.profile_photo_url) {
+        setPhotoPreview(`${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`);
+      } else {
+        setPhotoPreview(null);
+      }
+    } finally {
+      setUploadingPhoto(false);
+      // Clear file input for re-selection of same file
+      e.target.value = '';
+    }
+  };
+
+  const handleRemovePhoto = async () => {
+    if (!photoPreview) return;
+    
+    if (confirm('¿Estás seguro de que quieres eliminar tu foto de perfil?')) {
+      setUploadingPhoto(true);
+      setError('');
+      setMessage('');
+      
+      try {
+        await removeProfilePhoto();
+        setPhotoPreview(null);
+      } catch (err: any) {
+        setError(err.message || 'Error al eliminar la foto');
+      } finally {
+        setUploadingPhoto(false);
+      }
     }
   };
 
@@ -132,21 +211,65 @@ const EditarPerfil: NextPage = () => {
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Profile Picture */}
-                <div className="flex items-center space-x-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-navy-500 to-blue-600 rounded-2xl flex items-center justify-center">
-                    <UserIcon className="w-10 h-10 text-white" />
+                <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+                  <div className="relative">
+                    <div className="w-24 h-24 sm:w-20 sm:h-20 bg-gradient-to-br from-navy-500 to-blue-600 rounded-2xl flex items-center justify-center overflow-hidden shadow-lg">
+                      {photoPreview ? (
+                        <img 
+                          src={photoPreview} 
+                          alt="Foto de perfil" 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            // Fallback if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            setPhotoPreview(null);
+                          }}
+                        />
+                      ) : (
+                        <UserIcon className="w-12 h-12 sm:w-10 sm:h-10 text-white" />
+                      )}
+                    </div>
+                    {uploadingPhoto && (
+                      <div className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                      </div>
+                    )}
                   </div>
-                  <div>
+                  <div className="text-center sm:text-left">
                     <h3 className="text-lg font-semibold text-gray-900">Foto de Perfil</h3>
-                    <p className="text-gray-600 text-sm">Próximamente disponible</p>
-                    <button
-                      type="button"
-                      disabled
-                      className="mt-2 px-4 py-2 bg-gray-100 text-gray-400 rounded-xl text-sm font-medium cursor-not-allowed"
-                    >
-                      <CameraIcon className="w-4 h-4 inline mr-2" />
-                      Cambiar Foto
-                    </button>
+                    <p className="text-gray-600 text-sm mt-1">Imagen JPG, PNG o WebP (máx. 5MB)</p>
+                    <input
+                      type="file"
+                      id="profile-photo"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      onChange={handlePhotoChange}
+                      disabled={uploadingPhoto}
+                      className="hidden"
+                    />
+                    <div className="flex flex-col sm:flex-row gap-2 mt-3">
+                      <label
+                        htmlFor="profile-photo"
+                        className={`px-4 py-2 rounded-xl text-sm font-medium cursor-pointer inline-flex items-center transition-all shadow-sm ${
+                          uploadingPhoto 
+                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                            : 'bg-navy-50 text-navy-600 hover:bg-navy-100 hover:shadow-md'
+                        }`}
+                      >
+                        <CameraIcon className="w-4 h-4 mr-2" />
+                        {uploadingPhoto ? 'Subiendo...' : (photoPreview ? 'Cambiar Foto' : 'Subir Foto')}
+                      </label>
+                      {photoPreview && !uploadingPhoto && (
+                        <button
+                          type="button"
+                          onClick={handleRemovePhoto}
+                          className="px-4 py-2 rounded-xl text-sm font-medium transition-all shadow-sm bg-red-50 text-red-600 hover:bg-red-100 hover:shadow-md inline-flex items-center"
+                        >
+                          <TrashIcon className="w-4 h-4 mr-2" />
+                          Eliminar
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
 

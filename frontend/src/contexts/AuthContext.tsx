@@ -12,6 +12,8 @@ interface AuthContextType {
   logout: () => void;
   updateUser: (user: User) => void;
   updateProfile: (profileData: any) => Promise<void>;
+  uploadProfilePhoto: (file: File) => Promise<string>;
+  removeProfilePhoto: () => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   isAuthenticated: boolean;
 }
@@ -178,6 +180,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const uploadProfilePhoto = async (file: File): Promise<string> => {
+    try {
+      const result = await authService.uploadProfilePhoto(file);
+      
+      // Update user with new photo URL
+      if (user) {
+        const updatedUser = { ...user, profile_photo_url: result.profile_photo_url };
+        setUser(updatedUser);
+        authService.updateStoredUser(updatedUser);
+      }
+      
+      toast.success('Foto de perfil actualizada exitosamente');
+      return result.profile_photo_url;
+    } catch (error: any) {
+      const message = error.response?.data?.error || 'Error al subir la foto';
+      toast.error(message);
+      throw error;
+    }
+  };
+
+  const removeProfilePhoto = async (): Promise<void> => {
+    try {
+      await authService.removeProfilePhoto();
+      
+      // Update user by removing photo URL
+      if (user) {
+        const updatedUser = { ...user, profile_photo_url: undefined };
+        setUser(updatedUser);
+        authService.updateStoredUser(updatedUser);
+      }
+      
+      toast.success('Foto de perfil eliminada exitosamente');
+    } catch (error: any) {
+      const message = error.response?.data?.error || 'Error al eliminar la foto';
+      toast.error(message);
+      throw error;
+    }
+  };
+
   const changePassword = async (currentPassword: string, newPassword: string) => {
     try {
       await authService.changePassword(currentPassword, newPassword);
@@ -197,6 +238,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     updateUser,
     updateProfile,
+    uploadProfilePhoto,
+    removeProfilePhoto,
     changePassword,
     isAuthenticated: !!user,
   };
@@ -221,6 +264,8 @@ export const useAuth = (): AuthContextType => {
         logout: () => {},
         updateUser: () => {},
         updateProfile: async () => {},
+        uploadProfilePhoto: async () => '',
+        removeProfilePhoto: async () => {},
         changePassword: async () => {},
         isAuthenticated: false,
       };

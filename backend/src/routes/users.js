@@ -113,6 +113,22 @@ router.post('/profile/photo', upload.single('photo'), async (req, res) => {
   }
 });
 
+// DELETE /api/users/profile/photo - Remove profile photo
+router.delete('/profile/photo', async (req, res) => {
+  try {
+    await pool.execute(
+      'UPDATE users SET profile_photo_url = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [req.user.id]
+    );
+
+    res.json(formatResponse({}, 'Foto de perfil eliminada exitosamente'));
+
+  } catch (error) {
+    console.error('Remove photo error:', error);
+    res.status(500).json(formatError('Error al eliminar foto'));
+  }
+});
+
 // GET /api/users/:id - Get public user profile
 router.get('/:id', async (req, res) => {
   try {

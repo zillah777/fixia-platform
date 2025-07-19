@@ -212,10 +212,28 @@ export const authService = {
 
   // Update profile
   async updateProfile(profileData: any): Promise<User> {
-    const response = await api.put<ApiResponse<User>>('/api/auth/profile', profileData);
+    const response = await api.put<ApiResponse<User>>('/api/users/profile', profileData);
     const updatedUser = response.data.data;
     this.updateStoredUser(updatedUser);
     return updatedUser;
+  },
+
+  // Upload profile photo
+  async uploadProfilePhoto(file: File): Promise<{ profile_photo_url: string }> {
+    const formData = new FormData();
+    formData.append('photo', file);
+    
+    const response = await api.post('/api/users/profile/photo', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data.data;
+  },
+
+  // Remove profile photo
+  async removeProfilePhoto(): Promise<void> {
+    await api.delete('/api/users/profile/photo');
   },
 
   // Change password
