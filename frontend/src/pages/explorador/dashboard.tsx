@@ -63,7 +63,7 @@ const ExplorerDashboard: NextPage = () => {
     }
   }, [user, loading, router]);
 
-  // Default stats if none loaded
+  // Default stats if none loaded  
   const displayStats = stats?.stats || {
     activeBookings: 0,
     completedBookings: 0,

@@ -76,11 +76,23 @@ export const useLandingData = () => {
   return { categories, professionals, testimonials, loading, error };
 };
 
+// Type for Explorador Dashboard Data
+interface ExploradorDashboardData {
+  stats: {
+    activeBookings: number;
+    completedBookings: number;
+    totalSpent: number;
+    favoriteServices: number;
+    unreadMessages: number;
+  };
+  recentActivity: any[];
+}
+
 /**
  * Custom Hook for Explorador Dashboard Data
  */
 export const useExploradorDashboardData = () => {
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState<ExploradorDashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
