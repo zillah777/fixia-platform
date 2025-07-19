@@ -72,7 +72,7 @@ api.interceptors.response.use(
 );
 
 // Localities service
-export const localitiesService = {
+export const chubutLocalitiesService = {
   async getChubutLocalities(): Promise<any[]> {
     try {
       const response = await api.get('/api/localities/chubut');

@@ -23,7 +23,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
 import { categoriesService } from '@/services/categories';
-import { localitiesService } from '@/services/api';
+import { chubutLocalitiesService } from '@/services/api';
 import { ExplorerServiceRequestForm } from '@/types/explorer';
 import { CorporateHeader, CorporateCard, CorporateButton, CorporateInput } from '@/components/ui';
 import Logo from '@/components/Logo';
@@ -78,7 +78,7 @@ const BuscarServicioPage: NextPage = () => {
       setCategories(categoriesRes);
       
       // Load localities
-      const localitiesRes = await localitiesService.getChubutLocalities();
+      const localitiesRes = await chubutLocalitiesService.getChubutLocalities();
       console.log('Localities loaded:', localitiesRes);
       setLocalities(localitiesRes.map((loc: any) => loc.name));
       
