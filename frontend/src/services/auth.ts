@@ -1,6 +1,20 @@
 import api from './api';
 import { AuthUser, LoginCredentials, RegisterData, User, ApiResponse } from '@/types';
 
+// User type transformation for frontend
+const transformUserForFrontend = (user: any): User => {
+  if (!user) return user;
+  
+  const transformed = { ...user };
+  
+  // Transform 'client' to 'customer' for frontend compatibility
+  if (transformed.user_type === 'client') {
+    transformed.user_type = 'customer';
+  }
+  
+  return transformed;
+};
+
 // Safe localStorage wrapper for SSR compatibility
 const safeLocalStorage = {
   getItem: (key: string): string | null => {
@@ -44,9 +58,12 @@ export const authService = {
     const response = await api.post<ApiResponse<AuthUser>>('/api/auth/login', credentials);
     const { user, token } = response.data.data;
     
+    // Transform user for frontend consistency
+    const transformedUser = transformUserForFrontend(user);
+    
     // Store in localStorage securely
     safeLocalStorage.setItem('token', token);
-    safeLocalStorage.setItem('user', JSON.stringify(user));
+    safeLocalStorage.setItem('user', JSON.stringify(transformedUser));
     safeLocalStorage.setItem('loginTime', new Date().toISOString());
     
     // Also store token in cookie for middleware access
@@ -54,7 +71,7 @@ export const authService = {
       document.cookie = `auth-token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
     }
     
-    return response.data.data;
+    return { user: transformedUser, token };
   },
 
   // Register
@@ -71,8 +88,11 @@ export const authService = {
     // Normal registration flow (if verification not required)
     const { user, token } = responseData;
     if (token) {
+      // Transform user for frontend consistency
+      const transformedUser = transformUserForFrontend(user);
+      
       safeLocalStorage.setItem('token', token);
-      safeLocalStorage.setItem('user', JSON.stringify(user));
+      safeLocalStorage.setItem('user', JSON.stringify(transformedUser));
       safeLocalStorage.setItem('loginTime', new Date().toISOString());
       
       // Also store token in cookie for middleware access
@@ -87,7 +107,7 @@ export const authService = {
   // Get current user
   async getCurrentUser(): Promise<User> {
     const response = await api.get<ApiResponse<User>>('/api/auth/me');
-    return response.data.data;
+    return transformUserForFrontend(response.data.data);
   },
 
   // Logout with proper cleanup
@@ -146,7 +166,7 @@ export const authService = {
         const user = JSON.parse(userStr);
         // Validate user object has required fields
         if (user && user.id && user.email) {
-          return user;
+          return transformUserForFrontend(user);
         }
       } catch (error) {
         console.error('Error parsing stored user:', error);
