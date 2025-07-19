@@ -38,6 +38,7 @@ const ExplorerDashboard: NextPage = () => {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
   const { stats, loading: statsLoading, error } = useExploradorDashboardData();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!loading) {
