@@ -56,7 +56,7 @@ const CorporateInput: React.FC<CorporateInputProps> = ({
   };
 
   const errorClasses = error 
-    ? 'border-error-500 focus:border-error-500 focus:ring-error-200' 
+    ? 'border-terra-500 focus:border-terra-500 focus:ring-terra-200' 
     : '';
 
   const disabledClasses = disabled 

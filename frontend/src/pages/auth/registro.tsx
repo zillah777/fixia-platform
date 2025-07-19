@@ -258,7 +258,7 @@ const RegistroPage: NextPage = () => {
                           id="first_name"
                           autoComplete="given-name"
                           className={`form-input pl-12 pr-4 py-4 glass hover-lift w-full ${
-                            errors.first_name ? 'border-error-300 focus:border-error-500 focus:ring-error-500' : ''
+                            errors.first_name ? 'border-terra-300 focus:border-terra-500 focus:ring-terra-500' : ''
                           }`}
                           placeholder="Tu nombre"
                         />
@@ -281,7 +281,7 @@ const RegistroPage: NextPage = () => {
                           id="last_name"
                           autoComplete="family-name"
                           className={`form-input pl-12 pr-4 py-4 glass hover-lift w-full ${
-                            errors.last_name ? 'border-error-300 focus:border-error-500 focus:ring-error-500' : ''
+                            errors.last_name ? 'border-terra-300 focus:border-terra-500 focus:ring-terra-500' : ''
                           }`}
                           placeholder="Tu apellido"
                         />
@@ -304,7 +304,7 @@ const RegistroPage: NextPage = () => {
                           id="email"
                           autoComplete="email"
                           className={`form-input pl-12 pr-4 py-4 glass hover-lift w-full ${
-                            errors.email ? 'border-error-300 focus:border-error-500 focus:ring-error-500' : ''
+                            errors.email ? 'border-terra-300 focus:border-terra-500 focus:ring-terra-500' : ''
                           }`}
                           placeholder="tu@email.com"
                         />
@@ -347,14 +347,14 @@ const RegistroPage: NextPage = () => {
                           id="password"
                           autoComplete="new-password"
                           className={`form-input pl-12 pr-12 py-4 glass hover-lift w-full ${
-                            errors.password ? 'border-error-300 focus:border-error-500 focus:ring-error-500' : ''
+                            errors.password ? 'border-terra-300 focus:border-terra-500 focus:ring-terra-500' : ''
                           }`}
                           placeholder="••••••••"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-primary-600 transition-colors hover-bounce p-1"
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-forest-600 transition-colors hover-bounce p-1"
                         >
                           {showPassword ? (
                             <EyeSlashIcon className="h-5 w-5" />
@@ -381,14 +381,14 @@ const RegistroPage: NextPage = () => {
                           id="confirm_password"
                           autoComplete="new-password"
                           className={`form-input pl-12 pr-12 py-4 glass hover-lift w-full ${
-                            errors.confirm_password ? 'border-error-300 focus:border-error-500 focus:ring-error-500' : ''
+                            errors.confirm_password ? 'border-terra-300 focus:border-terra-500 focus:ring-terra-500' : ''
                           }`}
                           placeholder="••••••••"
                         />
                         <button
                           type="button"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-primary-600 transition-colors hover-bounce p-1"
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-forest-600 transition-colors hover-bounce p-1"
                         >
                           {showConfirmPassword ? (
                             <EyeSlashIcon className="h-5 w-5" />
