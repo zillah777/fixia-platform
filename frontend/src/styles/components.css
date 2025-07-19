@@ -17,19 +17,19 @@
 }
 
 .btn-primary {
-  @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+  @apply bg-forest-500 text-white hover:bg-forest-600 focus:ring-forest-500 shadow-lg backdrop-blur-sm;
 }
 
 .btn-secondary {
-  @apply bg-secondary-600 text-white hover:bg-secondary-700 focus:ring-secondary-500;
+  @apply bg-teal-500 text-white hover:bg-teal-600 focus:ring-teal-500 shadow-lg backdrop-blur-sm;
 }
 
 .btn-outline {
-  @apply border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white focus:ring-primary-500;
+  @apply border-forest-500 text-forest-500 hover:bg-forest-500 hover:text-white focus:ring-forest-500 backdrop-blur-sm;
 }
 
 .btn-ghost {
-  @apply text-primary-600 hover:bg-primary-50 focus:ring-primary-500;
+  @apply text-forest-500 hover:bg-forest-50 focus:ring-forest-500 backdrop-blur-sm;
 }
 
 .btn-success {
@@ -216,6 +216,46 @@
 }
 
 /* =============================================================================
+   GLASS MORPHISM COMPONENTS
+   ============================================================================= */
+
+.glass {
+  @apply bg-white/20 backdrop-blur-md border border-white/30 shadow-lg;
+}
+
+.glass-card {
+  @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl rounded-2xl;
+}
+
+.glass-input {
+  @apply bg-white/30 backdrop-blur-sm border border-white/40 placeholder-gray-500/70;
+}
+
+.glass-button {
+  @apply bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 transition-all duration-300;
+}
+
+.glass-nav {
+  @apply bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-lg;
+}
+
+.glass-minimal {
+  @apply bg-white/5 backdrop-blur-sm border border-white/10;
+}
+
+.glass-hero {
+  @apply bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl;
+}
+
+.glass-feature {
+  @apply bg-white/10 backdrop-blur-lg border border-white/20 hover:bg-white/20 transition-all duration-500 rounded-2xl shadow-lg hover:shadow-xl;
+}
+
+.glass-cta {
+  @apply bg-gradient-to-r from-forest-500/90 to-teal-500/90 backdrop-blur-md border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-300;
+}
+
+/* =============================================================================
    ANIMATION COMPONENTS
    ============================================================================= */
 
@@ -320,7 +360,7 @@
    ============================================================================= */
 
 .form-input {
-  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200;
+  @apply w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-forest-500 transition-all duration-300 bg-white/70 backdrop-blur-sm shadow-sm hover:shadow-md;
 }
 
 .form-label {

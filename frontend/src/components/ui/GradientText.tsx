@@ -17,12 +17,12 @@ const GradientText: React.FC<GradientTextProps> = ({
   const baseStyles = "bg-clip-text text-transparent bg-gradient-to-r font-bold";
   
   const variants = {
-    primary: "from-primary-500 to-primary-700",
-    secondary: "from-secondary-500 to-secondary-700",
-    accent: "from-accent-500 to-accent-700",
-    brand: "from-primary-600 to-primary-800",
-    trust: "from-trust-500 to-trust-700",
-    professional: "from-primary-600 via-primary-700 to-secondary-700"
+    primary: "from-forest-500 to-forest-700",
+    secondary: "from-teal-500 to-teal-700", 
+    accent: "from-gold-500 to-coral-500",
+    brand: "from-forest-500 to-teal-500",
+    trust: "from-teal-500 to-forest-500",
+    professional: "from-forest-600 via-teal-600 to-gold-600"
   };
 
   const animateStyles = animate ? "animate-gradient-x bg-[length:200%_auto]" : "";

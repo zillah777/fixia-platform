@@ -471,16 +471,16 @@ const LandingPage: NextPage = () => {
                     {/* CTA Buttons */}
                     <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
                       <Link href="/auth/registro?type=customer">
-                        <Button variant="glow" size="xl" className="min-w-[200px]">
+                        <button className="glass-cta text-white px-8 py-4 rounded-2xl font-semibold text-lg min-w-[200px] hover:scale-105 transition-all duration-300 shadow-xl flex items-center justify-center">
                           <UserGroupIcon className="h-6 w-6 mr-2" />
                           Soy Explorador
-                        </Button>
+                        </button>
                       </Link>
                       <Link href="/auth/registro?type=provider">
-                        <Button variant="outline" size="xl" className="min-w-[200px] border-white text-white hover:bg-white hover:text-primary-600">
+                        <button className="bg-white/20 backdrop-blur-md border border-white/40 text-white px-8 py-4 rounded-2xl font-semibold text-lg min-w-[200px] hover:bg-white hover:text-forest-600 transition-all duration-300 shadow-xl flex items-center justify-center">
                           <BriefcaseIcon className="h-6 w-6 mr-2" />
                           Soy Especialista
-                        </Button>
+                        </button>
                       </Link>
                     </div>
                   </div>
@@ -792,18 +792,18 @@ const LandingPage: NextPage = () => {
               
               <div className="flex flex-col sm:flex-row gap-6 justify-center">
                 <Link href="/auth/registro?type=customer">
-                  <Button variant="gradient" size="xl" className="min-w-[250px]">
+                  <button className="glass-cta text-white px-10 py-5 rounded-2xl font-bold text-xl min-w-[250px] hover:scale-105 transition-all duration-300 shadow-2xl flex items-center justify-center">
                     <UserGroupIcon className="h-6 w-6 mr-2" />
                     Soy Explorador
                     <ArrowRightIcon className="h-5 w-5 ml-2" />
-                  </Button>
+                  </button>
                 </Link>
                 <Link href="/auth/registro?type=provider">
-                  <Button variant="outline" size="xl" className="min-w-[250px]">
+                  <button className="bg-white/15 backdrop-blur-lg border border-white/30 text-white px-10 py-5 rounded-2xl font-bold text-xl min-w-[250px] hover:bg-white hover:text-forest-700 transition-all duration-300 shadow-2xl flex items-center justify-center">
                     <BriefcaseIcon className="h-6 w-6 mr-2" />
                     Soy Especialista
                     <ArrowRightIcon className="h-5 w-5 ml-2" />
-                  </Button>
+                  </button>
                 </Link>
               </div>
             </div>

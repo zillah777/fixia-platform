@@ -64,6 +64,7 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/auth', require('./src/routes/auth'));
 app.use('/api/email-verification', require('./src/routes/email-verification'));
+app.use('/api/test-email', require('./src/routes/test-email'));
 app.use('/api/users', authMiddleware, require('./src/routes/users'));
 app.use('/api/categories', require('./src/routes/categories'));
 app.use('/api/services', require('./src/routes/services'));
@@ -92,6 +93,7 @@ app.use('/api/mutual-confirmation', require('./src/routes/mutual-confirmation'))
 app.use('/api/role-switching', require('./src/routes/role-switching'));
 app.use('/api/dashboard', require('./src/routes/dashboard'));
 app.use('/api/verification', require('./src/routes/verification'));
+app.use('/api/localities', require('./src/routes/localities'));
 
 // Socket.IO connection handling
 io.use((socket, next) => {

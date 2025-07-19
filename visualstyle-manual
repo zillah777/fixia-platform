@@ -1,0 +1,221 @@
+Prompt para Diseño UI/UX de Marketplace de Servicios Locales
+Contexto del Proyecto
+Diseña una interfaz UI/UX profesional, moderna y minimalista para una aplicación PWA de marketplace de servicios locales que conecta personas que necesitan servicios (Exploradores) con profesionales que los ofrecen (AS). La app funciona como un híbrido entre clasificados, páginas amarillas y sistema de matchmaking tipo Uber para servicios.
+Identidad Visual y Estilo
+
+Estilo: Minimalista, profesional y moderno
+Filosofía de diseño: "Less is more" - Cada elemento debe tener un propósito claro
+Paleta de colores: Usar máximo 3-4 colores principales, preferiblemente neutros con un color de acento vibrante
+Tipografía: Sans-serif moderna y altamente legible (ej: Inter, Poppins, o similar)
+Espaciado: Generoso uso de espacios blancos para respirabilidad visual
+Iconografía: Líneas simples y consistentes, evitar detalles excesivos
+Micro-interacciones: Sutiles pero significativas para feedback instantáneo
+
+Arquitectura de Información
+1. Flujo de Usuario Explorador (Cliente)
+Inicio → Búsqueda/Explorar → Resultados → Perfil AS → Solicitud → Chat → Servicio → Calificación
+2. Flujo de Usuario AS (Profesional)
+Registro → Verificación → Perfil → Dashboard → Notificaciones "LO TENGO" → Chat → Servicio → Calificación
+Pantallas Principales a Diseñar
+Para Exploradores:
+
+Home con Búsqueda Inteligente
+
+Barra de búsqueda prominente con ejemplos: "busco niñera para hoy a las 10:00 pm"
+Categorías principales visuales (máximo 8 en vista inicial)
+Servicios recientes/populares
+Ubicación actual con opción de cambio
+
+
+Explorar Categorías
+
+Grid de 12 grupos principales con iconos distintivos
+Sub-categorías desplegables (107 total)
+Filtros rápidos: distancia, precio, calificación, disponibilidad
+
+
+Resultados de Búsqueda
+
+Cards de profesionales con foto verificada, rating, precio estimado
+Indicador de distancia y tiempo de respuesta promedio
+Badges visibles (verificado, top rated, respuesta rápida)
+Botón flotante de filtros
+
+
+Perfil del AS
+
+Hero section con foto, nombre, verificación
+Rating prominente con número de reseñas
+Galería de trabajos anteriores
+Sección de reseñas con fotos
+Botón CTA fijo: "Solicitar Servicio"
+
+
+
+Para AS (Profesionales):
+
+Dashboard AS
+
+Métricas clave: solicitudes del día, rating, ingresos
+Notificaciones de "LO TENGO" en tiempo real
+Estado de disponibilidad ON/OFF prominente
+Accesos rápidos a funciones principales
+
+
+Perfil Profesional Editable
+
+Sección de verificación DNI + Selfie
+Portfolio de trabajos
+Horarios de disponibilidad
+Zonas de cobertura en mapa
+Precios y servicios
+
+
+
+Pantallas Compartidas:
+
+Chat en Tiempo Real
+
+Interfaz tipo WhatsApp simplificada
+Indicadores de lectura y escritura
+Compartir ubicación, fotos, presupuestos
+Botones rápidos contextuales
+
+
+Sistema de Calificación Mutua
+
+Modal post-servicio obligatorio
+Rating de 5 estrellas
+Comentario opcional con sugerencias
+Fotos del trabajo realizado
+
+
+
+Componentes UI Clave
+1. Card de Servicio/Profesional
+[Foto] | Nombre + Verificado ✓
+       | ⭐ 4.8 (127 reseñas)
+       | 📍 A 2.3 km
+       | 💬 Responde en ~15 min
+       | [Badge1] [Badge2]
+       | Desde $XXX
+2. Sistema "LO TENGO"
+
+Notificación push vibrante y sonora
+Modal de pantalla completa con cuenta regresiva
+Botones grandes: "LO TENGO" (verde) / "PASO" (gris)
+Información clave del servicio solicitado
+
+3. Badges Sistema
+
+Diseño tipo achievement gaming
+Categorías: Verificación, Experiencia, Calidad, Rapidez
+Tooltip al tocar explicando cómo obtenerlo
+
+4. Barra de Navegación (Bottom Navigation)
+Para Exploradores:
+
+🏠 Inicio | 🔍 Explorar | 💬 Chats | 👤 Perfil
+
+Para AS:
+
+📊 Dashboard | 📬 Solicitudes | 💬 Chats | 👤 Perfil
+
+Consideraciones Técnicas UI
+Responsive & PWA
+
+Mobile-first design (320px - 414px prioritario)
+Breakpoints: 768px (tablet), 1024px (desktop)
+Instalación PWA con prompt personalizado
+Modo offline con caché inteligente
+
+Performance
+
+Lazy loading de imágenes
+Skeleton screens durante carga
+Optimización de animaciones (60 FPS)
+Compresión de imágenes automática
+
+Accesibilidad
+
+Contraste WCAG AA mínimo
+Tamaños de tap mínimo 44x44px
+Labels descriptivos para screen readers
+Navegación por teclado completa
+
+Estados y Microinteracciones
+Estados Vacíos
+
+Ilustraciones minimalistas amigables
+Mensajes claros de acción
+CTAs prominentes para guiar
+
+Loading States
+
+Skeleton screens contextuales
+Spinners solo para acciones cortas
+Progress bars para procesos largos
+
+Feedback Visual
+
+Toasts para confirmaciones
+Haptic feedback en acciones importantes
+Animaciones sutiles de transición
+Estados hover/active distintivos
+
+Elementos de Confianza
+
+Verificación Visual
+
+Badge azul de verificación DNI
+Indicador de "Perfil Completo"
+Años en la plataforma
+
+
+Social Proof
+
+Número de servicios completados
+Reseñas con fotos reales
+"Recomendado por X personas"
+
+
+Seguridad
+
+Botón de emergencia/reporte visible
+Términos y condiciones claros
+Centro de ayuda accesible
+
+
+
+Geolocalización UI
+
+Mapa minimalista estilo Google Maps
+Pins personalizados por categoría
+Radio de búsqueda ajustable
+Lista de 28 localidades de Chubut
+
+Monetización UI
+
+Planes de suscripción con comparativa visual
+Benefits destacados para AS premium
+Proceso de pago simplificado
+Recordatorios sutiles de renovación
+
+Guía de Implementación
+
+Comenzar con wireframes de baja fidelidad
+Crear sistema de diseño con componentes reutilizables
+Prototipar flujos principales interactivos
+Testing con usuarios reales de ambos perfiles
+Iterar basándose en métricas y feedback
+
+Inspiración Recomendada
+
+Simplicidad: Airbnb (cards y navegación)
+Respuesta rápida: Uber (sistema de matchmaking)
+Confianza: TaskRabbit (perfiles y reviews)
+Chat: WhatsApp Business (comunicación)
+Profesionalismo: LinkedIn (perfiles verificados)
+
+
+Objetivo Final: Crear una experiencia tan intuitiva que tanto un joven tech-savvy como una persona mayor puedan usar la app sin fricciones, generando confianza inmediata y facilitando conexiones rápidas entre quienes necesitan y ofrecen servicios en Chubut.
