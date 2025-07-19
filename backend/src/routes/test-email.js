@@ -1,7 +1,7 @@
 const express = require('express');
 const { execute } = require('../utils/database');
 const { formatResponse, formatError } = require('../utils/helpers');
-const { authenticateToken } = require('../middleware/auth');
+const { authMiddleware } = require('../middleware/auth');
 const EmailService = require('../services/emailService');
 
 const router = express.Router();
@@ -10,7 +10,7 @@ const router = express.Router();
  * POST /api/test-email
  * Enviar email de prueba para verificar configuración
  */
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
   try {
     const { email } = req.body;
     const userId = req.user.id;
