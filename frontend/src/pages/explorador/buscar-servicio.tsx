@@ -263,7 +263,7 @@ const BuscarServicioPage: NextPage = () => {
         </div>
 
         {/* Main Content Container */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        <div className="max-w-6xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* Professional System Status */}
           {process.env.NODE_ENV === 'development' && (
             <CorporateCard variant="minimal" className="mb-6">
@@ -335,7 +335,7 @@ const BuscarServicioPage: NextPage = () => {
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                   {/* Professional Service Category */}
                   <div className="lg:col-span-2">
                     <label className="block text-sm font-bold text-secondary-900 mb-3">
@@ -489,7 +489,7 @@ const BuscarServicioPage: NextPage = () => {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                   <div>
                     <label className="block text-sm font-bold text-secondary-900 mb-3">
                       Presupuesto Mínimo (ARS)
@@ -568,7 +568,7 @@ const BuscarServicioPage: NextPage = () => {
                   </div>
 
                   {!formData.flexible_timing && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                       <div>
                         <label className="block text-sm font-bold text-secondary-900 mb-3">
                           Fecha Preferida

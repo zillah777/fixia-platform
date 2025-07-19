@@ -34,11 +34,11 @@ const CorporateCard: React.FC<CorporateCardProps> = ({
 
   const getPaddingClasses = () => {
     switch (padding) {
-      case 'sm': return 'p-4';
-      case 'md': return 'p-6';
-      case 'lg': return 'p-6 lg:p-8';
-      case 'xl': return 'p-8 lg:p-10';
-      default: return 'p-6 lg:p-8';
+      case 'sm': return 'p-3 xs:p-4 sm:p-4 md:p-5';
+      case 'md': return 'p-4 xs:p-5 sm:p-6 md:p-6';
+      case 'lg': return 'p-5 xs:p-6 sm:p-6 md:p-7 lg:p-8';
+      case 'xl': return 'p-6 xs:p-7 sm:p-8 md:p-9 lg:p-10 xl:p-12';
+      default: return 'p-5 xs:p-6 sm:p-6 md:p-7 lg:p-8';
     }
   };
 

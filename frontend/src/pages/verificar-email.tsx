@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import { CheckCircleIcon, XMarkIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo';
+import { CorporateLayout, CorporateCard, CorporateButton } from '@/components/ui';
 
 export default function VerificarEmail() {
   const router = useRouter();
@@ -77,69 +79,65 @@ export default function VerificarEmail() {
   return (
     <>
       <Head>
-        <title>Verificar Email - Fixia</title>
-        <meta name="description" content="Verificación de email en Fixia" />
+        <title>Verificar Email | FIXIA</title>
+        <meta name="description" content="Verificación de email en FIXIA - Plataforma profesional de servicios certificados" />
+        <meta name="keywords" content="verificar email, FIXIA, servicios profesionales, verificación cuenta" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center px-4 relative overflow-hidden">
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
-        <div className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-r from-blue-500 to-purple-600 opacity-5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-r from-purple-500 to-pink-600 opacity-5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-        
-        <div className="max-w-md w-full relative z-10">
-          {/* Logo */}
+      <CorporateLayout variant="centered" maxWidth="md">
+        <div className="w-full max-w-md mx-auto">
+          {/* Corporate Logo */}
           <div className="text-center mb-8">
-            <div className="mb-4">
+            <div className="mb-6">
               <Logo size="xl" variant="gradient" className="justify-center" />
             </div>
-            <p className="text-gray-600 font-medium">Verificación de Email</p>
+            <h1 className="text-2xl font-bold text-secondary-900 mb-2">
+              Verificación de Email
+            </h1>
+            <p className="text-secondary-600 font-medium">
+              Sistema Profesional Certificado
+            </p>
           </div>
 
-          {/* Tarjeta de verificación */}
-          <div className="bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl border border-white/20 p-8 text-center">
+          {/* Corporate Verification Card */}
+          <CorporateCard variant="glass" className="text-center backdrop-blur-2xl bg-white/90 border border-white/50 shadow-2xl">
             
             {status === 'loading' && (
-              <div className="space-y-6">
+              <div className="space-y-8">
                 <div className="flex justify-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <div className="animate-spin h-8 w-8 border-2 border-white border-t-transparent rounded-full"></div>
+                  <div className="w-20 h-20 bg-gradient-to-r from-primary-500 to-trust-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <ArrowPathIcon className="h-10 w-10 text-white animate-spin" />
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                  <h2 className="text-2xl font-bold text-secondary-900 mb-3">
                     Verificando tu email...
                   </h2>
-                  <p className="text-gray-600">
-                    Por favor espera mientras procesamos tu verificación.
+                  <p className="text-secondary-600 font-medium">
+                    Por favor espera mientras procesamos tu verificación de cuenta profesional.
                   </p>
                 </div>
               </div>
             )}
 
             {status === 'success' && (
-              <div className="space-y-6">
+              <div className="space-y-8">
                 <div className="flex justify-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg">
-                    <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                  <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <CheckCircleIcon className="h-10 w-10 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-green-800 mb-2">
+                  <h2 className="text-2xl font-bold text-success-800 mb-3">
                     ¡Email Verificado!
                   </h2>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-secondary-600 font-medium mb-6">
                     {message}
                   </p>
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-center justify-center text-green-700">
-                      <svg className="animate-spin -ml-1 mr-3 h-4 w-4" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      <span className="font-medium">Redirigiendo al dashboard...</span>
+                  <div className="bg-gradient-to-r from-success-50 to-accent-50 border-2 border-success-200 rounded-xl p-6">
+                    <div className="flex items-center justify-center text-success-700">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-success-600 mr-3"></div>
+                      <span className="font-semibold">Redirigiendo al panel profesional...</span>
                     </div>
                   </div>
                 </div>
@@ -147,52 +145,53 @@ export default function VerificarEmail() {
             )}
 
             {status === 'error' && (
-              <div className="space-y-6">
+              <div className="space-y-8">
                 <div className="flex justify-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
-                    <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                  <div className="w-20 h-20 bg-gradient-to-r from-error-500 to-error-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <XMarkIcon className="h-10 w-10 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-red-800 mb-2">
+                  <h2 className="text-2xl font-bold text-error-800 mb-3">
                     Error de Verificación
                   </h2>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-secondary-600 font-medium mb-8">
                     {message}
                   </p>
-                  <div className="space-y-3">
-                    <button
+                  <div className="space-y-4">
+                    <CorporateButton
                       onClick={handleResendEmail}
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                      size="lg"
+                      className="w-full"
                     >
                       Reenviar Email de Verificación
-                    </button>
-                    <button
+                    </CorporateButton>
+                    <CorporateButton
                       onClick={() => router.push('/auth/login')}
-                      className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-3 px-4 rounded-lg transition-all duration-200 border border-gray-300 hover:border-gray-400"
+                      variant="outline"
+                      size="lg"
+                      className="w-full"
                     >
                       Ir al Login
-                    </button>
+                    </CorporateButton>
                   </div>
                 </div>
               </div>
             )}
-          </div>
+          </CorporateCard>
 
-          {/* Footer */}
-          <div className="text-center mt-8 space-y-2">
-            <p className="text-gray-500 text-sm">¿Problemas con la verificación?</p>
+          {/* Corporate Footer */}
+          <div className="text-center mt-8 space-y-3">
+            <p className="text-secondary-500 text-sm font-medium">¿Problemas con la verificación?</p>
             <a 
-              href="mailto:soporte@fixia.com.ar" 
-              className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
+              href="mailto:contacto@fixia.com.ar" 
+              className="text-primary-600 hover:text-primary-700 font-semibold text-sm transition-colors"
             >
-              Contáctanos en soporte@fixia.com.ar
+              Contáctanos en contacto@fixia.com.ar
             </a>
           </div>
         </div>
-      </div>
+      </CorporateLayout>
     </>
   );
 }

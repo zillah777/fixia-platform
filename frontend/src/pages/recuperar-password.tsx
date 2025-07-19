@@ -1,6 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import { 
+  CheckCircleIcon, 
+  XMarkIcon, 
+  ArrowPathIcon, 
+  ShieldCheckIcon,
+  LockClosedIcon,
+  ExclamationCircleIcon,
+  EyeIcon,
+  EyeSlashIcon
+} from '@heroicons/react/24/outline';
+import Logo from '@/components/Logo';
+import { CorporateLayout, CorporateCard, CorporateButton, CorporateInput } from '@/components/ui';
 
 export default function RecuperarPassword() {
   const router = useRouter();
@@ -9,6 +21,8 @@ export default function RecuperarPassword() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +42,8 @@ export default function RecuperarPassword() {
     setStatus('loading');
 
     try {
-      const response = await fetch('/api/email-verification/reset-password', {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${API_URL}/api/email-verification/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,160 +74,227 @@ export default function RecuperarPassword() {
     }
   };
 
+  const getPasswordStrength = (password: string) => {
+    let strength = 0;
+    if (password.length >= 6) strength += 1;
+    if (password.length >= 8) strength += 1;
+    if (/[A-Z]/.test(password)) strength += 1;
+    if (/[0-9]/.test(password)) strength += 1;
+    if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+    return strength;
+  };
+
+  const strengthColors = ['bg-error-500', 'bg-warning-500', 'bg-accent-500', 'bg-success-500', 'bg-success-600'];
+  const strengthLabels = ['Muy Débil', 'Débil', 'Regular', 'Fuerte', 'Muy Fuerte'];
+
   return (
     <>
       <Head>
-        <title>Restablecer Contraseña - Fixia</title>
-        <meta name="description" content="Restablecer contraseña en Fixia" />
+        <title>Restablecer Contraseña | FIXIA</title>
+        <meta name="description" content="Restablecer contraseña en FIXIA - Plataforma profesional de servicios certificados" />
+        <meta name="keywords" content="restablecer contraseña, FIXIA, servicios profesionales, recuperar acceso" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4">
-        <div className="max-w-md w-full">
-          {/* Logo */}
+      <CorporateLayout variant="centered" maxWidth="md">
+        <div className="w-full max-w-md mx-auto">
+          {/* Corporate Logo */}
           <div className="text-center mb-8">
-            <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
-              🔧 Fixia
+            <div className="mb-6">
+              <Logo size="xl" variant="gradient" className="justify-center" />
             </div>
-            <p className="text-gray-600">Restablecer Contraseña</p>
+            <h1 className="text-2xl font-bold text-secondary-900 mb-2">
+              Restablecer Contraseña
+            </h1>
+            <p className="text-secondary-600 font-medium">
+              Sistema Profesional Certificado
+            </p>
           </div>
 
-          {/* Formulario */}
-          <div className="backdrop-blur-xl bg-white/70 shadow-2xl rounded-2xl border border-white/20 p-8">
+          {/* Corporate Reset Card */}
+          <CorporateCard variant="glass" className="backdrop-blur-2xl bg-white/90 border border-white/50 shadow-2xl">
             
             {status === 'success' ? (
-              <div className="text-center space-y-4">
-                <div className="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center">
-                  <svg className="h-8 w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+              <div className="text-center space-y-8">
+                <div className="flex justify-center">
+                  <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <CheckCircleIcon className="h-10 w-10 text-white" />
+                  </div>
                 </div>
-                <h2 className="text-xl font-semibold text-green-800">
-                  ¡Contraseña Restablecida!
-                </h2>
-                <p className="text-gray-600">
-                  {message}
-                </p>
-                <div className="pt-4">
-                  <div className="inline-flex items-center text-sm text-blue-600">
-                    <svg className="animate-spin -ml-1 mr-3 h-4 w-4" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Redirigiendo al login...
+                <div>
+                  <h2 className="text-2xl font-bold text-success-800 mb-3">
+                    ¡Contraseña Restablecida!
+                  </h2>
+                  <p className="text-secondary-600 font-medium mb-6">
+                    {message}
+                  </p>
+                  <div className="bg-gradient-to-r from-success-50 to-accent-50 border-2 border-success-200 rounded-xl p-6">
+                    <div className="flex items-center justify-center text-success-700">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-success-600 mr-3"></div>
+                      <span className="font-semibold">Redirigiendo al login...</span>
+                    </div>
                   </div>
                 </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="text-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-trust-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <LockClosedIcon className="h-8 w-8 text-white" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-secondary-900 mb-2">
                     Nueva Contraseña
                   </h2>
-                  <p className="text-gray-600 text-sm">
-                    Ingresa tu nueva contraseña para restablecer el acceso a tu cuenta.
+                  <p className="text-secondary-600 font-medium">
+                    Ingresa tu nueva contraseña para restablecer el acceso a tu cuenta profesional.
                   </p>
                 </div>
 
-                {/* Error/Success Message */}
+                {/* Error Message */}
                 {status === 'error' && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <div className="flex items-center">
-                      <svg className="h-5 w-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <p className="text-red-800 text-sm">{message}</p>
+                  <CorporateCard variant="elevated" className="border-l-4 border-l-error-500 bg-error-50">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-error-100 rounded-xl flex items-center justify-center">
+                        <ExclamationCircleIcon className="h-5 w-5 text-error-600" />
+                      </div>
+                      <p className="text-error-800 font-medium">{message}</p>
                     </div>
-                  </div>
+                  </CorporateCard>
                 )}
 
                 {/* Nueva Contraseña */}
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="password" className="block text-sm font-semibold text-secondary-700 mb-2">
                     Nueva Contraseña
                   </label>
-                  <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    minLength={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    placeholder="Mínimo 6 caracteres"
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <LockClosedIcon className="h-5 w-5 text-secondary-400" />
+                    </div>
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      minLength={6}
+                      className="w-full pl-11 pr-12 py-3 border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white/80 backdrop-blur-sm font-medium"
+                      placeholder="Mínimo 6 caracteres"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      {showPassword ? (
+                        <EyeSlashIcon className="h-5 w-5 text-secondary-400 hover:text-secondary-600" />
+                      ) : (
+                        <EyeIcon className="h-5 w-5 text-secondary-400 hover:text-secondary-600" />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Confirmar Contraseña */}
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="confirmPassword" className="block text-sm font-semibold text-secondary-700 mb-2">
                     Confirmar Contraseña
                   </label>
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                    minLength={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    placeholder="Confirma tu nueva contraseña"
-                  />
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <ShieldCheckIcon className="h-5 w-5 text-secondary-400" />
+                    </div>
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      id="confirmPassword"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                      minLength={6}
+                      className="w-full pl-11 pr-12 py-3 border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white/80 backdrop-blur-sm font-medium"
+                      placeholder="Confirma tu nueva contraseña"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeSlashIcon className="h-5 w-5 text-secondary-400 hover:text-secondary-600" />
+                      ) : (
+                        <EyeIcon className="h-5 w-5 text-secondary-400 hover:text-secondary-600" />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Indicador de fortaleza */}
                 {password.length > 0 && (
-                  <div className="space-y-2">
-                    <div className="text-sm text-gray-600">Fortaleza de la contraseña:</div>
-                    <div className="flex space-x-1">
-                      <div className={`h-2 flex-1 rounded ${password.length >= 6 ? 'bg-green-400' : 'bg-gray-200'}`}></div>
-                      <div className={`h-2 flex-1 rounded ${password.length >= 8 && /[A-Z]/.test(password) ? 'bg-green-400' : 'bg-gray-200'}`}></div>
-                      <div className={`h-2 flex-1 rounded ${password.length >= 8 && /[0-9]/.test(password) && /[A-Z]/.test(password) ? 'bg-green-400' : 'bg-gray-200'}`}></div>
+                  <CorporateCard variant="elevated" className="bg-gradient-to-r from-secondary-50 to-primary-50">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-secondary-700">
+                          Fortaleza de la contraseña:
+                        </span>
+                        <span className={`text-xs font-bold px-2 py-1 rounded-full ${
+                          getPasswordStrength(password) >= 3 ? 'bg-success-100 text-success-800' : 'bg-warning-100 text-warning-800'
+                        }`}>
+                          {strengthLabels[getPasswordStrength(password) - 1] || 'Muy Débil'}
+                        </span>
+                      </div>
+                      <div className="flex space-x-2">
+                        {[...Array(5)].map((_, i) => (
+                          <div
+                            key={i}
+                            className={`h-2 flex-1 rounded-full transition-all duration-300 ${
+                              i < getPasswordStrength(password) 
+                                ? strengthColors[getPasswordStrength(password) - 1] 
+                                : 'bg-secondary-200'
+                            }`}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  </CorporateCard>
                 )}
 
                 {/* Botón Submit */}
-                <button
+                <CorporateButton
                   type="submit"
                   disabled={status === 'loading' || !password || !confirmPassword}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed flex items-center justify-center"
+                  loading={status === 'loading'}
+                  size="lg"
+                  className="w-full"
+                  rightIcon={status !== 'loading' ? <CheckCircleIcon className="h-5 w-5" /> : undefined}
                 >
-                  {status === 'loading' ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Restableciendo...
-                    </>
-                  ) : (
-                    'Restablecer Contraseña'
-                  )}
-                </button>
+                  {status === 'loading' ? 'Restableciendo...' : 'Restablecer Contraseña'}
+                </CorporateButton>
               </form>
             )}
-          </div>
+          </CorporateCard>
 
-          {/* Footer */}
-          <div className="text-center mt-8 space-y-2">
-            <p className="text-gray-500 text-sm">
+          {/* Corporate Footer */}
+          <div className="text-center mt-8 space-y-3">
+            <p className="text-secondary-500 text-sm font-medium">
               ¿Recordaste tu contraseña?{' '}
               <button
                 onClick={() => router.push('/auth/login')}
-                className="text-blue-600 hover:text-blue-700 font-medium"
+                className="text-primary-600 hover:text-primary-700 font-semibold transition-colors"
               >
                 Iniciar Sesión
               </button>
             </p>
-            <p className="text-gray-400 text-xs">
+            <p className="text-secondary-400 text-xs">
               ¿Problemas? Contáctanos en{' '}
-              <a href="mailto:soporte@fixia.com.ar" className="text-blue-600 hover:text-blue-700">
-                soporte@fixia.com.ar
+              <a 
+                href="mailto:contacto@fixia.com.ar" 
+                className="text-primary-600 hover:text-primary-700 font-semibold transition-colors"
+              >
+                contacto@fixia.com.ar
               </a>
             </p>
           </div>
         </div>
-      </div>
+      </CorporateLayout>
     </>
   );
 }

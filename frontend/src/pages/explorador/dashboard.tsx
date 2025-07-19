@@ -31,13 +31,12 @@ import {
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useExploradorDashboardData } from '@/hooks/useDashboardData';
-import { CorporateHeader, CorporateCard, CorporateButton, CorporateInput } from '@/components/ui';
+import { CorporateHeader, CorporateCard, CorporateButton, CorporateInput, CorporateNavigation, CorporateFooter } from '@/components/ui';
 import Logo from '@/components/Logo';
 
 const ExplorerDashboard: NextPage = () => {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { stats, loading: statsLoading, error } = useExploradorDashboardData();
 
   useEffect(() => {
@@ -87,14 +86,6 @@ const ExplorerDashboard: NextPage = () => {
     );
   }
 
-  const sidebarItems = [
-    { name: 'Dashboard', href: '/explorador/dashboard', icon: HomeIcon, current: true },
-    { name: 'Buscar Servicios', href: '/explorador/buscar-servicio', icon: MagnifyingGlassIcon, current: false },
-    { name: 'Mis Solicitudes', href: '/explorador/mis-solicitudes', icon: BriefcaseIcon, current: false },
-    { name: 'Mensajes', href: '/explorador/chats', icon: ChatBubbleLeftRightIcon, current: false, badge: displayStats.unreadMessages },
-    { name: 'Calificaciones', href: '/explorador/calificaciones', icon: StarIcon, current: false },
-    { name: 'Profesionales', href: '/explorador/navegar-profesionales', icon: MapPinIcon, current: false },
-  ];
 
   const statCards = [
     {
@@ -140,89 +131,56 @@ const ExplorerDashboard: NextPage = () => {
       </Head>
 
       <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50">
-        {/* iOS-Style Professional Sidebar */}
-        <div className={`fixed inset-y-0 left-0 z-50 w-80 bg-white/95 backdrop-blur-3xl shadow-2xl border-r border-secondary-200/30 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-500 ease-out lg:translate-x-0 lg:static lg:inset-0`}>
-          <div className="flex items-center justify-between h-20 px-6 border-b border-secondary-200/50 bg-gradient-to-r from-primary-50 to-trust-50">
-            <Link href="/">
-              <div className="flex items-center cursor-pointer">
-                <Logo size="sm" />
-              </div>
-            </Link>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-xl text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 transition-all"
-            >
-              <XMarkIcon className="h-6 w-6" />
-            </button>
-          </div>
-          
-          <nav className="mt-6 px-4">
-            <div className="space-y-2">
-              {sidebarItems.map((item) => (
-                <Link key={item.name} href={item.href}>
-                  <div className={`flex items-center px-4 py-3 text-sm font-semibold rounded-xl cursor-pointer transition-all duration-200 ${
-                    item.current
-                      ? 'bg-gradient-to-r from-primary-500 to-trust-500 text-white shadow-lg border-l-4 border-l-primary-600'
-                      : 'text-secondary-700 hover:bg-primary-50 hover:text-primary-700 hover:shadow-sm'
-                  }`}>
-                    <item.icon className="h-5 w-5 mr-3" />
-                    {item.name}
-                    {item.badge && (
-                      <span className="ml-auto bg-error-100 text-error-800 text-xs px-2 py-1 rounded-full font-bold">
-                        {item.badge}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </div>
-            
-            <div className="mt-8 pt-8 border-t border-secondary-200/50">
-              <Link href="/explorador/cambiar-a-as">
-                <div className="bg-gradient-to-r from-accent-500 to-success-500 rounded-xl p-5 text-white cursor-pointer hover:from-accent-600 hover:to-success-600 transition-all mb-6 shadow-lg">
-                  <div className="flex items-center mb-2">
-                    <BuildingOfficeIcon className="h-5 w-5 mr-2" />
-                    <h3 className="font-bold text-sm">¿Querés ofrecer servicios?</h3>
-                  </div>
-                  <p className="text-xs text-white/90 font-medium">Convertite en AS certificado y empezá a ganar dinero con tus habilidades</p>
-                  <div className="flex items-center mt-3 text-xs font-semibold">
-                    <SparklesIcon className="h-4 w-4 mr-1" />
-                    <span>Proceso de verificación gratuito</span>
-                  </div>
-                </div>
-              </Link>
-              
-              <CorporateButton
-                onClick={logout}
-                variant="ghost"
-                size="md"
-                className="w-full justify-start text-error-600 hover:text-error-700 hover:bg-error-50"
-                leftIcon={<ArrowRightOnRectangleIcon className="h-5 w-5" />}
-              >
-                Cerrar Sesión Segura
-              </CorporateButton>
-            </div>
-          </nav>
-        </div>
+        {/* Unified Corporate Navigation */}
+        <CorporateNavigation 
+          userType="customer" 
+          user={user} 
+          onLogout={logout}
+        />
 
         {/* Main Content */}
-        <div className="lg:ml-80">
+        <div className="sidebar-desktop:ml-72 xs:sidebar-desktop:ml-80">
           {/* Corporate Professional Header */}
           <div className="bg-white/90 backdrop-blur-xl shadow-sm border-b border-secondary-200/50">
-            <div className="px-6 sm:px-8 lg:px-10">
-              <div className="flex items-center justify-between h-20">
-                <div className="flex items-center">
+            <div className="px-3 xs:px-4 sm:px-6 md:px-8 lg:px-10">
+              {/* Mobile Header */}
+              <div className="flex items-center justify-between h-16 sm:h-18 sidebar-desktop:hidden">
+                <div className="flex items-center space-x-2">
                   <button
                     onClick={() => setSidebarOpen(true)}
-                    className="lg:hidden p-3 rounded-xl text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 transition-all"
+                    className="p-2 rounded-xl text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 transition-all"
                   >
-                    <Bars3Icon className="h-6 w-6" />
+                    <Bars3Icon className="h-5 w-5" />
                   </button>
+                  <div>
+                    <h1 className="text-lg xs:text-xl font-bold text-secondary-900">
+                      ¡Hola, {user?.first_name}!
+                    </h1>
+                    <p className="text-xs text-secondary-600 font-medium">
+                      Panel Profesional
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <button className="p-2 text-secondary-400 hover:text-secondary-600 hover:bg-secondary-100 rounded-xl transition-all relative">
+                    <BellIcon className="h-5 w-5" />
+                    <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-error-500 rounded-full"></span>
+                  </button>
+                  <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-trust-500 rounded-lg flex items-center justify-center shadow-lg">
+                    <UserIcon className="h-4 w-4 text-white" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop Header */}
+              <div className="hidden sidebar-desktop:flex items-center justify-between h-20">
+                <div className="flex items-center">
                   <div className="ml-2">
-                    <h1 className="text-2xl font-bold text-secondary-900">
+                    <h1 className="text-2xl xl:text-3xl font-bold text-secondary-900">
                       ¡Bienvenido, {user?.first_name}!
                     </h1>
-                    <p className="text-sm text-secondary-600 font-medium mt-1">
+                    <p className="text-sm xl:text-base text-secondary-600 font-medium mt-1">
                       Panel Profesional de Gestión • Explorador Certificado
                     </p>
                   </div>
@@ -273,9 +231,9 @@ const ExplorerDashboard: NextPage = () => {
           </div>
 
           {/* Dashboard Content */}
-          <div className="p-6 sm:p-8 lg:p-10">
+          <div className="p-3 xs:p-4 sm:p-6 md:p-8 lg:p-10">
             {/* Professional Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 xs:gap-4 sm:gap-6 mb-8 sm:mb-10">
               {statCards.map((card, index) => (
                 <CorporateCard key={card.title} variant="elevated" className="overflow-hidden group hover:shadow-2xl transition-all duration-300">
                   <div className={`${card.color} p-6 relative`}>
@@ -342,7 +300,7 @@ const ExplorerDashboard: NextPage = () => {
             </CorporateCard>
 
             {/* iOS-Style Professional Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-5 sm:gap-6 mb-8 sm:mb-10">
               <Link href="/explorador/buscar-servicio">
                 <CorporateCard variant="glass" className="group hover:scale-105 transition-all duration-300 cursor-pointer bg-gradient-to-br from-primary-50/80 to-trust-50/80 backdrop-blur-xl border border-primary-200/50 hover:shadow-2xl">
                   <div className="flex items-center mb-6">
@@ -404,7 +362,7 @@ const ExplorerDashboard: NextPage = () => {
             </div>
 
             {/* iOS-Style Professional Management */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-10">
               <CorporateCard variant="glass" className="backdrop-blur-2xl bg-white/90 border border-white/50 shadow-2xl">
                 <div className="flex items-center space-x-4 pb-6 border-b border-secondary-200/50">
                   <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-trust-500 rounded-2xl flex items-center justify-center shadow-lg">
@@ -583,6 +541,9 @@ const ExplorerDashboard: NextPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Unified Corporate Footer */}
+        <CorporateFooter variant="minimal" />
       </div>
     </>
   );

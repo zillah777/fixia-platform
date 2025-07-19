@@ -23,7 +23,62 @@ import {
   SparklesIcon,
   RocketLaunchIcon,
   BoltIcon,
-  FireIcon
+  FireIcon,
+  // 2025 Modern Icons
+  CommandLineIcon,
+  CpuChipIcon,
+  DevicePhoneMobileIcon,
+  EyeIcon,
+  FaceSmileIcon,
+  GlobeAltIcon,
+  HandRaisedIcon,
+  HeartIcon,
+  LightBulbIcon,
+  PaintBrushIcon,
+  PuzzlePieceIcon,
+  QrCodeIcon,
+  TrophyIcon,
+  WifiIcon,
+  BeakerIcon,
+  CameraIcon,
+  ClipboardDocumentCheckIcon,
+  CogIcon,
+  CreditCardIcon,
+  DocumentTextIcon,
+  GiftIcon,
+  HomeIcon,
+  KeyIcon,
+  MegaphoneIcon,
+  PaperAirplaneIcon,
+  PencilIcon,
+  PresentationChartLineIcon,
+  ScaleIcon,
+  SunIcon,
+  TagIcon,
+  UserIcon,
+  VideoCameraIcon,
+  WrenchScrewdriverIcon,
+  AcademicCapIcon,
+  BuildingOfficeIcon,
+  CalendarDaysIcon,
+  ChatBubbleLeftRightIcon,
+  ComputerDesktopIcon,
+  FlagIcon,
+  IdentificationIcon,
+  LanguageIcon,
+  MicrophoneIcon,
+  MusicalNoteIcon,
+  NewspaperIcon,
+  PaperClipIcon,
+  PrinterIcon,
+  RectangleGroupIcon,
+  ServerIcon,
+  ShareIcon,
+  SpeakerWaveIcon,
+  TableCellsIcon,
+  TruckIcon,
+  ViewfinderCircleIcon,
+  WindowIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
@@ -37,12 +92,48 @@ import GlowingOrb from '@/components/ui/GlowingOrb';
 import AnimatedBackground from '@/components/ui/AnimatedBackground';
 
 const serviceCategoriesData = [
-  { id: 'plomeria', name: 'Plomería', icon: '🔧', description: 'Reparaciones e instalaciones' },
-  { id: 'electricidad', name: 'Electricidad', icon: '⚡', description: 'Instalaciones eléctricas' },
-  { id: 'limpieza', name: 'Limpieza', icon: '🧹', description: 'Limpieza de hogar y oficinas' },
-  { id: 'reparaciones', name: 'Reparaciones', icon: '🔨', description: 'Reparaciones del hogar' },
-  { id: 'belleza', name: 'Belleza', icon: '💄', description: 'Servicios de belleza' },
-  { id: 'otros', name: 'Otros', icon: '🛠️', description: 'Más servicios disponibles' }
+  { 
+    id: 'plomeria', 
+    name: 'Plomería', 
+    icon: WrenchScrewdriverIcon, 
+    description: 'Reparaciones e instalaciones',
+    gradient: 'from-blue-500 to-cyan-500'
+  },
+  { 
+    id: 'electricidad', 
+    name: 'Electricidad', 
+    icon: BoltIcon, 
+    description: 'Instalaciones eléctricas',
+    gradient: 'from-yellow-500 to-orange-500'
+  },
+  { 
+    id: 'limpieza', 
+    name: 'Limpieza', 
+    icon: SparklesIcon, 
+    description: 'Limpieza de hogar y oficinas',
+    gradient: 'from-green-500 to-emerald-500'
+  },
+  { 
+    id: 'reparaciones', 
+    name: 'Reparaciones', 
+    icon: CogIcon, 
+    description: 'Reparaciones del hogar',
+    gradient: 'from-purple-500 to-violet-500'
+  },
+  { 
+    id: 'belleza', 
+    name: 'Belleza', 
+    icon: FaceSmileIcon, 
+    description: 'Servicios de belleza',
+    gradient: 'from-pink-500 to-rose-500'
+  },
+  { 
+    id: 'otros', 
+    name: 'Otros', 
+    icon: PuzzlePieceIcon, 
+    description: 'Más servicios disponibles',
+    gradient: 'from-slate-500 to-gray-500'
+  }
 ];
 
 const featuredProfessionals = [
@@ -413,7 +504,7 @@ const LandingPage: NextPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <Card variant="interactive" hover glow className="p-8 text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <BoltIcon className="h-8 w-8 text-white" />
+                  <CpuChipIcon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Algoritmos Inteligentes</h3>
                 <p className="text-gray-600">IA avanzada que conecta necesidades específicas con el talento perfecto</p>
@@ -427,7 +518,7 @@ const LandingPage: NextPage = () => {
               </Card>
               <Card variant="interactive" hover glow className="p-8 text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-accent-500 to-accent-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <StarIcon className="h-8 w-8 text-white" />
+                  <TrophyIcon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Resultados Excepcionales</h3>
                 <p className="text-gray-600">98% de satisfacción garantizada en cada conexión</p>
@@ -450,23 +541,28 @@ const LandingPage: NextPage = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {serviceCategoriesData.map((category, index) => (
-                <Link key={category.id} href={`/explorador/buscar-servicio?category=${category.id}`}>
-                  <Card variant="glass" hover className="p-8 group cursor-pointer">
-                    <div className="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                      {category.icon}
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">
-                      {category.name}
-                    </h3>
-                    <p className="text-gray-300 mb-6">{category.description}</p>
-                    <div className="flex items-center text-white font-medium group-hover:translate-x-2 transition-transform">
-                      <span>Explorar especialistas</span>
-                      <ArrowRightIcon className="h-5 w-5 ml-2" />
-                    </div>
-                  </Card>
-                </Link>
-              ))}
+              {serviceCategoriesData.map((category, index) => {
+                const IconComponent = category.icon;
+                return (
+                  <Link key={category.id} href={`/explorador/buscar-servicio?category=${category.id}`}>
+                    <Card variant="glass" hover className="p-8 group cursor-pointer">
+                      <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                        <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${category.gradient} flex items-center justify-center shadow-lg`}>
+                          <IconComponent className="h-10 w-10 text-white" />
+                        </div>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mb-4">
+                        {category.name}
+                      </h3>
+                      <p className="text-gray-300 mb-6">{category.description}</p>
+                      <div className="flex items-center text-white font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Explorar especialistas</span>
+                        <ArrowRightIcon className="h-5 w-5 ml-2" />
+                      </div>
+                    </Card>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -487,7 +583,7 @@ const LandingPage: NextPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center scale-in-on-scroll stagger-1 hover-lift cursor-pointer hover-tilt">
                 <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg hover:shadow-xl transition-shadow animate-pulse hover-bounce hover-magnetic">
-                  <MagnifyingGlassIcon className="h-8 w-8 text-white" />
+                  <EyeIcon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-4 hover-bounce">
                   Descubrimiento Inteligente
@@ -499,7 +595,7 @@ const LandingPage: NextPage = () => {
 
               <div className="text-center scale-in-on-scroll stagger-2 hover-lift cursor-pointer hover-tilt">
                 <div className="w-20 h-20 bg-gradient-secondary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg hover:shadow-xl transition-shadow animate-pulse hover-bounce hover-magnetic">
-                  <UserGroupIcon className="h-8 w-8 text-white" />
+                  <HandRaisedIcon className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-4 hover-bounce">
                   Conexión Estratégica

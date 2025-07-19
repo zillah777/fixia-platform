@@ -7,6 +7,23 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // iOS-Style Corporate Breakpoints
+      screens: {
+        'xs': '375px',     // iPhone SE, iPhone 12 mini
+        'sm': '414px',     // iPhone Pro Max, Pixel phones
+        'md': '768px',     // iPad Mini, Tablet portrait
+        'lg': '1024px',    // iPad Pro, Desktop small
+        'xl': '1280px',   // Desktop standard
+        '2xl': '1536px',  // Desktop large
+        '3xl': '1920px',  // Desktop extra large
+        // iOS-specific breakpoints
+        'iphone': {'max': '414px'},
+        'ipad': {'min': '768px', 'max': '1024px'},
+        'desktop': {'min': '1025px'},
+        // Corporate layout breakpoints
+        'sidebar-mobile': {'max': '1023px'},
+        'sidebar-desktop': {'min': '1024px'},
+      },
       colors: {
         // FIXIA 2025 - Corporate Professional Brand Colors
         // Primary: Deep Corporate Blue - Trust & Authority

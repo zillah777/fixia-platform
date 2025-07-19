@@ -45,15 +45,15 @@ const CorporateButton: React.FC<CorporateButtonProps> = ({
   const getSizeClasses = () => {
     switch (size) {
       case 'sm':
-        return 'px-3 py-2 text-sm font-medium rounded-lg';
+        return 'px-2 xs:px-3 py-1.5 xs:py-2 text-xs xs:text-sm font-medium rounded-lg xs:rounded-xl';
       case 'md':
-        return 'px-4 py-2.5 text-sm font-semibold rounded-xl';
+        return 'px-3 xs:px-4 sm:px-4 py-2 xs:py-2.5 text-sm font-semibold rounded-xl';
       case 'lg':
-        return 'px-6 py-3 text-base font-semibold rounded-xl';
+        return 'px-4 xs:px-5 sm:px-6 md:px-6 py-2.5 xs:py-3 text-sm xs:text-base font-semibold rounded-xl';
       case 'xl':
-        return 'px-8 py-4 text-lg font-semibold rounded-2xl';
+        return 'px-6 xs:px-7 sm:px-8 md:px-8 py-3 xs:py-4 text-base xs:text-lg font-semibold rounded-xl xs:rounded-2xl';
       default:
-        return 'px-4 py-2.5 text-sm font-semibold rounded-xl';
+        return 'px-3 xs:px-4 sm:px-4 py-2 xs:py-2.5 text-sm font-semibold rounded-xl';
     }
   };
 
