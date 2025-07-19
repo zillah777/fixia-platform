@@ -152,7 +152,7 @@ const ConfiguracionEmail: NextPage = () => {
         <CorporateHeader
           title="Configuración de Email"
           subtitle="Personaliza cómo y cuándo recibir notificaciones"
-          backUrl={`/${user?.user_type === 'professional' ? 'as' : 'explorador'}/dashboard`}
+          backUrl={`/${user?.user_type === 'provider' ? 'as' : 'explorador'}/dashboard`}
         />
 
         <div className="max-w-4xl mx-auto py-8">
@@ -196,7 +196,7 @@ const ConfiguracionEmail: NextPage = () => {
                   Cuenta de Email
                 </h2>
                 <p className="text-secondary-600 font-medium">
-                  {user?.email} • {user?.user_type === 'professional' ? 'AS Profesional' : 'Explorador'}
+                  {user?.email} • {user?.user_type === 'provider' ? 'AS Profesional' : 'Explorador'}
                 </p>
               </div>
             </div>
