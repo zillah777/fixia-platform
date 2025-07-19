@@ -15,6 +15,7 @@ export interface User {
   gender?: string; // VARCHAR(10)
   locality?: string; // VARCHAR(100)
   address?: string; // TEXT
+  bio?: string; // TEXT - user biography/description
   verification_status: string; // VARCHAR(20) DEFAULT 'pending'
   email_verified: boolean; // BOOLEAN DEFAULT false
   email_verified_at?: string; // TIMESTAMP

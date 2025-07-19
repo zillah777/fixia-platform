@@ -11,6 +11,8 @@ interface AuthContextType {
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
   updateUser: (user: User) => void;
+  updateProfile: (profileData: any) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -164,6 +166,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     authService.updateStoredUser(updatedUser);
   };
 
+  const updateProfile = async (profileData: any) => {
+    try {
+      const updatedUser = await authService.updateProfile(profileData);
+      setUser(updatedUser);
+      toast.success('Perfil actualizado exitosamente');
+    } catch (error: any) {
+      const message = error.response?.data?.error || 'Error al actualizar el perfil';
+      toast.error(message);
+      throw error;
+    }
+  };
+
+  const changePassword = async (currentPassword: string, newPassword: string) => {
+    try {
+      await authService.changePassword(currentPassword, newPassword);
+      toast.success('Contraseña cambiada exitosamente');
+    } catch (error: any) {
+      const message = error.response?.data?.error || 'Error al cambiar la contraseña';
+      toast.error(message);
+      throw error;
+    }
+  };
+
   const value: AuthContextType = {
     user,
     loading,
@@ -171,6 +196,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     logout,
     updateUser,
+    updateProfile,
+    changePassword,
     isAuthenticated: !!user,
   };
 
@@ -193,6 +220,8 @@ export const useAuth = (): AuthContextType => {
         register: async () => {},
         logout: () => {},
         updateUser: () => {},
+        updateProfile: async () => {},
+        changePassword: async () => {},
         isAuthenticated: false,
       };
     }

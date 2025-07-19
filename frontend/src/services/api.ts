@@ -75,7 +75,7 @@ api.interceptors.response.use(
 export const localitiesService = {
   async getChubutLocalities(): Promise<any[]> {
     try {
-      const response = await api.get('/localities/chubut');
+      const response = await api.get('/api/localities/chubut');
       return response.data.data;
     } catch (error) {
       console.error('Error fetching Chubut localities:', error);
@@ -86,14 +86,6 @@ export const localitiesService = {
         { name: 'Dolavon' }, { name: 'Rada Tilly' }, { name: 'Trevelin' }
       ];
     }
-  }
-};
-
-// Localities service
-export const localitiesService = {
-  async getChubutLocalities() {
-    const response = await api.get('/api/localities/chubut');
-    return response.data.data;
   },
 
   async getChubutLocalitiesByRegion() {

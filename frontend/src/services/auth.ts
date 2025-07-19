@@ -208,5 +208,21 @@ export const authService = {
       
       return false;
     }
+  },
+
+  // Update profile
+  async updateProfile(profileData: any): Promise<User> {
+    const response = await api.put<ApiResponse<User>>('/api/auth/profile', profileData);
+    const updatedUser = response.data.data;
+    this.updateStoredUser(updatedUser);
+    return updatedUser;
+  },
+
+  // Change password
+  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    await api.put('/api/auth/change-password', {
+      currentPassword,
+      newPassword
+    });
   }
 };
