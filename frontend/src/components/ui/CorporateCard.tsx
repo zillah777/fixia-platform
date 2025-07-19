@@ -5,6 +5,7 @@ interface CorporateCardProps {
   className?: string;
   variant?: 'default' | 'elevated' | 'glass' | 'minimal';
   hover?: boolean;
+  glow?: boolean;
   padding?: 'sm' | 'md' | 'lg' | 'xl';
   onClick?: () => void;
 }
@@ -14,6 +15,7 @@ const CorporateCard: React.FC<CorporateCardProps> = ({
   className = '',
   variant = 'default',
   hover = false,
+  glow = false,
   padding = 'lg',
   onClick
 }) => {
@@ -44,10 +46,11 @@ const CorporateCard: React.FC<CorporateCardProps> = ({
 
   const hoverClasses = hover ? 'hover:scale-[1.02] cursor-pointer' : '';
   const clickableClasses = onClick ? 'cursor-pointer' : '';
+  const glowClasses = glow ? 'ring-1 ring-primary-200/50 shadow-lg shadow-primary-500/10 hover:ring-primary-300/70 hover:shadow-primary-500/20' : '';
 
   return (
     <div
-      className={`${getBaseClasses()} ${getPaddingClasses()} ${hoverClasses} ${clickableClasses} ${className}`}
+      className={`${getBaseClasses()} ${getPaddingClasses()} ${hoverClasses} ${clickableClasses} ${glowClasses} ${className}`}
       onClick={onClick}
     >
       {children}
