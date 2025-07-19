@@ -1,10 +1,11 @@
-/* Fixia Design System - Professional & Trustworthy */
+/* FIXIA 2025 - Modern iOS-Style Design System */
 /* 
-  Brand Colors:
-  - Primary: #0084ff (Professional Blue)
-  - Secondary: #64748b (Neutral Gray) 
-  - Accent: #22c55e (Success Green)
-  - Trust: #0084ff (Same as primary for consistency)
+  Color Palette (5-color sophistication):
+  - Forest: #264653 (Primary brand - deep, trustworthy)
+  - Teal: #2a9d8f (Secondary - fresh, modern)
+  - Gold: #e9c46a (Accent - warm, premium)
+  - Coral: #f4a261 (Interactive - inviting)
+  - Terra: #e76f51 (States - bold, clear)
 */
 
 /* =============================================================================
@@ -32,15 +33,15 @@
 }
 
 .btn-success {
-  @apply bg-accent-600 text-white hover:bg-accent-700 focus:ring-accent-500;
+  @apply bg-teal-500 text-white hover:bg-teal-600 focus:ring-teal-500;
 }
 
 .btn-warning {
-  @apply bg-warning-600 text-white hover:bg-warning-700 focus:ring-warning-500;
+  @apply bg-gold-500 text-white hover:bg-gold-600 focus:ring-gold-500;
 }
 
 .btn-error {
-  @apply bg-error-600 text-white hover:bg-error-700 focus:ring-error-500;
+  @apply bg-terra-500 text-white hover:bg-terra-600 focus:ring-terra-500;
 }
 
 /* Button Sizes */
@@ -155,15 +156,15 @@
 }
 
 .text-success {
-  @apply text-accent-600;
+  @apply text-teal-500;
 }
 
 .text-warning {
-  @apply text-warning-600;
+  @apply text-gold-500;
 }
 
 .text-error {
-  @apply text-error-600;
+  @apply text-terra-500;
 }
 
 /* =============================================================================
@@ -179,7 +180,7 @@
 }
 
 .gradient-success {
-  @apply bg-gradient-to-r from-accent-500 to-accent-600;
+  @apply bg-gradient-to-r from-teal-500 to-gold-500;
 }
 
 .gradient-brand {
@@ -203,7 +204,7 @@
 }
 
 .bg-success {
-  @apply bg-accent-600;
+  @apply bg-teal-500;
 }
 
 .bg-brand {
@@ -351,7 +352,7 @@
 }
 
 .badge-success {
-  @apply bg-accent-100 text-accent-800;
+  @apply bg-teal-50 text-teal-800;
 }
 
 .badge-warning {

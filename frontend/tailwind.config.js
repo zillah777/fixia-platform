@@ -25,87 +25,161 @@ module.exports = {
         'sidebar-desktop': {'min': '1024px'},
       },
       colors: {
-        // FIXIA 2025 - Apple-Inspired Minimal Color System
-        // Less is more - Professional elegance through simplicity
+        // FIXIA 2025 - Modern iOS-Style Palette
+        // Sophisticated 5-color system: teal, orange, emerald, coral, deep green
         
-        // Primary: Corporate Blue - Single brand color
-        primary: {
-          50: '#f0f9ff',    // Ultra light background
-          100: '#e0f2fe',   // Light background
-          200: '#bae6fd',   // Soft accent
-          300: '#7dd3fc',   // Light interactive
-          400: '#38bdf8',   // Medium interactive
-          500: '#0ea5e9',   // Main brand color - Professional & Trustworthy
-          600: '#0284c7',   // Hover states
-          700: '#0369a1',   // Active states
-          800: '#075985',   // Deep brand
-          900: '#0c4a6e',   // Darkest brand
+        // Deep forest green - Primary brand
+        forest: {
+          50: '#f0f7f4',
+          100: '#daeee4', 
+          200: '#b5ddc9',
+          300: '#85c4a7',
+          400: '#55a582',
+          500: '#264653',  // Main brand
+          600: '#1f3a44',
+          700: '#192f36',
+          800: '#14242a',
+          900: '#0f1a1e',
         },
         
-        // Neutral: Apple-style grays - The foundation
-        neutral: {
-          50: '#fafafa',    // Pure background
-          100: '#f5f5f5',   // Card backgrounds
-          200: '#e5e5e5',   // Borders
-          300: '#d4d4d4',   // Dividers
-          400: '#a3a3a3',   // Placeholder text
-          500: '#737373',   // Secondary text
-          600: '#525252',   // Primary text light
-          700: '#404040',   // Primary text
-          800: '#262626',   // Headers
-          900: '#171717',   // Deep text
+        // Teal - Secondary brand
+        teal: {
+          50: '#f0fdfa',
+          100: '#d4f7f0',
+          200: '#a9efe1',
+          300: '#7ee0d2',
+          400: '#53d1c3',
+          500: '#2a9d8f',  // Vibrant teal
+          600: '#227e72',
+          700: '#1a5e55',
+          800: '#124038',
+          900: '#0a201c',
         },
-
-        // Success: Apple-style green - Clean & minimal
-        success: {
-          50: '#f0fdf4',
-          400: '#4ade80',   
-          500: '#22c55e',   // Clean success state
-          600: '#16a34a',
+        
+        // Amber/Gold - Accent highlights
+        gold: {
+          50: '#fefdf4',
+          100: '#fef9e3',
+          200: '#fef3c7',
+          300: '#fde68a',
+          400: '#fcd34d',
+          500: '#e9c46a',  // Warm gold
+          600: '#d69e2e',
+          700: '#b7791f',
+          800: '#975a16',
+          900: '#744210',
         },
-
-        // Warning: Apple-style amber - Subtle alerts
-        warning: {
-          50: '#fefce8',
-          400: '#facc15',
-          500: '#eab308',   // Clear warning state
-          600: '#ca8a04',
+        
+        // Coral/Orange - Interactive elements
+        coral: {
+          50: '#fef7f0',
+          100: '#fdeee0',
+          200: '#fbddc1',
+          300: '#f8c492',
+          400: '#f5ab63',
+          500: '#f4a261',  // Warm coral
+          600: '#e8924d',
+          700: '#cc7a3a',
+          800: '#a66129',
+          900: '#7d4a1f',
         },
-
-        // Error: Apple-style red - Clear but not aggressive
-        error: {
-          50: '#fef2f2',
-          400: '#f87171',
-          500: '#ef4444',   // Clean error state
-          600: '#dc2626',
+        
+        // Terracotta/Red - States & alerts
+        terra: {
+          50: '#fef4f2',
+          100: '#fce8e4',
+          200: '#f9d1ca',
+          300: '#f5b0a0',
+          400: '#f18f76',
+          500: '#e76f51',  // Rich terracotta
+          600: '#d85b41',
+          700: '#bd4a32',
+          800: '#9c3d28',
+          900: '#7a2f1f',
         },
-
-        // Legacy aliases for backward compatibility
-        // These will be gradually phased out
-        secondary: {
+        
+        // Neutral grays - Modern iOS style
+        gray: {
           50: '#fafafa',
-          100: '#f5f5f5',
-          200: '#e5e5e5',
-          300: '#d4d4d4',
-          400: '#a3a3a3',
-          500: '#737373',
-          600: '#525252',
-          700: '#404040',
-          800: '#262626',
-          900: '#171717',
+          100: '#f4f4f5',
+          200: '#e4e4e7',
+          300: '#d4d4d8',
+          400: '#a1a1aa',
+          500: '#71717a',
+          600: '#52525b',
+          700: '#3f3f46',
+          800: '#27272a',
+          900: '#18181b',
         },
-        
-        // Simplified aliases
+
+        // Modern iOS semantic mapping 
+        primary: {
+          50: '#f0f7f4',
+          100: '#daeee4',
+          200: '#b5ddc9',
+          300: '#85c4a7',
+          400: '#55a582',
+          500: '#264653',  // Forest green
+          600: '#1f3a44',
+          700: '#192f36',
+          800: '#14242a',
+          900: '#0f1a1e',
+        },
+
+        secondary: {
+          50: '#f0fdfa',
+          100: '#d4f7f0',
+          200: '#a9efe1',
+          300: '#7ee0d2',
+          400: '#53d1c3',
+          500: '#2a9d8f',  // Teal
+          600: '#227e72',
+          700: '#1a5e55',
+          800: '#124038',
+          900: '#0a201c',
+        },
+
+        neutral: {
+          50: '#fafafa',
+          100: '#f4f4f5',
+          200: '#e4e4e7',
+          300: '#d4d4d8',
+          400: '#a1a1aa',
+          500: '#71717a',
+          600: '#52525b',
+          700: '#3f3f46',
+          800: '#27272a',
+          900: '#18181b',
+        },
+
+        success: {
+          50: '#f0fdfa',
+          500: '#2a9d8f',  // Teal
+          600: '#227e72',
+        },
+
+        warning: {
+          50: '#fefdf4',
+          500: '#e9c46a',  // Gold
+          600: '#d69e2e',
+        },
+
+        error: {
+          50: '#fef4f2',
+          500: '#e76f51',  // Terracotta
+          600: '#d85b41',
+        },
+
         accent: {
-          50: '#f0fdf4',
-          500: '#22c55e',
-          600: '#16a34a',
+          50: '#fefdf4',
+          500: '#e9c46a',  // Gold
+          600: '#d69e2e',
         },
-        
+
         trust: {
-          50: '#f0f9ff',
-          500: '#0ea5e9',
-          600: '#0284c7',
+          50: '#f0fdfa',
+          500: '#2a9d8f',  // Teal
+          600: '#227e72',
         },
       },
       animation: {
