@@ -94,7 +94,6 @@ app.use('/api/mutual-confirmation', require('./src/routes/mutual-confirmation'))
 app.use('/api/role-switching', require('./src/routes/role-switching'));
 app.use('/api/dashboard', require('./src/routes/dashboard'));
 app.use('/api/verification', require('./src/routes/verification'));
-app.use('/api/localities', require('./src/routes/localities'));
 
 // Socket.IO connection handling
 io.use((socket, next) => {
@@ -150,12 +149,21 @@ app.use('*', (req, res) => {
 // Start server
 const startServer = async () => {
   try {
-    await testConnection();
+    // Test database connection but don't fail if it's not available
+    const dbConnected = await testConnection();
+    if (!dbConnected) {
+      console.warn('⚠️  Database not connected, but starting server anyway');
+      console.warn('⚠️  Some endpoints may not work until database is available');
+    }
     
     server.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📍 Environment: ${process.env.NODE_ENV}`);
       console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+      
+      if (!dbConnected) {
+        console.log('🔄 Will retry database connection on first API request');
+      }
     });
   } catch (error) {
     console.error('Failed to start server:', error);
