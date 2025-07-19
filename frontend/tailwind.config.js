@@ -25,145 +25,87 @@ module.exports = {
         'sidebar-desktop': {'min': '1024px'},
       },
       colors: {
-        // FIXIA 2025 - Corporate Professional Brand Colors
-        // Primary: Deep Corporate Blue - Trust & Authority
+        // FIXIA 2025 - Apple-Inspired Minimal Color System
+        // Less is more - Professional elegance through simplicity
+        
+        // Primary: Corporate Blue - Single brand color
         primary: {
-          50: '#f0f4ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe', 
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#1e40af', // Main corporate blue - Professional & Trustworthy
-          600: '#1d4ed8',
-          700: '#1e3a8a',
-          800: '#1e3a8a',
-          900: '#1e293b',
-          950: '#0f172a',
+          50: '#f0f9ff',    // Ultra light background
+          100: '#e0f2fe',   // Light background
+          200: '#bae6fd',   // Soft accent
+          300: '#7dd3fc',   // Light interactive
+          400: '#38bdf8',   // Medium interactive
+          500: '#0ea5e9',   // Main brand color - Professional & Trustworthy
+          600: '#0284c7',   // Hover states
+          700: '#0369a1',   // Active states
+          800: '#075985',   // Deep brand
+          900: '#0c4a6e',   // Darkest brand
         },
         
-        // Secondary: Sophisticated Slate - Modern Corporate
-        secondary: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b', // Perfect neutral for corporate
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617',
+        // Neutral: Apple-style grays - The foundation
+        neutral: {
+          50: '#fafafa',    // Pure background
+          100: '#f5f5f5',   // Card backgrounds
+          200: '#e5e5e5',   // Borders
+          300: '#d4d4d4',   // Dividers
+          400: '#a3a3a3',   // Placeholder text
+          500: '#737373',   // Secondary text
+          600: '#525252',   // Primary text light
+          700: '#404040',   // Primary text
+          800: '#262626',   // Headers
+          900: '#171717',   // Deep text
         },
 
-        // Accent: Premium Emerald - Success & Growth
-        accent: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#059669', // Professional emerald for success states
-          600: '#047857',
-          700: '#065f46',
-          800: '#064e3b',
-          900: '#022c22',
-        },
-
-        // Trust: Corporate Azure - Professional Trust
-        trust: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9', // Corporate trust blue
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-        },
-
-        // Corporate Gradients System
-        corporate: {
-          50: '#f8fafc',
-          100: '#f1f5f9', 
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-        },
-
-        // Status Colors - Modern Professional
+        // Success: Apple-style green - Clean & minimal
         success: {
           50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e', // Modern success green
+          400: '#4ade80',   
+          500: '#22c55e',   // Clean success state
           600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
         },
 
+        // Warning: Apple-style amber - Subtle alerts
         warning: {
           50: '#fefce8',
-          100: '#fef9c3',
-          200: '#fef08a',
-          300: '#fde047',
           400: '#facc15',
-          500: '#eab308', // Professional amber warning
+          500: '#eab308',   // Clear warning state
           600: '#ca8a04',
-          700: '#a16207',
-          800: '#854d0e',
-          900: '#713f12',
         },
 
+        // Error: Apple-style red - Clear but not aggressive
         error: {
           50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
           400: '#f87171',
-          500: '#ef4444', // Clear error red
+          500: '#ef4444',   // Clean error state
           600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
         },
 
-        // Premium Extras for Corporate Feel
-        platinum: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
+        // Legacy aliases for backward compatibility
+        // These will be gradually phased out
+        secondary: {
+          50: '#fafafa',
+          100: '#f5f5f5',
+          200: '#e5e5e5',
+          300: '#d4d4d4',
+          400: '#a3a3a3',
+          500: '#737373',
+          600: '#525252',
+          700: '#404040',
+          800: '#262626',
+          900: '#171717',
         },
-
-        // Future-forward accent
-        tech: {
+        
+        // Simplified aliases
+        accent: {
+          50: '#f0fdf4',
+          500: '#22c55e',
+          600: '#16a34a',
+        },
+        
+        trust: {
           50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
           500: '#0ea5e9',
           600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
         },
       },
       animation: {

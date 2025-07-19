@@ -97,42 +97,42 @@ const serviceCategoriesData = [
     name: 'Plomería', 
     icon: WrenchScrewdriverIcon, 
     description: 'Reparaciones e instalaciones',
-    gradient: 'from-blue-500 to-cyan-500'
+    gradient: 'from-primary-500 to-primary-600'  // Clean brand blue
   },
   { 
     id: 'electricidad', 
     name: 'Electricidad', 
     icon: BoltIcon, 
     description: 'Instalaciones eléctricas',
-    gradient: 'from-yellow-500 to-orange-500'
+    gradient: 'from-neutral-600 to-neutral-700'  // Elegant neutral
   },
   { 
     id: 'limpieza', 
     name: 'Limpieza', 
     icon: SparklesIcon, 
     description: 'Limpieza de hogar y oficinas',
-    gradient: 'from-green-500 to-emerald-500'
+    gradient: 'from-success-500 to-success-600'  // Clean success green
   },
   { 
     id: 'reparaciones', 
     name: 'Reparaciones', 
     icon: CogIcon, 
     description: 'Reparaciones del hogar',
-    gradient: 'from-purple-500 to-violet-500'
+    gradient: 'from-primary-600 to-primary-700'  // Deep brand blue
   },
   { 
     id: 'belleza', 
     name: 'Belleza', 
     icon: FaceSmileIcon, 
     description: 'Servicios de belleza',
-    gradient: 'from-pink-500 to-rose-500'
+    gradient: 'from-neutral-500 to-neutral-600'  // Sophisticated neutral
   },
   { 
     id: 'otros', 
     name: 'Otros', 
     icon: PuzzlePieceIcon, 
     description: 'Más servicios disponibles',
-    gradient: 'from-slate-500 to-gray-500'
+    gradient: 'from-neutral-700 to-neutral-800'  // Deep professional
   }
 ];
 
@@ -503,32 +503,32 @@ const LandingPage: NextPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <Card variant="interactive" hover glow className="p-8 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                   <CpuChipIcon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Algoritmos Inteligentes</h3>
-                <p className="text-gray-600">IA avanzada que conecta necesidades específicas con el talento perfecto</p>
+                <h3 className="text-xl font-bold text-neutral-800 mb-4">Algoritmos Inteligentes</h3>
+                <p className="text-neutral-600">IA avanzada que conecta necesidades específicas con el talento perfecto</p>
               </Card>
               <Card variant="interactive" hover glow className="p-8 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-16 h-16 bg-neutral-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                   <ShieldCheckIcon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Confianza Verificada</h3>
-                <p className="text-gray-600">Profesionales validados con certificaciones y reseñas auténticas</p>
+                <h3 className="text-xl font-bold text-neutral-800 mb-4">Confianza Verificada</h3>
+                <p className="text-neutral-600">Profesionales validados con certificaciones y reseñas auténticas</p>
               </Card>
               <Card variant="interactive" hover glow className="p-8 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-accent-500 to-accent-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-16 h-16 bg-success-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                   <TrophyIcon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Resultados Excepcionales</h3>
-                <p className="text-gray-600">98% de satisfacción garantizada en cada conexión</p>
+                <h3 className="text-xl font-bold text-neutral-800 mb-4">Resultados Excepcionales</h3>
+                <p className="text-neutral-600">98% de satisfacción garantizada en cada conexión</p>
               </Card>
             </div>
           </div>
         </section>
 
         {/* Service Categories - Ultra Modern */}
-        <section id="servicios" className="py-20 bg-gradient-to-br from-dark-900 to-dark-800 relative overflow-hidden">
+        <section id="servicios" className="py-20 bg-neutral-900 relative overflow-hidden">
           <AnimatedBackground variant="particles" className="absolute inset-0" />
           <div className="max-w-6xl mx-auto px-4 relative z-10">
             <div className="text-center mb-16">
@@ -568,7 +568,7 @@ const LandingPage: NextPage = () => {
         </section>
 
         {/* How It Works */}
-        <section id="como-funciona" className="section-padding bg-gradient-to-br from-primary-50 to-secondary-50 relative overflow-hidden">
+        <section id="como-funciona" className="section-padding bg-neutral-50 relative overflow-hidden">
           <div className="absolute inset-0 bg-white/50 backdrop-blur-sm"></div>
           <div className="container relative">
             <div className="content-medium text-center mb-16 slide-up-on-scroll">
@@ -696,7 +696,7 @@ const LandingPage: NextPage = () => {
         </section>
 
         {/* Testimonials */}
-        <section className="section-padding bg-gradient-to-br from-secondary-50 to-primary-50 relative overflow-hidden">
+        <section className="section-padding bg-white relative overflow-hidden">
           <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
           <div className="container relative">
             <div className="content-medium text-center mb-16 slide-up-on-scroll">
@@ -734,7 +734,7 @@ const LandingPage: NextPage = () => {
         </section>
 
         {/* Stats Section - Ultra Dynamic */}
-        <section className="py-20 bg-gradient-to-br from-dark-900 via-primary-900 to-secondary-900 relative overflow-hidden">
+        <section className="py-20 bg-neutral-900 relative overflow-hidden">
           <AnimatedBackground variant="geometric" className="absolute inset-0" />
           <div className="max-w-6xl mx-auto px-4 relative z-10">
             <div className="text-center mb-16">
@@ -811,7 +811,7 @@ const LandingPage: NextPage = () => {
         </section>
 
         {/* Footer - Ultra Modern */}
-        <footer id="contacto" className="bg-gradient-to-br from-dark-900 to-dark-800 text-white py-20 relative overflow-hidden">
+        <footer id="contacto" className="bg-neutral-900 text-white py-20 relative overflow-hidden">
           <AnimatedBackground variant="gradient" className="absolute inset-0" />
           <div className="max-w-6xl mx-auto px-4 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
