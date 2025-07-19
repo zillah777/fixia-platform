@@ -103,6 +103,25 @@ function transformRequestMiddleware(req, res, next) {
 function transformResponse(data) {
   if (!data) return data;
   
+  // Handle API response format with data.data (most common)
+  if (data.data && typeof data.data === 'object') {
+    // If data.data is a user object with user_type
+    if (data.data.user_type) {
+      data.data = transformUserForFrontend(data.data);
+    }
+    // If data.data has nested user objects
+    if (data.data.user) {
+      data.data.user = transformUserForFrontend(data.data.user);
+    }
+    if (data.data.users) {
+      data.data.users = transformUsersArrayForFrontend(data.data.users);
+    }
+    // If data.data is an array of users
+    if (Array.isArray(data.data)) {
+      data.data = transformUsersArrayForFrontend(data.data);
+    }
+  }
+  
   // Handle single user object
   if (data.user) {
     data.user = transformUserForFrontend(data.user);

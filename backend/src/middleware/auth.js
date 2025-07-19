@@ -124,7 +124,8 @@ const requireProvider = (req, res, next) => {
 };
 
 const requireCustomer = (req, res, next) => {
-  if (req.user.user_type !== 'customer') {
+  // Check for both 'client' (database) and 'customer' (frontend) for compatibility
+  if (req.user.user_type !== 'client' && req.user.user_type !== 'customer') {
     return res.status(403).json({
       success: false,
       error: 'Acceso denegado. Solo clientes pueden realizar esta acción.'

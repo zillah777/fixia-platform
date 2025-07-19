@@ -10,6 +10,7 @@ require('dotenv').config();
 
 const { testConnection } = require('./src/config/database');
 const { authMiddleware } = require('./src/middleware/auth');
+const { securityHeaders, validateContentType, validateBodySize, securityLogger } = require('./src/middleware/security');
 
 const app = express();
 
@@ -43,11 +44,58 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(helmet());
+// Security middleware - order is important
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false
+}));
 app.use(compression());
-app.use(cors());
+app.use(securityHeaders);
+app.use(securityLogger);
+app.use(validateBodySize);
+
+// CORS configuration - restrict to frontend domains only
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://fixia-platform.vercel.app',
+      'https://fixia.com.ar',
+      'https://www.fixia.com.ar'
+    ];
+    
+    // Allow requests with no origin (like mobile apps or curl requests) in development
+    if (!origin && process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  maxAge: 86400 // 24 hours
+};
+
+app.use(cors(corsOptions));
 app.use(limiter);
-app.use(express.json({ limit: '10mb' }));
+app.use(validateContentType);
+app.use(express.json({ limit: '5mb' })); // Reduced from 10mb
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

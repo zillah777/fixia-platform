@@ -3,11 +3,12 @@ const jwt = require('jsonwebtoken');
 const { query } = require('../config/database');
 const { validateEmail, validatePassword } = require('../utils/validation');
 const EmailService = require('../services/emailService');
+const { transformUserForFrontend } = require('../utils/userTypeTransformer');
 
 // Helper function to sanitize user data
 const sanitizeUser = (user) => {
   const { password_hash, ...sanitizedUser } = user;
-  return sanitizedUser;
+  return transformUserForFrontend(sanitizedUser);
 };
 
 // Generate JWT token

@@ -55,7 +55,7 @@ async function createCoreUserSystem() {
       email VARCHAR(255) UNIQUE NOT NULL,
       password_hash VARCHAR(255) NOT NULL,
       phone VARCHAR(20),
-      user_type VARCHAR(20) CHECK (user_type IN ('customer', 'provider', 'admin')) DEFAULT 'customer',
+      user_type VARCHAR(20) CHECK (user_type IN ('client', 'provider', 'admin')) DEFAULT 'client',
       profile_photo_url TEXT,
       address TEXT,
       latitude DECIMAL(10, 8),
@@ -727,7 +727,7 @@ async function createPromotionalSystem() {
       name VARCHAR(200) NOT NULL,
       description TEXT,
       campaign_type VARCHAR(50) NOT NULL,
-      target_user_type VARCHAR(20) CHECK (target_user_type IN ('customer', 'provider', 'both')),
+      target_user_type VARCHAR(20) CHECK (target_user_type IN ('client', 'provider', 'both')),
       
       -- Participation limits
       max_participants INTEGER,

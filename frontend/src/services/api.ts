@@ -37,7 +37,7 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status === 401) {
       // Only auto-logout for specific 401 errors, not all of them
-      const errorMessage = (error.response?.data as any)?.error || '';
+      const errorMessage = (error.response?.data as { error?: string })?.error || '';
       
       // Auto-logout only for these specific errors
       if (errorMessage.includes('Token expirado') || 

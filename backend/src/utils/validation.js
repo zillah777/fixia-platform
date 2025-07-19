@@ -49,7 +49,7 @@ const registerValidation = [
     .matches(/^[a-zA-ZÀ-ÿ\s]+$/)
     .withMessage('El apellido debe tener entre 2 y 50 caracteres y solo contener letras'),
   body('user_type')
-    .isIn(['customer', 'provider'])
+    .isIn(['customer', 'client', 'provider'])
     .withMessage('Tipo de usuario inválido'),
   body('phone')
     .optional()

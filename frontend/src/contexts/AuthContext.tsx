@@ -11,7 +11,7 @@ interface AuthContextType {
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
   updateUser: (user: User) => void;
-  updateProfile: (profileData: any) => Promise<void>;
+  updateProfile: (profileData: Partial<User>) => Promise<void>;
   uploadProfilePhoto: (file: File) => Promise<string>;
   removeProfilePhoto: () => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
