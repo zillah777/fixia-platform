@@ -70,28 +70,35 @@ const BuscarServicioPage: NextPage = () => {
 
   const loadInitialData = async () => {
     try {
-      const [categoriesRes, blockingRes, localitiesRes] = await Promise.all([
-        categoriesService.getAllCategories(),
-        explorerService.getBlockingStatus(),
-        localitiesService.getChubutLocalities()
-      ]);
-
-      console.log('Categories loaded:', categoriesRes);
-      console.log('Blocking status loaded:', blockingRes);
-      console.log('Localities loaded:', localitiesRes);
-
-      setCategories(categoriesRes);
-      setLocalities(localitiesRes.map(loc => loc.name));
+      console.log('Loading initial data...');
       
-      if (blockingRes.success) {
-        setBlockingStatus(blockingRes.data);
-      } else {
-        // Set default non-blocked status if API fails
+      // Load categories
+      const categoriesRes = await categoriesService.getAllCategories();
+      console.log('Categories loaded:', categoriesRes);
+      setCategories(categoriesRes);
+      
+      // Load localities
+      const localitiesRes = await localitiesService.getChubutLocalities();
+      console.log('Localities loaded:', localitiesRes);
+      setLocalities(localitiesRes.map((loc: any) => loc.name));
+      
+      // Load blocking status
+      try {
+        const blockingRes = await explorerService.getBlockingStatus();
+        console.log('Blocking status loaded:', blockingRes);
+        if (blockingRes.success) {
+          setBlockingStatus(blockingRes.data);
+        } else {
+          setBlockingStatus({ is_blocked: false, message: '' });
+        }
+      } catch (blockingError) {
+        console.warn('Blocking status failed, setting default:', blockingError);
         setBlockingStatus({ is_blocked: false, message: '' });
       }
+      
     } catch (error) {
       console.error('Error loading initial data:', error);
-      // Set default non-blocked status if API fails
+      setCategoriesError('Error cargando datos. Por favor recarga la página.');
       setBlockingStatus({ is_blocked: false, message: '' });
     } finally {
       setLoadingInitialData(false);

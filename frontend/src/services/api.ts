@@ -89,4 +89,29 @@ export const localitiesService = {
   }
 };
 
+// Localities service
+export const localitiesService = {
+  async getChubutLocalities() {
+    const response = await api.get('/api/localities/chubut');
+    return response.data.data;
+  },
+
+  async getChubutLocalitiesByRegion() {
+    const response = await api.get('/api/localities/chubut/by-region');
+    return response.data.data;
+  },
+
+  async searchChubutLocalities(query: string) {
+    const response = await api.get('/api/localities/chubut/search', {
+      params: { q: query }
+    });
+    return response.data.data;
+  },
+
+  async validateChubutLocality(name: string) {
+    const response = await api.get(`/api/localities/chubut/validate/${encodeURIComponent(name)}`);
+    return response.data.data;
+  }
+};
+
 export default api;

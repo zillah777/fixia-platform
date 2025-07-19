@@ -67,6 +67,7 @@ app.use('/api/email-verification', require('./src/routes/email-verification'));
 app.use('/api/test-email', require('./src/routes/test-email'));
 app.use('/api/users', authMiddleware, require('./src/routes/users'));
 app.use('/api/categories', require('./src/routes/categories'));
+app.use('/api/localities', require('./src/routes/localities'));
 app.use('/api/services', require('./src/routes/services'));
 app.use('/api/bookings', authMiddleware, require('./src/routes/bookings'));
 app.use('/api/reviews', authMiddleware, require('./src/routes/reviews'));
