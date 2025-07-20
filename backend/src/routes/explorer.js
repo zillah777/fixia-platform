@@ -134,19 +134,57 @@ router.post('/service-request', authMiddleware, requireExplorer, async (req, res
       return res.status(400).json(formatError('Categoría, título, descripción y localidad son requeridos'));
     }
 
-    // Verify locality exists in Chubut
-    const localityResult = await query(`
-      SELECT id FROM chubut_localities WHERE name = $1 AND is_active = TRUE
-    `, [locality]);
+    // Verify locality exists in Chubut (with debugging)
+    console.log('🏘️ Validating locality:', locality);
+    
+    try {
+      const localityResult = await query(`
+        SELECT id FROM chubut_localities WHERE name ILIKE $1 AND is_active = TRUE
+      `, [locality]);
 
-    if (localityResult.rows.length === 0) {
-      return res.status(400).json(formatError('La localidad especificada no está disponible en Chubut'));
+      console.log('🏘️ Locality validation result:', localityResult.rows.length);
+
+      if (localityResult.rows.length === 0) {
+        // Try to find similar localities for debugging
+        const similarResult = await query(`
+          SELECT name FROM chubut_localities WHERE name ILIKE $1 LIMIT 3
+        `, [`%${locality}%`]);
+        
+        console.log('🏘️ Similar localities found:', similarResult.rows);
+        
+        return res.status(400).json(formatError(
+          `La localidad "${locality}" no está disponible en Chubut. ` +
+          (similarResult.rows.length > 0 ? 
+            `Localidades similares: ${similarResult.rows.map(r => r.name).join(', ')}` : 
+            'No se encontraron localidades similares.')
+        ));
+      }
+    } catch (localityError) {
+      console.error('🏘️ Locality validation error:', localityError);
+      // Continue without strict validation if there's a database error
+      console.log('🏘️ Continuing without strict locality validation');
     }
 
     // Calculate expiry date (7 days for normal, 3 days for urgent, 1 day for emergency)
     const expiryHours = { low: 168, medium: 120, high: 72, emergency: 24 };
     const expiryDate = new Date();
     expiryDate.setHours(expiryDate.getHours() + (expiryHours[urgency] || 120));
+
+    console.log('📝 Creating service request with params:', {
+      explorer_id: req.user.id,
+      category_id,
+      title,
+      description,
+      locality,
+      specific_address,
+      urgency,
+      budget_min,
+      budget_max,
+      preferred_date,
+      preferred_time,
+      flexible_timing,
+      expires_at: expiryDate
+    });
 
     const result = await query(`
       INSERT INTO explorer_service_requests (
