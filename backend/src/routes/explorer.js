@@ -122,8 +122,6 @@ router.post('/service-request', authMiddleware, requireExplorer, async (req, res
       description,
       locality,
       specific_address,
-      location_lat,
-      location_lng,
       urgency = 'medium',
       budget_min,
       budget_max,
@@ -153,15 +151,15 @@ router.post('/service-request', authMiddleware, requireExplorer, async (req, res
     const result = await query(`
       INSERT INTO explorer_service_requests (
         explorer_id, category_id, title, description, locality, specific_address,
-        location_lat, location_lng, urgency, budget_min, budget_max,
-        preferred_date, preferred_time, flexible_timing, expires_at
+        urgency, budget_min, budget_max, preferred_date, preferred_time, 
+        flexible_timing, expires_at
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       RETURNING id
     `, [
       req.user.id, category_id, title, description, locality, specific_address,
-      location_lat, location_lng, urgency, budget_min, budget_max,
-      preferred_date, preferred_time, flexible_timing, expiryDate
+      urgency, budget_min, budget_max, preferred_date, preferred_time, 
+      flexible_timing, expiryDate
     ]);
 
     const insertId = result.rows[0].id;
