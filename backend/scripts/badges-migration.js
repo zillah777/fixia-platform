@@ -1,64 +1,67 @@
-const { pool } = require('../src/config/database');
+const { query } = require('../src/config/database');
 
 const createBadgesTables = async () => {
   try {
     console.log('🔄 Creating badges system tables...');
 
     // Badges definitions table
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS badges (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         slug VARCHAR(100) UNIQUE NOT NULL,
         description TEXT NOT NULL,
         icon VARCHAR(50) NOT NULL,
         color VARCHAR(20) NOT NULL,
-        category ENUM('verification', 'experience', 'performance', 'milestone', 'special') NOT NULL,
-        criteria JSON NOT NULL COMMENT 'Requirements to earn this badge',
+        category VARCHAR(20) NOT NULL CHECK (category IN ('verification', 'experience', 'performance', 'milestone', 'special')),
+        criteria JSONB NOT NULL, -- Requirements to earn this badge
         is_active BOOLEAN DEFAULT TRUE,
         sort_order INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX idx_category (category),
-        INDEX idx_active (is_active)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_badges_category ON badges(category)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_badges_active ON badges(is_active)`);
 
     // User badges table (earned badges)
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS user_badges (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
         badge_id INT NOT NULL,
         earned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        progress_data JSON COMMENT 'Additional data about progress towards badge',
+        progress_data JSONB, -- Additional data about progress towards badge
         is_visible BOOLEAN DEFAULT TRUE,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (badge_id) REFERENCES badges(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_user_badge (user_id, badge_id),
-        INDEX idx_user (user_id),
-        INDEX idx_badge (badge_id),
-        INDEX idx_earned_at (earned_at)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (user_id, badge_id)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_user_badges_user ON user_badges(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_user_badges_badge ON user_badges(badge_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_user_badges_earned_at ON user_badges(earned_at)`);
 
     // Badge progress tracking
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS badge_progress (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
         badge_id INT NOT NULL,
         current_progress INT DEFAULT 0,
         target_progress INT NOT NULL,
-        progress_data JSON COMMENT 'Detailed progress information',
-        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        progress_data JSONB, -- Detailed progress information
+        last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (badge_id) REFERENCES badges(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_user_badge_progress (user_id, badge_id),
-        INDEX idx_user (user_id),
-        INDEX idx_badge (badge_id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (user_id, badge_id)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_badge_progress_user ON badge_progress(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_badge_progress_badge ON badge_progress(badge_id)`);
 
     console.log('✅ Badges tables created successfully!');
     
@@ -295,9 +298,10 @@ const insertDefaultBadges = async () => {
 
     for (let i = 0; i < badges.length; i++) {
       const badge = badges[i];
-      await pool.execute(
-        `INSERT IGNORE INTO badges (name, slug, description, icon, color, category, criteria, sort_order)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      await query(
+        `INSERT INTO badges (name, slug, description, icon, color, category, criteria, sort_order)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         ON CONFLICT (slug) DO NOTHING`,
         [badge.name, badge.slug, badge.description, badge.icon, badge.color, badge.category, badge.criteria, i]
       );
     }

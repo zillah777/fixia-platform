@@ -1,36 +1,37 @@
-const { pool } = require('../src/config/database');
+const { query } = require('../src/config/database');
 
 const createExplorerTables = async () => {
   try {
     console.log('🔄 Creating Explorer system tables...');
 
     // Explorer profiles (extended client information)
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS explorer_profiles (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
-        preferred_localities JSON COMMENT 'Array of preferred localities in Chubut',
-        preferred_categories JSON COMMENT 'Array of preferred service categories',
+        preferred_localities JSONB, -- Array of preferred localities in Chubut
+        preferred_categories JSONB, -- Array of preferred service categories
         average_budget_range VARCHAR(50),
-        communication_preference ENUM('chat', 'whatsapp', 'phone', 'email') DEFAULT 'chat',
+        communication_preference VARCHAR(20) DEFAULT 'chat' CHECK (communication_preference IN ('chat', 'whatsapp', 'phone', 'email')),
         is_reliable_client BOOLEAN DEFAULT TRUE,
         total_services_hired INT DEFAULT 0,
         total_amount_spent DECIMAL(10,2) DEFAULT 0,
         preferred_payment_method VARCHAR(100),
         special_requirements TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_explorer_profile (user_id),
-        INDEX idx_user_id (user_id),
-        INDEX idx_reliable (is_reliable_client)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (user_id)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_profiles_user_id ON explorer_profiles(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_profiles_reliable ON explorer_profiles(is_reliable_client)`);
 
     // Explorer service requests (BUSCO ALBAÑIL PARA TRABAJO EN RAWSON)
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS explorer_service_requests (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         explorer_id INT NOT NULL,
         category_id INT NOT NULL,
         title VARCHAR(200) NOT NULL,
@@ -39,37 +40,38 @@ const createExplorerTables = async () => {
         specific_address TEXT,
         location_lat DECIMAL(10, 8),
         location_lng DECIMAL(11, 8),
-        urgency ENUM('low', 'medium', 'high', 'emergency') DEFAULT 'medium',
+        urgency VARCHAR(20) DEFAULT 'medium' CHECK (urgency IN ('low', 'medium', 'high', 'emergency')),
         budget_min DECIMAL(10,2),
         budget_max DECIMAL(10,2),
         currency VARCHAR(3) DEFAULT 'ARS',
         preferred_date DATE,
         preferred_time TIME,
         flexible_timing BOOLEAN DEFAULT TRUE,
-        status ENUM('active', 'in_progress', 'completed', 'cancelled') DEFAULT 'active',
+        status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'in_progress', 'completed', 'cancelled')),
         selected_as_id INT,
         expires_at TIMESTAMP NOT NULL,
         views_count INT DEFAULT 0,
         interested_as_count INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (explorer_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
-        FOREIGN KEY (selected_as_id) REFERENCES users(id) ON DELETE SET NULL,
-        INDEX idx_explorer_id (explorer_id),
-        INDEX idx_category_id (category_id),
-        INDEX idx_locality (locality),
-        INDEX idx_status (status),
-        INDEX idx_urgency (urgency),
-        INDEX idx_expires_at (expires_at),
-        INDEX idx_preferred_date (preferred_date)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        FOREIGN KEY (selected_as_id) REFERENCES users(id) ON DELETE SET NULL
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_service_requests_explorer_id ON explorer_service_requests(explorer_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_service_requests_category_id ON explorer_service_requests(category_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_service_requests_locality ON explorer_service_requests(locality)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_service_requests_status ON explorer_service_requests(status)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_service_requests_urgency ON explorer_service_requests(urgency)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_service_requests_expires_at ON explorer_service_requests(expires_at)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_service_requests_preferred_date ON explorer_service_requests(preferred_date)`);
 
     // AS interests in explorer requests (when AS clicks "LO TENGO")
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_service_interests (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         request_id INT NOT NULL,
         as_id INT NOT NULL,
         message TEXT,
@@ -78,52 +80,54 @@ const createExplorerTables = async () => {
         estimated_completion_time VARCHAR(100),
         availability_date DATE,
         availability_time TIME,
-        status ENUM('pending', 'accepted', 'rejected', 'expired') DEFAULT 'pending',
+        status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected', 'expired')),
         viewed_by_explorer BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (request_id) REFERENCES explorer_service_requests(id) ON DELETE CASCADE,
         FOREIGN KEY (as_id) REFERENCES users(id) ON DELETE CASCADE,
-        INDEX idx_request_id (request_id),
-        INDEX idx_as_id (as_id),
-        INDEX idx_status (status),
-        INDEX idx_viewed (viewed_by_explorer),
-        UNIQUE KEY unique_as_request (request_id, as_id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (request_id, as_id)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_service_interests_request_id ON as_service_interests(request_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_service_interests_as_id ON as_service_interests(as_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_service_interests_status ON as_service_interests(status)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_service_interests_viewed ON as_service_interests(viewed_by_explorer)`);
 
     // Explorer-AS connections and chat initiation
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS explorer_as_connections (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         explorer_id INT NOT NULL,
         as_id INT NOT NULL,
         request_id INT,
-        connection_type ENUM('service_request', 'direct_contact', 'chat_initiated') DEFAULT 'service_request',
+        connection_type VARCHAR(30) DEFAULT 'service_request' CHECK (connection_type IN ('service_request', 'direct_contact', 'chat_initiated')),
         chat_room_id VARCHAR(100) UNIQUE NOT NULL,
-        status ENUM('active', 'service_in_progress', 'completed', 'cancelled') DEFAULT 'active',
+        status VARCHAR(30) DEFAULT 'active' CHECK (status IN ('active', 'service_in_progress', 'completed', 'cancelled')),
         service_started_at TIMESTAMP NULL,
         service_completed_at TIMESTAMP NULL,
         final_agreed_price DECIMAL(10,2),
         currency VARCHAR(3) DEFAULT 'ARS',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (explorer_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (as_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (request_id) REFERENCES explorer_service_requests(id) ON DELETE SET NULL,
-        INDEX idx_explorer_id (explorer_id),
-        INDEX idx_as_id (as_id),
-        INDEX idx_request_id (request_id),
-        INDEX idx_chat_room (chat_room_id),
-        INDEX idx_status (status),
-        UNIQUE KEY unique_explorer_as_request (explorer_id, as_id, request_id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (explorer_id, as_id, request_id)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_as_connections_explorer_id ON explorer_as_connections(explorer_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_as_connections_as_id ON explorer_as_connections(as_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_as_connections_request_id ON explorer_as_connections(request_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_as_connections_chat_room ON explorer_as_connections(chat_room_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_as_connections_status ON explorer_as_connections(status)`);
 
     // Explorer reviews for AS (mandatory after service completion)
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS explorer_as_reviews (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         connection_id INT NOT NULL,
         explorer_id INT NOT NULL,
         as_id INT NOT NULL,
@@ -136,28 +140,29 @@ const createExplorerTables = async () => {
         value_for_money_rating INT CHECK (value_for_money_rating >= 1 AND value_for_money_rating <= 5),
         would_hire_again BOOLEAN DEFAULT TRUE,
         recommend_to_others BOOLEAN DEFAULT TRUE,
-        review_photos JSON COMMENT 'Array of photo URLs',
+        review_photos JSONB, -- Array of photo URLs
         is_verified_review BOOLEAN DEFAULT FALSE,
         helpful_votes INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (connection_id) REFERENCES explorer_as_connections(id) ON DELETE CASCADE,
         FOREIGN KEY (explorer_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (as_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (request_id) REFERENCES explorer_service_requests(id) ON DELETE SET NULL,
-        INDEX idx_connection_id (connection_id),
-        INDEX idx_explorer_id (explorer_id),
-        INDEX idx_as_id (as_id),
-        INDEX idx_rating (rating),
-        INDEX idx_created_at (created_at),
-        UNIQUE KEY unique_explorer_as_review (connection_id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (connection_id)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_as_reviews_connection_id ON explorer_as_reviews(connection_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_as_reviews_explorer_id ON explorer_as_reviews(explorer_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_as_reviews_as_id ON explorer_as_reviews(as_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_as_reviews_rating ON explorer_as_reviews(rating)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_as_reviews_created_at ON explorer_as_reviews(created_at)`);
 
     // AS reviews for Explorer (so AS can see what kind of client they are)
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_explorer_reviews (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         connection_id INT NOT NULL,
         as_id INT NOT NULL,
         explorer_id INT NOT NULL,
@@ -171,24 +176,25 @@ const createExplorerTables = async () => {
         would_work_again BOOLEAN DEFAULT TRUE,
         recommend_to_others BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (connection_id) REFERENCES explorer_as_connections(id) ON DELETE CASCADE,
         FOREIGN KEY (as_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (explorer_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (request_id) REFERENCES explorer_service_requests(id) ON DELETE SET NULL,
-        INDEX idx_connection_id (connection_id),
-        INDEX idx_as_id (as_id),
-        INDEX idx_explorer_id (explorer_id),
-        INDEX idx_rating (rating),
-        INDEX idx_created_at (created_at),
-        UNIQUE KEY unique_as_explorer_review (connection_id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (connection_id)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_explorer_reviews_connection_id ON as_explorer_reviews(connection_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_explorer_reviews_as_id ON as_explorer_reviews(as_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_explorer_reviews_explorer_id ON as_explorer_reviews(explorer_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_explorer_reviews_rating ON as_explorer_reviews(rating)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_explorer_reviews_created_at ON as_explorer_reviews(created_at)`);
 
     // Explorer mandatory review tracking (to enforce rating before next service)
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS explorer_review_obligations (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         explorer_id INT NOT NULL,
         connection_id INT NOT NULL,
         as_id INT NOT NULL,
@@ -200,24 +206,25 @@ const createExplorerTables = async () => {
         last_reminder_sent TIMESTAMP,
         is_blocking_new_services BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (explorer_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (connection_id) REFERENCES explorer_as_connections(id) ON DELETE CASCADE,
         FOREIGN KEY (as_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (review_id) REFERENCES explorer_as_reviews(id) ON DELETE SET NULL,
-        INDEX idx_explorer_id (explorer_id),
-        INDEX idx_connection_id (connection_id),
-        INDEX idx_is_reviewed (is_reviewed),
-        INDEX idx_blocking (is_blocking_new_services),
-        INDEX idx_due_date (review_due_date),
-        UNIQUE KEY unique_explorer_obligation (explorer_id, connection_id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (explorer_id, connection_id)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_review_obligations_explorer_id ON explorer_review_obligations(explorer_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_review_obligations_connection_id ON explorer_review_obligations(connection_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_review_obligations_is_reviewed ON explorer_review_obligations(is_reviewed)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_review_obligations_blocking ON explorer_review_obligations(is_blocking_new_services)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_explorer_review_obligations_due_date ON explorer_review_obligations(review_due_date)`);
 
     // Chubut localities database
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS chubut_localities (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         department VARCHAR(100) NOT NULL,
         postal_code VARCHAR(10),
@@ -226,29 +233,31 @@ const createExplorerTables = async () => {
         population INT,
         is_active BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        INDEX idx_name (name),
-        INDEX idx_department (department),
-        INDEX idx_active (is_active),
-        UNIQUE KEY unique_locality_department (name, department)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (name, department)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_chubut_localities_name ON chubut_localities(name)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_chubut_localities_department ON chubut_localities(department)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_chubut_localities_active ON chubut_localities(is_active)`);
 
     // User role switching tracking (Explorer can become AS with same account)
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS user_role_switches (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
-        from_role ENUM('client', 'provider') NOT NULL,
-        to_role ENUM('client', 'provider') NOT NULL,
+        from_role VARCHAR(20) NOT NULL CHECK (from_role IN ('client', 'provider')),
+        to_role VARCHAR(20) NOT NULL CHECK (to_role IN ('client', 'provider')),
         switch_reason TEXT,
         switched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         is_active BOOLEAN DEFAULT TRUE,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        INDEX idx_user_id (user_id),
-        INDEX idx_switched_at (switched_at),
-        INDEX idx_active (is_active)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_user_role_switches_user_id ON user_role_switches(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_user_role_switches_switched_at ON user_role_switches(switched_at)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_user_role_switches_active ON user_role_switches(is_active)`);
 
     console.log('✅ Explorer system tables created successfully!');
     
@@ -307,9 +316,10 @@ const insertChubutLocalities = async () => {
     ];
 
     for (const locality of localities) {
-      await pool.execute(`
-        INSERT IGNORE INTO chubut_localities (name, department, postal_code, latitude, longitude, population)
-        VALUES (?, ?, ?, ?, ?, ?)
+      await query(`
+        INSERT INTO chubut_localities (name, department, postal_code, latitude, longitude, population)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        ON CONFLICT (name, department) DO NOTHING
       `, [locality.name, locality.department, locality.postal_code, locality.latitude, locality.longitude, locality.population]);
     }
 

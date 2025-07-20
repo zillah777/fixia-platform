@@ -1,11 +1,11 @@
-const { pool } = require('../src/config/database');
+const { query } = require('../src/config/database');
 
 const createServiceCategories = async () => {
   try {
     console.log('🔄 Inserting comprehensive service categories...');
 
     // Clear existing categories first
-    await pool.execute('DELETE FROM categories');
+    await query('DELETE FROM categories');
 
     const categories = [
       // Servicios para el hogar y la familia
@@ -786,9 +786,10 @@ const createServiceCategories = async () => {
 
     // Insert categories
     for (const category of categories) {
-      await pool.execute(`
+      await query(`
         INSERT INTO categories (name, description, icon, parent_category, sort_order)
-        VALUES (?, ?, ?, ?, ?)
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (name) DO NOTHING
       `, [category.name, category.description, category.icon, category.parent_category, category.sort_order]);
     }
 
@@ -806,13 +807,14 @@ const updateCategoriesTable = async () => {
     console.log('🔄 Updating categories table structure...');
 
     // Add parent_category and sort_order columns if they don't exist
-    await pool.execute(`
-      ALTER TABLE categories 
-      ADD COLUMN IF NOT EXISTS parent_category VARCHAR(100),
-      ADD COLUMN IF NOT EXISTS sort_order INT DEFAULT 0,
-      ADD INDEX IF NOT EXISTS idx_parent_category (parent_category),
-      ADD INDEX IF NOT EXISTS idx_sort_order (sort_order)
-    `);
+    try {
+      await query(`ALTER TABLE categories ADD COLUMN IF NOT EXISTS parent_category VARCHAR(100)`);
+      await query(`ALTER TABLE categories ADD COLUMN IF NOT EXISTS sort_order INT DEFAULT 0`);
+      await query(`CREATE INDEX IF NOT EXISTS idx_categories_parent_category ON categories(parent_category)`);
+      await query(`CREATE INDEX IF NOT EXISTS idx_categories_sort_order ON categories(sort_order)`);
+    } catch (err) {
+      console.log('Some columns may already exist:', err.message);
+    }
 
     console.log('✅ Categories table structure updated successfully!');
 

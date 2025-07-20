@@ -1,30 +1,31 @@
-const { pool } = require('../src/config/database');
+const { query } = require('../src/config/database');
 
 const createASPremiumTables = async () => {
   try {
     console.log('🔄 Creating AS Premium features tables...');
 
     // Work locations for AS
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_work_locations (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
         locality VARCHAR(100) NOT NULL,
         province VARCHAR(100) DEFAULT 'Chubut',
-        travel_radius INT DEFAULT 0 COMMENT 'Radius in kilometers',
+        travel_radius INT DEFAULT 0, -- Radius in kilometers
         is_active BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        INDEX idx_user_id (user_id),
-        INDEX idx_locality (locality),
-        UNIQUE KEY unique_user_location (user_id, locality)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (user_id, locality)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_work_locations_user_id ON as_work_locations(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_work_locations_locality ON as_work_locations(locality)`);
 
     // Work categories for AS
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_work_categories (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
         category_id INT NOT NULL,
         subcategory VARCHAR(100),
@@ -33,58 +34,61 @@ const createASPremiumTables = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
-        INDEX idx_user_id (user_id),
-        INDEX idx_category_id (category_id),
-        UNIQUE KEY unique_user_category (user_id, category_id, subcategory)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (user_id, category_id, subcategory)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_work_categories_user_id ON as_work_categories(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_work_categories_category_id ON as_work_categories(category_id)`);
 
     // AS availability and scheduling
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_availability (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
-        day_of_week ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday') NOT NULL,
+        day_of_week VARCHAR(20) NOT NULL CHECK (day_of_week IN ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')),
         start_time TIME NOT NULL,
         end_time TIME NOT NULL,
         is_active BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        INDEX idx_user_id (user_id),
-        INDEX idx_day (day_of_week),
-        UNIQUE KEY unique_user_day_time (user_id, day_of_week, start_time, end_time)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (user_id, day_of_week, start_time, end_time)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_availability_user_id ON as_availability(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_availability_day ON as_availability(day_of_week)`);
 
     // AS pricing configuration
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_pricing (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
         category_id INT NOT NULL,
-        service_type ENUM('hourly', 'fixed', 'negotiable') NOT NULL,
+        service_type VARCHAR(20) NOT NULL CHECK (service_type IN ('hourly', 'fixed', 'negotiable')),
         base_price DECIMAL(10,2) NOT NULL,
         currency VARCHAR(3) DEFAULT 'ARS',
         minimum_hours DECIMAL(3,1) DEFAULT 1.0,
         travel_cost DECIMAL(10,2) DEFAULT 0,
-        emergency_surcharge DECIMAL(5,2) DEFAULT 0 COMMENT 'Percentage surcharge for emergency services',
+        emergency_surcharge DECIMAL(5,2) DEFAULT 0, -- Percentage surcharge for emergency services
         is_negotiable BOOLEAN DEFAULT FALSE,
         is_active BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
-        INDEX idx_user_id (user_id),
-        INDEX idx_category_id (category_id),
-        UNIQUE KEY unique_user_category_pricing (user_id, category_id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (user_id, category_id)
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_pricing_user_id ON as_pricing(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_pricing_category_id ON as_pricing(category_id)`);
 
     // AS portfolio items
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_portfolio (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
         title VARCHAR(200) NOT NULL,
         description TEXT,
@@ -97,22 +101,23 @@ const createASPremiumTables = async () => {
         is_visible BOOLEAN DEFAULT TRUE,
         sort_order INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
-        INDEX idx_user_id (user_id),
-        INDEX idx_category_id (category_id),
-        INDEX idx_featured (is_featured),
-        INDEX idx_visible (is_visible)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_portfolio_user_id ON as_portfolio(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_portfolio_category_id ON as_portfolio(category_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_portfolio_featured ON as_portfolio(is_featured)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_portfolio_visible ON as_portfolio(is_visible)`);
 
     // AS education and certifications for validation
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_education (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
-        education_type ENUM('formal', 'course', 'certification', 'workshop') NOT NULL,
+        education_type VARCHAR(20) NOT NULL CHECK (education_type IN ('formal', 'course', 'certification', 'workshop')),
         institution_name VARCHAR(200) NOT NULL,
         degree_title VARCHAR(200) NOT NULL,
         field_of_study VARCHAR(200),
@@ -120,22 +125,23 @@ const createASPremiumTables = async () => {
         end_date DATE,
         is_current BOOLEAN DEFAULT FALSE,
         certificate_image VARCHAR(500),
-        verification_status ENUM('pending', 'verified', 'rejected') DEFAULT 'pending',
+        verification_status VARCHAR(20) DEFAULT 'pending' CHECK (verification_status IN ('pending', 'verified', 'rejected')),
         verification_notes TEXT,
         is_visible BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        INDEX idx_user_id (user_id),
-        INDEX idx_education_type (education_type),
-        INDEX idx_verification_status (verification_status)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_education_user_id ON as_education(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_education_education_type ON as_education(education_type)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_education_verification_status ON as_education(verification_status)`);
 
     // AS privacy preferences
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_privacy_settings (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
         show_profile_photo BOOLEAN DEFAULT TRUE,
         show_full_name BOOLEAN DEFAULT TRUE,
@@ -152,16 +158,16 @@ const createASPremiumTables = async () => {
         show_response_time BOOLEAN DEFAULT TRUE,
         allow_direct_contact BOOLEAN DEFAULT TRUE,
         allow_public_reviews BOOLEAN DEFAULT TRUE,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_user_privacy (user_id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (user_id)
+      )
     `);
 
     // AS notification preferences
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_notification_settings (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
         email_new_requests BOOLEAN DEFAULT TRUE,
         email_messages BOOLEAN DEFAULT TRUE,
@@ -175,28 +181,28 @@ const createASPremiumTables = async () => {
         push_marketing BOOLEAN DEFAULT FALSE,
         sms_urgent_requests BOOLEAN DEFAULT FALSE,
         sms_confirmations BOOLEAN DEFAULT FALSE,
-        notification_radius INT DEFAULT 10 COMMENT 'Radius in kilometers for location-based notifications',
+        notification_radius INT DEFAULT 10, -- Radius in kilometers for location-based notifications
         quiet_hours_start TIME DEFAULT '22:00:00',
         quiet_hours_end TIME DEFAULT '08:00:00',
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_user_notifications (user_id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        UNIQUE (user_id)
+      )
     `);
 
     // AS service announcements (multiple categories)
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_service_announcements (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
         title VARCHAR(200) NOT NULL,
         description TEXT NOT NULL,
         category_id INT NOT NULL,
         subcategory VARCHAR(100),
-        service_type ENUM('hourly', 'fixed', 'negotiable') NOT NULL,
+        service_type VARCHAR(20) NOT NULL CHECK (service_type IN ('hourly', 'fixed', 'negotiable')),
         base_price DECIMAL(10,2),
         currency VARCHAR(3) DEFAULT 'ARS',
-        location_type ENUM('client_location', 'my_location', 'both') DEFAULT 'both',
+        location_type VARCHAR(20) DEFAULT 'both' CHECK (location_type IN ('client_location', 'my_location', 'both')),
         requires_materials BOOLEAN DEFAULT FALSE,
         estimated_duration VARCHAR(50),
         availability_note TEXT,
@@ -205,46 +211,48 @@ const createASPremiumTables = async () => {
         views_count INT DEFAULT 0,
         inquiries_count INT DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
-        INDEX idx_user_id (user_id),
-        INDEX idx_category_id (category_id),
-        INDEX idx_active (is_active),
-        INDEX idx_featured (is_featured),
-        INDEX idx_created_at (created_at)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_service_announcements_user_id ON as_service_announcements(user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_service_announcements_category_id ON as_service_announcements(category_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_service_announcements_active ON as_service_announcements(is_active)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_service_announcements_featured ON as_service_announcements(is_featured)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_service_announcements_created_at ON as_service_announcements(created_at)`);
 
     // AS reports about explorers
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS as_explorer_reports (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        reporter_id INT NOT NULL COMMENT 'AS user reporting',
-        reported_user_id INT NOT NULL COMMENT 'Explorer being reported',
+        id SERIAL PRIMARY KEY,
+        reporter_id INT NOT NULL, -- AS user reporting
+        reported_user_id INT NOT NULL, -- Explorer being reported
         booking_id INT,
-        report_type ENUM('suspicious_behavior', 'malicious_intent', 'non_compliance', 'fraud', 'harassment', 'other') NOT NULL,
+        report_type VARCHAR(30) NOT NULL CHECK (report_type IN ('suspicious_behavior', 'malicious_intent', 'non_compliance', 'fraud', 'harassment', 'other')),
         description TEXT NOT NULL,
-        evidence_urls JSON COMMENT 'Array of evidence file URLs',
-        status ENUM('pending', 'investigating', 'resolved', 'dismissed') DEFAULT 'pending',
+        evidence_urls JSONB, -- Array of evidence file URLs
+        status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'investigating', 'resolved', 'dismissed')),
         admin_notes TEXT,
         resolution_date TIMESTAMP NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE CASCADE,
-        FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE SET NULL,
-        INDEX idx_reporter (reporter_id),
-        INDEX idx_reported (reported_user_id),
-        INDEX idx_status (status),
-        INDEX idx_created_at (created_at)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE SET NULL
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_explorer_reports_reporter ON as_explorer_reports(reporter_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_explorer_reports_reported ON as_explorer_reports(reported_user_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_explorer_reports_status ON as_explorer_reports(status)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_as_explorer_reports_created_at ON as_explorer_reports(created_at)`);
 
     // Service requests management
-    await pool.execute(`
+    await query(`
       CREATE TABLE IF NOT EXISTS service_requests (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         client_id INT NOT NULL,
         provider_id INT NOT NULL,
         announcement_id INT,
@@ -259,26 +267,27 @@ const createASPremiumTables = async () => {
         budget_min DECIMAL(10,2),
         budget_max DECIMAL(10,2),
         currency VARCHAR(3) DEFAULT 'ARS',
-        urgency ENUM('low', 'medium', 'high', 'emergency') DEFAULT 'medium',
-        status ENUM('pending', 'accepted', 'rejected', 'cancelled', 'completed') DEFAULT 'pending',
+        urgency VARCHAR(20) DEFAULT 'medium' CHECK (urgency IN ('low', 'medium', 'high', 'emergency')),
+        status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected', 'cancelled', 'completed')),
         provider_response TEXT,
         response_date TIMESTAMP NULL,
         expiry_date TIMESTAMP NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (client_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (provider_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (announcement_id) REFERENCES as_service_announcements(id) ON DELETE SET NULL,
-        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
-        INDEX idx_client (client_id),
-        INDEX idx_provider (provider_id),
-        INDEX idx_status (status),
-        INDEX idx_category (category_id),
-        INDEX idx_location (location_lat, location_lng),
-        INDEX idx_preferred_date (preferred_date),
-        INDEX idx_expiry_date (expiry_date)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+      )
     `);
+    
+    await query(`CREATE INDEX IF NOT EXISTS idx_service_requests_client ON service_requests(client_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_service_requests_provider ON service_requests(provider_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_service_requests_status ON service_requests(status)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_service_requests_category ON service_requests(category_id)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_service_requests_location ON service_requests(location_lat, location_lng)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_service_requests_preferred_date ON service_requests(preferred_date)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_service_requests_expiry_date ON service_requests(expiry_date)`);
 
     console.log('✅ AS Premium tables created successfully!');
     
@@ -307,8 +316,8 @@ const insertDefaultData = async () => {
     ];
 
     for (const category of categories) {
-      await pool.execute(
-        'INSERT IGNORE INTO categories (name, description, icon) VALUES (?, ?, ?)',
+      await query(
+        'INSERT INTO categories (name, description, icon) VALUES ($1, $2, $3) ON CONFLICT (name) DO NOTHING',
         [category.name, category.description, category.icon]
       );
     }
