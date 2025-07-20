@@ -51,7 +51,7 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", "data:", "https:", "*"], // Allow images from any source
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
@@ -59,7 +59,8 @@ app.use(helmet({
       frameSrc: ["'none'"],
     },
   },
-  crossOriginEmbedderPolicy: false
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" } // Allow cross-origin resource sharing
 }));
 app.use(compression());
 app.use(securityHeaders);
@@ -99,7 +100,42 @@ app.use(limiter);
 app.use(validateContentType);
 app.use(express.json({ limit: '5mb' })); // Reduced from 10mb
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// CORS-enabled static file serving with security headers
+app.use('/uploads', (req, res, next) => {
+  // Set CORS headers for static files
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Max-Age', '86400'); // 24 hours cache
+  
+  // Security headers for uploaded files
+  res.header('X-Content-Type-Options', 'nosniff');
+  res.header('X-Frame-Options', 'DENY');
+  res.header('Content-Security-Policy', "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'");
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  // Add cache control for images
+  if (req.path.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+    res.header('Cache-Control', 'public, max-age=31536000'); // 1 year
+  }
+  
+  next();
+}, express.static(path.join(__dirname, 'uploads'), {
+  // Express.static options for security and performance
+  dotfiles: 'deny',
+  index: false,
+  redirect: false,
+  setHeaders: (res, path) => {
+    // Additional security for specific file types
+    if (path.endsWith('.jpg') || path.endsWith('.jpeg') || path.endsWith('.png') || path.endsWith('.webp')) {
+      res.set('Content-Type', 'image/' + path.split('.').pop());
+    }
+  }
+}));
 
 // Health check
 app.get('/health', (req, res) => {
