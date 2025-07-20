@@ -21,6 +21,15 @@ api.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      // Debug log for auth endpoints
+      if (config.url?.includes('/dashboard/') || config.url?.includes('/profile')) {
+        console.log('🔐 Auth token added to request:', config.url, token.substring(0, 20) + '...');
+      }
+    } else {
+      // Debug log when no token found
+      if (config.url?.includes('/dashboard/') || config.url?.includes('/profile')) {
+        console.warn('⚠️ No auth token found for protected endpoint:', config.url);
+      }
     }
     return config;
   },
@@ -43,6 +52,7 @@ api.interceptors.response.use(
       if (errorMessage.includes('Token expirado') || 
           errorMessage.includes('Token inválido') || 
           errorMessage.includes('Token revocado') ||
+          errorMessage.includes('Token de acceso requerido') ||
           errorMessage.includes('Usuario no encontrado') ||
           errorMessage.includes('Cuenta desactivada')) {
         localStorage.removeItem('token');

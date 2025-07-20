@@ -16,28 +16,30 @@ const requireExplorer = async (req, res, next) => {
 // GET /api/explorer-reviews/pending-obligations - Get pending review obligations
 router.get('/pending-obligations', authMiddleware, requireExplorer, async (req, res) => {
   try {
-    const [obligations] = await pool.execute(`
+    const obligationsResult = await query(`
       SELECT ero.*, eac.chat_room_id, eac.final_agreed_price,
              u.first_name as as_name, u.last_name as as_last_name,
              u.profile_photo_url as as_profile_image, u.verification_status,
              esr.title as service_title, c.name as category_name,
-             DATEDIFF(ero.review_due_date, NOW()) as days_remaining
+             EXTRACT(DAY FROM (ero.review_due_date - NOW())) as days_remaining
       FROM explorer_review_obligations ero
       INNER JOIN explorer_as_connections eac ON ero.connection_id = eac.id
       INNER JOIN users u ON ero.as_id = u.id
       LEFT JOIN explorer_service_requests esr ON eac.request_id = esr.id
       LEFT JOIN categories c ON esr.category_id = c.id
-      WHERE ero.explorer_id = ? AND ero.is_reviewed = FALSE
+      WHERE ero.explorer_id = $1 AND ero.is_reviewed = FALSE
       ORDER BY ero.review_due_date ASC
     `, [req.user.id]);
+
+    const obligations = obligationsResult.rows;
 
     // Mark overdue obligations as blocking
     const overdueObligations = obligations.filter(o => o.days_remaining < 0);
     if (overdueObligations.length > 0) {
-      await pool.execute(`
+      await query(`
         UPDATE explorer_review_obligations 
         SET is_blocking_new_services = TRUE 
-        WHERE explorer_id = ? AND is_reviewed = FALSE AND review_due_date < NOW()
+        WHERE explorer_id = $1 AND is_reviewed = FALSE AND review_due_date < NOW()
       `, [req.user.id]);
     }
 

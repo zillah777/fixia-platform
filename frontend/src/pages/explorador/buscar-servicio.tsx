@@ -147,6 +147,39 @@ const BuscarServicioPage: NextPage = () => {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate form
+    const validationErrors = explorerService.validateServiceRequest(formData);
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setSubmitting(true);
+    setErrors([]);
+
+    try {
+      const response = await explorerService.createServiceRequest(formData);
+      
+      if (response.success) {
+        setSuccess(true);
+        // Redirect to dashboard after 3 seconds
+        setTimeout(() => {
+          router.push('/explorador/dashboard');
+        }, 3000);
+      } else {
+        setErrors([response.message || 'Error al crear la solicitud']);
+      }
+    } catch (error: any) {
+      console.error('Error creating service request:', error);
+      setErrors([error.response?.data?.error || 'Error al crear la solicitud']);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const getUrgencyInfo = (urgency: string) => {
     const info = {
       low: { 
