@@ -170,6 +170,10 @@ router.post('/service-request', authMiddleware, requireExplorer, async (req, res
     const expiryDate = new Date();
     expiryDate.setHours(expiryDate.getHours() + (expiryHours[urgency] || 120));
 
+    // Validate and clean date/time fields
+    const cleanPreferredDate = preferred_date && preferred_date.trim() !== '' ? preferred_date : null;
+    const cleanPreferredTime = preferred_time && preferred_time.trim() !== '' ? preferred_time : null;
+
     console.log('📝 Creating service request with params:', {
       explorer_id: req.user.id,
       category_id,
@@ -180,8 +184,8 @@ router.post('/service-request', authMiddleware, requireExplorer, async (req, res
       urgency,
       budget_min,
       budget_max,
-      preferred_date,
-      preferred_time,
+      preferred_date: cleanPreferredDate,
+      preferred_time: cleanPreferredTime,
       flexible_timing,
       expires_at: expiryDate
     });
@@ -196,7 +200,7 @@ router.post('/service-request', authMiddleware, requireExplorer, async (req, res
       RETURNING id
     `, [
       req.user.id, category_id, title, description, locality, specific_address,
-      urgency, budget_min, budget_max, preferred_date, preferred_time, 
+      urgency, budget_min, budget_max, cleanPreferredDate, cleanPreferredTime, 
       flexible_timing, expiryDate
     ]);
 
