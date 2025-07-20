@@ -529,17 +529,23 @@ exports.getServicesByProvider = async (req, res) => {
 // GET /api/services/categories
 exports.getCategories = async (req, res) => {
   try {
-    const result = await query(`
-      SELECT slug as value, name as label, icon
-      FROM categories 
-      WHERE is_active = true
-      ORDER BY name
-    `);
+    // OPTIMIZED: Cache categories data (24h TTL) - static data rarely changes
+    const { getCachedCategories } = require('../utils/cache');
+    
+    const categories = await getCachedCategories(async () => {
+      const result = await query(`
+        SELECT slug as value, name as label, icon
+        FROM categories 
+        WHERE is_active = true
+        ORDER BY name
+      `);
+      return result.rows;
+    });
 
     res.json({
       success: true,
       message: 'Categorías obtenidas exitosamente',
-      data: result.rows
+      data: categories
     });
 
   } catch (error) {

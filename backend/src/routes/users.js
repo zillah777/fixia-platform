@@ -156,29 +156,28 @@ router.get('/:id', async (req, res) => {
 
     // If it's a provider, get additional stats
     if (user.user_type === 'provider') {
-      const serviceStatsResult = await query(
-        'SELECT COUNT(*) as total_services FROM services WHERE provider_id = $1 AND is_active = TRUE',
-        [id]
-      );
-      const serviceStats = serviceStatsResult.rows;
+      // OPTIMIZED: Single query instead of 3 separate queries (N+1 fix)
+      // Combines service count, review stats, and booking count with JOINs
+      const providerStatsResult = await query(`
+        SELECT 
+          COUNT(DISTINCT CASE WHEN s.is_active = TRUE THEN s.id END) as total_services,
+          COUNT(DISTINCT r.id) as total_reviews,
+          ROUND(AVG(r.rating), 2) as average_rating,
+          COUNT(DISTINCT CASE WHEN b.status = 'completed' THEN b.id END) as completed_bookings
+        FROM users u
+        LEFT JOIN services s ON u.id = s.provider_id
+        LEFT JOIN reviews r ON u.id = r.provider_id  
+        LEFT JOIN bookings b ON u.id = b.provider_id
+        WHERE u.id = $1
+        GROUP BY u.id
+      `, [id]);
 
-      const reviewStatsResult = await query(
-        'SELECT COUNT(*) as total_reviews, AVG(rating) as average_rating FROM reviews WHERE provider_id = $1',
-        [id]
-      );
-      const reviewStats = reviewStatsResult.rows;
-
-      const completedBookingsResult = await query(
-        'SELECT COUNT(*) as completed_bookings FROM bookings WHERE provider_id = $1 AND status = $2',
-        [id, 'completed']
-      );
-      const completedBookings = completedBookingsResult.rows;
-
+      const stats = providerStatsResult.rows[0] || {};
       user.stats = {
-        total_services: serviceStats[0].total_services,
-        total_reviews: reviewStats[0].total_reviews,
-        average_rating: parseFloat(reviewStats[0].average_rating) || 0,
-        completed_bookings: completedBookings[0].completed_bookings
+        total_services: parseInt(stats.total_services) || 0,
+        total_reviews: parseInt(stats.total_reviews) || 0,
+        average_rating: parseFloat(stats.average_rating) || 0,
+        completed_bookings: parseInt(stats.completed_bookings) || 0
       };
     }
 

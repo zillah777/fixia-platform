@@ -161,22 +161,24 @@ exports.getProviderStats = async (req, res) => {
 // GET /api/dashboard/general-stats
 exports.getGeneralStats = async (req, res) => {
   try {
-    // Get platform-wide stats
-    const platformStats = await query(`
-      SELECT 
-        COUNT(DISTINCT u.id) FILTER (WHERE u.user_type = 'client') as total_clients,
-        COUNT(DISTINCT u.id) FILTER (WHERE u.user_type = 'provider') as total_providers,
-        COUNT(DISTINCT s.id) as total_services,
-        COUNT(DISTINCT b.id) as total_bookings,
-        COALESCE(AVG(r.rating), 0) as platform_rating
-      FROM users u
-      LEFT JOIN services s ON u.id = s.provider_id
-      LEFT JOIN bookings b ON 1=1
-      LEFT JOIN reviews r ON 1=1
-      WHERE u.is_active = true
-    `);
+    // OPTIMIZED: Cache dashboard stats (5min TTL) - expensive aggregation queries
+    const { getCachedDashboardStats } = require('../utils/cache');
+    
+    const platformStatsData = await getCachedDashboardStats(async () => {
+      // CRITICAL FIX: Replace cartesian product with independent efficient queries
+      // Previous query caused exponential performance degradation (users × services × bookings × reviews)
+      const platformStats = await query(`
+        SELECT 
+          (SELECT COUNT(*) FROM users WHERE user_type = 'client' AND is_active = true) as total_clients,
+          (SELECT COUNT(*) FROM users WHERE user_type = 'provider' AND is_active = true) as total_providers,
+          (SELECT COUNT(*) FROM services WHERE is_active = true) as total_services,
+          (SELECT COUNT(*) FROM bookings) as total_bookings,
+          (SELECT COALESCE(ROUND(AVG(rating), 2), 0) FROM reviews) as platform_rating
+      `);
+      return platformStats.rows[0];
+    });
 
-    const result = platformStats.rows[0] || {
+    const result = platformStatsData || {
       total_clients: 0,
       total_providers: 0,
       total_services: 0,
