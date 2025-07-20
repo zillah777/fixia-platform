@@ -22,7 +22,7 @@ const requireExplorer = async (req, res, next) => {
 router.get('/profile', authMiddleware, requireExplorer, async (req, res) => {
   try {
     let profileResult = await query(`
-      SELECT ep.*, u.first_name, u.last_name, u.email, u.phone, u.profile_image,
+      SELECT ep.*, u.first_name, u.last_name, u.email, u.phone, u.profile_photo_url as profile_image,
              (SELECT AVG(rating) FROM as_explorer_reviews WHERE explorer_id = u.id) as avg_rating,
              (SELECT COUNT(*) FROM as_explorer_reviews WHERE explorer_id = u.id) as total_reviews
       FROM users u
@@ -38,7 +38,7 @@ router.get('/profile', authMiddleware, requireExplorer, async (req, res) => {
       `, [req.user.id]);
       
       profileResult = await query(`
-        SELECT ep.*, u.first_name, u.last_name, u.email, u.phone, u.profile_image,
+        SELECT ep.*, u.first_name, u.last_name, u.email, u.phone, u.profile_photo_url as profile_image,
                0 as avg_rating, 0 as total_reviews
         FROM users u
         INNER JOIN explorer_profiles ep ON u.id = ep.user_id
@@ -260,7 +260,7 @@ router.get('/request/:id/interests', authMiddleware, requireExplorer, async (req
     }
 
     const interestsResult = await query(`
-      SELECT asi.*, u.first_name, u.last_name, u.profile_image, u.verification_status,
+      SELECT asi.*, u.first_name, u.last_name, u.profile_photo_url as profile_image, u.verification_status,
              (SELECT AVG(rating) FROM explorer_as_reviews WHERE as_id = u.id) as avg_rating,
              (SELECT COUNT(*) FROM explorer_as_reviews WHERE as_id = u.id) as total_reviews,
              u.subscription_type
@@ -387,7 +387,7 @@ router.get('/browse-as', authMiddleware, requireExplorer, async (req, res) => {
     } = req.query;
 
     let sqlQuery = `
-      SELECT DISTINCT u.id, u.first_name, u.last_name, u.profile_image, 
+      SELECT DISTINCT u.id, u.first_name, u.last_name, u.profile_photo_url as profile_image, 
              u.verification_status, u.subscription_type, u.created_at,
              (SELECT AVG(rating) FROM explorer_as_reviews WHERE as_id = u.id) as avg_rating,
              (SELECT COUNT(*) FROM explorer_as_reviews WHERE as_id = u.id) as total_reviews,
@@ -426,7 +426,7 @@ router.get('/browse-as', authMiddleware, requireExplorer, async (req, res) => {
       paramIndex++;
     }
 
-    sqlQuery += ` GROUP BY u.id, u.first_name, u.last_name, u.profile_image, u.verification_status, 
+    sqlQuery += ` GROUP BY u.id, u.first_name, u.last_name, u.profile_photo_url, u.verification_status, 
                          u.subscription_type, u.created_at, ap.base_price, ap.service_type, 
                          ap.currency, upi.years_experience, upi.about_me`;
 
