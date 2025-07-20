@@ -103,13 +103,13 @@ router.put('/profile', authMiddleware, requireExplorer, async (req, res) => {
 router.post('/service-request', authMiddleware, requireExplorer, async (req, res) => {
   try {
     // Check if explorer has pending review obligations
-    const [obligations] = await pool.execute(`
+    const obligationsResult = await query(`
       SELECT COUNT(*) as pending_reviews 
       FROM explorer_review_obligations 
-      WHERE explorer_id = ? AND is_reviewed = FALSE AND is_blocking_new_services = TRUE
+      WHERE explorer_id = $1 AND is_reviewed = FALSE AND is_blocking_new_services = TRUE
     `, [req.user.id]);
 
-    if (obligations[0].pending_reviews > 0) {
+    if (obligationsResult.rows[0].pending_reviews > 0) {
       return res.status(403).json(formatError(
         'CALIFICA A LOS AS QUE CONTRATASTE PARA CONTINUAR BUSCANDO A LOS MEJORES. ' +
         'Ve a "Mis Calificaciones" para completar las calificaciones obligatorias.'
@@ -150,24 +150,27 @@ router.post('/service-request', authMiddleware, requireExplorer, async (req, res
     const expiryDate = new Date();
     expiryDate.setHours(expiryDate.getHours() + (expiryHours[urgency] || 120));
 
-    const [result] = await pool.execute(`
+    const result = await query(`
       INSERT INTO explorer_service_requests (
         explorer_id, category_id, title, description, locality, specific_address,
         location_lat, location_lng, urgency, budget_min, budget_max,
         preferred_date, preferred_time, flexible_timing, expires_at
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+      RETURNING id
     `, [
       req.user.id, category_id, title, description, locality, specific_address,
       location_lat, location_lng, urgency, budget_min, budget_max,
       preferred_date, preferred_time, flexible_timing, expiryDate
     ]);
 
+    const insertId = result.rows[0].id;
+
     // Notify relevant AS professionals
-    await notifyRelevantAS(result.insertId, category_id, locality, urgency, req.io);
+    await notifyRelevantAS(insertId, category_id, locality, urgency, req.io);
 
     res.json(formatResponse({
-      request_id: result.insertId,
+      request_id: insertId,
       expires_at: expiryDate
     }, 'Solicitud de servicio creada exitosamente'));
 
@@ -489,7 +492,7 @@ router.get('/as-profile/:id', authMiddleware, requireExplorer, async (req, res) 
 const notifyRelevantAS = async (requestId, categoryId, locality, urgency, io) => {
   try {
     // Find AS that work in this category and locality
-    const [relevantAS] = await pool.execute(`
+    const relevantASResult = await query(`
       SELECT DISTINCT u.id, u.first_name, u.last_name
       FROM users u
       INNER JOIN as_work_categories awc ON u.id = awc.user_id
@@ -498,12 +501,13 @@ const notifyRelevantAS = async (requestId, categoryId, locality, urgency, io) =>
       WHERE u.user_type = 'provider'
         AND u.subscription_type IN ('basic', 'premium')
         AND u.verification_status = 'verified'
-        AND awc.category_id = ?
+        AND awc.category_id = $1
         AND awc.is_active = TRUE
-        AND (awl.locality = ? OR awl.locality = 'Todas las localidades')
+        AND (awl.locality = $2 OR awl.locality = 'Todas las localidades')
         AND awl.is_active = TRUE
         AND (uas.is_available = TRUE OR uas.availability_type = 'online')
     `, [categoryId, locality]);
+    const relevantAS = relevantASResult.rows;
 
     // Send notifications via Socket.IO
     if (io) {
