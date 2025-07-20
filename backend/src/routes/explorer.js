@@ -21,35 +21,36 @@ const requireExplorer = async (req, res, next) => {
 // GET /api/explorer/profile - Get or create Explorer profile
 router.get('/profile', authMiddleware, requireExplorer, async (req, res) => {
   try {
-    let [profile] = await pool.execute(`
+    let profileResult = await query(`
       SELECT ep.*, u.first_name, u.last_name, u.email, u.phone, u.profile_image,
              (SELECT AVG(rating) FROM as_explorer_reviews WHERE explorer_id = u.id) as avg_rating,
              (SELECT COUNT(*) FROM as_explorer_reviews WHERE explorer_id = u.id) as total_reviews
       FROM users u
       LEFT JOIN explorer_profiles ep ON u.id = ep.user_id
-      WHERE u.id = ?
+      WHERE u.id = $1
     `, [req.user.id]);
 
-    if (profile.length === 0 || !profile[0].user_id) {
+    if (profileResult.rows.length === 0 || !profileResult.rows[0].user_id) {
       // Create default explorer profile
-      await pool.execute(`
+      await query(`
         INSERT INTO explorer_profiles (user_id, preferred_localities, preferred_categories)
-        VALUES (?, '[]', '[]')
+        VALUES ($1, '[]', '[]')
       `, [req.user.id]);
       
-      [profile] = await pool.execute(`
+      profileResult = await query(`
         SELECT ep.*, u.first_name, u.last_name, u.email, u.phone, u.profile_image,
                0 as avg_rating, 0 as total_reviews
         FROM users u
         INNER JOIN explorer_profiles ep ON u.id = ep.user_id
-        WHERE u.id = ?
+        WHERE u.id = $1
       `, [req.user.id]);
     }
 
+    const profile = profileResult.rows[0];
     const explorerProfile = {
-      ...profile[0],
-      preferred_localities: profile[0].preferred_localities ? JSON.parse(profile[0].preferred_localities) : [],
-      preferred_categories: profile[0].preferred_categories ? JSON.parse(profile[0].preferred_categories) : []
+      ...profile,
+      preferred_localities: profile.preferred_localities ? JSON.parse(profile.preferred_localities) : [],
+      preferred_categories: profile.preferred_categories ? JSON.parse(profile.preferred_categories) : []
     };
 
     res.json(formatResponse(explorerProfile, 'Perfil de explorador obtenido exitosamente'));
@@ -83,14 +84,14 @@ router.put('/profile', authMiddleware, requireExplorer, async (req, res) => {
       return res.status(400).json(formatError('No hay campos para actualizar'));
     }
 
-    const setClause = Object.keys(updates).map(key => `${key} = ?`).join(', ');
+    const setClause = Object.keys(updates).map((key, index) => `${key} = $${index + 2}`).join(', ');
     const values = Object.values(updates);
 
-    await pool.execute(`
+    await query(`
       INSERT INTO explorer_profiles (user_id, ${Object.keys(updates).join(', ')})
-      VALUES (?, ${Object.keys(updates).map(() => '?').join(', ')})
-      ON DUPLICATE KEY UPDATE ${setClause}, updated_at = NOW()
-    `, [req.user.id, ...values, ...values]);
+      VALUES ($1, ${Object.keys(updates).map((_, index) => `$${index + 2}`).join(', ')})
+      ON CONFLICT (user_id) DO UPDATE SET ${setClause}, updated_at = NOW()
+    `, [req.user.id, ...values]);
 
     res.json(formatResponse(null, 'Perfil de explorador actualizado exitosamente'));
   } catch (error) {
@@ -250,33 +251,33 @@ router.get('/request/:id/interests', authMiddleware, requireExplorer, async (req
     const { id } = req.params;
 
     // Verify request belongs to explorer
-    const [requestCheck] = await pool.execute(`
-      SELECT id FROM explorer_service_requests WHERE id = ? AND explorer_id = ?
+    const requestCheckResult = await query(`
+      SELECT id FROM explorer_service_requests WHERE id = $1 AND explorer_id = $2
     `, [id, req.user.id]);
 
-    if (requestCheck.length === 0) {
+    if (requestCheckResult.rows.length === 0) {
       return res.status(404).json(formatError('Solicitud no encontrada'));
     }
 
-    const [interests] = await pool.execute(`
+    const interestsResult = await query(`
       SELECT asi.*, u.first_name, u.last_name, u.profile_image, u.verification_status,
              (SELECT AVG(rating) FROM explorer_as_reviews WHERE as_id = u.id) as avg_rating,
              (SELECT COUNT(*) FROM explorer_as_reviews WHERE as_id = u.id) as total_reviews,
              u.subscription_type
       FROM as_service_interests asi
       INNER JOIN users u ON asi.as_id = u.id
-      WHERE asi.request_id = ?
+      WHERE asi.request_id = $1
       ORDER BY asi.created_at ASC
     `, [id]);
 
     // Mark interests as viewed by explorer
-    await pool.execute(`
+    await query(`
       UPDATE as_service_interests 
       SET viewed_by_explorer = TRUE 
-      WHERE request_id = ? AND viewed_by_explorer = FALSE
+      WHERE request_id = $1 AND viewed_by_explorer = FALSE
     `, [id]);
 
-    res.json(formatResponse(interests, 'Intereses obtenidos exitosamente'));
+    res.json(formatResponse(interestsResult.rows, 'Intereses obtenidos exitosamente'));
   } catch (error) {
     console.error('Get request interests error:', error);
     res.status(500).json(formatError('Error al obtener intereses'));
@@ -293,62 +294,63 @@ router.post('/accept-as', authMiddleware, requireExplorer, async (req, res) => {
     }
 
     // Get interest details
-    const [interests] = await pool.execute(`
+    const interestsResult = await query(`
       SELECT asi.*, esr.explorer_id, esr.id as request_id
       FROM as_service_interests asi
       INNER JOIN explorer_service_requests esr ON asi.request_id = esr.id
-      WHERE asi.id = ? AND esr.explorer_id = ?
+      WHERE asi.id = $1 AND esr.explorer_id = $2
     `, [interest_id, req.user.id]);
 
-    if (interests.length === 0) {
+    if (interestsResult.rows.length === 0) {
       return res.status(404).json(formatError('Interés no encontrado'));
     }
 
-    const interest = interests[0];
+    const interest = interestsResult.rows[0];
 
     // Create chat room ID
     const chatRoomId = crypto.randomBytes(16).toString('hex');
 
     // Start transaction
-    await pool.execute('START TRANSACTION');
+    await query('BEGIN');
 
     try {
       // Accept the interest
-      await pool.execute(`
+      await query(`
         UPDATE as_service_interests 
         SET status = 'accepted' 
-        WHERE id = ?
+        WHERE id = $1
       `, [interest_id]);
 
       // Reject other interests for this request
-      await pool.execute(`
+      await query(`
         UPDATE as_service_interests 
         SET status = 'rejected' 
-        WHERE request_id = ? AND id != ?
+        WHERE request_id = $1 AND id != $2
       `, [interest.request_id, interest_id]);
 
       // Update request status
-      await pool.execute(`
+      await query(`
         UPDATE explorer_service_requests 
-        SET status = 'in_progress', selected_as_id = ? 
-        WHERE id = ?
+        SET status = 'in_progress', selected_as_id = $1 
+        WHERE id = $2
       `, [interest.as_id, interest.request_id]);
 
       // Create connection record
-      const [connectionResult] = await pool.execute(`
+      const connectionResult = await query(`
         INSERT INTO explorer_as_connections (
           explorer_id, as_id, request_id, connection_type, chat_room_id,
           status, service_started_at, final_agreed_price
         )
-        VALUES (?, ?, ?, 'service_request', ?, 'service_in_progress', NOW(), ?)
+        VALUES ($1, $2, $3, 'service_request', $4, 'service_in_progress', NOW(), $5)
+        RETURNING id
       `, [req.user.id, interest.as_id, interest.request_id, chatRoomId, final_agreed_price]);
 
-      await pool.execute('COMMIT');
+      await query('COMMIT');
 
       // Notify AS via Socket.IO
       if (req.io) {
         req.io.to(`user_${interest.as_id}`).emit('service_accepted', {
-          connection_id: connectionResult.insertId,
+          connection_id: connectionResult.rows[0].id,
           chat_room_id: chatRoomId,
           explorer_name: `${req.user.first_name} ${req.user.last_name}`,
           message: 'Tu propuesta ha sido aceptada. ¡Puedes comenzar a chatear!'
@@ -356,12 +358,12 @@ router.post('/accept-as', authMiddleware, requireExplorer, async (req, res) => {
       }
 
       res.json(formatResponse({
-        connection_id: connectionResult.insertId,
+        connection_id: connectionResult.rows[0].id,
         chat_room_id: chatRoomId
       }, 'AS aceptado exitosamente. Chat iniciado.'));
 
     } catch (transactionError) {
-      await pool.execute('ROLLBACK');
+      await query('ROLLBACK');
       throw transactionError;
     }
 
@@ -384,13 +386,13 @@ router.get('/browse-as', authMiddleware, requireExplorer, async (req, res) => {
       offset = 0
     } = req.query;
 
-    let query = `
+    let sqlQuery = `
       SELECT DISTINCT u.id, u.first_name, u.last_name, u.profile_image, 
              u.verification_status, u.subscription_type, u.created_at,
              (SELECT AVG(rating) FROM explorer_as_reviews WHERE as_id = u.id) as avg_rating,
              (SELECT COUNT(*) FROM explorer_as_reviews WHERE as_id = u.id) as total_reviews,
              ap.base_price, ap.service_type, ap.currency,
-             GROUP_CONCAT(DISTINCT awl.locality) as work_localities,
+             STRING_AGG(DISTINCT awl.locality, ', ') as work_localities,
              upi.years_experience, upi.about_me,
              (SELECT COUNT(*) FROM as_portfolio WHERE user_id = u.id AND is_visible = TRUE) as portfolio_count
       FROM users u
@@ -404,47 +406,54 @@ router.get('/browse-as', authMiddleware, requireExplorer, async (req, res) => {
     `;
 
     const params = [];
+    let paramIndex = 1;
 
     if (category_id) {
-      query += ' AND awc.category_id = ?';
+      sqlQuery += ` AND awc.category_id = $${paramIndex}`;
       params.push(category_id);
+      paramIndex++;
     }
 
     if (locality) {
-      query += ' AND awl.locality = ?';
+      sqlQuery += ` AND awl.locality = $${paramIndex}`;
       params.push(locality);
+      paramIndex++;
     }
 
     if (subscription_type) {
-      query += ' AND u.subscription_type = ?';
+      sqlQuery += ` AND u.subscription_type = $${paramIndex}`;
       params.push(subscription_type);
+      paramIndex++;
     }
 
-    query += ' GROUP BY u.id';
+    sqlQuery += ` GROUP BY u.id, u.first_name, u.last_name, u.profile_image, u.verification_status, 
+                         u.subscription_type, u.created_at, ap.base_price, ap.service_type, 
+                         ap.currency, upi.years_experience, upi.about_me`;
 
     if (min_rating > 0) {
-      query += ' HAVING avg_rating >= ?';
+      sqlQuery += ` HAVING AVG((SELECT AVG(rating) FROM explorer_as_reviews WHERE as_id = u.id)) >= $${paramIndex}`;
       params.push(min_rating);
+      paramIndex++;
     }
 
     // Sorting
     if (sort_by === 'rating') {
-      query += ' ORDER BY avg_rating DESC, total_reviews DESC';
+      sqlQuery += ' ORDER BY avg_rating DESC, total_reviews DESC';
     } else if (sort_by === 'price') {
-      query += ' ORDER BY ap.base_price ASC';
+      sqlQuery += ' ORDER BY ap.base_price ASC';
     } else if (sort_by === 'newest') {
-      query += ' ORDER BY u.created_at DESC';
+      sqlQuery += ' ORDER BY u.created_at DESC';
     }
 
-    query += ' LIMIT ? OFFSET ?';
+    sqlQuery += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
     params.push(parseInt(limit), parseInt(offset));
 
-    const [profiles] = await pool.execute(query, params);
+    const profilesResult = await query(sqlQuery, params);
 
     res.json(formatResponse({
-      profiles: profiles,
-      total: profiles.length,
-      has_more: profiles.length === parseInt(limit)
+      profiles: profilesResult.rows,
+      total: profilesResult.rows.length,
+      has_more: profilesResult.rows.length === parseInt(limit)
     }, 'Perfiles de AS obtenidos exitosamente'));
 
   } catch (error) {
@@ -459,66 +468,66 @@ router.get('/as-profile/:id', authMiddleware, requireExplorer, async (req, res) 
     const { id } = req.params;
 
     // Get AS basic info
-    const [asInfo] = await pool.execute(`
+    const asInfoResult = await query(`
       SELECT u.*, upi.*, 
              (SELECT AVG(rating) FROM explorer_as_reviews WHERE as_id = u.id) as avg_rating,
              (SELECT COUNT(*) FROM explorer_as_reviews WHERE as_id = u.id) as total_reviews
       FROM users u
       LEFT JOIN user_professional_info upi ON u.id = upi.user_id
-      WHERE u.id = ? AND u.user_type = 'provider'
+      WHERE u.id = $1 AND u.user_type = 'provider'
     `, [id]);
 
-    if (asInfo.length === 0) {
+    if (asInfoResult.rows.length === 0) {
       return res.status(404).json(formatError('Perfil de AS no encontrado'));
     }
 
     // Get work categories
-    const [categories] = await pool.execute(`
+    const categoriesResult = await query(`
       SELECT awc.*, c.name as category_name, c.icon as category_icon
       FROM as_work_categories awc
       INNER JOIN categories c ON awc.category_id = c.id
-      WHERE awc.user_id = ? AND awc.is_active = TRUE
+      WHERE awc.user_id = $1 AND awc.is_active = TRUE
     `, [id]);
 
     // Get work locations
-    const [locations] = await pool.execute(`
+    const locationsResult = await query(`
       SELECT * FROM as_work_locations 
-      WHERE user_id = ? AND is_active = TRUE
+      WHERE user_id = $1 AND is_active = TRUE
     `, [id]);
 
     // Get pricing info
-    const [pricing] = await pool.execute(`
+    const pricingResult = await query(`
       SELECT ap.*, c.name as category_name
       FROM as_pricing ap
       INNER JOIN categories c ON ap.category_id = c.id
-      WHERE ap.user_id = ? AND ap.is_active = TRUE
+      WHERE ap.user_id = $1 AND ap.is_active = TRUE
     `, [id]);
 
     // Get portfolio (if visible)
-    const [portfolio] = await pool.execute(`
+    const portfolioResult = await query(`
       SELECT * FROM as_portfolio 
-      WHERE user_id = ? AND is_visible = TRUE 
+      WHERE user_id = $1 AND is_visible = TRUE 
       ORDER BY is_featured DESC, sort_order ASC
       LIMIT 6
     `, [id]);
 
     // Get recent reviews
-    const [reviews] = await pool.execute(`
+    const reviewsResult = await query(`
       SELECT ear.*, u.first_name as explorer_name
       FROM explorer_as_reviews ear
       INNER JOIN users u ON ear.explorer_id = u.id
-      WHERE ear.as_id = ?
+      WHERE ear.as_id = $1
       ORDER BY ear.created_at DESC
       LIMIT 5
     `, [id]);
 
     const profileData = {
-      basic_info: asInfo[0],
-      categories: categories,
-      locations: locations,
-      pricing: pricing,
-      portfolio: portfolio,
-      recent_reviews: reviews
+      basic_info: asInfoResult.rows[0],
+      categories: categoriesResult.rows,
+      locations: locationsResult.rows,
+      pricing: pricingResult.rows,
+      portfolio: portfolioResult.rows,
+      recent_reviews: reviewsResult.rows
     };
 
     res.json(formatResponse(profileData, 'Perfil de AS obtenido exitosamente'));
