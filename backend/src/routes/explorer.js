@@ -1,5 +1,5 @@
 const express = require('express');
-const { pool } = require('../config/database');
+const { query } = require('../config/database');
 const { authMiddleware } = require('../middleware/auth');
 const { formatResponse, formatError } = require('../utils/helpers');
 const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
@@ -137,11 +137,11 @@ router.post('/service-request', authMiddleware, requireExplorer, async (req, res
     }
 
     // Verify locality exists in Chubut
-    const [localityCheck] = await pool.execute(`
-      SELECT id FROM chubut_localities WHERE name = ? AND is_active = TRUE
+    const localityResult = await query(`
+      SELECT id FROM chubut_localities WHERE name = $1 AND is_active = TRUE
     `, [locality]);
 
-    if (localityCheck.length === 0) {
+    if (localityResult.rows.length === 0) {
       return res.status(400).json(formatError('La localidad especificada no está disponible en Chubut'));
     }
 

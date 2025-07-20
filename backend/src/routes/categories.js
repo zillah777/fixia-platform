@@ -47,7 +47,7 @@ router.get('/', async (req, res) => {
 // GET /api/categories/parent-groups - Get unique parent category groups
 router.get('/parent-groups', async (req, res) => {
   try {
-    const [parentGroups] = await pool.execute(`
+    const result = await query(`
       SELECT DISTINCT parent_category, COUNT(*) as count
       FROM categories 
       WHERE parent_category IS NOT NULL
@@ -55,7 +55,7 @@ router.get('/parent-groups', async (req, res) => {
       ORDER BY parent_category ASC
     `);
 
-    const groups = parentGroups.map(group => ({
+    const groups = result.rows.map(group => ({
       name: group.parent_category,
       count: group.count,
       slug: group.parent_category.toLowerCase()
@@ -79,11 +79,12 @@ router.get('/by-parent/:parentName', async (req, res) => {
     // Decode URI component to handle special characters
     const decodedParentName = decodeURIComponent(parentName);
 
-    const [categories] = await pool.execute(`
+    const result = await query(`
       SELECT * FROM categories 
-      WHERE parent_category = ?
+      WHERE parent_category = $1
       ORDER BY sort_order ASC, name ASC
     `, [decodedParentName]);
+    const categories = result.rows;
 
     res.json(formatResponse(categories, `Categorías de "${decodedParentName}" obtenidas exitosamente`));
   } catch (error) {
@@ -101,21 +102,24 @@ router.get('/search', async (req, res) => {
       return res.status(400).json(formatError('Query debe tener al menos 2 caracteres'));
     }
 
-    let query = `
+    let queryText = `
       SELECT * FROM categories 
-      WHERE (name LIKE ? OR description LIKE ?)
+      WHERE (name LIKE $1 OR description LIKE $2)
     `;
     
     const params = [`%${q}%`, `%${q}%`];
+    let paramIndex = 3;
 
     if (parent_category) {
-      query += ' AND parent_category = ?';
+      queryText += ` AND parent_category = $${paramIndex}`;
       params.push(parent_category);
+      paramIndex++;
     }
 
-    query += ' ORDER BY sort_order ASC, name ASC LIMIT 20';
+    queryText += ' ORDER BY sort_order ASC, name ASC LIMIT 20';
 
-    const [categories] = await pool.execute(query, params);
+    const result = await query(queryText, params);
+    const categories = result.rows;
 
     res.json(formatResponse(categories, `${categories.length} categorías encontradas`));
   } catch (error) {
@@ -129,9 +133,10 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [categories] = await pool.execute(`
-      SELECT * FROM categories WHERE id = ?
+    const result = await query(`
+      SELECT * FROM categories WHERE id = $1
     `, [id]);
+    const categories = result.rows;
 
     if (categories.length === 0) {
       return res.status(404).json(formatError('Categoría no encontrada'));
@@ -149,14 +154,15 @@ router.get('/stats/popular', async (req, res) => {
   try {
     const { limit = 10 } = req.query;
 
-    const [popularCategories] = await pool.execute(`
+    const result = await query(`
       SELECT c.*, COUNT(asa.id) as announcements_count
       FROM categories c
       LEFT JOIN as_service_announcements asa ON c.id = asa.category_id AND asa.is_active = TRUE
       GROUP BY c.id
       ORDER BY announcements_count DESC, c.name ASC
-      LIMIT ?
+      LIMIT $1
     `, [parseInt(limit)]);
+    const popularCategories = result.rows;
 
     res.json(formatResponse(popularCategories, 'Categorías populares obtenidas exitosamente'));
   } catch (error) {
