@@ -11,13 +11,13 @@ import {
 export const categoriesService = {
   // Get all categories
   async getAllCategories(): Promise<ServiceCategory[]> {
-    const response = await api.get<CategoriesApiResponse<ServiceCategory[]>>('/categories');
+    const response = await api.get<CategoriesApiResponse<ServiceCategory[]>>('/api/categories');
     return response.data.data;
   },
 
   // Get categories grouped by parent category
   async getGroupedCategories(): Promise<GroupedCategories> {
-    const response = await api.get<CategoriesApiResponse<GroupedCategories>>('/categories', {
+    const response = await api.get<CategoriesApiResponse<GroupedCategories>>('/api/categories', {
       params: { grouped: true }
     });
     return response.data.data;
@@ -25,20 +25,20 @@ export const categoriesService = {
 
   // Get parent category groups
   async getParentGroups(): Promise<CategoryGroup[]> {
-    const response = await api.get<CategoriesApiResponse<CategoryGroup[]>>('/categories/parent-groups');
+    const response = await api.get<CategoriesApiResponse<CategoryGroup[]>>('/api/categories/parent-groups');
     return response.data.data;
   },
 
   // Get categories by parent group
   async getCategoriesByParent(parentName: string): Promise<ServiceCategory[]> {
     const encodedParentName = encodeURIComponent(parentName);
-    const response = await api.get<CategoriesApiResponse<ServiceCategory[]>>(`/categories/by-parent/${encodedParentName}`);
+    const response = await api.get<CategoriesApiResponse<ServiceCategory[]>>(`/api/categories/by-parent/${encodedParentName}`);
     return response.data.data;
   },
 
   // Search categories
   async searchCategories(params: CategorySearchParams): Promise<ServiceCategory[]> {
-    const response = await api.get<CategoriesApiResponse<ServiceCategory[]>>('/categories/search', {
+    const response = await api.get<CategoriesApiResponse<ServiceCategory[]>>('/api/categories/search', {
       params
     });
     return response.data.data;
@@ -46,13 +46,13 @@ export const categoriesService = {
 
   // Get specific category by ID
   async getCategoryById(id: number): Promise<ServiceCategory> {
-    const response = await api.get<CategoriesApiResponse<ServiceCategory>>(`/categories/${id}`);
+    const response = await api.get<CategoriesApiResponse<ServiceCategory>>(`/api/categories/${id}`);
     return response.data.data;
   },
 
   // Get popular categories (based on service announcements)
   async getPopularCategories(limit: number = 10): Promise<PopularCategory[]> {
-    const response = await api.get<CategoriesApiResponse<PopularCategory[]>>('/categories/stats/popular', {
+    const response = await api.get<CategoriesApiResponse<PopularCategory[]>>('/api/categories/stats/popular', {
       params: { limit }
     });
     return response.data.data;
