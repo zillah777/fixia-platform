@@ -225,19 +225,19 @@ router.get('/my-requests', authMiddleware, requireExplorer, async (req, res) => 
   try {
     const { status = 'active' } = req.query;
 
-    const [requests] = await pool.execute(`
+    const result = await query(`
       SELECT esr.*, c.name as category_name, c.icon as category_icon,
              COUNT(asi.id) as interested_as_count,
              (SELECT COUNT(*) FROM as_service_interests WHERE request_id = esr.id AND status = 'pending') as pending_interests
       FROM explorer_service_requests esr
       INNER JOIN categories c ON esr.category_id = c.id
       LEFT JOIN as_service_interests asi ON esr.id = asi.request_id
-      WHERE esr.explorer_id = ? AND esr.status = ?
-      GROUP BY esr.id
+      WHERE esr.explorer_id = $1 AND esr.status = $2
+      GROUP BY esr.id, c.name, c.icon
       ORDER BY esr.created_at DESC
     `, [req.user.id, status]);
 
-    res.json(formatResponse(requests, 'Solicitudes obtenidas exitosamente'));
+    res.json(formatResponse(result.rows, 'Solicitudes obtenidas exitosamente'));
   } catch (error) {
     console.error('Get my requests error:', error);
     res.status(500).json(formatError('Error al obtener solicitudes'));
