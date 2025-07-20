@@ -51,7 +51,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
 
   const filteredCategories = categories.filter(category =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    category.description.toLowerCase().includes(searchTerm.toLowerCase())
+    (category.description && category.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const selectedCategory = categories.find(cat => cat.id === value);
@@ -152,7 +152,9 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
                       <span className="text-lg mr-3">{category.icon}</span>
                       <div>
                         <div className="font-medium">{category.name}</div>
-                        <div className="text-sm text-gray-500">{category.description}</div>
+                        {category.description && (
+                          <div className="text-sm text-gray-500">{category.description}</div>
+                        )}
                       </div>
                       {value === category.id && (
                         <span className="ml-auto text-blue-500">✓</span>

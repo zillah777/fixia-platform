@@ -535,7 +535,9 @@ const LandingPage: NextPage = () => {
                       <h3 className="text-2xl font-bold text-gray-900 mb-4">
                         {category.name}
                       </h3>
-                      <p className="text-gray-600 mb-6">{category.description}</p>
+                      {category.description && (
+                        <p className="text-gray-600 mb-6">{category.description}</p>
+                      )}
                       <div className="flex items-center text-gray-900 font-medium group-hover:translate-x-2 transition-transform">
                         <span>Explorar especialistas</span>
                         <ArrowRightIcon className="h-5 w-5 ml-2" />

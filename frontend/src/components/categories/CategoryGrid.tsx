@@ -86,11 +86,13 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({
             }`}>
               {category.name}
             </h3>
-            <p className={`text-xs mt-1 ${
-              isSelected ? 'text-blue-700' : 'text-gray-600'
-            }`}>
-              {category.description}
-            </p>
+            {category.description && (
+              <p className={`text-xs mt-1 ${
+                isSelected ? 'text-blue-700' : 'text-gray-600'
+              }`}>
+                {category.description}
+              </p>
+            )}
           </div>
           {mode === 'selection' && isSelected && (
             <div className="text-blue-500 text-sm">
