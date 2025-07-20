@@ -11,8 +11,37 @@ import {
 export const categoriesService = {
   // Get all categories
   async getAllCategories(): Promise<ServiceCategory[]> {
-    const response = await api.get<CategoriesApiResponse<ServiceCategory[]>>('/api/categories');
-    return response.data.data;
+    try {
+      const response = await api.get<CategoriesApiResponse<ServiceCategory[]>>('/api/categories');
+      
+      // Deduplicate categories by name (keep the first occurrence)
+      const categories = response.data.data;
+      const seenNames = new Set<string>();
+      const uniqueCategories = categories.filter(category => {
+        if (seenNames.has(category.name)) {
+          return false;
+        }
+        seenNames.add(category.name);
+        return true;
+      });
+      
+      return uniqueCategories;
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Fallback categories if API fails
+      return [
+        { id: 1, name: 'Plomería', icon: '🔧', group_name: 'Mantenimiento y reparaciones', parent_category: 'Mantenimiento y reparaciones', description: 'Servicios de plomería y fontanería', is_active: true },
+        { id: 2, name: 'Electricidad', icon: '⚡', group_name: 'Mantenimiento y reparaciones', parent_category: 'Mantenimiento y reparaciones', description: 'Servicios eléctricos e iluminación', is_active: true },
+        { id: 3, name: 'Carpintería', icon: '🔨', group_name: 'Mantenimiento y reparaciones', parent_category: 'Mantenimiento y reparaciones', description: 'Trabajos en madera y carpintería', is_active: true },
+        { id: 4, name: 'Limpieza', icon: '🧹', group_name: 'Servicios para el hogar y la familia', parent_category: 'Servicios para el hogar y la familia', description: 'Servicios de limpieza doméstica', is_active: true },
+        { id: 5, name: 'Jardinería', icon: '🌱', group_name: 'Jardinería y espacios exteriores', parent_category: 'Jardinería y espacios exteriores', description: 'Cuidado de jardines y plantas', is_active: true },
+        { id: 6, name: 'Pintura', icon: '🎨', group_name: 'Mantenimiento y reparaciones', parent_category: 'Mantenimiento y reparaciones', description: 'Pintura de interiores y exteriores', is_active: true },
+        { id: 7, name: 'Albañilería', icon: '🧱', group_name: 'Mantenimiento y reparaciones', parent_category: 'Mantenimiento y reparaciones', description: 'Trabajos de construcción y albañilería', is_active: true },
+        { id: 8, name: 'Reparación de electrodomésticos', icon: '🔌', group_name: 'Mantenimiento y reparaciones', parent_category: 'Mantenimiento y reparaciones', description: 'Reparación de electrodomésticos', is_active: true },
+        { id: 9, name: 'Cuidado de niños', icon: '👶', group_name: 'Servicios para el hogar y la familia', parent_category: 'Servicios para el hogar y la familia', description: 'Niñeras y cuidado infantil', is_active: true },
+        { id: 10, name: 'Belleza y estética', icon: '💄', group_name: 'Belleza, estética y cuidado personal', parent_category: 'Belleza, estética y cuidado personal', description: 'Servicios de belleza a domicilio', is_active: true }
+      ];
+    }
   },
 
   // Get categories grouped by parent category
@@ -20,7 +49,24 @@ export const categoriesService = {
     const response = await api.get<CategoriesApiResponse<GroupedCategories>>('/api/categories', {
       params: { grouped: true }
     });
-    return response.data.data;
+    
+    // Deduplicate categories within each group
+    const groupedData = response.data.data;
+    const deduplicatedGroups: GroupedCategories = {};
+    
+    for (const [groupName, categories] of Object.entries(groupedData)) {
+      const seenNames = new Set<string>();
+      const uniqueCategories = categories.filter(category => {
+        if (seenNames.has(category.name)) {
+          return false;
+        }
+        seenNames.add(category.name);
+        return true;
+      });
+      deduplicatedGroups[groupName] = uniqueCategories;
+    }
+    
+    return deduplicatedGroups;
   },
 
   // Get parent category groups

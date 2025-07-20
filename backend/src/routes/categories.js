@@ -10,11 +10,12 @@ router.get('/', async (req, res) => {
     const { grouped = false } = req.query;
 
     if (grouped === 'true') {
-      // Get categories grouped by group_name
+      // Get categories grouped by group_name, removing duplicates by name
       const result = await query(`
-        SELECT * FROM categories 
+        SELECT DISTINCT ON (name) id, name, description, icon, group_name, is_active, created_at
+        FROM categories 
         WHERE is_active = TRUE
-        ORDER BY group_name ASC, name ASC
+        ORDER BY name ASC, id ASC
       `);
 
       // Group categories by group_name
@@ -29,11 +30,12 @@ router.get('/', async (req, res) => {
 
       res.json(formatResponse(groupedCategories, 'Categorías agrupadas obtenidas exitosamente'));
     } else {
-      // Get all categories in a flat list
+      // Get all categories in a flat list, removing duplicates by name
       const result = await query(`
-        SELECT * FROM categories 
+        SELECT DISTINCT ON (name) id, name, description, icon, group_name, is_active, created_at
+        FROM categories 
         WHERE is_active = TRUE
-        ORDER BY name ASC
+        ORDER BY name ASC, id ASC
       `);
 
       res.json(formatResponse(result.rows, 'Categorías obtenidas exitosamente'));

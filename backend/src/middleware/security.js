@@ -84,11 +84,35 @@ const securityLogger = (req, res, next) => {
 const validateContentType = (req, res, next) => {
   if (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') {
     const contentType = req.get('Content-Type');
-    if (!contentType || !contentType.includes('application/json')) {
-      return res.status(400).json({
-        success: false,
-        error: 'Content-Type debe ser application/json'
-      });
+    
+    // File upload endpoints that require multipart/form-data
+    const fileUploadPaths = [
+      '/api/users/profile/photo',
+      '/api/services/',
+      '/api/verification/dni',
+      '/api/as-premium/portfolio',
+      '/api/upload'
+    ];
+    
+    // Check if this is a file upload endpoint
+    const isFileUpload = fileUploadPaths.some(path => req.path.includes(path));
+    
+    if (isFileUpload) {
+      // For file uploads, allow multipart/form-data
+      if (!contentType || (!contentType.includes('multipart/form-data') && !contentType.includes('application/json'))) {
+        return res.status(400).json({
+          success: false,
+          error: 'Content-Type debe ser multipart/form-data para uploads de archivos'
+        });
+      }
+    } else {
+      // For other endpoints, require application/json
+      if (!contentType || !contentType.includes('application/json')) {
+        return res.status(400).json({
+          success: false,
+          error: 'Content-Type debe ser application/json'
+        });
+      }
     }
   }
   next();
