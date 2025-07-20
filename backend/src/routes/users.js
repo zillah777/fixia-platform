@@ -51,7 +51,12 @@ router.get('/profile', async (req, res) => {
       return res.status(404).json(formatError('Usuario no encontrado'));
     }
 
-    res.json(formatResponse(sanitizeUser(result.rows[0]), 'Perfil obtenido exitosamente'));
+    const user = result.rows[0];
+    // Map profile_image to profile_photo_url for frontend compatibility
+    if (user.profile_image) {
+      user.profile_photo_url = user.profile_image;
+    }
+    res.json(formatResponse(sanitizeUser(user), 'Perfil obtenido exitosamente'));
 
   } catch (error) {
     console.error('Get profile error:', error);
@@ -100,7 +105,7 @@ router.post('/profile/photo', upload.single('photo'), async (req, res) => {
     const photoUrl = `/uploads/profiles/${req.file.filename}`;
 
     await query(
-      'UPDATE users SET profile_photo_url = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      'UPDATE users SET profile_image = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
       [photoUrl, req.user.id]
     );
 
@@ -118,7 +123,7 @@ router.post('/profile/photo', upload.single('photo'), async (req, res) => {
 router.delete('/profile/photo', async (req, res) => {
   try {
     await query(
-      'UPDATE users SET profile_photo_url = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = $1',
+      'UPDATE users SET profile_image = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = $1',
       [req.user.id]
     );
 
@@ -136,7 +141,7 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
 
     const result = await query(
-      `SELECT id, first_name, last_name, user_type, profile_photo_url, 
+      `SELECT id, first_name, last_name, user_type, profile_image, profile_image as profile_photo_url, 
               address, latitude, longitude, is_verified, created_at
        FROM users WHERE id = $1 AND is_active = TRUE`,
       [id]
