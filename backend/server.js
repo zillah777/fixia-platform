@@ -72,7 +72,9 @@ const corsOptions = {
     const allowedOrigins = [
       'https://fixia-platform.vercel.app',
       'https://fixia.com.ar',
-      'https://www.fixia.com.ar'
+      'https://www.fixia.com.ar',
+      'http://localhost:3000',
+      'https://fixia-frontend.vercel.app'
     ];
     
     // Allow requests with no origin (like mobile apps or curl requests) in development
