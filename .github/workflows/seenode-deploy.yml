@@ -1,0 +1,277 @@
+name: Deploy to SeeNode
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+env:
+  NODE_VERSION: '18.x'
+
+jobs:
+  # Pre-deployment tests
+  pre-deploy-tests:
+    name: Pre-deployment Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fixia_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: Install dependencies
+      working-directory: ./backend
+      run: npm ci
+
+    - name: Run tests
+      working-directory: ./backend
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: fixia_test
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        JWT_SECRET: test-jwt-secret-key
+      run: |
+        npm run migrate
+        npm run test:unit
+        npm run test:integration
+
+    - name: Build check
+      working-directory: ./backend
+      run: npm run build
+
+  # Deploy to SeeNode
+  deploy-seenode:
+    name: Deploy to SeeNode
+    runs-on: ubuntu-latest
+    needs: [pre-deploy-tests]
+    environment: ${{ github.event.inputs.environment || 'production' }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install SeeNode CLI
+      run: |
+        npm install -g @seenode/cli
+        echo "SeeNode CLI installed successfully"
+
+    - name: Authenticate with SeeNode
+      env:
+        SEENODE_TOKEN: ${{ secrets.SEENODE_TOKEN }}
+      run: |
+        seenode auth --token $SEENODE_TOKEN
+        echo "Authenticated with SeeNode successfully"
+
+    - name: Deploy Backend to SeeNode
+      working-directory: ./backend
+      env:
+        SEENODE_APP_ID: ${{ secrets.SEENODE_APP_ID }}
+        ENVIRONMENT: ${{ github.event.inputs.environment || 'production' }}
+      run: |
+        echo "Deploying Fixia backend to SeeNode..."
+        
+        # Deploy application
+        seenode deploy \
+          --app-id $SEENODE_APP_ID \
+          --environment $ENVIRONMENT \
+          --dockerfile Dockerfile.seenode \
+          --config seenode.config.js \
+          --wait
+        
+        echo "Deployment completed successfully"
+
+    - name: Update Environment Variables
+      env:
+        SEENODE_APP_ID: ${{ secrets.SEENODE_APP_ID }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        REDIS_URL: ${{ secrets.REDIS_URL }}
+        MERCADOPAGO_ACCESS_TOKEN: ${{ secrets.MERCADOPAGO_ACCESS_TOKEN }}
+      run: |
+        echo "Updating environment variables..."
+        
+        # Core variables
+        seenode env set DATABASE_URL="$DATABASE_URL" --app-id $SEENODE_APP_ID
+        seenode env set JWT_SECRET="$JWT_SECRET" --app-id $SEENODE_APP_ID
+        seenode env set NODE_ENV="production" --app-id $SEENODE_APP_ID
+        
+        # Optional variables (only set if they exist)
+        if [ ! -z "$SENDGRID_API_KEY" ]; then
+          seenode env set SENDGRID_API_KEY="$SENDGRID_API_KEY" --app-id $SEENODE_APP_ID
+        fi
+        
+        if [ ! -z "$SENTRY_DSN" ]; then
+          seenode env set SENTRY_DSN="$SENTRY_DSN" --app-id $SEENODE_APP_ID
+        fi
+        
+        if [ ! -z "$REDIS_URL" ]; then
+          seenode env set REDIS_URL="$REDIS_URL" --app-id $SEENODE_APP_ID
+        fi
+        
+        if [ ! -z "$MERCADOPAGO_ACCESS_TOKEN" ]; then
+          seenode env set MERCADOPAGO_ACCESS_TOKEN="$MERCADOPAGO_ACCESS_TOKEN" --app-id $SEENODE_APP_ID
+        fi
+        
+        echo "Environment variables updated successfully"
+
+    - name: Run Database Migrations
+      env:
+        SEENODE_APP_ID: ${{ secrets.SEENODE_APP_ID }}
+      run: |
+        echo "Running database migrations..."
+        seenode exec "npm run seenode:migrate" --app-id $SEENODE_APP_ID
+        echo "Migrations completed successfully"
+
+    - name: Run Database Optimization
+      env:
+        SEENODE_APP_ID: ${{ secrets.SEENODE_APP_ID }}
+      run: |
+        echo "Optimizing database performance..."
+        seenode exec "npm run seenode:optimize" --app-id $SEENODE_APP_ID
+        echo "Database optimization completed"
+
+    - name: Health Check
+      env:
+        SEENODE_APP_ID: ${{ secrets.SEENODE_APP_ID }}
+        DEPLOYMENT_URL: ${{ secrets.SEENODE_DEPLOYMENT_URL }}
+      run: |
+        echo "Performing health check..."
+        
+        # Wait for deployment to be ready
+        sleep 30
+        
+        # Health check with retry
+        for i in {1..5}; do
+          if curl -f "$DEPLOYMENT_URL/health"; then
+            echo "✅ Health check passed"
+            break
+          else
+            echo "⚠️ Health check attempt $i failed, retrying..."
+            sleep 10
+          fi
+          
+          if [ $i -eq 5 ]; then
+            echo "❌ Health check failed after 5 attempts"
+            exit 1
+          fi
+        done
+
+    - name: Performance Test
+      env:
+        DEPLOYMENT_URL: ${{ secrets.SEENODE_DEPLOYMENT_URL }}
+      run: |
+        echo "Running basic performance test..."
+        
+        # Test API endpoints
+        curl -f "$DEPLOYMENT_URL/api/system/health"
+        curl -f "$DEPLOYMENT_URL/api/services?limit=5"
+        
+        echo "✅ Performance test completed"
+
+    - name: Notify Deployment Status
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow
+        text: |
+          🚀 Fixia Backend Deployment to SeeNode
+          Status: ${{ job.status }}
+          Environment: ${{ github.event.inputs.environment || 'production' }}
+          URL: ${{ secrets.SEENODE_DEPLOYMENT_URL }}
+
+  # Post-deployment monitoring
+  post-deploy-monitoring:
+    name: Post-deployment Monitoring
+    runs-on: ubuntu-latest
+    needs: [deploy-seenode]
+    if: success()
+
+    steps:
+    - name: Setup Monitoring
+      env:
+        SEENODE_APP_ID: ${{ secrets.SEENODE_APP_ID }}
+        DEPLOYMENT_URL: ${{ secrets.SEENODE_DEPLOYMENT_URL }}
+      run: |
+        echo "Setting up post-deployment monitoring..."
+        
+        # Monitor for 5 minutes
+        for i in {1..10}; do
+          echo "Monitoring check $i/10..."
+          
+          # Check system status
+          if curl -s "$DEPLOYMENT_URL/api/system/status" | grep -q '"success":true'; then
+            echo "✅ System status check passed"
+          else
+            echo "⚠️ System status check failed"
+          fi
+          
+          sleep 30
+        done
+        
+        echo "✅ Post-deployment monitoring completed"
+
+    - name: Generate Deployment Report
+      run: |
+        echo "📊 Deployment Report" > deployment-report.md
+        echo "===================" >> deployment-report.md
+        echo "" >> deployment-report.md
+        echo "**Deployment Details:**" >> deployment-report.md
+        echo "- Environment: ${{ github.event.inputs.environment || 'production' }}" >> deployment-report.md
+        echo "- Commit: ${{ github.sha }}" >> deployment-report.md
+        echo "- Branch: ${{ github.ref_name }}" >> deployment-report.md
+        echo "- Deployment Time: $(date -u)" >> deployment-report.md
+        echo "- Platform: SeeNode.com" >> deployment-report.md
+        echo "" >> deployment-report.md
+        echo "**Status:** ✅ Successful" >> deployment-report.md
+        echo "**URL:** ${{ secrets.SEENODE_DEPLOYMENT_URL }}" >> deployment-report.md
+        
+        cat deployment-report.md
+
+    - name: Upload Deployment Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: seenode-deployment-report
+        path: deployment-report.md
+        retention-days: 30
