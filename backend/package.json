@@ -25,6 +25,9 @@
     "seed": "node scripts/seed.js",
     "db:setup": "node scripts/migrate-postgresql.js",
     "db:reset": "node scripts/reset-db.js",
+    "db:optimize": "node scripts/optimize-database.js",
+    "db:optimize:dry": "node scripts/optimize-database.js --dry-run",
+    "db:stats": "node scripts/optimize-database.js --stats",
     "build": "echo 'Build completed - migrations will run at startup'"
   },
   "keywords": [
@@ -59,6 +62,7 @@
     "socket.io": "^4.7.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
+    "bull": "^4.12.0",
     "uuid": "^9.0.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"

@@ -17,8 +17,14 @@ const { requestLogger, errorLogger, rateLimitLogger } = require('./src/middlewar
 const { testRedisConnection, disconnectRedis } = require('./src/config/redis');
 const { cacheResponse, cacheUserData, warmCache } = require('./src/middleware/redisCache');
 
-// Initialize Swagger
-const { specs, swaggerUi, swaggerOptions } = require('./src/config/swagger');
+// Background Job Queue (optional, with graceful fallback)
+const jobQueue = require('./src/services/jobQueue');
+
+// Initialize Swagger (optional)
+const swaggerConfig = require('./src/config/swagger');
+
+// Asset optimization middleware (optional, non-breaking)
+const { assetOptimization } = require('./src/middleware/assetOptimization');
 
 const { testConnection } = require('./src/config/database');
 const { authMiddleware } = require('./src/middleware/auth');
@@ -126,6 +132,15 @@ app.use(limiter);
 app.use(validateContentType);
 app.use(express.json({ limit: '5mb' })); // Reduced from 10mb
 app.use(express.urlencoded({ extended: true }));
+
+// Asset optimization middleware (enhances existing static file serving)
+app.use('/uploads', assetOptimization({
+  enableCompression: true,
+  enablePerformanceMonitoring: process.env.NODE_ENV !== 'production', // Only in dev/staging
+  enableSmartCaching: false, // Disabled to avoid conflicts with existing cache headers
+  enablePreloadHints: false
+}));
+
 // CORS-enabled static file serving with security headers
 app.use('/uploads', (req, res, next) => {
   // Set CORS headers for static files
@@ -163,8 +178,19 @@ app.use('/uploads', (req, res, next) => {
   }
 }));
 
-// API Documentation with Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, swaggerOptions));
+// API Documentation with Swagger (if available)
+if (swaggerConfig.isAvailable) {
+  app.use('/api-docs', swaggerConfig.swaggerUi.serve, swaggerConfig.swaggerUi.setup(swaggerConfig.specs, swaggerConfig.swaggerOptions));
+} else {
+  // Fallback endpoint when Swagger is not available
+  app.get('/api-docs', (req, res) => {
+    res.json({
+      message: 'API Documentation not available',
+      reason: 'Swagger modules not installed',
+      alternative: 'See README-API.md for API documentation'
+    });
+  });
+}
 
 /**
  * @swagger
@@ -237,6 +263,7 @@ app.use('/api/mutual-confirmation', require('./src/routes/mutual-confirmation'))
 app.use('/api/role-switching', require('./src/routes/role-switching'));
 app.use('/api/dashboard', require('./src/routes/dashboard'));
 app.use('/api/verification', require('./src/routes/verification'));
+app.use('/api/system', require('./src/routes/system-status'));
 
 // Socket.IO connection handling
 io.use((socket, next) => {
@@ -318,6 +345,14 @@ const startServer = async () => {
     } else {
       console.log('✅ Redis connected successfully');
     }
+
+    // Initialize background job queue (optional, graceful fallback)
+    const jobQueueInitialized = jobQueue.initialize();
+    if (jobQueueInitialized) {
+      console.log('✅ Background job queue system initialized');
+    } else {
+      console.warn('⚠️  Job queue not available, jobs will run synchronously');
+    }
     
     server.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
@@ -347,6 +382,9 @@ const gracefulShutdown = async (signal) => {
 
   // Disconnect Redis
   await disconnectRedis();
+
+  // Close job queues
+  await jobQueue.closeQueues();
 
   // Exit process
   process.exit(0);

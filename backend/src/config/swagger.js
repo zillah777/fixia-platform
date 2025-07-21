@@ -1,5 +1,13 @@
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+// Try to require Swagger modules, gracefully handle if not available
+let swaggerJsdoc, swaggerUi;
+try {
+  swaggerJsdoc = require('swagger-jsdoc');
+  swaggerUi = require('swagger-ui-express');
+} catch (error) {
+  console.warn('Swagger modules not available, API documentation disabled:', error.message);
+  swaggerJsdoc = null;
+  swaggerUi = null;
+}
 
 const options = {
   definition: {
@@ -315,30 +323,40 @@ const options = {
   ]
 };
 
-const specs = swaggerJsdoc(options);
+// Generate specs and options only if Swagger is available
+let specs, swaggerOptions;
 
-const swaggerOptions = {
-  customCss: `
-    .swagger-ui .topbar { display: none }
-    .swagger-ui .info .title { color: #1976d2 }
-    .swagger-ui .scheme-container { background: #fafafa; padding: 15px; border-radius: 4px; }
-  `,
-  customSiteTitle: 'Fixia API Documentation',
-  customfavIcon: '/favicon.ico',
-  swaggerOptions: {
-    persistAuthorization: true,
-    displayRequestDuration: true,
-    filter: true,
-    tryItOutEnabled: true,
-    requestInterceptor: (req) => {
-      req.headers['Accept'] = 'application/json';
-      return req;
+if (swaggerJsdoc && swaggerUi) {
+  specs = swaggerJsdoc(options);
+  
+  swaggerOptions = {
+    customCss: `
+      .swagger-ui .topbar { display: none }
+      .swagger-ui .info .title { color: #1976d2 }
+      .swagger-ui .scheme-container { background: #fafafa; padding: 15px; border-radius: 4px; }
+    `,
+    customSiteTitle: 'Fixia API Documentation',
+    customfavIcon: '/favicon.ico',
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      filter: true,
+      tryItOutEnabled: true,
+      requestInterceptor: (req) => {
+        req.headers['Accept'] = 'application/json';
+        return req;
+      }
     }
-  }
-};
+  };
+} else {
+  // Fallback when Swagger is not available
+  specs = null;
+  swaggerOptions = null;
+}
 
 module.exports = {
   specs,
   swaggerUi,
-  swaggerOptions
+  swaggerOptions,
+  isAvailable: !!(swaggerJsdoc && swaggerUi)
 };
