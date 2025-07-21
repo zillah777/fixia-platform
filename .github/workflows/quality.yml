@@ -1,0 +1,326 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run quality checks daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+env:
+  NODE_VERSION: '18.x'
+
+jobs:
+  # Code quality analysis
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for better analysis
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        cd backend && npm ci
+        cd ../frontend && npm ci
+
+    - name: Run ESLint (Backend)
+      working-directory: ./backend
+      run: |
+        npx eslint . --ext .js --format json --output-file eslint-results.json || true
+
+    - name: Run ESLint (Frontend)
+      working-directory: ./frontend
+      run: |
+        npm run lint -- --format json --output-file eslint-results.json || true
+
+    - name: Run SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    - name: Upload ESLint results
+      uses: actions/upload-artifact@v3
+      with:
+        name: eslint-results
+        path: |
+          backend/eslint-results.json
+          frontend/eslint-results.json
+        retention-days: 30
+
+  # Dependency vulnerability check
+  dependency-check:
+    name: Dependency Vulnerability Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        cd backend && npm ci
+        cd ../frontend && npm ci
+
+    - name: Run npm audit (Backend)
+      working-directory: ./backend
+      run: |
+        npm audit --json > audit-results.json || true
+        npm audit --audit-level=high
+
+    - name: Run npm audit (Frontend)
+      working-directory: ./frontend
+      run: |
+        npm audit --json > audit-results.json || true
+        npm audit --audit-level=high
+
+    - name: Check for outdated dependencies
+      run: |
+        cd backend && npm outdated --json > outdated-backend.json || true
+        cd ../frontend && npm outdated --json > outdated-frontend.json || true
+
+    - name: Upload audit results
+      uses: actions/upload-artifact@v3
+      with:
+        name: audit-results
+        path: |
+          backend/audit-results.json
+          frontend/audit-results.json
+          backend/outdated-backend.json
+          frontend/outdated-frontend.json
+        retention-days: 30
+
+  # Performance testing
+  performance-test:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fixia_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        cd backend && npm ci
+        cd ../frontend && npm ci
+
+    - name: Setup test environment
+      working-directory: ./backend
+      run: |
+        cp .env.example .env.test
+        echo "NODE_ENV=test" >> .env.test
+        echo "DB_HOST=localhost" >> .env.test
+        echo "DB_PORT=5432" >> .env.test
+        echo "DB_NAME=fixia_test" >> .env.test
+        echo "DB_USER=postgres" >> .env.test
+        echo "DB_PASSWORD=postgres" >> .env.test
+        echo "JWT_SECRET=test-jwt-secret-key" >> .env.test
+
+    - name: Run database migrations
+      working-directory: ./backend
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: fixia_test
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+      run: npm run migrate
+
+    - name: Start backend server
+      working-directory: ./backend
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: fixia_test
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        JWT_SECRET: test-jwt-secret-key
+        PORT: 5001
+      run: |
+        npm start &
+        echo $! > backend.pid
+        sleep 10
+
+    - name: Install Artillery for load testing
+      run: npm install -g artillery
+
+    - name: Run load tests
+      run: |
+        cat > artillery-config.yml << EOF
+        config:
+          target: 'http://localhost:5001'
+          phases:
+            - duration: 60
+              arrivalRate: 10
+              name: "Warm up"
+            - duration: 120
+              arrivalRate: 20
+              name: "Load test"
+        scenarios:
+          - name: "API Load Test"
+            requests:
+              - get:
+                  url: "/health"
+              - get:
+                  url: "/api/services"
+              - get:
+                  url: "/api/services/categories/list"
+        EOF
+        artillery run artillery-config.yml --output artillery-results.json
+
+    - name: Generate performance report
+      run: |
+        artillery report artillery-results.json --output performance-report.html
+
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-results
+        path: |
+          artillery-results.json
+          performance-report.html
+        retention-days: 30
+
+    - name: Stop backend server
+      if: always()
+      run: |
+        if [ -f backend/backend.pid ]; then
+          kill $(cat backend/backend.pid) || true
+        fi
+
+  # Bundle size analysis
+  bundle-analysis:
+    name: Bundle Size Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm ci
+
+    - name: Build with bundle analyzer
+      working-directory: ./frontend
+      env:
+        ANALYZE: true
+        NODE_ENV: production
+        NEXT_PUBLIC_API_URL: http://localhost:5000
+      run: npm run build
+
+    - name: Upload bundle analysis
+      uses: actions/upload-artifact@v3
+      with:
+        name: bundle-analysis
+        path: frontend/.next/analyze/
+        retention-days: 30
+
+  # Documentation check
+  docs-check:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Check README files
+      run: |
+        echo "Checking documentation completeness..."
+        
+        # Check if main README exists
+        if [ ! -f README.md ]; then
+          echo "❌ Main README.md is missing"
+          exit 1
+        fi
+        
+        # Check if testing documentation exists
+        if [ ! -f README-TESTING.md ]; then
+          echo "❌ README-TESTING.md is missing"
+          exit 1
+        fi
+        
+        # Check if environment example files exist
+        if [ ! -f backend/.env.example ]; then
+          echo "❌ Backend .env.example is missing"
+          exit 1
+        fi
+        
+        if [ ! -f frontend/.env.example ]; then
+          echo "❌ Frontend .env.example is missing"
+          exit 1
+        fi
+        
+        echo "✅ All required documentation files are present"
+
+    - name: Check for TODO comments
+      run: |
+        echo "Checking for TODO comments..."
+        TODO_COUNT=$(grep -r "TODO\|FIXME\|HACK" --include="*.js" --include="*.jsx" --include="*.ts" --include="*.tsx" . | wc -l)
+        echo "Found $TODO_COUNT TODO/FIXME/HACK comments"
+        
+        if [ $TODO_COUNT -gt 50 ]; then
+          echo "⚠️ Warning: High number of TODO comments ($TODO_COUNT)"
+        fi
+
+    - name: Check package.json metadata
+      run: |
+        echo "Checking package.json metadata..."
+        
+        # Check backend package.json
+        cd backend
+        if ! node -e "const pkg = require('./package.json'); if (!pkg.description || !pkg.author || !pkg.version) process.exit(1)"; then
+          echo "❌ Backend package.json is missing required metadata"
+          exit 1
+        fi
+        
+        # Check frontend package.json
+        cd ../frontend
+        if ! node -e "const pkg = require('./package.json'); if (!pkg.description || !pkg.author || !pkg.version) process.exit(1)"; then
+          echo "❌ Frontend package.json is missing required metadata"
+          exit 1
+        fi
+        
+        echo "✅ Package.json metadata is complete"

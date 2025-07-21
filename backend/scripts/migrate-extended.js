@@ -39,8 +39,8 @@ const createExtendedTables = async () => {
       await query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS gender VARCHAR(20)`);
       
       // Add CHECK constraints for enum-like fields
-      await query(`ALTER TABLE users ADD CONSTRAINT IF NOT EXISTS check_verification_status CHECK (verification_status IN ('pending', 'in_review', 'verified', 'rejected'))`);
-      await query(`ALTER TABLE users ADD CONSTRAINT IF NOT EXISTS check_subscription_type CHECK (subscription_type IN ('free', 'basic', 'premium'))`);
+      await query(`ALTER TABLE users ADD CONSTRAINT check_verification_status CHECK (verification_status IN ('pending', 'in_review', 'verified', 'rejected'))`);
+      await query(`ALTER TABLE users ADD CONSTRAINT check_subscription_type CHECK (subscription_type IN ('free', 'basic', 'premium'))`);
     } catch (err) {
       console.log('Some columns may already exist:', err.message);
     }

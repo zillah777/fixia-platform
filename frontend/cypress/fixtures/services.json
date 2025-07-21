@@ -1,0 +1,38 @@
+{
+  "cleaningService": {
+    "title": "Professional House Cleaning",
+    "description": "Complete house cleaning service with professional equipment and eco-friendly products. We clean every corner of your house to leave it spotless.",
+    "price": 150.00,
+    "category": "Limpieza",
+    "duration": 120,
+    "location": "Rawson, Chubut",
+    "requirements": "Access to water and electricity required. Please ensure pets are secured during cleaning."
+  },
+  "plumbingService": {
+    "title": "Emergency Plumbing Repair",
+    "description": "Fast and reliable plumbing repair service available 24/7. We fix leaks, unclog drains, and repair fixtures.",
+    "price": 200.00,
+    "category": "Plomería",
+    "duration": 90,
+    "location": "Puerto Madryn, Chubut",
+    "requirements": "Access to plumbing area required. Additional costs may apply for parts and materials."
+  },
+  "electricalService": {
+    "title": "Electrical Installation & Repair",
+    "description": "Licensed electrician for all your electrical needs. Installation, repair, and maintenance of electrical systems.",
+    "price": 180.00,
+    "category": "Electricidad",
+    "duration": 150,
+    "location": "Comodoro Rivadavia, Chubut",
+    "requirements": "Must turn off main electrical breaker before service. Safety equipment will be provided."
+  },
+  "gardeningService": {
+    "title": "Garden Maintenance & Landscaping",
+    "description": "Complete garden care including pruning, weeding, planting, and landscape design. Transform your outdoor space.",
+    "price": 120.00,
+    "category": "Jardinería",
+    "duration": 180,
+    "location": "Trelew, Chubut",
+    "requirements": "Access to garden area and water source required. Weather dependent service."
+  }
+}

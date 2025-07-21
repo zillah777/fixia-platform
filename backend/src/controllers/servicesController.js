@@ -1,4 +1,7 @@
 const { query } = require('../config/database');
+const cacheService = require('../services/cacheService');
+const { CACHE_TTL } = require('../config/redis');
+const logger = require('../utils/logger');
 
 // GET /api/services
 exports.getServices = async (req, res) => {
@@ -15,6 +18,36 @@ exports.getServices = async (req, res) => {
       page = 1,
       limit = 10
     } = req.query;
+
+    // Create cache key based on filters
+    const filters = {
+      category,
+      latitude,
+      longitude,
+      radius,
+      min_price,
+      max_price,
+      min_rating,
+      search,
+      page,
+      limit
+    };
+
+    // Try to get cached results first
+    const cachedServices = await cacheService.getCachedServicesList(filters);
+    if (cachedServices) {
+      logger.debug('Services list cache hit', {
+        category: 'cache',
+        filters
+      });
+      
+      return res.json({
+        success: true,
+        services: cachedServices.services,
+        pagination: cachedServices.pagination,
+        cached: true
+      });
+    }
 
     let whereConditions = ['s.is_active = true'];
     let params = [];
@@ -147,18 +180,30 @@ exports.getServices = async (req, res) => {
     const countResult = await query(countQuery, params.slice(0, -2));
     const total = parseInt(countResult.rows[0].total);
 
+    const responseData = {
+      services: result.rows,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    };
+
+    // Cache the results for future requests
+    await cacheService.cacheServicesList(filters, responseData, CACHE_TTL.MEDIUM);
+    
+    logger.debug('Services list cached', {
+      category: 'cache',
+      filters,
+      count: result.rows.length
+    });
+
     res.json({
       success: true,
       message: 'Servicios obtenidos exitosamente',
-      data: {
-        services: result.rows,
-        pagination: {
-          page: parseInt(page),
-          limit: parseInt(limit),
-          total,
-          pages: Math.ceil(total / limit)
-        }
-      }
+      data: responseData,
+      cached: false
     });
 
   } catch (error) {
@@ -174,6 +219,22 @@ exports.getServices = async (req, res) => {
 exports.getServiceById = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Try to get cached service first
+    const cachedService = await cacheService.getCachedService(id);
+    if (cachedService) {
+      logger.debug('Service cache hit', {
+        category: 'cache',
+        serviceId: id
+      });
+      
+      return res.json({
+        success: true,
+        message: 'Servicio obtenido exitosamente',
+        data: { service: cachedService },
+        cached: true
+      });
+    }
 
     const result = await query(`
       SELECT 
@@ -222,10 +283,21 @@ exports.getServiceById = async (req, res) => {
       [id]
     );
 
+    const serviceData = result.rows[0];
+
+    // Cache the service for future requests
+    await cacheService.cacheService(serviceData, CACHE_TTL.LONG);
+    
+    logger.debug('Service cached', {
+      category: 'cache',
+      serviceId: id
+    });
+
     res.json({
       success: true,
       message: 'Servicio obtenido exitosamente',
-      data: result.rows[0]
+      data: { service: serviceData },
+      cached: false
     });
 
   } catch (error) {

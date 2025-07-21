@@ -1,3 +1,5 @@
+const { withSentryConfig } = require("@sentry/nextjs");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -48,4 +50,36 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// Sentry configuration
+const sentryConfig = {
+  // For all available options, see:
+  // https://github.com/getsentry/sentry-webpack-plugin#options
+
+  // Suppresses source map uploading logs during build
+  silent: true,
+  
+  // Automatically tree-shake Sentry logger statements
+  disableLogger: true,
+  
+  // Hides source maps from generated client bundles
+  hideSourceMaps: true,
+  
+  // Upload source maps to Sentry
+  widenClientFileUpload: true,
+  
+  // Transpiles SDK to be compatible with IE11
+  transpileClientSDK: true,
+  
+  // Routes browser requests to Sentry through a Next.js rewrite
+  tunnelRoute: "/monitoring",
+  
+  // Only run Sentry build plugin in production
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+};
+
+// Make sure adding Sentry options is the last code to run before exporting
+module.exports = process.env.NODE_ENV === 'production' 
+  ? withSentryConfig(nextConfig, sentryConfig)
+  : nextConfig;

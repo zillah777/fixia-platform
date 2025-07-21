@@ -54,7 +54,7 @@ const createPromotionalTables = async () => {
       await query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS currency VARCHAR(3) DEFAULT 'ARS'`);
       await query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS billing_cycle VARCHAR(20) DEFAULT 'monthly'`);
       await query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS trial_days INT DEFAULT 0`);
-      await query(`ALTER TABLE subscriptions ADD CONSTRAINT IF NOT EXISTS check_billing_cycle CHECK (billing_cycle IN ('monthly'))`);
+      await query(`ALTER TABLE subscriptions ADD CONSTRAINT check_billing_cycle CHECK (billing_cycle IN ('monthly'))`);
     } catch (err) {
       console.log('Some subscription table modifications may already exist:', err.message);
     }

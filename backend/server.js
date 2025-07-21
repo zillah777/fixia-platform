@@ -8,16 +8,35 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 require('dotenv').config();
 
+// Initialize Sentry first
+const { initSentry, sentryRequestHandler, sentryTracingHandler, sentryErrorHandler } = require('./src/config/sentry');
+const logger = require('./src/utils/logger');
+const { requestLogger, errorLogger, rateLimitLogger } = require('./src/middleware/logging');
+
+// Initialize Redis and Cache
+const { testRedisConnection, disconnectRedis } = require('./src/config/redis');
+const { cacheResponse, cacheUserData, warmCache } = require('./src/middleware/redisCache');
+
+// Initialize Swagger
+const { specs, swaggerUi, swaggerOptions } = require('./src/config/swagger');
+
 const { testConnection } = require('./src/config/database');
 const { authMiddleware } = require('./src/middleware/auth');
 const { securityHeaders, validateContentType, validateBodySize, securityLogger } = require('./src/middleware/security');
 
 const app = express();
 
+// Initialize Sentry
+initSentry(app);
+
 // Trust proxy for Railway deployment
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
+
+// Sentry request handler (must be first middleware)
+app.use(sentryRequestHandler());
+app.use(sentryTracingHandler());
 
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -29,7 +48,7 @@ const io = socketIo(server, {
 
 const PORT = process.env.PORT || 5000;
 
-// Rate limiting
+// Rate limiting with logging
 const limiter = rateLimit({
   windowMs: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000,
   max: process.env.RATE_LIMIT_MAX || 100,
@@ -37,6 +56,13 @@ const limiter = rateLimit({
     error: 'Demasiadas solicitudes desde esta IP, intenta de nuevo más tarde.'
   }
 });
+
+// Request logging middleware
+app.use(requestLogger);
+app.use(rateLimitLogger);
+
+// Cache warming middleware
+app.use(warmCache());
 
 // Middleware to inject Socket.IO
 app.use((req, res, next) => {
@@ -137,7 +163,38 @@ app.use('/uploads', (req, res, next) => {
   }
 }));
 
-// Health check
+// API Documentation with Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, swaggerOptions));
+
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check endpoint
+ *     tags: [Health]
+ *     responses:
+ *       200:
+ *         description: Service is healthy
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: OK
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2024-07-21T12:00:00.000Z
+ *                 uptime:
+ *                   type: number
+ *                   example: 3600.5
+ *                   description: Server uptime in seconds
+ *                 version:
+ *                   type: string
+ *                   example: v1.0.1-auth-fix
+ */
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -217,9 +274,20 @@ io.on('connection', (socket) => {
 });
 
 // Error handling middleware
+app.use(errorLogger);
+app.use(sentryErrorHandler());
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
+  // Log error (already logged by errorLogger, but this is fallback)
+  logger.error('Unhandled error in request', err, {
+    request: {
+      method: req.method,
+      originalUrl: req.originalUrl,
+      ip: req.ip
+    },
+    user: req.user
+  });
+  
+  res.status(err.statusCode || 500).json({
     error: 'Algo salió mal en el servidor',
     ...(process.env.NODE_ENV === 'development' && { details: err.message })
   });
@@ -241,6 +309,15 @@ const startServer = async () => {
       console.warn('⚠️  Database not connected, but starting server anyway');
       console.warn('⚠️  Some endpoints may not work until database is available');
     }
+
+    // Test Redis connection but don't fail if it's not available
+    const redisConnected = await testRedisConnection();
+    if (!redisConnected) {
+      console.warn('⚠️  Redis not connected, falling back to in-memory cache');
+      console.warn('⚠️  Performance may be reduced without Redis');
+    } else {
+      console.log('✅ Redis connected successfully');
+    }
     
     server.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
@@ -256,6 +333,42 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
+// Graceful shutdown handlers
+const gracefulShutdown = async (signal) => {
+  logger.info(`Received ${signal}, shutting down gracefully...`, {
+    category: 'server'
+  });
+
+  // Close server
+  server.close(() => {
+    logger.info('HTTP server closed', { category: 'server' });
+  });
+
+  // Disconnect Redis
+  await disconnectRedis();
+
+  // Exit process
+  process.exit(0);
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught Exception', error, { category: 'server' });
+  gracefulShutdown('uncaughtException');
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection', new Error(reason), {
+    category: 'server',
+    promise: promise.toString()
+  });
+  gracefulShutdown('unhandledRejection');
+});
 
 startServer();
 

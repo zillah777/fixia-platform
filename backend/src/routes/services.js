@@ -3,6 +3,8 @@ const multer = require('multer');
 const path = require('path');
 const servicesController = require('../controllers/servicesController');
 const { authMiddleware, requireProvider } = require('../middleware/auth');
+const { cacheResponse, invalidateCache } = require('../middleware/redisCache');
+const { CACHE_TTL } = require('../config/redis');
 
 const router = express.Router();
 
@@ -33,20 +35,122 @@ const upload = multer({
   }
 });
 
-// GET /api/services - List services with filters
-router.get('/', servicesController.getServices);
+/**
+ * @swagger
+ * /api/services:
+ *   get:
+ *     summary: Get list of services with optional filters
+ *     tags: [Services]
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter by service category
+ *         example: Limpieza
+ *       - in: query
+ *         name: location
+ *         schema:
+ *           type: string
+ *         description: Filter by location
+ *         example: Comodoro Rivadavia
+ *       - in: query
+ *         name: min_price
+ *         schema:
+ *           type: number
+ *         description: Minimum price filter
+ *         example: 1000
+ *       - in: query
+ *         name: max_price
+ *         schema:
+ *           type: number
+ *         description: Maximum price filter
+ *         example: 5000
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search in title and description
+ *         example: limpieza hogar
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Page number for pagination
+ *         example: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *         description: Number of items per page
+ *         example: 10
+ *     responses:
+ *       200:
+ *         description: List of services
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 services:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Service'
+ *                 pagination:
+ *                   $ref: '#/components/schemas/PaginationMeta'
+ *                 cached:
+ *                   type: boolean
+ *                   example: false
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.get('/', 
+  cacheResponse({ 
+    ttl: CACHE_TTL.MEDIUM,
+    keyGenerator: (req) => `services:list:${JSON.stringify(req.query)}`
+  }), 
+  servicesController.getServices
+);
 
-// GET /api/services/:id - Get service details
-router.get('/:id', servicesController.getServiceById);
+// GET /api/services/:id - Get service details (cached)
+router.get('/:id', 
+  cacheResponse({ 
+    ttl: CACHE_TTL.LONG,
+    keyGenerator: (req) => `service:${req.params.id}`
+  }), 
+  servicesController.getServiceById
+);
 
-// POST /api/services - Create service (providers only)
-router.post('/', authMiddleware, servicesController.createService);
+// POST /api/services - Create service (providers only) with cache invalidation
+router.post('/', 
+  authMiddleware, 
+  invalidateCache({ serviceSpecific: true, userSpecific: true }),
+  servicesController.createService
+);
 
-// PUT /api/services/:id - Update service
-router.put('/:id', authMiddleware, servicesController.updateService);
+// PUT /api/services/:id - Update service with cache invalidation
+router.put('/:id', 
+  authMiddleware, 
+  invalidateCache({ serviceSpecific: true, userSpecific: true }),
+  servicesController.updateService
+);
 
-// DELETE /api/services/:id - Delete service
-router.delete('/:id', authMiddleware, servicesController.deleteService);
+// DELETE /api/services/:id - Delete service with cache invalidation
+router.delete('/:id', 
+  authMiddleware, 
+  invalidateCache({ serviceSpecific: true, userSpecific: true }),
+  servicesController.deleteService
+);
 
 // GET /api/services/provider/:providerId - Get services by provider
 router.get('/provider/:providerId', servicesController.getServicesByProvider);
@@ -93,7 +197,13 @@ router.post('/:id/images', authMiddleware, requireProvider, upload.array('images
   }
 });
 
-// GET /api/services/categories/list - Get available categories
-router.get('/categories/list', servicesController.getCategories);
+// GET /api/services/categories/list - Get available categories (cached)
+router.get('/categories/list', 
+  cacheResponse({ 
+    ttl: CACHE_TTL.VERY_LONG,
+    keyGenerator: () => 'categories:list'
+  }),
+  servicesController.getCategories
+);
 
 module.exports = router;
