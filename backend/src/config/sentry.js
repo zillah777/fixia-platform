@@ -1,5 +1,4 @@
 const Sentry = require("@sentry/node");
-const { nodeProfilingIntegration } = require("@sentry/profiling-node");
 
 const initSentry = (app) => {
   // Only initialize Sentry in production or staging
@@ -12,13 +11,9 @@ const initSentry = (app) => {
         new Sentry.Integrations.Http({ tracing: true }),
         // enable Express.js middleware tracing
         new Sentry.Integrations.Express({ app }),
-        // enable profiling
-        nodeProfilingIntegration(),
       ],
       // Performance Monitoring
       tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-      // Set profiling sample rate
-      profilesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
       // Capture 100% of the transactions for performance monitoring in development
       beforeSend(event) {
         // Don't send events in test environment

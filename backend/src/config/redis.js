@@ -1,4 +1,11 @@
-const Redis = require('ioredis');
+// Try to require Redis, gracefully handle if not available
+let Redis;
+try {
+  Redis = require('ioredis');
+} catch (error) {
+  console.warn('Redis (ioredis) not available, using mock Redis:', error.message);
+  Redis = null;
+}
 const logger = require('../utils/logger');
 
 // Redis configuration
@@ -28,6 +35,12 @@ let isConnected = false;
 const createRedisClient = () => {
   if (redisClient) {
     return redisClient;
+  }
+
+  // Skip Redis if ioredis module is not available
+  if (!Redis) {
+    logger.warn('Redis module not available, using mock Redis');
+    return createMockRedis();
   }
 
   // Skip Redis in test environment unless explicitly enabled
