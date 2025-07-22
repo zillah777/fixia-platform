@@ -52,7 +52,7 @@ const io = socketIo(server, {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 // Rate limiting with logging
 const limiter = rateLimit({
