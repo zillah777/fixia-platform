@@ -15,89 +15,105 @@ Esta guía te llevará paso a paso para migrar el backend de Fixia.com.ar desde 
 
 ### Herramientas Requeridas
 ```bash
-# Instalar SeeNode CLI
-npm install -g @seenode/cli
-
-# Verificar instalación
-seenode --version
+# SeeNode utiliza deployment basado en Git/GitHub
+# No requiere CLI específico, usa dashboard web y Git integration
+# Verificar acceso a:
+# - Dashboard: https://www.seenode.com
+# - GitHub repository: github.com/zillah777/fixia-platform
 ```
 
 ## 🚀 Paso 1: Preparación en SeeNode
 
 ### 1.1 Crear Nueva Aplicación
 ```bash
-# Autenticarse en SeeNode
-seenode login
-
-# Crear nueva aplicación
-seenode create fixia-backend \
-  --runtime nodejs \
-  --version 18 \
-  --region us-east-1
+# 1. Ir a https://www.seenode.com
+# 2. Crear cuenta o iniciar sesión
+# 3. Crear nueva aplicación:
+#    - Nombre: fixia-backend
+#    - Runtime: Node.js 18
+#    - Region: US East (recomendado para Argentina)
+# 4. Conectar repositorio GitHub: zillah777/fixia-platform
+# 5. Configurar directorio: /backend
 ```
 
 ### 1.2 Configurar Base de Datos
 ```bash
-# Agregar PostgreSQL add-on
-seenode addons create postgresql:standard \
-  --app fixia-backend
-
-# Obtener URL de conexión
-seenode config --app fixia-backend
+# En el dashboard de SeeNode:
+# 1. Ir a "Add-ons" o "Services"
+# 2. Agregar PostgreSQL (Standard plan recomendado)
+# 3. Copiar la DATABASE_URL generada
+# 4. Agregar a variables de entorno
 ```
 
 ### 1.3 Configurar Redis (Opcional)
 ```bash
-# Agregar Redis add-on
-seenode addons create redis:basic \
-  --app fixia-backend
+# En el dashboard de SeeNode:
+# 1. Agregar Redis add-on (Basic plan)
+# 2. Copiar la REDIS_URL generada
+# 3. Agregar a variables de entorno
 ```
 
 ## 🔧 Paso 2: Configuración de Variables de Entorno
 
-### 2.1 Variables Críticas
+### 2.1 Variables Críticas (Configurar en Dashboard)
 ```bash
-# Variables core (REQUERIDAS)
-seenode config:set DATABASE_URL="postgresql://..." --app fixia-backend
-seenode config:set JWT_SECRET="your-64-char-secret" --app fixia-backend
-seenode config:set NODE_ENV="production" --app fixia-backend
+# En SeeNode Dashboard > App Settings > Environment Variables:
 
-# Variables de integración
-seenode config:set SENDGRID_API_KEY="your-key" --app fixia-backend
-seenode config:set SENTRY_DSN="your-dsn" --app fixia-backend
-seenode config:set MERCADOPAGO_ACCESS_TOKEN="your-token" --app fixia-backend
+# Variables CORE (REQUERIDAS):
+DATABASE_URL=postgresql://...         # De PostgreSQL add-on
+JWT_SECRET=your-64-char-secret       # Generar string seguro de 64+ chars
+NODE_ENV=production                  # Ambiente de producción
+
+# Variables de INTEGRACIÓN:
+SENDGRID_API_KEY=your-sendgrid-key   # Para emails
+SENTRY_DSN=your-sentry-dsn           # Para monitoring
+MERCADOPAGO_ACCESS_TOKEN=your-token  # Para pagos
 ```
 
 ### 2.2 Variables Opcionales
 ```bash
-# Redis (si usas el add-on)
-seenode config:set REDIS_URL="redis://..." --app fixia-backend
+# En SeeNode Dashboard > Environment Variables:
 
-# Dominio personalizado
-seenode config:set FRONTEND_URL="https://fixia.com.ar" --app fixia-backend
-seenode config:set CORS_ORIGIN="https://fixia.com.ar,https://www.fixia.com.ar" --app fixia-backend
+# CACHE Y PERFORMANCE:
+REDIS_URL=redis://...                # De Redis add-on (opcional)
+
+# FRONTEND INTEGRATION:
+FRONTEND_URL=https://fixia.com.ar
+CORS_ORIGIN=https://fixia.com.ar,https://www.fixia.com.ar
+
+# CDN Y ASSETS:
+CDN_BASE_URL=https://cdn.fixia.com.ar
+CLOUDFLARE_DOMAIN=fixia.com.ar
 ```
 
 ## 📦 Paso 3: Deployment
 
-### 3.1 Deployment Manual (Primera vez)
+### 3.1 Deployment Automático (Git-based)
 ```bash
-# Desde el directorio backend/
-seenode deploy \
-  --app fixia-backend \
-  --dockerfile Dockerfile.seenode \
-  --config seenode.config.js
+# SeeNode se conecta directamente a GitHub:
+
+# 1. En Dashboard > Deployment Settings:
+#    - Conectar repositorio: zillah777/fixia-platform
+#    - Branch: main
+#    - Build directory: /backend
+#    - Dockerfile: Dockerfile.seenode
+
+# 2. Configurar build commands:
+#    - Build: npm ci --production
+#    - Start: node server.js
+
+# 3. Hacer push para trigger deployment:
+git push origin main  # Auto-deploy activado
 ```
 
 ### 3.2 Verificar Deployment
 ```bash
-# Verificar estado
-seenode ps --app fixia-backend
+# En SeeNode Dashboard:
+# 1. Ir a "Deployments" para ver status
+# 2. Ver logs en tiempo real en "Logs" tab
+# 3. Verificar métricas en "Metrics"
 
-# Ver logs
-seenode logs --app fixia-backend --tail
-
-# Health check
+# Health check desde terminal:
 curl https://your-app.seenode.com/health
 ```
 

@@ -7,7 +7,7 @@ module.exports = {
   // Application Configuration
   app: {
     name: 'fixia-backend',
-    port: process.env.PORT || 5000,
+    port: process.env.PORT || 8080,
     node_version: '18.x',
     main: 'server.js',
     
