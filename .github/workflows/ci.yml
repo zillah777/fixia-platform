@@ -224,8 +224,8 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
 
-    - name: Install root dependencies
-      run: npm ci
+    - name: Skip root dependencies (no longer using workspaces)
+      run: echo "Skipping root dependencies - using individual frontend/backend installs"
 
     - name: Install backend dependencies
       working-directory: ./backend
