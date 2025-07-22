@@ -3,7 +3,6 @@
   "buildCommand": "cd .. && npm run build --workspace=frontend",
   "outputDirectory": ".next",
   "installCommand": "cd .. && npm install --workspace=frontend",
-  "rootDirectory": "frontend",
   "env": {
     "NEXT_PUBLIC_API_URL": "https://fixia-platform-production.up.railway.app"
   },
