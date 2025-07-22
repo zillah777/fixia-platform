@@ -123,29 +123,6 @@ const BuscarServicioPage: NextPage = () => {
     return validationErrors.length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-    
-    try {
-      setSubmitting(true);
-      const response = await explorerService.createServiceRequest(formData);
-      
-      if (response.success) {
-        setSuccess(true);
-        setTimeout(() => {
-          router.push('/explorador/dashboard');
-        }, 2000);
-      } else {
-        setErrors([response.message || 'Error al crear la solicitud']);
-      }
-    } catch (error: any) {
-      setErrors([error.response?.data?.message || 'Error al crear la solicitud']);
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
