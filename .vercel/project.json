@@ -1,0 +1,11 @@
+{
+  "projectId": "",
+  "orgId": "",
+  "settings": {
+    "buildCommand": "cd frontend && npm ci && npm run build",
+    "outputDirectory": "frontend/.next",
+    "installCommand": "cd frontend && npm ci",
+    "framework": "nextjs",
+    "rootDirectory": null
+  }
+}
