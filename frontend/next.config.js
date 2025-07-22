@@ -3,7 +3,21 @@ const { withSentryConfig } = require("@sentry/nextjs");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '5000',
+      },
+      {
+        protocol: 'https',
+        hostname: 'fixia-platform-production.up.railway.app',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.vercel.app',
+      }
+    ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 60,
   },

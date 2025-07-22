@@ -38,7 +38,8 @@ node_modules/.cache/
 .next/
 out/
 
-# Environment files (except .env.local which is needed for build)
+# Environment files (these will be configured in Vercel dashboard)
 .env
 .env.development
 .env.production
+.env.local

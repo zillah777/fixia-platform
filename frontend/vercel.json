@@ -1,3 +1,39 @@
 {
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "buildCommand": "cd .. && npm run build --workspace=frontend",
+  "outputDirectory": ".next",
+  "installCommand": "cd .. && npm install --workspace=frontend",
+  "rootDirectory": "frontend",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://fixia-platform-production.up.railway.app"
+  },
+  "functions": {
+    "src/pages/api/**/*.js": {
+      "maxDuration": 30
+    },
+    "src/pages/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://fixia-platform-production.up.railway.app/api/:path*"
+    }
+  ]
 }

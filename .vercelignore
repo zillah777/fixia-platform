@@ -1,0 +1,31 @@
+# Backend files - not needed for frontend deployment
+backend/
+auto-repair/
+
+# Documentation files
+*.md
+!README.md
+
+# Scripts
+*.sh
+*.js
+!frontend/**/*.js
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env*
+
+# Testing files
+test-*.js
+test-*.sh
+
+# IDE and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
