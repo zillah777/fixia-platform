@@ -151,4 +151,4 @@ frontend/
 
 ---
 
-**Fixia.com.ar** - Conectando profesionales con clientes en toda la provincia de Chubut 🇦🇷
+**Fixia.com.ar** - Conectando profesionales con clientes en toda la provincia de Chubut 🇦🇷# SeeNode deployment ready with production environment
