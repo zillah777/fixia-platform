@@ -94,6 +94,6 @@ const sentryConfig = {
 };
 
 // Make sure adding Sentry options is the last code to run before exporting
-module.exports = process.env.NODE_ENV === 'production' 
+module.exports = process.env.NODE_ENV === 'production' && process.env.SENTRY_AUTH_TOKEN
   ? withSentryConfig(nextConfig, sentryConfig)
   : nextConfig;

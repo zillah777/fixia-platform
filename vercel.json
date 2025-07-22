@@ -2,5 +2,15 @@
   "buildCommand": "cd frontend && npm ci && npm run build",
   "outputDirectory": "frontend/.next",
   "installCommand": "cd frontend && npm ci",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://fixia-platform-production.up.railway.app",
+    "NODE_ENV": "production"
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://fixia-platform-production.up.railway.app/api/:path*"
+    }
+  ]
 }

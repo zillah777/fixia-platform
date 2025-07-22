@@ -26,7 +26,6 @@
     "axios": "^1.6.2",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
-    "express": "^5.1.0",
     "framer-motion": "^10.16.16",
     "lucide-react": "^0.303.0",
     "next": "^14.2.30",
