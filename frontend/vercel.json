@@ -1,10 +1,3 @@
 {
-  "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "outputDirectory": ".next",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "https://fixia-platform-production.up.railway.app"
-  }
+  "framework": "nextjs"
 }
