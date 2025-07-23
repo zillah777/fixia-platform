@@ -6,7 +6,21 @@
   "scripts": {
     "build": "cd frontend && npm run build",
     "dev": "cd frontend && npm run dev",
-    "start": "cd frontend && npm run start"
+    "start": "cd frontend && npm run start",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:auth": "playwright test e2e-tests/auth/",
+    "test:e2e:explorador": "playwright test e2e-tests/explorador/",
+    "test:e2e:as": "playwright test e2e-tests/as/",
+    "test:e2e:chat": "playwright test e2e-tests/communication/",
+    "test:e2e:payments": "playwright test e2e-tests/payments/",
+    "test:e2e:reviews": "playwright test e2e-tests/reviews/",
+    "test:e2e:critical": "playwright test e2e-tests/auth/ e2e-tests/explorador/service-requests.spec.ts e2e-tests/as/service-management.spec.ts",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:install": "playwright install",
+    "test:e2e:install-deps": "playwright install-deps"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -29,5 +43,9 @@
   "bugs": {
     "url": "https://github.com/fixia/platform/issues"
   },
-  "homepage": "https://fixia.com.ar"
+  "homepage": "https://fixia.com.ar",
+  "devDependencies": {
+    "@playwright/test": "^1.54.1",
+    "playwright": "^1.54.1"
+  }
 }
