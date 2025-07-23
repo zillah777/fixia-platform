@@ -25,8 +25,11 @@ import {
 
 import { useAuth } from '@/contexts/AuthContext';
 import { RegisterData } from '@/types';
+import MarketplaceLayout from '@/components/layouts/MarketplaceLayout';
 import Logo from '@/components/Logo';
-import MultiStepForm from '@/components/MultiStepForm';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 
 const registerSchema = yup.object().shape({
   first_name: yup
@@ -154,84 +157,96 @@ const RegistroPage: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="hero section-padding-lg">
-        <div className="container">
+      <MarketplaceLayout title="Cargando..." showHeader={false} showFooter={false}>
+        <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-6"></div>
-            <p className="text-secondary font-medium">Verificando sesión...</p>
+            <p className="text-neutral-600 dark:text-neutral-400 font-medium">Verificando sesión...</p>
           </div>
         </div>
-      </div>
+      </MarketplaceLayout>
     );
   }
 
   if (user) {
     return (
-      <div className="hero section-padding-lg">
-        <div className="container">
+      <MarketplaceLayout title="Redirigiendo..." showHeader={false} showFooter={false}>
+        <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-6"></div>
-            <p className="text-secondary font-medium">Redirigiendo...</p>
+            <p className="text-neutral-600 dark:text-neutral-400 font-medium">Redirigiendo...</p>
           </div>
         </div>
-      </div>
+      </MarketplaceLayout>
     );
   }
 
   const totalSteps = 3;
 
   return (
-    <>
-      <Head>
-        <title>Registro - Fixia</title>
-        <meta name="description" content="Crea tu cuenta en Fixia y forma parte de las páginas amarillas del futuro" />
-      </Head>
-
-      {/* Background with Gradient */}
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 relative overflow-hidden">
+    <MarketplaceLayout 
+      title="Registro - Fixia"
+      description="Crea tu cuenta en Fixia y forma parte del marketplace de servicios más confiable de Argentina"
+      showHeader={false}
+      showFooter={false}
+      maxWidth="full"
+    >
+      {/* Auth Background */}
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-primary-950/20 relative overflow-hidden">
         {/* Decorative Background Elements */}
-        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm"></div>
-        <div className="absolute top-20 right-20 w-64 h-64 bg-gradient-primary opacity-10 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-secondary opacity-10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}} />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-primary-500/5 to-secondary-500/5 rounded-full blur-3xl" />
+        </div>
         
         <div className="relative flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-lg w-full space-y-8">
-            {/* Header */}
-            <div className="text-center animate-fade-in">
-              <Link href="/">
-                <div className="hover-lift cursor-pointer inline-block mb-6">
-                  <Logo size="xl" variant="gradient" />
-                </div>
+          <div className="max-w-lg w-full space-y-8 animate-fade-in">
+            {/* Back to Home */}
+            <div className="text-center">
+              <Link href="/" className="inline-flex items-center gap-2 text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 transition-colors">
+                <Logo size="sm" variant="primary" />
+                <span className="text-sm font-medium">Volver al inicio</span>
               </Link>
-              <h1 className="text-3xl font-bold text-primary mb-4">
-                Únete a Fixia
-              </h1>
-              <p className="text-secondary text-lg">
-                Forma parte de las páginas amarillas del futuro
-              </p>
             </div>
 
             {/* Progress Bar */}
-            <div className="card glass p-6 animate-scale-in" style={{animationDelay: '0.1s'}}>
+            <Card variant="glass" padding="lg" className="backdrop-blur-md">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-sm font-medium text-secondary">Paso {currentStep} de {totalSteps}</span>
-                <span className="text-sm font-medium text-primary">{Math.round((currentStep / totalSteps) * 100)}%</span>
+                <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">Paso {currentStep} de {totalSteps}</span>
+                <span className="text-sm font-medium text-primary-600 dark:text-primary-400">{Math.round((currentStep / totalSteps) * 100)}%</span>
               </div>
-              <div className="w-full bg-neutral-200 rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2 overflow-hidden">
                 <div 
-                  className="bg-gradient-primary h-2 rounded-full transition-all duration-500 ease-out"
+                  className="bg-gradient-to-r from-primary-500 to-primary-600 h-2 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${(currentStep / totalSteps) * 100}%` }}
                 ></div>
               </div>
-            </div>
+            </Card>
 
             {/* Registration Form */}
-            <div className="card glass hover-lift animate-scale-in" style={{animationDelay: '0.2s'}}>
+            <Card variant="glass" padding="xl" className="backdrop-blur-md">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div className="mb-4">
+                  <Logo size="lg" variant="primary" showText={false} />
+                </div>
+                <h1 className="text-3xl font-bold font-display text-neutral-900 dark:text-white mb-2">
+                  Únete a Fixia
+                </h1>
+                <p className="text-neutral-600 dark:text-neutral-400">
+                  Crea tu cuenta en el marketplace de servicios
+                </p>
+              </div>
+
+              {/* Registration Error */}
               {registerError && (
-                <div className="mb-6 bg-gradient-to-r from-error-50 to-error-100 border border-error-200 rounded-xl p-4 animate-shake">
-                  <div className="flex items-center">
-                    <ExclamationTriangleIcon className="h-5 w-5 text-error-600 mr-3 animate-bounce" />
-                    <p className="text-sm text-error-700 font-medium">{registerError}</p>
+                <div className="mb-6 p-4 bg-error-50 dark:bg-error-950/50 border border-error-200 dark:border-error-800 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <ExclamationTriangleIcon className="h-5 w-5 text-error-600 dark:text-error-400 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-error-700 dark:text-error-300">
+                      {registerError}
+                    </p>
                   </div>
                 </div>
               )}
@@ -610,30 +625,34 @@ const RegistroPage: NextPage = () => {
               </form>
             </div>
 
-            {/* Login Link */}
-            <div className="text-center animate-fade-in" style={{animationDelay: '0.4s'}}>
-              <p className="text-secondary">
-                ¿Ya tienes una cuenta?{' '}
-                <Link href="/auth/login">
-                  <span className="text-primary-600 hover:text-primary-700 font-semibold cursor-pointer hover-lift hover-magnetic">
-                    Inicia sesión
+            {/* Divider */}
+            <div className="mt-8 mb-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-neutral-300 dark:border-neutral-700" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400">
+                    ¿Ya tienes cuenta?
                   </span>
-                </Link>
-              </p>
+                </div>
+              </div>
             </div>
 
-            {/* Back to Home */}
-            <div className="text-center animate-fade-in" style={{animationDelay: '0.6s'}}>
-              <Link href="/">
-                <span className="text-tertiary hover:text-secondary text-sm cursor-pointer hover-lift hover-magnetic inline-flex items-center">
-                  ← Volver al inicio
-                </span>
-              </Link>
-            </div>
+            {/* Login Link */}
+            <Link href="/auth/login">
+              <Button
+                variant="ghost"
+                size="md"
+                fullWidth
+              >
+                Iniciar Sesión
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
-    </>
+    </MarketplaceLayout>
   );
 };
 

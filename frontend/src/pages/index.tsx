@@ -24,115 +24,73 @@ import {
   RocketLaunchIcon,
   BoltIcon,
   FireIcon,
-  // 2025 Modern Icons
-  CommandLineIcon,
   CpuChipIcon,
-  DevicePhoneMobileIcon,
   EyeIcon,
-  FaceSmileIcon,
-  GlobeAltIcon,
   HandRaisedIcon,
-  HeartIcon,
-  LightBulbIcon,
-  PaintBrushIcon,
-  PuzzlePieceIcon,
-  QrCodeIcon,
   TrophyIcon,
-  WifiIcon,
-  BeakerIcon,
-  CameraIcon,
-  ClipboardDocumentCheckIcon,
-  CogIcon,
-  CreditCardIcon,
-  DocumentTextIcon,
-  GiftIcon,
-  HomeIcon,
-  KeyIcon,
-  MegaphoneIcon,
-  PaperAirplaneIcon,
-  PencilIcon,
-  PresentationChartLineIcon,
-  ScaleIcon,
-  SunIcon,
-  TagIcon,
-  UserIcon,
-  VideoCameraIcon,
   WrenchScrewdriverIcon,
-  AcademicCapIcon,
-  BuildingOfficeIcon,
-  CalendarDaysIcon,
-  ChatBubbleLeftRightIcon,
-  ComputerDesktopIcon,
-  FlagIcon,
-  IdentificationIcon,
-  LanguageIcon,
-  MicrophoneIcon,
-  MusicalNoteIcon,
-  NewspaperIcon,
-  PaperClipIcon,
-  PrinterIcon,
-  RectangleGroupIcon,
-  ServerIcon,
-  ShareIcon,
-  SpeakerWaveIcon,
-  TableCellsIcon,
-  TruckIcon,
-  ViewfinderCircleIcon,
-  WindowIcon
+  CogIcon,
+  FaceSmileIcon,
+  PuzzlePieceIcon,
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import Logo from '@/components/Logo';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import GradientText from '@/components/ui/GradientText';
-import FloatingElement from '@/components/ui/FloatingElement';
-import GlowingOrb from '@/components/ui/GlowingOrb';
-import AnimatedBackground from '@/components/ui/AnimatedBackground';
+import ThemeToggle from '@/components/ui/ThemeToggle';
+import Input from '@/components/ui/Input';
 
 const serviceCategoriesData = [
   { 
     id: 'plomeria', 
     name: 'Plomería', 
     icon: WrenchScrewdriverIcon, 
-    description: 'Reparaciones e instalaciones',
-    gradient: 'from-primary-500 to-primary-600'  // Clean brand blue
+    description: 'Reparaciones e instalaciones profesionales',
+    bgColor: 'bg-primary-500',
+    hoverColor: 'hover:bg-primary-600'
   },
   { 
     id: 'electricidad', 
     name: 'Electricidad', 
     icon: BoltIcon, 
-    description: 'Instalaciones eléctricas',
-    gradient: 'from-neutral-600 to-neutral-700'  // Elegant neutral
+    description: 'Instalaciones eléctricas certificadas',
+    bgColor: 'bg-secondary-500',
+    hoverColor: 'hover:bg-secondary-600'
   },
   { 
     id: 'limpieza', 
     name: 'Limpieza', 
     icon: SparklesIcon, 
-    description: 'Limpieza de hogar y oficinas',
-    gradient: 'from-success-500 to-success-600'  // Clean success green
+    description: 'Servicios de limpieza especializados',
+    bgColor: 'bg-success-500',
+    hoverColor: 'hover:bg-success-600'
   },
   { 
     id: 'reparaciones', 
     name: 'Reparaciones', 
     icon: CogIcon, 
-    description: 'Reparaciones del hogar',
-    gradient: 'from-primary-600 to-primary-700'  // Deep brand blue
+    description: 'Reparaciones y mantenimiento integral',
+    bgColor: 'bg-info-500',
+    hoverColor: 'hover:bg-info-600'
   },
   { 
     id: 'belleza', 
     name: 'Belleza', 
     icon: FaceSmileIcon, 
-    description: 'Servicios de belleza',
-    gradient: 'from-neutral-500 to-neutral-600'  // Sophisticated neutral
+    description: 'Servicios de belleza y bienestar',
+    bgColor: 'bg-warning-500',
+    hoverColor: 'hover:bg-warning-600'
   },
   { 
     id: 'otros', 
     name: 'Otros', 
     icon: PuzzlePieceIcon, 
-    description: 'Más servicios disponibles',
-    gradient: 'from-neutral-700 to-neutral-800'  // Deep professional
+    description: 'Servicios especializados diversos',
+    bgColor: 'bg-neutral-600',
+    hoverColor: 'hover:bg-neutral-700'
   }
 ];
 
@@ -271,26 +229,30 @@ const LandingPage: NextPage = () => {
   };
 
   return (
-    <>
+    <ThemeProvider>
       <MetaTags
-        title="Fx Fixia - La Evolución Digital de los Servicios Profesionales"
-        description="Donde la innovación encuentra la experiencia. Conectamos talento excepcional con proyectos que trascienden lo ordinario. La próxima generación de servicios profesionales está aquí."
+        title="Fx Fixia - Marketplace de Servicios Profesionales"
+        description="Conectamos a los mejores profesionales con clientes que buscan servicios de calidad excepcional. Plomería, electricidad, limpieza y más."
         keywords="servicios profesionales, plomería, electricidad, limpieza, reparaciones, marketplace, fixia, chubut, argentina"
         ogType="website"
         structuredData={structuredData}
       />
 
-      <div className="min-h-screen">
-        {/* Modern Clean Header */}
-        <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
-          <div className="max-w-6xl mx-auto px-4">
+      <div className="min-h-screen bg-surface-50 dark:bg-neutral-950 transition-colors duration-200">
+        {/* Marketplace Header - Modern & Clean */}
+        <header className="fixed top-0 left-0 right-0 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 z-50 transition-colors">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <Logo size="md" variant="primary" />
+              {/* Logo */}
+              <div className="flex-shrink-0">
+                <Logo size="md" variant="primary" />
+              </div>
               
-              <nav className="hidden md:flex items-center gap-8">
+              {/* Navigation */}
+              <nav className="hidden md:flex items-center space-x-8">
                 <a 
                   href="#como-funciona" 
-                  className="text-gray-600 hover:text-primary-600 transition-colors duration-200 hover:underline underline-offset-4"
+                  className="text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400 transition-colors duration-200 font-medium"
                   onClick={(e) => {
                     e.preventDefault();
                     document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' });
@@ -300,7 +262,7 @@ const LandingPage: NextPage = () => {
                 </a>
                 <a 
                   href="#servicios" 
-                  className="text-gray-600 hover:text-primary-600 transition-colors duration-200 hover:underline underline-offset-4"
+                  className="text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400 transition-colors duration-200 font-medium"
                   onClick={(e) => {
                     e.preventDefault();
                     document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' });
@@ -310,7 +272,7 @@ const LandingPage: NextPage = () => {
                 </a>
                 <a 
                   href="#profesionales" 
-                  className="text-gray-600 hover:text-primary-600 transition-colors duration-200 hover:underline underline-offset-4"
+                  className="text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400 transition-colors duration-200 font-medium"
                   onClick={(e) => {
                     e.preventDefault();
                     document.getElementById('profesionales')?.scrollIntoView({ behavior: 'smooth' });
@@ -320,7 +282,7 @@ const LandingPage: NextPage = () => {
                 </a>
                 <a 
                   href="#contacto" 
-                  className="text-gray-600 hover:text-primary-600 transition-colors duration-200 hover:underline underline-offset-4"
+                  className="text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400 transition-colors duration-200 font-medium"
                   onClick={(e) => {
                     e.preventDefault();
                     document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' });
@@ -330,181 +292,303 @@ const LandingPage: NextPage = () => {
                 </a>
               </nav>
 
-              <div className="hidden md:flex items-center gap-3">
-                <Link href="/auth/login">
-                  <button className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors font-medium">
-                    Iniciar Sesión
-                  </button>
-                </Link>
-                <Link href="/auth/registro">
-                  <button className="px-6 py-2 bg-gray-900 text-white rounded-2xl hover:bg-gray-800 transition-all duration-300 font-medium">
-                    Registrarse
-                  </button>
-                </Link>
-              </div>
+              {/* Actions */}
+              <div className="flex items-center space-x-4">
+                {/* Theme Toggle */}
+                <ThemeToggle size="sm" />
+                
+                {/* Auth Buttons */}
+                <div className="hidden md:flex items-center space-x-3">
+                  <Link href="/auth/login">
+                    <Button variant="ghost" size="sm">
+                      Iniciar Sesión
+                    </Button>
+                  </Link>
+                  <Link href="/auth/registro">
+                    <Button variant="primary" size="sm">
+                      Registrarse
+                    </Button>
+                  </Link>
+                </div>
 
-              {/* Mobile Menu Button */}
-              <button
-                className="md:hidden nav-hamburger"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                {mobileMenuOpen ? (
-                  <XMarkIcon className="h-6 w-6 text-primary-600" />
-                ) : (
-                  <Bars3Icon className="h-6 w-6 text-primary-600" />
-                )}
-              </button>
+                {/* Mobile Menu Button */}
+                <button
+                  className="md:hidden p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                >
+                  {mobileMenuOpen ? (
+                    <XMarkIcon className="h-6 w-6 text-neutral-600 dark:text-neutral-400" />
+                  ) : (
+                    <Bars3Icon className="h-6 w-6 text-neutral-600 dark:text-neutral-400" />
+                  )}
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Mobile Menu */}
-          <div className={`nav-mobile-menu ${mobileMenuOpen ? 'active' : ''}`}>
-            <div className="nav-mobile-content">
-              <Logo size="xl" variant="white" className="mb-8" />
-              <nav className="flex flex-col">
-                <a href="#como-funciona" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                  Cómo funciona
-                </a>
-                <a href="#servicios" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                  Servicios
-                </a>
-                <a href="#profesionales" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                  Profesionales
-                </a>
-                <a href="#contacto" className="nav-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                  Contacto
-                </a>
-              </nav>
-              <div className="mt-8 flex flex-col gap-4">
-                <Link href="/auth/login">
-                  <button className="btn btn-ghost text-white border-white hover:bg-white hover:text-primary-600">
-                    Iniciar Sesión
-                  </button>
-                </Link>
-                <Link href="/auth/registro">
-                  <button className="btn btn-primary">
-                    Registrarse
-                  </button>
-                </Link>
+          {mobileMenuOpen && (
+            <div className="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 shadow-lg">
+              <div className="px-4 py-6 space-y-4">
+                <nav className="space-y-4">
+                  <a 
+                    href="#como-funciona" 
+                    className="block text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400 font-medium py-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMobileMenuOpen(false);
+                      document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Cómo funciona
+                  </a>
+                  <a 
+                    href="#servicios" 
+                    className="block text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400 font-medium py-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMobileMenuOpen(false);
+                      document.getElementById('servicios')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Servicios
+                  </a>
+                  <a 
+                    href="#profesionales" 
+                    className="block text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400 font-medium py-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMobileMenuOpen(false);
+                      document.getElementById('profesionales')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Especialistas
+                  </a>
+                  <a 
+                    href="#contacto" 
+                    className="block text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400 font-medium py-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMobileMenuOpen(false);
+                      document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Contacto
+                  </a>
+                </nav>
+                
+                <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+                  <Link href="/auth/login">
+                    <Button variant="ghost" fullWidth onClick={() => setMobileMenuOpen(false)}>
+                      Iniciar Sesión
+                    </Button>
+                  </Link>
+                  <Link href="/auth/registro">
+                    <Button variant="primary" fullWidth onClick={() => setMobileMenuOpen(false)}>
+                      Registrarse
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+        </header>
+
+        {/* Hero Section - Marketplace 2.0 Design */}
+        <section className="relative min-h-screen bg-gradient-to-br from-surface-50 via-white to-primary-50/20 dark:from-neutral-950 dark:via-neutral-900 dark:to-primary-950/20 overflow-hidden">
+          {/* Background Decorative Elements */}
+          <div className="absolute inset-0">
+            <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-float" />
+            <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-primary-500/5 to-secondary-500/5 rounded-full blur-3xl" />
+          </div>
+
+          {/* Hero Content */}
+          <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 pt-16">
+            <div className="max-w-6xl mx-auto text-center">
+              <div className="space-y-12 animate-fade-in">
+                
+                {/* Status Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-full shadow-sm">
+                  <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse" />
+                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    Marketplace de Servicios Profesionales
+                  </span>
+                </div>
+
+                {/* Hero Logo & Title */}
+                <div className="space-y-8">
+                  <div className="flex justify-center animate-scale-in">
+                    <Logo size="2xl" variant="primary" animated showText={false} />
+                  </div>
+                  
+                  <div className="space-y-6">
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-display text-neutral-900 dark:text-white leading-tight">
+                      <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+                        Fixia
+                      </span>
+                      <br />
+                      <span className="text-neutral-600 dark:text-neutral-400 text-3xl md:text-4xl lg:text-5xl">
+                        Conecta. Confía. Resuelve.
+                      </span>
+                    </h1>
+                    
+                    <p className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 max-w-4xl mx-auto leading-relaxed">
+                      El marketplace que conecta a los mejores profesionales con clientes que buscan 
+                      <span className="font-semibold text-primary-600 dark:text-primary-400"> calidad excepcional</span>.
+                    </p>
+                  </div>
+
+                  {/* Trust Indicators */}
+                  <div className="flex items-center justify-center gap-8 text-neutral-500 dark:text-neutral-400">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheckIcon className="h-5 w-5 text-success-500" />
+                      <span className="text-sm font-medium">Verificado</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <BoltIcon className="h-5 w-5 text-warning-500" />
+                      <span className="text-sm font-medium">Sin comisiones</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <StarIcon className="h-5 w-5 text-secondary-500" />
+                      <span className="text-sm font-medium">4.9/5 rating</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Search Card */}
+                <div className="max-w-3xl mx-auto">
+                  <Card variant="glass" padding="lg" className="backdrop-blur-md">
+                    <form onSubmit={handleSearch} className="space-y-6">
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                          ¿Qué servicio necesitas?
+                        </h3>
+                        
+                        <Input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="Ej: Plomero, electricista, limpieza..."
+                          variant="filled"
+                          inputSize="lg"
+                          leftIcon={<MagnifyingGlassIcon className="h-6 w-6" />}
+                          fullWidth
+                        />
+                      </div>
+                      
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        size="lg"
+                        fullWidth
+                        disabled={!searchQuery.trim()}
+                        leftIcon={<RocketLaunchIcon className="h-5 w-5" />}
+                      >
+                        Buscar Profesionales
+                      </Button>
+                    </form>
+                  </Card>
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+                  <Link href="/auth/registro?type=customer">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      leftIcon={<UserGroupIcon className="h-6 w-6" />}
+                      rightIcon={<ArrowRightIcon className="h-5 w-5" />}
+                      className="min-w-[200px]"
+                    >
+                      Soy Cliente
+                    </Button>
+                  </Link>
+                  <Link href="/auth/registro?type=provider">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      leftIcon={<BriefcaseIcon className="h-6 w-6" />}
+                      rightIcon={<ArrowRightIcon className="h-5 w-5" />}
+                      className="min-w-[200px]"
+                    >
+                      Soy Profesional
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        </header>
-
-        {/* Hero Section - Clean & Modern */}
-        <section className="min-h-screen bg-gray-50 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
-
-            {/* Main Content */}
-            <div className="relative z-10 flex items-center justify-center min-h-screen px-4 pt-16">
-              <div className="max-w-6xl mx-auto text-center">
-                <div className="space-y-12">
-                  {/* Badge */}
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-2xl shadow-sm">
-                    <SparklesIcon className="h-4 w-4 text-gray-600" />
-                    <span className="text-sm font-medium text-gray-900">La Nueva Era de los Servicios Profesionales</span>
-                  </div>
-
-                  {/* Hero Title */}
-                  <div className="space-y-6">
-                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-tight">
-                      Fx Fixia
-                      <br />
-                      <span className="text-gray-600">
-                        Conectando Ases y Exploradores
-                      </span>
-                    </h1>
-                    <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                      La plataforma que conecta a los mejores profesionales con personas que necesitan servicios de calidad excepcional.
-                    </p>
-                    <div className="flex items-center justify-center gap-4 text-gray-500">
-                      <BoltIcon className="h-5 w-5" />
-                      <span className="text-lg font-medium">Sin comisiones, sin intermediarios</span>
-                      <BoltIcon className="h-5 w-5" />
-                    </div>
-                  </div>
-
-                  {/* Search Section */}
-                  <div className="max-w-3xl mx-auto space-y-8">
-                    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
-                      <form onSubmit={handleSearch} className="space-y-6">
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
-                          </div>
-                          <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="¿Qué servicio necesitas hoy?"
-                            className="w-full pl-12 pr-4 py-6 text-lg bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all placeholder-gray-500 text-gray-900"
-                          />
-                        </div>
-                        <button
-                          type="submit"
-                          disabled={!searchQuery.trim()}
-                          className="w-full bg-gray-900 text-white px-8 py-6 text-lg font-medium rounded-2xl hover:bg-gray-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group"
-                        >
-                          <RocketLaunchIcon className="h-5 w-5 mr-2 group-hover:animate-pulse" />
-                          Buscar Ahora
-                        </button>
-                      </form>
-                    </div>
-
-                    {/* CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-                      <Link href="/auth/registro?type=customer">
-                        <button className="bg-gray-900 text-white px-8 py-4 rounded-2xl font-semibold text-lg min-w-[200px] hover:bg-gray-800 transition-all duration-300 shadow-sm flex items-center justify-center">
-                          <UserGroupIcon className="h-6 w-6 mr-2" />
-                          Soy Explorador
-                        </button>
-                      </Link>
-                      <Link href="/auth/registro?type=provider">
-                        <button className="bg-white border border-gray-200 text-gray-900 px-8 py-4 rounded-2xl font-semibold text-lg min-w-[200px] hover:bg-gray-50 transition-all duration-300 shadow-sm flex items-center justify-center">
-                          <BriefcaseIcon className="h-6 w-6 mr-2" />
-                          Soy Especialista
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
         </section>
 
-        {/* Trust Indicators - Clean & Modern */}
-        <section className="py-20 bg-white">
-          <div className="max-w-6xl mx-auto px-4">
+        {/* Trust Indicators - Marketplace 2.0 */}
+        <section className="py-20 bg-white dark:bg-neutral-900 transition-colors">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Por qué elegir Fx Fixia
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 dark:bg-primary-950/50 rounded-full mb-6">
+                <SparklesIcon className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                <span className="text-sm font-medium text-primary-700 dark:text-primary-300">
+                  ¿Por qué Fixia?
+                </span>
+              </div>
+              
+              <h2 className="text-4xl md:text-5xl font-bold font-display text-neutral-900 dark:text-white mb-6">
+                Marketplace de 
+                <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent"> Confianza</span>
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
                 Tecnología avanzada y profesionales verificados para resultados excepcionales
               </p>
             </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-md transition-shadow">
-                <div className="w-16 h-16 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <CpuChipIcon className="h-8 w-8 text-white" />
+              {/* Algoritmos Inteligentes */}
+              <Card variant="default" padding="xl" hover className="text-center group">
+                <div className="mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <CpuChipIcon className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="w-24 h-1 bg-gradient-to-r from-primary-500 to-transparent mx-auto rounded-full opacity-60" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Algoritmos Inteligentes</h3>
-                <p className="text-gray-600">IA avanzada que conecta necesidades específicas con el talento perfecto</p>
-              </div>
-              <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-md transition-shadow">
-                <div className="w-16 h-16 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <ShieldCheckIcon className="h-8 w-8 text-white" />
+                <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-4">
+                  Matching Inteligente
+                </h3>
+                <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  Algoritmos avanzados que conectan tus necesidades específicas con el profesional perfecto
+                </p>
+              </Card>
+
+              {/* Confianza Verificada */}
+              <Card variant="default" padding="xl" hover className="text-center group">
+                <div className="mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-success-500 to-success-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <ShieldCheckIcon className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="w-24 h-1 bg-gradient-to-r from-success-500 to-transparent mx-auto rounded-full opacity-60" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Confianza Verificada</h3>
-                <p className="text-gray-600">Profesionales validados con certificaciones y reseñas auténticas</p>
-              </div>
-              <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center hover:shadow-md transition-shadow">
-                <div className="w-16 h-16 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <TrophyIcon className="h-8 w-8 text-white" />
+                <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-4">
+                  100% Verificado
+                </h3>
+                <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  Todos los profesionales pasan por un riguroso proceso de verificación y validación
+                </p>
+              </Card>
+
+              {/* Resultados Excepcionales */}
+              <Card variant="default" padding="xl" hover className="text-center group">
+                <div className="mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <TrophyIcon className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="w-24 h-1 bg-gradient-to-r from-secondary-500 to-transparent mx-auto rounded-full opacity-60" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Resultados Excepcionales</h3>
-                <p className="text-gray-600">98% de satisfacción garantizada en cada conexión</p>
-              </div>
+                <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-4">
+                  Calidad Garantizada
+                </h3>
+                <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  98% de satisfacción del cliente con garantía de calidad en cada servicio
+                </p>
+              </Card>
             </div>
           </div>
         </section>

@@ -1,15 +1,21 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Link from 'next/link';
 import { 
   CheckCircleIcon, 
+  ExclamationTriangleIcon,
   ExclamationCircleIcon,
   EnvelopeIcon,
   ArrowLeftIcon,
   PaperAirplaneIcon
 } from '@heroicons/react/24/outline';
+
+import MarketplaceLayout from '@/components/layouts/MarketplaceLayout';
 import Logo from '@/components/Logo';
-import { CorporateLayout, CorporateCard, CorporateButton, CorporateInput } from '@/components/ui';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 
 export default function SolicitarRestablecimientoPassword() {
   const router = useRouter();
@@ -61,173 +67,190 @@ export default function SolicitarRestablecimientoPassword() {
   };
 
   return (
-    <>
-      <Head>
-        <title>Solicitar Restablecimiento de Contraseña | FIXIA</title>
-        <meta name="description" content="Solicitar restablecimiento de contraseña en FIXIA - Plataforma profesional de servicios certificados" />
-        <meta name="keywords" content="solicitar restablecimiento, contraseña, FIXIA, servicios profesionales, recuperar acceso" />
-      </Head>
-
-      <CorporateLayout variant="centered" maxWidth="md">
-        <div className="w-full max-w-md mx-auto">
-          {/* Corporate Logo */}
-          <div className="text-center mb-8">
-            <div className="mb-6">
-              <Logo size="xl" variant="gradient" className="justify-center" />
+    <MarketplaceLayout 
+      title="Recuperar Contraseña - Fixia"
+      description="Solicita el restablecimiento de tu contraseña en Fixia"
+      showHeader={false}
+      showFooter={false}
+      maxWidth="full"
+    >
+      {/* Auth Background */}
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-primary-950/20 relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}} />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-primary-500/5 to-secondary-500/5 rounded-full blur-3xl" />
+        </div>
+        
+        <div className="relative flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-md w-full space-y-8 animate-fade-in">
+            {/* Back to Home */}
+            <div className="text-center">
+              <Link href="/" className="inline-flex items-center gap-2 text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 transition-colors">
+                <Logo size="sm" variant="primary" />
+                <span className="text-sm font-medium">Volver al inicio</span>
+              </Link>
             </div>
-            <h1 className="text-2xl font-bold text-secondary-900 mb-2">
-              Recuperar Contraseña
-            </h1>
-            <p className="text-secondary-600 font-medium">
-              Sistema Profesional Certificado
-            </p>
-          </div>
 
-          {/* Corporate Password Reset Request Card */}
-          <CorporateCard variant="glass" className="backdrop-blur-2xl bg-white/90 border border-white/50 shadow-2xl">
-            
+            {/* Password Reset Card */}
+            <Card variant="glass" padding="xl" className="backdrop-blur-md">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div className="mb-4">
+                  <Logo size="lg" variant="primary" showText={false} />
+                </div>
+                <h1 className="text-3xl font-bold font-display text-neutral-900 dark:text-white mb-2">
+                  Recuperar Contraseña
+                </h1>
+                <p className="text-neutral-600 dark:text-neutral-400">
+                  Te ayudamos a recuperar el acceso a tu cuenta
+                </p>
+              </div>
+
             {status === 'success' ? (
               <div className="text-center space-y-8">
                 <div className="flex justify-center">
-                  <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-success-600 rounded-2xl flex items-center justify-center shadow-lg">
                     <CheckCircleIcon className="h-10 w-10 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-success-800 mb-3">
+                  <h2 className="text-2xl font-bold text-success-800 dark:text-success-300 mb-3">
                     ¡Email Enviado!
                   </h2>
-                  <p className="text-secondary-600 font-medium mb-6">
+                  <p className="text-neutral-600 dark:text-neutral-400 font-medium mb-6">
                     {message}
                   </p>
-                  <div className="bg-gradient-to-r from-success-50 to-accent-50 border-2 border-success-200 rounded-xl p-6">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-center text-success-700">
-                        <EnvelopeIcon className="h-5 w-5 mr-2" />
-                        <span className="font-semibold">Revisa tu bandeja de entrada</span>
+                  <div className="p-4 bg-success-50 dark:bg-success-950/50 border border-success-200 dark:border-success-800 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <EnvelopeIcon className="h-5 w-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5" />
+                      <div className="text-left">
+                        <p className="font-semibold text-success-700 dark:text-success-300 mb-1">Revisa tu bandeja de entrada</p>
+                        <p className="text-sm text-success-600 dark:text-success-400">
+                          Si no encuentras el email, revisa tu carpeta de spam o promociones
+                        </p>
                       </div>
-                      <p className="text-sm text-success-600">
-                        Si no encuentras el email, revisa tu carpeta de spam o promociones
-                      </p>
                     </div>
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <CorporateButton
+                  <Button
                     onClick={() => router.push('/auth/login')}
-                    variant="outline"
+                    variant="primary"
                     size="lg"
-                    className="w-full"
+                    fullWidth
                     leftIcon={<ArrowLeftIcon className="h-5 w-5" />}
                   >
                     Volver al Login
-                  </CorporateButton>
+                  </Button>
                 </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="text-center mb-8">
-                  <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-trust-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <EnvelopeIcon className="h-8 w-8 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold text-secondary-900 mb-2">
-                    Recuperar Contraseña
-                  </h2>
-                  <p className="text-secondary-600 font-medium">
+                  <p className="text-neutral-600 dark:text-neutral-400 font-medium">
                     Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.
                   </p>
                 </div>
 
                 {/* Error Message */}
                 {status === 'error' && (
-                  <CorporateCard variant="elevated" className="border-l-4 border-l-error-500 bg-error-50">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-error-100 rounded-xl flex items-center justify-center">
-                        <ExclamationCircleIcon className="h-5 w-5 text-error-600" />
-                      </div>
-                      <p className="text-error-800 font-medium">{message}</p>
+                  <div className="mb-6 p-4 bg-error-50 dark:bg-error-950/50 border border-error-200 dark:border-error-800 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <ExclamationTriangleIcon className="h-5 w-5 text-error-600 dark:text-error-400 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-error-700 dark:text-error-300">
+                        {message}
+                      </p>
                     </div>
-                  </CorporateCard>
+                  </div>
                 )}
 
-                {/* Email Input */}
-                <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-secondary-700 mb-2">
-                    Dirección de Email
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <EnvelopeIcon className="h-5 w-5 text-secondary-400" />
-                    </div>
-                    <input
-                      type="email"
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="w-full pl-11 pr-4 py-3 border border-secondary-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white/80 backdrop-blur-sm font-medium"
-                      placeholder="tu@email.com"
-                    />
-                  </div>
+                <div className="space-y-4">
+                  <Input
+                    label="Dirección de Email"
+                    type="email"
+                    placeholder="tu@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    leftIcon={<EnvelopeIcon className="h-5 w-5" />}
+                    fullWidth
+                    required
+                  />
                 </div>
 
                 {/* Security Notice */}
-                <CorporateCard variant="elevated" className="bg-gradient-to-r from-primary-50 to-trust-50">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <ExclamationCircleIcon className="h-4 w-4 text-primary-600" />
-                    </div>
+                <div className="p-4 bg-info-50 dark:bg-info-950/50 border border-info-200 dark:border-info-800 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <ExclamationCircleIcon className="h-5 w-5 text-info-600 dark:text-info-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-semibold text-primary-900 mb-1">
+                      <h3 className="font-semibold text-info-900 dark:text-info-300 mb-1">
                         Nota de Seguridad
                       </h3>
-                      <p className="text-sm text-primary-700">
+                      <p className="text-sm text-info-700 dark:text-info-400">
                         El enlace de restablecimiento será válido por 1 hora y solo podrá ser usado una vez. 
                         Si no tienes acceso a tu email, contáctanos.
                       </p>
                     </div>
                   </div>
-                </CorporateCard>
+                </div>
 
-                {/* Submit Button */}
-                <CorporateButton
+                <Button
                   type="submit"
-                  disabled={status === 'loading' || !email.trim()}
-                  loading={status === 'loading'}
+                  variant="primary"
                   size="lg"
-                  className="w-full"
-                  rightIcon={status !== 'loading' ? <PaperAirplaneIcon className="h-5 w-5" /> : undefined}
+                  fullWidth
+                  loading={status === 'loading'}
+                  disabled={!email.trim()}
+                  rightIcon={<PaperAirplaneIcon className="h-5 w-5" />}
                 >
                   {status === 'loading' ? 'Enviando...' : 'Enviar Enlace de Restablecimiento'}
-                </CorporateButton>
+                </Button>
 
-                {/* Back to Login */}
-                <div className="text-center">
-                  <button
-                    type="button"
-                    onClick={() => router.push('/auth/login')}
-                    className="text-secondary-600 hover:text-primary-600 font-medium text-sm transition-colors inline-flex items-center"
-                  >
-                    <ArrowLeftIcon className="h-4 w-4 mr-1" />
-                    Volver al Login
-                  </button>
+                {/* Divider */}
+                <div className="mt-8 mb-6">
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-neutral-300 dark:border-neutral-700" />
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-4 bg-white dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400">
+                        ¿Ya recordaste tu contraseña?
+                      </span>
+                    </div>
+                  </div>
                 </div>
+
+                <Link href="/auth/login">
+                  <Button
+                    variant="ghost"
+                    size="md"
+                    fullWidth
+                    leftIcon={<ArrowLeftIcon className="h-5 w-5" />}
+                  >
+                    Volver al Login
+                  </Button>
+                </Link>
               </form>
             )}
-          </CorporateCard>
+            </Card>
 
-          {/* Corporate Footer */}
-          <div className="text-center mt-8 space-y-3">
-            <p className="text-secondary-500 text-sm font-medium">¿Problemas con tu cuenta?</p>
-            <a 
-              href="mailto:contacto@fixia.com.ar" 
-              className="text-primary-600 hover:text-primary-700 font-semibold text-sm transition-colors"
-            >
-              Contáctanos en contacto@fixia.com.ar
-            </a>
+            {/* Footer */}
+            <div className="text-center mt-8 space-y-3">
+              <p className="text-neutral-500 dark:text-neutral-400 text-sm font-medium">¿Problemas con tu cuenta?</p>
+              <a 
+                href="mailto:contacto@fixia.com.ar" 
+                className="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 font-semibold text-sm transition-colors"
+              >
+                Contáctanos en contacto@fixia.com.ar
+              </a>
+            </div>
           </div>
         </div>
-      </CorporateLayout>
-    </>
+      </div>
+    </MarketplaceLayout>
   );
 }
