@@ -963,7 +963,7 @@ const LandingPage: NextPage = () => {
           </div>
         </footer>
       </div>
-    </>
+    </ThemeProvider>
   );
 };
 
