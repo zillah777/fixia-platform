@@ -256,88 +256,52 @@ const RegistroPage: NextPage = () => {
                 {currentStep === 1 && (
                   <div className="space-y-6 animate-fade-in">
                     <div className="text-center mb-6">
-                      <h2 className="text-xl font-semibold text-primary mb-2">Información Personal</h2>
-                      <p className="text-secondary">Cuéntanos sobre ti</p>
+                      <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">Información Personal</h2>
+                      <p className="text-neutral-600 dark:text-neutral-400">Cuéntanos sobre ti</p>
                     </div>
 
-                    {/* First Name */}
-                    <div className="space-y-2">
-                      <label htmlFor="first_name" className="form-label">
-                        Nombre
-                      </label>
-                      <div className="relative">
-                        <UserIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400 transition-colors" />
-                        <input
-                          {...register('first_name')}
-                          type="text"
-                          id="first_name"
-                          autoComplete="given-name"
-                          className={`form-input pl-12 pr-4 py-4 glass hover-lift w-full ${
-                            errors.first_name ? 'border-terra-300 focus:border-terra-500 focus:ring-terra-500' : ''
-                          }`}
-                          placeholder="Tu nombre"
-                        />
-                      </div>
-                      {errors.first_name && (
-                        <p className="form-error animate-slide-down">{errors.first_name.message}</p>
-                      )}
+                    <div className="space-y-4">
+                      <Input
+                        label="Nombre"
+                        type="text"
+                        placeholder="Tu nombre"
+                        error={errors.first_name?.message}
+                        leftIcon={<UserIcon className="h-5 w-5" />}
+                        fullWidth
+                        {...register('first_name')}
+                      />
+
+                      <Input
+                        label="Apellido"
+                        type="text"
+                        placeholder="Tu apellido"
+                        error={errors.last_name?.message}
+                        leftIcon={<UserIcon className="h-5 w-5" />}
+                        fullWidth
+                        {...register('last_name')}
+                      />
+
+                      <Input
+                        label="Email"
+                        type="email"
+                        placeholder="tu@email.com"
+                        error={errors.email?.message}
+                        leftIcon={<EnvelopeIcon className="h-5 w-5" />}
+                        fullWidth
+                        {...register('email')}
+                      />
                     </div>
 
-                    {/* Last Name */}
-                    <div className="space-y-2">
-                      <label htmlFor="last_name" className="form-label">
-                        Apellido
-                      </label>
-                      <div className="relative">
-                        <UserIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400 transition-colors" />
-                        <input
-                          {...register('last_name')}
-                          type="text"
-                          id="last_name"
-                          autoComplete="family-name"
-                          className={`form-input pl-12 pr-4 py-4 glass hover-lift w-full ${
-                            errors.last_name ? 'border-terra-300 focus:border-terra-500 focus:ring-terra-500' : ''
-                          }`}
-                          placeholder="Tu apellido"
-                        />
-                      </div>
-                      {errors.last_name && (
-                        <p className="form-error animate-slide-down">{errors.last_name.message}</p>
-                      )}
-                    </div>
-
-                    {/* Email */}
-                    <div className="space-y-2">
-                      <label htmlFor="email" className="form-label">
-                        Email
-                      </label>
-                      <div className="relative">
-                        <EnvelopeIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400 transition-colors" />
-                        <input
-                          {...register('email')}
-                          type="email"
-                          id="email"
-                          autoComplete="email"
-                          className={`form-input pl-12 pr-4 py-4 glass hover-lift w-full ${
-                            errors.email ? 'border-terra-300 focus:border-terra-500 focus:ring-terra-500' : ''
-                          }`}
-                          placeholder="tu@email.com"
-                        />
-                      </div>
-                      {errors.email && (
-                        <p className="form-error animate-slide-down">{errors.email.message}</p>
-                      )}
-                    </div>
-
-                    {/* Next Button */}
-                    <button
+                    <Button
                       type="button"
+                      variant="primary"
+                      size="lg"
+                      fullWidth
                       onClick={handleNextStep}
-                      className="btn btn-primary btn-lg w-full btn-magnetic hover-lift animate-glow"
+                      rightIcon={<ArrowRightIcon className="h-5 w-5" />}
                     >
                       Continuar
-                      <ArrowRightIcon className="h-5 w-5 ml-2" />
-                    </button>
+                    </Button>
                   </div>
                 )}
 
@@ -345,96 +309,56 @@ const RegistroPage: NextPage = () => {
                 {currentStep === 2 && (
                   <div className="space-y-6 animate-fade-in">
                     <div className="text-center mb-6">
-                      <h2 className="text-xl font-semibold text-primary mb-2">Seguridad</h2>
-                      <p className="text-secondary">Crea una contraseña segura</p>
+                      <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">Seguridad</h2>
+                      <p className="text-neutral-600 dark:text-neutral-400">Crea una contraseña segura</p>
                     </div>
 
-                    {/* Password */}
-                    <div className="space-y-2">
-                      <label htmlFor="password" className="form-label">
-                        Contraseña
-                      </label>
-                      <div className="relative">
-                        <LockClosedIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400 transition-colors" />
-                        <input
-                          {...register('password')}
-                          type={showPassword ? 'text' : 'password'}
-                          id="password"
-                          autoComplete="new-password"
-                          className={`form-input pl-12 pr-12 py-4 glass hover-lift w-full ${
-                            errors.password ? 'border-terra-300 focus:border-terra-500 focus:ring-terra-500' : ''
-                          }`}
-                          placeholder="••••••••"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-forest-600 transition-colors hover-bounce p-1"
-                        >
-                          {showPassword ? (
-                            <EyeSlashIcon className="h-5 w-5" />
-                          ) : (
-                            <EyeIcon className="h-5 w-5" />
-                          )}
-                        </button>
-                      </div>
-                      {errors.password && (
-                        <p className="form-error animate-slide-down">{errors.password.message}</p>
-                      )}
-                    </div>
+                    <div className="space-y-4">
+                      <Input
+                        label="Contraseña"
+                        type="password"
+                        placeholder="Tu contraseña"
+                        error={errors.password?.message}
+                        leftIcon={<LockClosedIcon className="h-5 w-5" />}
+                        showPasswordToggle
+                        fullWidth
+                        {...register('password')}
+                      />
 
-                    {/* Confirm Password */}
-                    <div className="space-y-2">
-                      <label htmlFor="confirm_password" className="form-label">
-                        Confirmar Contraseña
-                      </label>
-                      <div className="relative">
-                        <LockClosedIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400 transition-colors" />
-                        <input
-                          {...register('confirm_password')}
-                          type={showConfirmPassword ? 'text' : 'password'}
-                          id="confirm_password"
-                          autoComplete="new-password"
-                          className={`form-input pl-12 pr-12 py-4 glass hover-lift w-full ${
-                            errors.confirm_password ? 'border-terra-300 focus:border-terra-500 focus:ring-terra-500' : ''
-                          }`}
-                          placeholder="••••••••"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-forest-600 transition-colors hover-bounce p-1"
-                        >
-                          {showConfirmPassword ? (
-                            <EyeSlashIcon className="h-5 w-5" />
-                          ) : (
-                            <EyeIcon className="h-5 w-5" />
-                          )}
-                        </button>
-                      </div>
-                      {errors.confirm_password && (
-                        <p className="form-error animate-slide-down">{errors.confirm_password.message}</p>
-                      )}
+                      <Input
+                        label="Confirmar Contraseña"
+                        type="password"
+                        placeholder="Confirma tu contraseña"
+                        error={errors.confirm_password?.message}
+                        leftIcon={<LockClosedIcon className="h-5 w-5" />}
+                        showPasswordToggle
+                        fullWidth
+                        {...register('confirm_password')}
+                      />
                     </div>
 
                     {/* Navigation Buttons */}
                     <div className="flex gap-4">
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="lg"
                         onClick={handlePrevStep}
-                        className="btn btn-ghost btn-lg flex-1 hover-lift hover-magnetic"
+                        leftIcon={<ArrowLeftIcon className="h-5 w-5" />}
+                        className="flex-1"
                       >
-                        <ArrowLeftIcon className="h-5 w-5 mr-2" />
                         Anterior
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="button"
+                        variant="primary"
+                        size="lg"
                         onClick={handleNextStep}
-                        className="btn btn-primary btn-lg flex-1 btn-magnetic hover-lift animate-glow"
+                        rightIcon={<ArrowRightIcon className="h-5 w-5" />}
+                        className="flex-1"
                       >
                         Continuar
-                        <ArrowRightIcon className="h-5 w-5 ml-2" />
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 )}
@@ -623,7 +547,7 @@ const RegistroPage: NextPage = () => {
                   </div>
                 )}
               </form>
-            </div>
+            </Card>
 
             {/* Divider */}
             <div className="mt-8 mb-6">
