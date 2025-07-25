@@ -1,11 +1,9 @@
 const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-const helmet = require('helmet');
-const compression = require('compression');
-const rateLimit = require('express-rate-limit');
-const path = require('path');
 require('dotenv').config();
+
+console.log('🚀 Starting Fixia Backend Server...');
+console.log('📍 Environment:', process.env.NODE_ENV);
+console.log('📍 Port:', process.env.PORT || 8080);
 
 // Try to load optional dependencies with fallbacks
 let initSentry, sentryRequestHandler, sentryTracingHandler, sentryErrorHandler;
