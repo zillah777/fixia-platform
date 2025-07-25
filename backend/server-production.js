@@ -237,6 +237,134 @@ app.get('/debug/table-structure/:tableName', async (req, res) => {
   }
 });
 
+// COMPREHENSIVE DATABASE AUDIT ENDPOINT
+app.get('/debug/full-audit', async (req, res) => {
+  try {
+    const { query } = require('./src/config/database');
+    
+    console.log('🔍 AUDITORÍA COMPLETA DE BASE DE DATOS - INICIANDO...');
+    
+    const auditResults = {
+      users_table: {},
+      missing_columns: [],
+      existing_columns: [],
+      critical_tables: {},
+      sql_fixes: []
+    };
+
+    // 1. Estructura de tabla users
+    console.log('📋 1. Analizando estructura de tabla users...');
+    const usersColumns = await query(`
+      SELECT 
+        column_name,
+        data_type,
+        is_nullable,
+        column_default
+      FROM information_schema.columns 
+      WHERE table_name = 'users' AND table_schema = 'public'
+      ORDER BY ordinal_position
+    `);
+    
+    auditResults.users_table = {
+      exists: usersColumns.rows.length > 0,
+      columns: usersColumns.rows,
+      total_columns: usersColumns.rows.length
+    };
+
+    // 2. Verificar columnas específicas que se usan en el código
+    const columnsToCheck = [
+      'profile_photo_url', 'profile_image', 'verification_status', 
+      'subscription_type', 'verification_score', 'about_me', 
+      'has_mobility', 'professional_info', 'bio', 'date_of_birth',
+      'gender', 'locality', 'birth_date'
+    ];
+    
+    console.log('🔍 2. Verificando columnas específicas...');
+    const existingColumns = usersColumns.rows.map(row => row.column_name);
+    
+    columnsToCheck.forEach(colName => {
+      if (existingColumns.includes(colName)) {
+        auditResults.existing_columns.push(colName);
+      } else {
+        auditResults.missing_columns.push(colName);
+      }
+    });
+
+    // 3. Verificar tablas críticas
+    const criticalTables = [
+      'explorer_profiles', 'as_service_interests', 'explorer_service_requests',
+      'as_work_locations', 'as_work_categories', 'user_professional_info',
+      'user_availability_status', 'as_pricing'
+    ];
+
+    console.log('📋 3. Verificando tablas críticas...');
+    for (const tableName of criticalTables) {
+      try {
+        const tableColumns = await query(`
+          SELECT column_name, data_type
+          FROM information_schema.columns 
+          WHERE table_name = $1 AND table_schema = 'public'
+        `, [tableName]);
+        
+        auditResults.critical_tables[tableName] = {
+          exists: tableColumns.rows.length > 0,
+          columns: tableColumns.rows,
+          total_columns: tableColumns.rows.length
+        };
+      } catch (error) {
+        auditResults.critical_tables[tableName] = {
+          exists: false,
+          error: error.message
+        };
+      }
+    }
+
+    // 4. Generar queries para columnas faltantes
+    console.log('🛠️ 4. Generando queries para columnas faltantes...');
+    const columnQueries = {
+      'profile_photo_url': 'ALTER TABLE users ADD COLUMN profile_photo_url TEXT;',
+      'verification_status': "ALTER TABLE users ADD COLUMN verification_status VARCHAR(20) DEFAULT 'pending';",
+      'subscription_type': "ALTER TABLE users ADD COLUMN subscription_type VARCHAR(20) DEFAULT 'free';",
+      'verification_score': 'ALTER TABLE users ADD COLUMN verification_score INTEGER DEFAULT 0;',
+      'about_me': 'ALTER TABLE users ADD COLUMN about_me TEXT;',
+      'has_mobility': 'ALTER TABLE users ADD COLUMN has_mobility BOOLEAN DEFAULT false;',
+      'professional_info': 'ALTER TABLE users ADD COLUMN professional_info JSONB;',
+      'bio': 'ALTER TABLE users ADD COLUMN bio TEXT;',
+      'date_of_birth': 'ALTER TABLE users ADD COLUMN date_of_birth DATE;',
+      'gender': 'ALTER TABLE users ADD COLUMN gender VARCHAR(10);',
+      'locality': 'ALTER TABLE users ADD COLUMN locality VARCHAR(100);',
+      'birth_date': 'ALTER TABLE users ADD COLUMN birth_date DATE;'
+    };
+
+    auditResults.missing_columns.forEach(colName => {
+      if (columnQueries[colName]) {
+        auditResults.sql_fixes.push(columnQueries[colName]);
+      }
+    });
+
+    console.log('✅ AUDITORÍA COMPLETA FINALIZADA');
+    
+    res.json({
+      success: true,
+      message: 'Auditoría completa realizada',
+      data: auditResults,
+      summary: {
+        total_missing_columns: auditResults.missing_columns.length,
+        total_existing_columns: auditResults.existing_columns.length,
+        sql_fixes_needed: auditResults.sql_fixes.length
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Error en auditoría completa:', error);
+    res.status(500).json({ 
+      success: false,
+      error: error.message, 
+      stack: error.stack 
+    });
+  }
+});
+
 // Debug login endpoint to see detailed errors
 app.post('/debug/login', async (req, res) => {
   try {
