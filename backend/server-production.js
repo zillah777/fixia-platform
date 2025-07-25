@@ -146,6 +146,196 @@ try {
   console.error('❌ Email verification routes failed:', e.message);
 }
 
+// MISSING ROUTES - Adding all the routes from server.js
+try {
+  app.use('/api/test-email', require('./src/routes/test-email'));
+  console.log('✅ Test email routes loaded');
+} catch (e) {
+  console.error('❌ Test email routes failed:', e.message);
+}
+
+try {
+  app.use('/api/localities', require('./src/routes/localities'));
+  console.log('✅ Localities routes loaded');
+} catch (e) {
+  console.error('❌ Localities routes failed:', e.message);
+}
+
+try {
+  app.use('/api/bookings', authMiddleware, require('./src/routes/bookings'));
+  console.log('✅ Bookings routes loaded');
+} catch (e) {
+  console.error('❌ Bookings routes failed:', e.message);
+}
+
+try {
+  app.use('/api/reviews', authMiddleware, require('./src/routes/reviews'));
+  console.log('✅ Reviews routes loaded');
+} catch (e) {
+  console.error('❌ Reviews routes failed:', e.message);
+}
+
+try {
+  app.use('/api/chat', authMiddleware, require('./src/routes/chat'));
+  console.log('✅ Chat routes loaded');
+} catch (e) {
+  console.error('❌ Chat routes failed:', e.message);
+}
+
+try {
+  app.use('/api/payments', authMiddleware, require('./src/routes/payments'));
+  console.log('✅ Payments routes loaded');
+} catch (e) {
+  console.error('❌ Payments routes failed:', e.message);
+}
+
+try {
+  app.use('/api/notifications', authMiddleware, require('./src/routes/notifications'));
+  console.log('✅ Notifications routes loaded');
+} catch (e) {
+  console.error('❌ Notifications routes failed:', e.message);
+}
+
+try {
+  app.use('/api/professionals', require('./src/routes/professionals'));
+  console.log('✅ Professionals routes loaded');
+} catch (e) {
+  console.error('❌ Professionals routes failed:', e.message);
+}
+
+try {
+  app.use('/api/subscriptions', require('./src/routes/subscriptions'));
+  console.log('✅ Subscriptions routes loaded');
+} catch (e) {
+  console.error('❌ Subscriptions routes failed:', e.message);
+}
+
+try {
+  app.use('/api/reports', require('./src/routes/reports'));
+  console.log('✅ Reports routes loaded');
+} catch (e) {
+  console.error('❌ Reports routes failed:', e.message);
+}
+
+try {
+  app.use('/api/ranking', require('./src/routes/ranking'));
+  console.log('✅ Ranking routes loaded');
+} catch (e) {
+  console.error('❌ Ranking routes failed:', e.message);
+}
+
+try {
+  app.use('/api/badges', require('./src/routes/badges'));
+  console.log('✅ Badges routes loaded');
+} catch (e) {
+  console.error('❌ Badges routes failed:', e.message);
+}
+
+try {
+  app.use('/api/as-premium', require('./src/routes/as-premium'));
+  console.log('✅ AS Premium routes loaded');
+} catch (e) {
+  console.error('❌ AS Premium routes failed:', e.message);
+}
+
+try {
+  app.use('/api/as-settings', require('./src/routes/as-settings'));
+  console.log('✅ AS Settings routes loaded');
+} catch (e) {
+  console.error('❌ AS Settings routes failed:', e.message);
+}
+
+try {
+  app.use('/api/service-management', require('./src/routes/service-management'));
+  console.log('✅ Service Management routes loaded');
+} catch (e) {
+  console.error('❌ Service Management routes failed:', e.message);
+}
+
+try {
+  app.use('/api/smart-search', require('./src/routes/smart-search'));
+  console.log('✅ Smart Search routes loaded');
+} catch (e) {
+  console.error('❌ Smart Search routes failed:', e.message);
+}
+
+try {
+  app.use('/api/promotional-subscriptions', require('./src/routes/promotional-subscriptions'));
+  console.log('✅ Promotional Subscriptions routes loaded');
+} catch (e) {
+  console.error('❌ Promotional Subscriptions routes failed:', e.message);
+}
+
+try {
+  app.use('/api/availability-status', require('./src/routes/availability-status'));
+  console.log('✅ Availability Status routes loaded');
+} catch (e) {
+  console.error('❌ Availability Status routes failed:', e.message);
+}
+
+try {
+  app.use('/api/explorer', require('./src/routes/explorer'));
+  console.log('✅ Explorer routes loaded');
+} catch (e) {
+  console.error('❌ Explorer routes failed:', e.message);
+}
+
+try {
+  app.use('/api/as-interests', require('./src/routes/as-interests'));
+  console.log('✅ AS Interests routes loaded');
+} catch (e) {
+  console.error('❌ AS Interests routes failed:', e.message);
+}
+
+try {
+  app.use('/api/explorer-chat', require('./src/routes/explorer-chat'));
+  console.log('✅ Explorer Chat routes loaded');
+} catch (e) {
+  console.error('❌ Explorer Chat routes failed:', e.message);
+}
+
+try {
+  app.use('/api/explorer-reviews', require('./src/routes/explorer-reviews'));
+  console.log('✅ Explorer Reviews routes loaded');
+} catch (e) {
+  console.error('❌ Explorer Reviews routes failed:', e.message);
+}
+
+try {
+  app.use('/api/as-reviews', require('./src/routes/as-reviews'));
+  console.log('✅ AS Reviews routes loaded');
+} catch (e) {
+  console.error('❌ AS Reviews routes failed:', e.message);
+}
+
+try {
+  app.use('/api/mutual-confirmation', require('./src/routes/mutual-confirmation'));
+  console.log('✅ Mutual Confirmation routes loaded');
+} catch (e) {
+  console.error('❌ Mutual Confirmation routes failed:', e.message);
+}
+
+try {
+  app.use('/api/role-switching', require('./src/routes/role-switching'));
+  console.log('✅ Role Switching routes loaded');
+} catch (e) {
+  console.error('❌ Role Switching routes failed:', e.message);
+}
+
+try {
+  app.use('/api/verification', require('./src/routes/verification'));
+  console.log('✅ Verification routes loaded');
+} catch (e) {
+  console.error('❌ Verification routes failed:', e.message);
+}
+
+try {
+  app.use('/api/system', require('./src/routes/system-status'));
+  console.log('✅ System Status routes loaded');
+} catch (e) {
+  console.error('❌ System Status routes failed:', e.message);
+}
+
 // Email verification endpoint (for direct links) - redirect to frontend
 app.get('/verificar-email', async (req, res) => {
   const { token, type } = req.query;
