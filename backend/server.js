@@ -99,49 +99,44 @@ app.use(securityHeaders);
 app.use(securityLogger);
 app.use(validateBodySize);
 
-// CORS configuration - restrict to frontend domains only
-const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      'https://fixia-platform.vercel.app',
-      'https://fixia.com.ar',  
-      'https://www.fixia.com.ar',
-      'http://localhost:3000',
-      'https://fixia-frontend.vercel.app',
-      'https://fixia-zillah777s-projects.vercel.app',
-      process.env.FRONTEND_URL,
-      process.env.CORS_ORIGIN
-    ].filter(Boolean);
-    
-    console.log('🌐 CORS allowed origins:', allowedOrigins);
-    console.log('🔍 Environment FRONTEND_URL:', process.env.FRONTEND_URL);
-    console.log('🔍 Environment CORS_ORIGIN:', process.env.CORS_ORIGIN);
-    
-    // Allow requests with no origin (like mobile apps or curl requests) in development
-    if (!origin && process.env.NODE_ENV === 'development') {
-      return callback(null, true);
-    }
-    
-    console.log('🔍 CORS check - Origin:', origin, 'Allowed:', allowedOrigins.includes(origin));
-    
-    // Temporary: Allow all Vercel app origins for debugging
-    if (origin && origin.includes('.vercel.app')) {
-      console.log('✅ Allowing Vercel origin:', origin);
-      callback(null, true);
-    } else if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      console.error('❌ CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  maxAge: 86400 // 24 hours
-};
-
-app.use(cors(corsOptions));
+// Simple and direct CORS setup
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  console.log('🌐 CORS middleware - Origin:', origin);
+  console.log('🌐 CORS middleware - Method:', req.method);
+  console.log('🌐 CORS middleware - URL:', req.url);
+  
+  // Allow all Vercel app origins
+  if (origin && origin.includes('.vercel.app')) {
+    res.header('Access-Control-Allow-Origin', origin);
+    console.log('✅ CORS: Allowing Vercel origin:', origin);
+  } else if (origin && (
+    origin === 'https://fixia.com.ar' ||
+    origin === 'https://www.fixia.com.ar' ||
+    origin === 'http://localhost:3000'
+  )) {
+    res.header('Access-Control-Allow-Origin', origin);
+    console.log('✅ CORS: Allowing approved origin:', origin);
+  } else {
+    // Default to allowing the frontend URL from env
+    res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'https://fixia-platform.vercel.app');
+    console.log('✅ CORS: Using default origin:', process.env.FRONTEND_URL || 'https://fixia-platform.vercel.app');
+  }
+  
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.header('Access-Control-Max-Age', '86400');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    console.log('✅ CORS: Handling OPTIONS preflight request');
+    return res.status(200).end();
+  }
+  
+  next();
+});
 app.use(limiter);
 app.use(validateContentType);
 app.use(express.json({ limit: '5mb' })); // Reduced from 10mb
