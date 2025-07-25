@@ -103,6 +103,64 @@ app.get('/debug/user/:email', async (req, res) => {
   }
 });
 
+// Debug login endpoint to see detailed errors
+app.post('/debug/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log('🔍 Debug login attempt:', { email, hasPassword: !!password });
+    
+    if (!email || !password) {
+      return res.json({ error: 'Email and password required', step: 'validation' });
+    }
+
+    const { query } = require('./src/config/database');
+    const { comparePassword } = require('./src/utils/helpers');
+    
+    // Find user
+    const result = await query('SELECT * FROM users WHERE email = $1 AND is_active = true', [email]);
+    console.log('🔍 User found:', result.rows.length > 0);
+    
+    if (result.rows.length === 0) {
+      return res.json({ error: 'User not found', step: 'user_lookup' });
+    }
+
+    const user = result.rows[0];
+    console.log('🔍 User details:', { 
+      id: user.id, 
+      email: user.email, 
+      email_verified: user.email_verified,
+      user_type: user.user_type 
+    });
+
+    // Check password
+    const isPasswordValid = await comparePassword(password, user.password_hash);
+    console.log('🔍 Password valid:', isPasswordValid);
+    
+    if (!isPasswordValid) {
+      return res.json({ error: 'Invalid password', step: 'password_check' });
+    }
+
+    // Check email verification
+    if (!user.email_verified && process.env.NODE_ENV === 'production') {
+      return res.json({ error: 'Email not verified', step: 'email_verification' });
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Login would succeed',
+      user: {
+        id: user.id,
+        email: user.email,
+        user_type: user.user_type
+      }
+    });
+
+  } catch (error) {
+    console.error('🔍 Debug login error:', error);
+    res.status(500).json({ error: error.message, step: 'server_error' });
+  }
+});
+
 // API Routes - only the working ones
 try {
   app.use('/api/auth', require('./src/routes/auth'));
