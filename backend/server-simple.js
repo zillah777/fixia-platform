@@ -88,10 +88,61 @@ app.post('/api/auth/login', (req, res) => {
   console.log('🔐 Login attempt:', req.body?.email);
   res.json({
     success: true,
-    message: 'Servidor funcionando - login de prueba',
+    message: 'Login exitoso - servidor de prueba',
     data: { 
-      test: true,
-      received: req.body 
+      user: {
+        email: req.body.email,
+        first_name: 'Test',
+        last_name: 'User',
+        user_type: 'customer'
+      },
+      token: 'test-token-12345'
+    }
+  });
+});
+
+// Dashboard endpoints
+app.get('/api/dashboard/explorer-stats', (req, res) => {
+  console.log('📊 Dashboard stats requested');
+  res.json({
+    success: true,
+    data: {
+      totalServices: 150,
+      activeRequests: 3,
+      completedRequests: 12,
+      favoriteProviders: 5,
+      recentActivity: []
+    }
+  });
+});
+
+app.get('/api/dashboard/as-stats', (req, res) => {
+  console.log('📊 AS Dashboard stats requested');
+  res.json({
+    success: true,
+    data: {
+      totalServices: 8,
+      activeBookings: 2,
+      completedBookings: 25,
+      totalEarnings: 15000,
+      rating: 4.8,
+      recentBookings: []
+    }
+  });
+});
+
+// Profile endpoint
+app.get('/api/auth/me', (req, res) => {
+  console.log('👤 Profile requested');
+  res.json({
+    success: true,
+    data: {
+      id: 1,
+      email: 'test@example.com',
+      first_name: 'Test',
+      last_name: 'User',
+      user_type: 'customer',
+      created_at: new Date().toISOString()
     }
   });
 });
