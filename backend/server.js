@@ -1,70 +1,23 @@
 const express = require('express');
+const helmet = require('helmet');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit');
+const path = require('path');
 require('dotenv').config();
 
-console.log('🚀 Starting Fixia Backend Server...');
+console.log('🚀 Starting Fixia Production Server...');
 console.log('📍 Environment:', process.env.NODE_ENV);
 console.log('📍 Port:', process.env.PORT || 8080);
 
-// Try to load optional dependencies with fallbacks
-let initSentry, sentryRequestHandler, sentryTracingHandler, sentryErrorHandler;
-let logger;
-let requestLogger, errorLogger, rateLimitLogger;
-let testRedisConnection, disconnectRedis;
-let cacheResponse, cacheUserData, warmCache;
-let jobQueue;
-let swaggerConfig;
-let assetOptimization;
-
-try {
-  const sentryConfig = require('./src/config/sentry');
-  initSentry = sentryConfig.initSentry;
-  sentryRequestHandler = sentryConfig.sentryRequestHandler;
-  sentryTracingHandler = sentryConfig.sentryTracingHandler;
-  sentryErrorHandler = sentryConfig.sentryErrorHandler;
-} catch (e) {
-  console.warn('Sentry not available:', e.message);
-  initSentry = () => {};
-  sentryRequestHandler = () => (req, res, next) => next();
-  sentryTracingHandler = () => (req, res, next) => next();
-  sentryErrorHandler = () => (err, req, res, next) => next(err);
-}
-
-try {
-  logger = require('./src/utils/logger');
-} catch (e) {
-  console.warn('Logger not available:', e.message);
-  logger = console;
-}
-
-try {
-  const loggingMiddleware = require('./src/middleware/logging');
-  requestLogger = loggingMiddleware.requestLogger;
-  errorLogger = loggingMiddleware.errorLogger;
-  rateLimitLogger = loggingMiddleware.rateLimitLogger;
-} catch (e) {
-  console.warn('Logging middleware not available:', e.message);
-  requestLogger = (req, res, next) => next();
-  errorLogger = (err, req, res, next) => next(err);
-  rateLimitLogger = (req, res, next) => next();
-}
-
 const { testConnection } = require('./src/config/database');
 const { authMiddleware } = require('./src/middleware/auth');
-const { securityHeaders, validateContentType, validateBodySize, securityLogger } = require('./src/middleware/security');
 
 const app = express();
-
-// Initialize Sentry
-initSentry(app);
 
 // Trust proxy for Railway deployment
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
-
-// Sentry request handler (must be first middleware)
-app.use(sentryRequestHandler());
-app.use(sentryTracingHandler());
 
 const server = http.createServer(app);
 const io = socketIo(server, {

@@ -4,8 +4,8 @@
   "description": "Backend API for Fixia - Service marketplace platform",
   "main": "server.js",
   "scripts": {
-    "start": "node server-simple.js",
-    "dev": "nodemon server-simple.js",
+    "start": "node server-production.js",
+    "dev": "nodemon server-production.js",
     "test": "jest --detectOpenHandles --forceExit",
     "test:unit": "jest tests/unit --detectOpenHandles --forceExit",
     "test:integration": "jest tests/integration --detectOpenHandles --forceExit",
