@@ -126,7 +126,7 @@ router.get('/leaderboard', async (req, res) => {
     const { limit: queryLimit, offset } = paginate(page, limit);
 
     let query = `
-      SELECT u.id, u.first_name, u.last_name, u.profile_photo_url,
+      SELECT u.id, u.first_name, u.last_name, u.profile_image,
              u.verification_score, u.verification_status, u.subscription_type,
              u.city, u.is_verified,
              AVG(r.rating) as average_rating,
@@ -240,7 +240,7 @@ router.get('/trending', async (req, res) => {
     const { category, limit = 10 } = req.query;
 
     let query = `
-      SELECT u.id, u.first_name, u.last_name, u.profile_photo_url,
+      SELECT u.id, u.first_name, u.last_name, u.profile_image,
              u.verification_score, u.verification_status, u.subscription_type,
              u.city, u.created_at,
              AVG(r.rating) as average_rating,

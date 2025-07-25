@@ -119,7 +119,7 @@ router.get('/as-stats', authMiddleware, cacheMiddleware(120), async (req, res) =
         CASE 
           WHEN COUNT(DISTINCT s.id) > 0 THEN 
             LEAST(100, 
-              (CASE WHEN u.profile_photo_url IS NOT NULL THEN 20 ELSE 0 END) +
+              (CASE WHEN u.profile_image IS NOT NULL THEN 20 ELSE 0 END) +
               (CASE WHEN u.about_me IS NOT NULL THEN 20 ELSE 0 END) +
               (CASE WHEN u.phone IS NOT NULL THEN 20 ELSE 0 END) +
               (CASE WHEN u.address IS NOT NULL THEN 20 ELSE 0 END) +
@@ -132,7 +132,7 @@ router.get('/as-stats', authMiddleware, cacheMiddleware(120), async (req, res) =
       LEFT JOIN bookings b ON u.id = b.provider_id
       LEFT JOIN reviews r ON u.id = r.provider_id
       WHERE u.id = $1
-      GROUP BY u.id, u.profile_photo_url, u.about_me, u.phone, u.address
+      GROUP BY u.id, u.profile_image, u.about_me, u.phone, u.address
     `;
 
     const result = await query(statsQuery, [userId]);

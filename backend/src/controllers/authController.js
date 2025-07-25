@@ -364,7 +364,7 @@ exports.updateProfile = async (req, res) => {
     const allowedFields = [
       'first_name', 'last_name', 'phone', 'address', 'city',
       'latitude', 'longitude', 'birth_date', 'about_me', 
-      'has_mobility', 'profile_photo_url', 'professional_info'
+      'has_mobility', 'profile_image', 'professional_info'
     ];
     
     const updates = {};

@@ -188,7 +188,7 @@ const recalculateAllRankings = async () => {
 const getTopProfessionals = async (limit = 10, category = null, location = null) => {
   try {
     let query = `
-      SELECT u.id, u.first_name, u.last_name, u.profile_photo_url, 
+      SELECT u.id, u.first_name, u.last_name, u.profile_image, 
              u.verification_score, u.verification_status, u.subscription_type,
              u.city, u.is_verified,
              AVG(r.rating) as average_rating,

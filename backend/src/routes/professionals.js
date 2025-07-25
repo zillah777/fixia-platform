@@ -485,7 +485,7 @@ const calculateProfileCompletion = async (userId) => {
     { name: 'Fecha de nacimiento', check: () => userData.birth_date },
     { name: 'Localidad y dirección', check: () => userData.city && userData.address },
     { name: 'Teléfono', check: () => userData.phone },
-    { name: 'Foto de perfil', check: () => userData.profile_photo_url },
+    { name: 'Foto de perfil', check: () => userData.profile_image },
     { name: 'DNI', check: () => userData.dni && userData.dni_procedure_number },
     { name: 'Información profesional', check: () => userData.profession },
     { name: 'Descripción personal', check: () => userData.about_me },

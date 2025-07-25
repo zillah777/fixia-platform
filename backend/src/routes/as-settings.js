@@ -96,7 +96,7 @@ router.get('/validation-progress', authMiddleware, requireProvider, async (req, 
     const validationItems = [
       {
         name: 'Foto de Perfil',
-        completed: !!userData.profile_photo_url,
+        completed: !!userData.profile_image,
         required: true,
         weight: 15
       },

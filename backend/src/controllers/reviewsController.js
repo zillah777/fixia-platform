@@ -67,10 +67,10 @@ exports.getReviews = async (req, res) => {
         r.updated_at,
         uc.first_name as customer_first_name,
         uc.last_name as customer_last_name,
-        uc.profile_photo_url as customer_photo,
+        uc.profile_image as customer_photo,
         up.first_name as provider_first_name,
         up.last_name as provider_last_name,
-        up.profile_photo_url as provider_photo,
+        up.profile_image as provider_photo,
         s.title as service_title
       FROM reviews r
       JOIN users uc ON r.customer_id = uc.id
@@ -134,10 +134,10 @@ exports.getReviewById = async (req, res) => {
         r.updated_at,
         uc.first_name as customer_first_name,
         uc.last_name as customer_last_name,
-        uc.profile_photo_url as customer_photo,
+        uc.profile_image as customer_photo,
         up.first_name as provider_first_name,
         up.last_name as provider_last_name,
-        up.profile_photo_url as provider_photo,
+        up.profile_image as provider_photo,
         s.title as service_title,
         s.description as service_description
       FROM reviews r
@@ -426,7 +426,7 @@ exports.getProviderReviewStats = async (req, res) => {
         r.created_at,
         uc.first_name as customer_first_name,
         uc.last_name as customer_last_name,
-        uc.profile_photo_url as customer_photo,
+        uc.profile_image as customer_photo,
         s.title as service_title
       FROM reviews r
       JOIN users uc ON r.customer_id = uc.id

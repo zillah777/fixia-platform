@@ -82,10 +82,10 @@ exports.getBookings = async (req, res) => {
         s.category,
         uc.first_name as customer_first_name,
         uc.last_name as customer_last_name,
-        uc.profile_photo_url as customer_photo,
+        uc.profile_image as customer_photo,
         up.first_name as provider_first_name,
         up.last_name as provider_last_name,
-        up.profile_photo_url as provider_photo
+        up.profile_image as provider_photo
       FROM bookings b
       JOIN services s ON b.service_id = s.id
       JOIN users uc ON b.customer_id = uc.id
@@ -162,11 +162,11 @@ exports.getBookingById = async (req, res) => {
         s.price,
         uc.first_name as customer_first_name,
         uc.last_name as customer_last_name,
-        uc.profile_photo_url as customer_photo,
+        uc.profile_image as customer_photo,
         uc.email as customer_email,
         up.first_name as provider_first_name,
         up.last_name as provider_last_name,
-        up.profile_photo_url as provider_photo,
+        up.profile_image as provider_photo,
         up.email as provider_email
       FROM bookings b
       JOIN services s ON b.service_id = s.id

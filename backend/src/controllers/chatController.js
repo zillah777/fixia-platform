@@ -25,8 +25,8 @@ exports.getChats = async (req, res) => {
           ELSE uc.last_name
         END as other_user_last_name,
         CASE 
-          WHEN c.customer_id = $1 THEN up.profile_photo_url
-          ELSE uc.profile_photo_url
+          WHEN c.customer_id = $1 THEN up.profile_image
+          ELSE uc.profile_image
         END as other_user_photo,
         s.title as service_title,
         last_msg.content as last_message,
@@ -115,8 +115,8 @@ exports.getChatById = async (req, res) => {
           ELSE uc.last_name
         END as other_user_last_name,
         CASE 
-          WHEN c.customer_id = $2 THEN up.profile_photo_url
-          ELSE uc.profile_photo_url
+          WHEN c.customer_id = $2 THEN up.profile_image
+          ELSE uc.profile_image
         END as other_user_photo,
         s.title as service_title
       FROM chats c
@@ -280,7 +280,7 @@ exports.getChatMessages = async (req, res) => {
         m.created_at,
         u.first_name as sender_first_name,
         u.last_name as sender_last_name,
-        u.profile_photo_url as sender_photo
+        u.profile_image as sender_photo
       FROM messages m
       JOIN users u ON m.sender_id = u.id
       WHERE m.chat_id = $1
@@ -398,7 +398,7 @@ exports.sendMessage = async (req, res) => {
 
     // Get sender info for response
     const senderResult = await query(`
-      SELECT first_name, last_name, profile_photo_url
+      SELECT first_name, last_name, profile_image
       FROM users 
       WHERE id = $1
     `, [userId]);
@@ -412,7 +412,7 @@ exports.sendMessage = async (req, res) => {
         ...message,
         sender_first_name: sender.first_name,
         sender_last_name: sender.last_name,
-        sender_photo: sender.profile_photo_url
+        sender_photo: sender.profile_image
       }
     });
 

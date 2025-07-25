@@ -149,7 +149,7 @@ exports.getServices = async (req, res) => {
         s.updated_at,
         u.first_name,
         u.last_name,
-        u.profile_photo_url,
+        u.profile_image,
         u.is_verified,
         s.average_rating,
         s.total_reviews,
@@ -162,7 +162,7 @@ exports.getServices = async (req, res) => {
       JOIN users u ON s.provider_id = u.id
       LEFT JOIN service_images si ON s.id = si.service_id
       WHERE ${whereConditions.join(' AND ')}
-      GROUP BY s.id, u.first_name, u.last_name, u.profile_photo_url, u.is_verified
+      GROUP BY s.id, u.first_name, u.last_name, u.profile_image, u.is_verified
       ${orderBy}
       LIMIT $${paramIndex - 1} OFFSET $${paramIndex}
     `;
@@ -253,7 +253,7 @@ exports.getServiceById = async (req, res) => {
         s.updated_at,
         u.first_name,
         u.last_name,
-        u.profile_photo_url,
+        u.profile_image,
         u.is_verified,
         u.about_me,
         u.city,
@@ -267,7 +267,7 @@ exports.getServiceById = async (req, res) => {
       JOIN users u ON s.provider_id = u.id
       LEFT JOIN service_images si ON s.id = si.service_id
       WHERE s.id = $1 AND s.is_active = true
-      GROUP BY s.id, u.first_name, u.last_name, u.profile_photo_url, u.is_verified, u.about_me, u.city
+      GROUP BY s.id, u.first_name, u.last_name, u.profile_image, u.is_verified, u.about_me, u.city
     `, [id]);
 
     if (result.rows.length === 0) {

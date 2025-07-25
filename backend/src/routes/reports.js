@@ -111,7 +111,7 @@ router.get('/my-reports', authMiddleware, async (req, res) => {
     let query = `
       SELECT r.*, 
              ru.first_name as reported_first_name, ru.last_name as reported_last_name,
-             ru.profile_photo_url as reported_photo
+             ru.profile_image as reported_photo
       FROM user_reports r
       INNER JOIN users ru ON r.reported_user_id = ru.id
       WHERE r.reporter_id = ?
