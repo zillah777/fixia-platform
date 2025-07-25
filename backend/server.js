@@ -124,36 +124,45 @@ app.use(securityHeaders);
 app.use(securityLogger);
 app.use(validateBodySize);
 
-// CORS configuration - production ready
-const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      'https://fixia-platform.vercel.app',
-      'https://fixia.com.ar',
-      'https://www.fixia.com.ar',
-      'http://localhost:3000',
-      'https://fixia-frontend.vercel.app',
-      process.env.FRONTEND_URL,
-      process.env.CORS_ORIGIN
-    ].filter(Boolean);
-    
-    // Allow requests with no origin (mobile apps, server-to-server)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.warn('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  maxAge: 86400 // 24 hours
-};
-
-app.use(cors(corsOptions));
+// CORS middleware - direct implementation for better control
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  console.log('🌐 CORS Request:', {
+    origin: origin,
+    method: req.method,
+    url: req.url,
+    headers: Object.keys(req.headers)
+  });
+  
+  // Set CORS headers
+  if (origin && origin.includes('fixia-platform.vercel.app')) {
+    res.header('Access-Control-Allow-Origin', origin);
+    console.log('✅ CORS: Allowed fixia-platform.vercel.app');
+  } else if (origin && (
+    origin.includes('fixia.com.ar') ||
+    origin.includes('localhost:3000')
+  )) {
+    res.header('Access-Control-Allow-Origin', origin);  
+    console.log('✅ CORS: Allowed approved origin');
+  } else {
+    res.header('Access-Control-Allow-Origin', 'https://fixia-platform.vercel.app');
+    console.log('✅ CORS: Using default origin');
+  }
+  
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
+  res.header('Access-Control-Max-Age', '86400');
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    console.log('✅ CORS: Handling OPTIONS preflight');
+    return res.status(200).end();
+  }
+  
+  next();
+});
 app.use(limiter);
 app.use(validateContentType);
 app.use(express.json({ limit: '5mb' })); // Reduced from 10mb
