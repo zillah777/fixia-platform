@@ -1,8 +1,6 @@
 // Database-aligned validation utilities
 // These validators match the exact constraints from PostgreSQL
 
-import { ValidationRules } from '@/types';
-
 export interface ValidationError {
   field: string;
   message: string;
@@ -126,28 +124,48 @@ export function validateObject(
  * Validates user registration data
  */
 export function validateUserRegistration(userData: any): ValidationResult {
-  return validateObject(userData, ValidationRules.user);
+  const userRules = {
+    first_name: { required: true, maxLength: 50 },
+    last_name: { required: true, maxLength: 50 },
+    email: { required: true, maxLength: 100, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
+    password: { required: true, minLength: 6 }
+  };
+  return validateObject(userData, userRules);
 }
 
 /**
  * Validates service creation data
  */
 export function validateServiceCreation(serviceData: any): ValidationResult {
-  return validateObject(serviceData, ValidationRules.service);
+  const serviceRules = {
+    title: { required: true, maxLength: 200 },
+    description: { required: true, maxLength: 2000 },
+    price: { required: true, min: 0 },
+    category_id: { required: true }
+  };
+  return validateObject(serviceData, serviceRules);
 }
 
 /**
  * Validates booking creation data
  */
 export function validateBookingCreation(bookingData: any): ValidationResult {
-  return validateObject(bookingData, ValidationRules.booking);
+  const bookingRules = {
+    service_id: { required: true },
+    message: { maxLength: 1000 }
+  };
+  return validateObject(bookingData, bookingRules);
 }
 
 /**
  * Validates review creation data
  */
 export function validateReviewCreation(reviewData: any): ValidationResult {
-  return validateObject(reviewData, ValidationRules.review);
+  const reviewRules = {
+    rating: { required: true, min: 1, max: 5 },
+    comment: { maxLength: 1000 }
+  };
+  return validateObject(reviewData, reviewRules);
 }
 
 /**
