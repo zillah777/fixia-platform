@@ -124,7 +124,11 @@ const corsOptions = {
     
     console.log('🔍 CORS check - Origin:', origin, 'Allowed:', allowedOrigins.includes(origin));
     
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+    // Temporary: Allow all Vercel app origins for debugging
+    if (origin && origin.includes('.vercel.app')) {
+      console.log('✅ Allowing Vercel origin:', origin);
+      callback(null, true);
+    } else if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
       console.error('❌ CORS blocked origin:', origin);
