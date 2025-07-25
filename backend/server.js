@@ -99,40 +99,28 @@ app.use(securityHeaders);
 app.use(securityLogger);
 app.use(validateBodySize);
 
-// Simple and direct CORS setup
+const corsOptions = {
+  origin: true, // Allow all origins temporarily
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+
+// Additional CORS headers middleware for extra safety
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
+  console.log('🌐 Request from origin:', req.headers.origin);
+  console.log('🌐 Request method:', req.method);
+  console.log('🌐 Request URL:', req.url);
   
-  console.log('🌐 CORS middleware - Origin:', origin);
-  console.log('🌐 CORS middleware - Method:', req.method);
-  console.log('🌐 CORS middleware - URL:', req.url);
-  
-  // Allow all Vercel app origins
-  if (origin && origin.includes('.vercel.app')) {
-    res.header('Access-Control-Allow-Origin', origin);
-    console.log('✅ CORS: Allowing Vercel origin:', origin);
-  } else if (origin && (
-    origin === 'https://fixia.com.ar' ||
-    origin === 'https://www.fixia.com.ar' ||
-    origin === 'http://localhost:3000'
-  )) {
-    res.header('Access-Control-Allow-Origin', origin);
-    console.log('✅ CORS: Allowing approved origin:', origin);
-  } else {
-    // Default to allowing the frontend URL from env
-    res.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'https://fixia-platform.vercel.app');
-    console.log('✅ CORS: Using default origin:', process.env.FRONTEND_URL || 'https://fixia-platform.vercel.app');
-  }
-  
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-  res.header('Access-Control-Max-Age', '86400');
   
-  // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    console.log('✅ CORS: Handling OPTIONS preflight request');
-    return res.status(200).end();
+    console.log('✅ Handling preflight OPTIONS request');
+    return res.status(200).json({ success: true });
   }
   
   next();
