@@ -135,6 +135,29 @@ app.get('/debug/user/:email', async (req, res) => {
   }
 });
 
+// Debug endpoint to check database tables
+app.get('/debug/tables', async (req, res) => {
+  try {
+    const { query } = require('./src/config/database');
+    
+    const result = await query(`
+      SELECT table_name 
+      FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      ORDER BY table_name
+    `);
+    
+    const tables = result.rows.map(row => row.table_name);
+    
+    res.json({
+      tables: tables,
+      count: tables.length
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Debug login endpoint to see detailed errors
 app.post('/debug/login', async (req, res) => {
   try {
