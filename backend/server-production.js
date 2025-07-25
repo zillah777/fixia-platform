@@ -171,6 +171,72 @@ app.get('/debug/service-data', async (req, res) => {
   }
 });
 
+// Debug endpoint to check table structure
+app.get('/debug/table-structure/:tableName', async (req, res) => {
+  try {
+    const { query } = require('./src/config/database');
+    const { tableName } = req.params;
+    
+    // Validate table name to prevent SQL injection
+    const validTables = [
+      'users', 'explorer_profiles', 'as_service_interests', 'explorer_service_requests',
+      'explorer_as_connections', 'explorer_as_reviews', 'explorer_review_obligations',
+      'as_review_obligations', 'as_work_categories', 'as_work_locations', 'as_pricing',
+      'as_portfolio', 'bookings', 'categories', 'chat_messages', 'chat_rooms',
+      'chubut_localities', 'notifications', 'payments', 'reviews', 'services',
+      'user_professional_info', 'user_availability_status'
+    ];
+    
+    if (!validTables.includes(tableName)) {
+      return res.status(400).json({ error: 'Invalid table name' });
+    }
+    
+    console.log(`🔍 Getting structure for table: ${tableName}`);
+    
+    // Get column information
+    const columns = await query(`
+      SELECT 
+        column_name,
+        data_type,
+        is_nullable,
+        column_default,
+        character_maximum_length
+      FROM information_schema.columns 
+      WHERE table_name = $1 AND table_schema = 'public'
+      ORDER BY ordinal_position
+    `, [tableName]);
+    
+    // Check if table exists
+    if (columns.rows.length === 0) {
+      return res.json({
+        table_name: tableName,
+        exists: false,
+        columns: []
+      });
+    }
+    
+    // Get a sample row to see actual data structure
+    let sampleData = { rows: [] };
+    try {
+      sampleData = await query(`SELECT * FROM ${tableName} LIMIT 1`);
+    } catch (sampleError) {
+      console.log(`⚠️ Could not get sample data from ${tableName}:`, sampleError.message);
+    }
+    
+    res.json({
+      table_name: tableName,
+      exists: true,
+      columns: columns.rows,
+      sample_data: sampleData.rows[0] || null,
+      total_columns: columns.rows.length
+    });
+    
+  } catch (error) {
+    console.error(`❌ Table structure debug error for ${req.params.tableName}:`, error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Debug login endpoint to see detailed errors
 app.post('/debug/login', async (req, res) => {
   try {
