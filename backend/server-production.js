@@ -70,6 +70,39 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Debug endpoint to check user status
+app.get('/debug/user/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    const { query } = require('./src/config/database');
+    
+    const result = await query(`
+      SELECT id, email, email_verified, email_verified_at, user_type, created_at 
+      FROM users 
+      WHERE email = $1
+    `, [email]);
+    
+    if (result.rows.length === 0) {
+      return res.json({ found: false, message: 'User not found' });
+    }
+    
+    const user = result.rows[0];
+    res.json({
+      found: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        email_verified: user.email_verified,
+        email_verified_at: user.email_verified_at,
+        user_type: user.user_type,
+        created_at: user.created_at
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // API Routes - only the working ones
 try {
   app.use('/api/auth', require('./src/routes/auth'));
