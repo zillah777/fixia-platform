@@ -117,9 +117,7 @@ app.get('/debug/user/:email', async (req, res) => {
     const { query } = require('./src/config/database');
     
     const result = await query(`
-      SELECT id, email, email_verified, email_verified_at, user_type, created_at 
-      FROM users 
-      WHERE email = $1
+      SELECT * FROM users WHERE email = $1
     `, [email]);
     
     if (result.rows.length === 0) {
@@ -129,14 +127,8 @@ app.get('/debug/user/:email', async (req, res) => {
     const user = result.rows[0];
     res.json({
       found: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        email_verified: user.email_verified,
-        email_verified_at: user.email_verified_at,
-        user_type: user.user_type,
-        created_at: user.created_at
-      }
+      user: user,
+      columns: Object.keys(user)
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

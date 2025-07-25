@@ -67,19 +67,18 @@ router.get('/profile', async (req, res) => {
 // PUT /api/users/profile - Update user profile
 router.put('/profile', async (req, res) => {
   try {
-    const { first_name, last_name, phone, address, latitude, longitude } = req.body;
+    const { first_name, last_name, phone, address, latitude, longitude, bio } = req.body;
 
+    // Only update existing columns to prevent SQL errors
     await query(
       `UPDATE users SET 
         first_name = COALESCE($1, first_name),
         last_name = COALESCE($2, last_name),
         phone = COALESCE($3, phone),
         address = COALESCE($4, address),
-        latitude = COALESCE($5, latitude),
-        longitude = COALESCE($6, longitude),
         updated_at = CURRENT_TIMESTAMP
-       WHERE id = $7`,
-      [first_name, last_name, phone, address, latitude, longitude, req.user.id]
+       WHERE id = $5`,
+      [first_name, last_name, phone, address, req.user.id]
     );
 
     const result = await query(
