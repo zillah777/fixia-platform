@@ -158,6 +158,18 @@ app.get('/verificar-email', async (req, res) => {
   res.redirect(`https://fixia-platform.vercel.app/verificar-email?token=${token}&type=${type || 'customer'}`);
 });
 
+// Password reset endpoint (for direct links) - redirect to frontend
+app.get('/recuperar-password', async (req, res) => {
+  const { token } = req.query;
+  
+  if (!token) {
+    return res.redirect('https://fixia-platform.vercel.app/auth/login?error=token-missing');
+  }
+  
+  // Redirect to the frontend password reset page
+  res.redirect(`https://fixia-platform.vercel.app/recuperar-password?token=${token}`);
+});
+
 // Also handle the API endpoint with GET (BEFORE 404 handler)
 app.get('/api/email-verification/verify', async (req, res) => {
   try {
