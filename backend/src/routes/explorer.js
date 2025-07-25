@@ -24,7 +24,7 @@ router.get('/profile', authMiddleware, requireExplorer, async (req, res) => {
     // OPTIMIZED: Replace correlated subqueries with LEFT JOIN (N+1 fix)
     // Eliminates 2 subqueries per row, improves performance significantly
     let profileResult = await query(`
-      SELECT ep.*, u.first_name, u.last_name, u.email, u.phone, u.profile_photo_url as profile_image,
+      SELECT ep.*, u.first_name, u.last_name, u.email, u.phone, u.profile_image,
              COALESCE(reviews.avg_rating, 0) as avg_rating,
              COALESCE(reviews.total_reviews, 0) as total_reviews
       FROM users u
@@ -47,7 +47,7 @@ router.get('/profile', authMiddleware, requireExplorer, async (req, res) => {
       `, [req.user.id]);
       
       profileResult = await query(`
-        SELECT ep.*, u.first_name, u.last_name, u.email, u.phone, u.profile_photo_url as profile_image,
+        SELECT ep.*, u.first_name, u.last_name, u.email, u.phone, u.profile_image,
                0 as avg_rating, 0 as total_reviews
         FROM users u
         INNER JOIN explorer_profiles ep ON u.id = ep.user_id
@@ -269,7 +269,7 @@ router.get('/request/:id/interests', authMiddleware, requireExplorer, async (req
     }
 
     const interestsResult = await query(`
-      SELECT asi.*, u.first_name, u.last_name, u.profile_photo_url as profile_image, u.verification_status,
+      SELECT asi.*, u.first_name, u.last_name, u.profile_image, u.verification_status,
              (SELECT AVG(rating) FROM explorer_as_reviews WHERE as_id = u.id) as avg_rating,
              (SELECT COUNT(*) FROM explorer_as_reviews WHERE as_id = u.id) as total_reviews,
              u.subscription_type
@@ -398,7 +398,7 @@ router.get('/browse-as', authMiddleware, requireExplorer, async (req, res) => {
     // OPTIMIZED: Replace 3 correlated subqueries with efficient LEFT JOINs (N+1 fix)
     // Eliminates N×3 subqueries for N professionals (major performance improvement)
     let sqlQuery = `
-      SELECT DISTINCT u.id, u.first_name, u.last_name, u.profile_photo_url as profile_image, 
+      SELECT DISTINCT u.id, u.first_name, u.last_name, u.profile_image, 
              u.verification_status, u.subscription_type, u.created_at,
              COALESCE(reviews.avg_rating, 0) as avg_rating,
              COALESCE(reviews.total_reviews, 0) as total_reviews,
@@ -451,7 +451,7 @@ router.get('/browse-as', authMiddleware, requireExplorer, async (req, res) => {
       paramIndex++;
     }
 
-    sqlQuery += ` GROUP BY u.id, u.first_name, u.last_name, u.profile_photo_url, u.verification_status, 
+    sqlQuery += ` GROUP BY u.id, u.first_name, u.last_name, u.profile_image, u.verification_status, 
                          u.subscription_type, u.created_at, ap.base_price, ap.service_type, 
                          ap.currency, upi.years_experience, upi.about_me`;
 

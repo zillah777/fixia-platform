@@ -19,7 +19,7 @@ router.get('/pending-obligations', authMiddleware, requireExplorer, async (req, 
     const obligationsResult = await query(`
       SELECT ero.*, eac.chat_room_id, eac.final_agreed_price,
              u.first_name as as_name, u.last_name as as_last_name,
-             u.profile_photo_url as as_profile_image, u.verification_status,
+             u.profile_image as as_profile_image, u.verification_status,
              esr.title as service_title, c.name as category_name,
              EXTRACT(DAY FROM (ero.review_due_date - NOW())) as days_remaining
       FROM explorer_review_obligations ero
@@ -154,7 +154,7 @@ router.get('/my-reviews', authMiddleware, requireExplorer, async (req, res) => {
 
     const [reviews] = await pool.execute(`
       SELECT ear.*, u.first_name as as_name, u.last_name as as_last_name,
-             u.profile_photo_url as as_profile_image,
+             u.profile_image as as_profile_image,
              esr.title as service_title, c.name as category_name
       FROM explorer_as_reviews ear
       INNER JOIN users u ON ear.as_id = u.id

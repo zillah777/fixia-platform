@@ -180,7 +180,7 @@ router.get('/available-requests', authMiddleware, requireProvider, async (req, r
     let query = `
       SELECT esr.*, c.name as category_name, c.icon as category_icon,
              u.first_name as explorer_name, u.last_name as explorer_last_name,
-             u.profile_photo_url as explorer_profile_image,
+             u.profile_image as explorer_profile_image,
              (SELECT AVG(rating) FROM as_explorer_reviews WHERE explorer_id = esr.explorer_id) as explorer_rating,
              (SELECT COUNT(*) FROM as_explorer_reviews WHERE explorer_id = esr.explorer_id) as explorer_reviews_count,
              (SELECT COUNT(*) FROM as_service_interests WHERE request_id = esr.id) as total_interests,
@@ -251,7 +251,7 @@ router.get('/request/:id', authMiddleware, requireProvider, async (req, res) => 
     const [requests] = await pool.execute(`
       SELECT esr.*, c.name as category_name, c.icon as category_icon,
              u.first_name as explorer_name, u.last_name as explorer_last_name,
-             u.profile_photo_url as explorer_profile_image, u.phone as explorer_phone,
+             u.profile_image as explorer_profile_image, u.phone as explorer_phone,
              u.created_at as explorer_member_since,
              (SELECT AVG(rating) FROM as_explorer_reviews WHERE explorer_id = esr.explorer_id) as explorer_rating,
              (SELECT COUNT(*) FROM as_explorer_reviews WHERE explorer_id = esr.explorer_id) as explorer_reviews_count,

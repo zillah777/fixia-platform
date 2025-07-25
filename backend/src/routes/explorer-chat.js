@@ -10,7 +10,7 @@ router.get('/connections', authMiddleware, async (req, res) => {
   try {
     const [connections] = await pool.execute(`
       SELECT eac.*, u.first_name as as_name, u.last_name as as_last_name,
-             u.profile_photo_url as as_profile_image, u.verification_status,
+             u.profile_image as as_profile_image, u.verification_status,
              esr.title as service_title, c.name as category_name,
              (SELECT COUNT(*) FROM chat_messages cm WHERE cm.chat_room_id = eac.chat_room_id AND cm.sender_id != ? AND cm.is_read = FALSE) as unread_messages,
              (SELECT message FROM chat_messages cm WHERE cm.chat_room_id = eac.chat_room_id ORDER BY cm.created_at DESC LIMIT 1) as last_message,
@@ -47,7 +47,7 @@ router.get('/:chatRoomId/messages', authMiddleware, async (req, res) => {
     }
 
     const [messages] = await pool.execute(`
-      SELECT cm.*, u.first_name, u.last_name, u.profile_photo_url as profile_image
+      SELECT cm.*, u.first_name, u.last_name, u.profile_image
       FROM chat_messages cm
       INNER JOIN users u ON cm.sender_id = u.id
       WHERE cm.chat_room_id = ?
@@ -101,7 +101,7 @@ router.post('/:chatRoomId/message', authMiddleware, async (req, res) => {
 
     // Get complete message data
     const [messageData] = await pool.execute(`
-      SELECT cm.*, u.first_name, u.last_name, u.profile_photo_url as profile_image
+      SELECT cm.*, u.first_name, u.last_name, u.profile_image
       FROM chat_messages cm
       INNER JOIN users u ON cm.sender_id = u.id
       WHERE cm.id = ?
@@ -210,7 +210,7 @@ router.get('/connection/:connectionId', authMiddleware, async (req, res) => {
     const [connections] = await pool.execute(`
       SELECT eac.*, 
              eu.first_name as explorer_name, eu.last_name as explorer_last_name,
-             eu.profile_photo_url as explorer_profile_image,
+             eu.profile_image as explorer_profile_image,
              au.first_name as as_name, au.last_name as as_last_name,
              au.profile_image as as_profile_image, au.verification_status,
              esr.title as service_title, esr.description as service_description,
