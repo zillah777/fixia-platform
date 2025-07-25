@@ -106,6 +106,39 @@ try {
   console.error('❌ Dashboard routes failed:', e.message);
 }
 
+try {
+  app.use('/api/email-verification', require('./src/routes/email-verification'));
+  console.log('✅ Email verification routes loaded');
+} catch (e) {
+  console.error('❌ Email verification routes failed:', e.message);
+}
+
+// Email verification endpoint (for direct links)
+app.get('/verificar-email', async (req, res) => {
+  try {
+    console.log('📧 Email verification requested:', req.query);
+    const { token, type } = req.query;
+    
+    if (!token) {
+      return res.status(400).json({
+        error: 'Token de verificación requerido'
+      });
+    }
+
+    // Try to use the email verification route
+    const emailVerificationRoute = require('./src/routes/email-verification');
+    // Redirect to API endpoint
+    return res.redirect(`/api/email-verification/verify?token=${token}&type=${type || 'customer'}`);
+    
+  } catch (error) {
+    console.error('❌ Email verification error:', error);
+    res.status(500).json({
+      error: 'Error en la verificación de email',
+      details: error.message
+    });
+  }
+});
+
 // 404 handler
 app.use('*', (req, res) => {
   console.log('❓ Unknown route:', req.method, req.originalUrl);
