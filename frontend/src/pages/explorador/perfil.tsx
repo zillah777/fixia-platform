@@ -56,7 +56,11 @@ const EditarPerfil: NextPage = () => {
     
     // Set photo preview if user has profile photo
     if (user?.profile_photo_url) {
-      setPhotoPreview(`${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`);
+      // If URL is already complete, use it directly, otherwise prepend API URL
+      const photoUrl = user.profile_photo_url.startsWith('http') 
+        ? user.profile_photo_url 
+        : `${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`;
+      setPhotoPreview(photoUrl);
     }
   }, [user, loading, router]);
 
@@ -120,7 +124,11 @@ const EditarPerfil: NextPage = () => {
       
       // Restore original photo on error
       if (user?.profile_photo_url) {
-        setPhotoPreview(`${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`);
+        // If URL is already complete, use it directly, otherwise prepend API URL
+        const photoUrl = user.profile_photo_url.startsWith('http') 
+          ? user.profile_photo_url 
+          : `${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`;
+        setPhotoPreview(photoUrl);
       } else {
         setPhotoPreview(null);
       }
