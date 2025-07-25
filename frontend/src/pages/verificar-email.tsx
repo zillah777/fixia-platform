@@ -34,10 +34,9 @@ export default function VerificarEmail() {
         setStatus('success');
         setMessage(data.message || '¡Email verificado exitosamente!');
         
-        // Redirigir después de 3 segundos
+        // Redirigir al login después de verificar email exitosamente
         setTimeout(() => {
-          const userType = type === 'provider' ? 'as' : 'explorador';
-          router.push(`/${userType}/dashboard`);
+          router.push('/auth/login?verified=true');
         }, 3000);
       } else {
         setStatus('error');
