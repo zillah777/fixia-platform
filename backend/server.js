@@ -104,7 +104,7 @@ const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
       'https://fixia-platform.vercel.app',
-      'https://fixia.com.ar',
+      'https://fixia.com.ar',  
       'https://www.fixia.com.ar',
       'http://localhost:3000',
       'https://fixia-frontend.vercel.app',
@@ -114,6 +114,8 @@ const corsOptions = {
     ].filter(Boolean);
     
     console.log('🌐 CORS allowed origins:', allowedOrigins);
+    console.log('🔍 Environment FRONTEND_URL:', process.env.FRONTEND_URL);
+    console.log('🔍 Environment CORS_ORIGIN:', process.env.CORS_ORIGIN);
     
     // Allow requests with no origin (like mobile apps or curl requests) in development
     if (!origin && process.env.NODE_ENV === 'development') {
