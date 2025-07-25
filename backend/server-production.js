@@ -76,38 +76,7 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Static file serving for uploads with CORS
-app.use('/uploads', (req, res, next) => {
-  const origin = req.headers.origin;
-  
-  // Set CORS headers for static files
-  if (origin && origin.includes('fixia-platform.vercel.app')) {
-    res.header('Access-Control-Allow-Origin', origin);
-  } else {
-    res.header('Access-Control-Allow-Origin', 'https://fixia-platform.vercel.app');
-  }
-  
-  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  
-  // Add cache control for images
-  if (req.path.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
-    res.header('Cache-Control', 'public, max-age=31536000'); // 1 year
-  }
-  
-  next();
-}, express.static('uploads', {
-  // Express.static options for security
-  dotfiles: 'deny',
-  index: false,
-  redirect: false
-}));
+// Static file serving moved to AFTER API routes but BEFORE 404 handler
 
 // Health check
 app.get('/health', (req, res) => {
@@ -539,6 +508,44 @@ app.get('/api/email-verification/verify', async (req, res) => {
     });
   }
 });
+
+// Static files MUST be before 404 handler
+console.log('📁 Setting up static file serving for uploads...');
+
+// MOVED: Static file serving for uploads with CORS (moved here to be before 404)
+app.use('/uploads', (req, res, next) => {
+  const origin = req.headers.origin;
+  
+  console.log('📁 Static file request:', req.url, 'from:', origin);
+  
+  // Set CORS headers for static files
+  if (origin && origin.includes('fixia-platform.vercel.app')) {
+    res.header('Access-Control-Allow-Origin', origin);
+  } else {
+    res.header('Access-Control-Allow-Origin', 'https://fixia-platform.vercel.app');
+  }
+  
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  // Add cache control for images
+  if (req.path.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+    res.header('Cache-Control', 'public, max-age=31536000'); // 1 year
+  }
+  
+  next();
+}, express.static('uploads', {
+  // Express.static options for security
+  dotfiles: 'deny',
+  index: false,
+  redirect: false
+}));
 
 // 404 handler
 app.use('*', (req, res) => {
