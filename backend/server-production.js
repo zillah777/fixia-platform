@@ -125,13 +125,105 @@ app.get('/verificar-email', async (req, res) => {
       });
     }
 
-    // Try to use the email verification route
-    const emailVerificationRoute = require('./src/routes/email-verification');
-    // Redirect to API endpoint
-    return res.redirect(`/api/email-verification/verify?token=${token}&type=${type || 'customer'}`);
+    // Direct verification implementation
+    const { query } = require('./src/config/database');
+    
+    // Verify token and update user
+    const result = await query(`
+      UPDATE users 
+      SET email_verified = true, email_verified_at = CURRENT_TIMESTAMP 
+      WHERE id = (
+        SELECT user_id FROM email_verification_tokens 
+        WHERE token = $1 AND expires_at > CURRENT_TIMESTAMP
+      )
+      RETURNING id, email, first_name, last_name
+    `, [token]);
+    
+    if (result.rows.length === 0) {
+      return res.status(400).json({
+        error: 'Token inválido o expirado'
+      });
+    }
+    
+    const user = result.rows[0];
+    
+    // Delete used token
+    await query('DELETE FROM email_verification_tokens WHERE token = $1', [token]);
+    
+    console.log('✅ Email verified for user:', user.email);
+    
+    // Return success response
+    res.json({
+      success: true,
+      message: `¡Email verificado exitosamente! Bienvenido ${user.first_name}`,
+      data: {
+        email: user.email,
+        verified: true,
+        redirect_url: 'https://fixia-platform.vercel.app/auth/login'
+      }
+    });
     
   } catch (error) {
     console.error('❌ Email verification error:', error);
+    res.status(500).json({
+      error: 'Error en la verificación de email',
+      details: error.message
+    });
+  }
+});
+
+// Also handle the API endpoint with GET (BEFORE 404 handler)
+app.get('/api/email-verification/verify', async (req, res) => {
+  try {
+    console.log('📧 API verification requested:', req.query);
+    const { token, type } = req.query;
+    
+    if (!token) {
+      return res.status(400).json({
+        error: 'Token de verificación requerido'
+      });
+    }
+
+    // Direct verification implementation (same as /verificar-email)
+    const { query } = require('./src/config/database');
+    
+    // Verify token and update user
+    const result = await query(`
+      UPDATE users 
+      SET email_verified = true, email_verified_at = CURRENT_TIMESTAMP 
+      WHERE id = (
+        SELECT user_id FROM email_verification_tokens 
+        WHERE token = $1 AND expires_at > CURRENT_TIMESTAMP
+      )
+      RETURNING id, email, first_name, last_name
+    `, [token]);
+    
+    if (result.rows.length === 0) {
+      return res.status(400).json({
+        error: 'Token inválido o expirado'
+      });
+    }
+    
+    const user = result.rows[0];
+    
+    // Delete used token
+    await query('DELETE FROM email_verification_tokens WHERE token = $1', [token]);
+    
+    console.log('✅ Email verified for user:', user.email);
+    
+    // Return success response
+    res.json({
+      success: true,
+      message: `¡Email verificado exitosamente! Bienvenido ${user.first_name}`,
+      data: {
+        email: user.email,
+        verified: true,
+        redirect_url: 'https://fixia-platform.vercel.app/auth/login'
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ API Email verification error:', error);
     res.status(500).json({
       error: 'Error en la verificación de email',
       details: error.message
