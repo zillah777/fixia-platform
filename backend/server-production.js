@@ -2,11 +2,26 @@ const express = require('express');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 console.log('🚀 Starting Fixia Production Server...');
 console.log('📍 Environment:', process.env.NODE_ENV);
 console.log('📍 Port:', process.env.PORT || 8080);
+
+// Ensure upload directories exist
+const ensureDirectoryExists = (dirPath) => {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+    console.log(`✅ Created directory: ${dirPath}`);
+  }
+};
+
+ensureDirectoryExists('uploads');
+ensureDirectoryExists('uploads/profiles');
+ensureDirectoryExists('uploads/services');
+ensureDirectoryExists('uploads/documents');
 
 const { testConnection } = require('./src/config/database');
 const { authMiddleware } = require('./src/middleware/auth');
@@ -60,6 +75,31 @@ app.use((req, res, next) => {
 // Body parsing
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Static file serving for uploads with CORS
+app.use('/uploads', (req, res, next) => {
+  // Set CORS headers for static files
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  // Add cache control for images
+  if (req.path.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+    res.header('Cache-Control', 'public, max-age=31536000'); // 1 year
+  }
+  
+  next();
+}, express.static('uploads', {
+  // Express.static options for security
+  dotfiles: 'deny',
+  index: false,
+  redirect: false
+}));
 
 // Health check
 app.get('/health', (req, res) => {
