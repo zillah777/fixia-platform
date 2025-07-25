@@ -28,6 +28,7 @@
     "db:optimize": "node scripts/optimize-database.js",
     "db:optimize:dry": "node scripts/optimize-database.js --dry-run",
     "db:stats": "node scripts/optimize-database.js --stats",
+    "verify-users": "node scripts/verify-existing-users.js",
     "build": "echo 'Build completed - migrations will run at startup'",
     "seenode:deploy": "echo 'Deploying to SeeNode...'",
     "seenode:health": "curl -f $SEENODE_URL/health || exit 1",

@@ -1,0 +1,154 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - img
+  - text: FIXIA
+  - navigation:
+    - link "Cómo funciona":
+      - /url: "#como-funciona"
+    - link "Servicios":
+      - /url: "#servicios"
+    - link "Especialistas":
+      - /url: "#profesionales"
+    - link "Contacto":
+      - /url: "#contacto"
+  - link "Iniciar Sesión":
+    - /url: /auth/login
+    - button "Iniciar Sesión"
+  - link "Registrarse":
+    - /url: /auth/registro
+    - button "Registrarse"
+- text: La Nueva Era de los Servicios Profesionales
+- heading "Fx Fixia Conectando Ases y Exploradores" [level=1]
+- paragraph: La plataforma que conecta a los mejores profesionales con personas que necesitan servicios de calidad excepcional.
+- text: Sin comisiones, sin intermediarios
+- textbox "¿Qué servicio necesitas hoy?"
+- button "Buscar Ahora" [disabled]
+- link "Soy Explorador":
+  - /url: /auth/registro?type=customer
+  - button "Soy Explorador"
+- link "Soy Especialista":
+  - /url: /auth/registro?type=provider
+  - button "Soy Especialista"
+- heading "Por qué elegir Fx Fixia" [level=2]
+- paragraph: Tecnología avanzada y profesionales verificados para resultados excepcionales
+- heading "Algoritmos Inteligentes" [level=3]
+- paragraph: IA avanzada que conecta necesidades específicas con el talento perfecto
+- heading "Confianza Verificada" [level=3]
+- paragraph: Profesionales validados con certificaciones y reseñas auténticas
+- heading "Resultados Excepcionales" [level=3]
+- paragraph: 98% de satisfacción garantizada en cada conexión
+- heading "Servicios que Transforman" [level=2]
+- paragraph: Cada especialista es cuidadosamente seleccionado. Cada proyecto, una oportunidad de crear algo extraordinario.
+- link "Plomería Reparaciones e instalaciones Explorar especialistas":
+  - /url: /explorador/buscar-servicio?category=plomeria
+  - heading "Plomería" [level=3]
+  - paragraph: Reparaciones e instalaciones
+  - text: Explorar especialistas
+- link "Electricidad Instalaciones eléctricas Explorar especialistas":
+  - /url: /explorador/buscar-servicio?category=electricidad
+  - heading "Electricidad" [level=3]
+  - paragraph: Instalaciones eléctricas
+  - text: Explorar especialistas
+- link "Limpieza Limpieza de hogar y oficinas Explorar especialistas":
+  - /url: /explorador/buscar-servicio?category=limpieza
+  - heading "Limpieza" [level=3]
+  - paragraph: Limpieza de hogar y oficinas
+  - text: Explorar especialistas
+- link "Reparaciones Reparaciones del hogar Explorar especialistas":
+  - /url: /explorador/buscar-servicio?category=reparaciones
+  - heading "Reparaciones" [level=3]
+  - paragraph: Reparaciones del hogar
+  - text: Explorar especialistas
+- link "Belleza Servicios de belleza Explorar especialistas":
+  - /url: /explorador/buscar-servicio?category=belleza
+  - heading "Belleza" [level=3]
+  - paragraph: Servicios de belleza
+  - text: Explorar especialistas
+- link "Otros Más servicios disponibles Explorar especialistas":
+  - /url: /explorador/buscar-servicio?category=otros
+  - heading "Otros" [level=3]
+  - paragraph: Más servicios disponibles
+  - text: Explorar especialistas
+- heading "Tres Pasos Hacia la Excelencia" [level=2]
+- paragraph: Una metodología diseñada para garantizar que cada conexión sea perfecta, cada resultado extraordinario.
+- heading "Descubrimiento Inteligente" [level=3]
+- paragraph: Nuestra tecnología comprende tu visión y localiza especialistas que no solo ejecutan, sino que elevan tu proyecto.
+- heading "Conexión Estratégica" [level=3]
+- paragraph: "Más que una coincidencia: una alianza estratégica entre tu necesidad y el talento excepcional que la materializa."
+- heading "Garantía de Excelencia" [level=3]
+- paragraph: Un ecosistema de confianza que asegura resultados superiores y relaciones duraderas.
+- link "Experimentar la Diferencia":
+  - /url: /auth/registro
+  - button "Experimentar la Diferencia"
+- heading "Especialistas de Elite" [level=2]
+- paragraph: Profesionales excepcionales que han sido rigurosamente evaluados y que consistentemente superan expectativas.
+- heading "Carlos Rodríguez" [level=3]
+- paragraph: Plomero Certificado
+- text: 4.9 (127 reseñas) Plomería Instalaciones Zona Centro
+- heading "Ana Martínez" [level=3]
+- paragraph: Electricista
+- text: 4.8 (89 reseñas) Electricidad Instalaciones Zona Norte
+- heading "Roberto Silva" [level=3]
+- paragraph: Técnico Reparaciones
+- text: 4.7 (156 reseñas) Reparaciones Mantenimiento Zona Sur
+- link "Ver Todos los Especialistas":
+  - /url: /explorador/navegar-profesionales
+  - button "Ver Todos los Especialistas"
+- heading "Historias de Transformación" [level=2]
+- paragraph: Cada testimonio es una prueba de que cuando la innovación encuentra la experiencia, surgen resultados extraordinarios.
+- paragraph: "\"Excelente servicio, muy profesional y resolvió mi problema de plomería rápidamente.\""
+- paragraph: María González
+- paragraph: Reparación de Plomería
+- paragraph: "\"Encontré al electricista perfecto para mi hogar. Trabajo de calidad y precio justo.\""
+- paragraph: Juan López
+- paragraph: Instalación Eléctrica
+- paragraph: "\"Muy buena experiencia usando Fixia. La plataforma es fácil de usar.\""
+- paragraph: Laura Fernández
+- paragraph: Limpieza de Hogar
+- heading "Resultados que Hablan" [level=2]
+- paragraph: Números que demuestran nuestra excelencia
+- text: 500+ Especialistas de Elite 2,000+ Proyectos Transformados 4.8 Calificación Promedio 98% Resultados Excepcionales ¡Únete a la Revolución!
+- heading "Tu Proyecto Excepcional Te Espera" [level=2]
+- paragraph: Únete a la comunidad de visionarios que han elegido la excelencia como estándar.
+- link "Soy Explorador":
+  - /url: /auth/registro?type=customer
+  - button "Soy Explorador"
+- link "Soy Especialista":
+  - /url: /auth/registro?type=provider
+  - button "Soy Especialista"
+- contentinfo:
+  - img
+  - text: FIXIA Servicios Profesionales
+  - paragraph: Fx Fixia - La nueva era de los servicios profesionales. Donde cada conexión es el inicio de algo extraordinario.
+  - heading "Para Exploradores" [level=4]
+  - list:
+    - listitem:
+      - link "Buscar Servicios":
+        - /url: /explorador/buscar-servicio
+    - listitem:
+      - link "Explorar Especialistas":
+        - /url: /explorador/navegar-profesionales
+    - listitem:
+      - link "Registro Explorador":
+        - /url: /auth/registro?type=customer
+  - heading "Para Especialistas" [level=4]
+  - list:
+    - listitem:
+      - link "Unirse como Especialista":
+        - /url: /auth/registro?type=provider
+    - listitem:
+      - link "Convertirse en AS":
+        - /url: /explorador/cambiar-a-as
+  - heading "Contacto" [level=4]
+  - text: info@fixia.com.ar +54 11 1234-5678 Argentina
+  - paragraph: © 2024 Fx Fixia. Todos los derechos reservados.
+  - link "Términos":
+    - /url: /legal/terms
+  - link "Privacidad":
+    - /url: /legal/privacy
+  - link "Contacto":
+    - /url: /company/contact
+- alert
+```

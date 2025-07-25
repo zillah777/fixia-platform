@@ -1,0 +1,272 @@
+{
+  "testUsers": {
+    "explorador": {
+      "name": "Juan",
+      "lastname": "Pérez",
+      "email": "explorador.test@fixia.com",
+      "password": "TestPassword123!",
+      "phone": "+54 280 123456",
+      "location": "rawson"
+    },
+    "as": {
+      "name": "María",
+      "lastname": "García", 
+      "email": "as.test@fixia.com",
+      "password": "TestPassword123!",
+      "businessName": "García Servicios Profesionales",
+      "experience": 8,
+      "categories": ["plomeria", "electricidad"],
+      "serviceAreas": ["rawson", "trelew"]
+    }
+  },
+  "serviceCategories": [
+    {
+      "id": "plomeria",
+      "name": "Plomería",
+      "description": "Servicios de plomería profesional"
+    },
+    {
+      "id": "electricidad", 
+      "name": "Electricidad",
+      "description": "Servicios eléctricos certificados"
+    },
+    {
+      "id": "limpieza",
+      "name": "Limpieza", 
+      "description": "Servicios de limpieza integral"
+    },
+    {
+      "id": "reparaciones",
+      "name": "Reparaciones",
+      "description": "Reparaciones generales del hogar"
+    },
+    {
+      "id": "belleza",
+      "name": "Belleza",
+      "description": "Servicios de belleza y estética"
+    },
+    {
+      "id": "otros",
+      "name": "Otros",
+      "description": "Otros servicios profesionales"
+    }
+  ],
+  "locations": [
+    {
+      "id": "rawson",
+      "name": "Rawson",
+      "province": "Chubut"
+    },
+    {
+      "id": "trelew",
+      "name": "Trelew", 
+      "province": "Chubut"
+    },
+    {
+      "id": "puerto-madryn",
+      "name": "Puerto Madryn",
+      "province": "Chubut"
+    },
+    {
+      "id": "comodoro-rivadavia",
+      "name": "Comodoro Rivadavia",
+      "province": "Chubut"
+    },
+    {
+      "id": "esquel",
+      "name": "Esquel",
+      "province": "Chubut"
+    }
+  ],
+  "sampleServiceRequests": [
+    {
+      "title": "Reparación de plomería en cocina",
+      "description": "Necesito reparar una fuga en la tubería debajo del fregadero de la cocina. El problema ha empeorado y hay agua acumulándose.",
+      "category": "plomeria",
+      "location": "rawson",
+      "priority": "urgente",
+      "budgetMin": 2000,
+      "budgetMax": 5000
+    },
+    {
+      "title": "Instalación eléctrica en dormitorio",
+      "description": "Requiero instalación de tomas de corriente adicionales y mejora de la iluminación en dormitorio principal.",
+      "category": "electricidad",
+      "location": "trelew", 
+      "priority": "normal",
+      "budgetMin": 3000,
+      "budgetMax": 8000
+    },
+    {
+      "title": "Limpieza profunda de oficina",
+      "description": "Necesito limpieza profunda de oficina de 150m2, incluyendo alfombras, ventanas y desinfección completa.",
+      "category": "limpieza",
+      "location": "puerto-madryn",
+      "priority": "flexible",
+      "budgetMin": 4000,
+      "budgetMax": 7000
+    }
+  ],
+  "sampleServices": [
+    {
+      "title": "Reparación de Plomería 24/7",
+      "description": "Servicio de plomería de emergencia disponible las 24 horas. Especialistas en reparación de fugas, destapado de cañerías e instalaciones.",
+      "category": "plomeria",
+      "price": 3500,
+      "serviceAreas": ["rawson", "trelew"],
+      "availability": "24/7"
+    },
+    {
+      "title": "Instalaciones Eléctricas Certificadas",
+      "description": "Electricista matriculado con más de 10 años de experiencia. Instalaciones residenciales y comerciales con garantía.",
+      "category": "electricidad", 
+      "price": 2800,
+      "serviceAreas": ["puerto-madryn", "trelew"],
+      "availability": "lunes-viernes"
+    },
+    {
+      "title": "Limpieza Integral del Hogar",
+      "description": "Servicio completo de limpieza con productos ecológicos. Incluye cocina, baños, dormitorios y áreas comunes.",
+      "category": "limpieza",
+      "price": 2200,
+      "serviceAreas": ["rawson", "puerto-madryn", "trelew"],
+      "availability": "flexible"
+    }
+  ],
+  "chatMessages": [
+    {
+      "type": "greeting",
+      "messages": [
+        "Hola, me interesa su servicio",
+        "Buenos días, quisiera más información",
+        "Hola, necesito ayuda con un problema"
+      ]
+    },
+    {
+      "type": "inquiry",
+      "messages": [
+        "¿Cuándo podrían venir a ver el trabajo?",
+        "¿Incluye materiales en el precio?",
+        "¿Tienen disponibilidad esta semana?"
+      ]
+    },
+    {
+      "type": "booking",
+      "messages": [
+        "Me gustaría contratar el servicio",
+        "¿Podríamos coordinar para mañana?",
+        "Acepto el presupuesto, ¿cuándo empezamos?"
+      ]
+    }
+  ],
+  "reviewTexts": [
+    {
+      "rating": 5,
+      "comments": [
+        "Excelente servicio, muy profesional y rápido",
+        "Quedé muy satisfecho con el trabajo realizado",
+        "Lo recomiendo totalmente, trabajo de calidad"
+      ]
+    },
+    {
+      "rating": 4,
+      "comments": [
+        "Buen servicio, llegó puntual y trabajó bien",
+        "Resolvió el problema satisfactoriamente",
+        "Profesional y amable, precio justo"
+      ]
+    },
+    {
+      "rating": 3,
+      "comments": [
+        "El trabajo está bien, pero tardó más de lo esperado",
+        "Servicio aceptable, cumplió con lo acordado",
+        "Está bien, aunque podría mejorar la comunicación"
+      ]
+    }
+  ],
+  "paymentData": {
+    "testCards": {
+      "visa": {
+        "number": "4509953566233704",
+        "expiry": "11/25",
+        "cvv": "123",
+        "name": "APRO"
+      },
+      "mastercard": {
+        "number": "5031755734530604", 
+        "expiry": "11/25",
+        "cvv": "123",
+        "name": "APRO"
+      }
+    },
+    "amounts": {
+      "small": 1500,
+      "medium": 3500,
+      "large": 7500
+    }
+  },
+  "apiEndpoints": {
+    "auth": {
+      "register": "/api/auth/register",
+      "login": "/api/auth/login",
+      "logout": "/api/auth/logout",
+      "resetPassword": "/api/auth/reset-password"
+    },
+    "users": {
+      "profile": "/api/users/profile",
+      "updateProfile": "/api/users/profile",
+      "changePassword": "/api/users/change-password"
+    },
+    "services": {
+      "create": "/api/services",
+      "list": "/api/services",
+      "detail": "/api/services/:id",
+      "update": "/api/services/:id",
+      "delete": "/api/services/:id"
+    },
+    "requests": {
+      "create": "/api/service-requests",
+      "list": "/api/service-requests", 
+      "detail": "/api/service-requests/:id",
+      "respond": "/api/service-requests/:id/respond"
+    },
+    "chat": {
+      "conversations": "/api/chat/conversations",
+      "messages": "/api/chat/conversations/:id/messages",
+      "send": "/api/chat/conversations/:id/messages"
+    },
+    "payments": {
+      "create": "/api/payments",
+      "status": "/api/payments/:id",
+      "history": "/api/payments/history",
+      "refund": "/api/payments/:id/refund"
+    },
+    "reviews": {
+      "create": "/api/reviews",
+      "list": "/api/reviews",
+      "respond": "/api/reviews/:id/respond"
+    }
+  },
+  "testConfig": {
+    "timeouts": {
+      "short": 5000,
+      "medium": 10000,
+      "long": 30000
+    },
+    "retries": {
+      "default": 2,
+      "flaky": 3
+    },
+    "viewport": {
+      "desktop": {
+        "width": 1280,
+        "height": 720
+      },
+      "mobile": {
+        "width": 375,
+        "height": 667
+      }
+    }
+  }
+}

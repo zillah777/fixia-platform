@@ -64,14 +64,15 @@ exports.register = async (req, res) => {
     // Hash password
     const password_hash = await hashPassword(password);
 
-    // Create user with minimal fields
+    // Create user with minimal fields (auto-verify if email verification not required)
+    const shouldAutoVerify = process.env.REQUIRE_EMAIL_VERIFICATION !== 'true';
     const result = await query(`
       INSERT INTO users (
-        first_name, last_name, email, password_hash, user_type
-      ) VALUES ($1, $2, $3, $4, $5)
-      RETURNING id, first_name, last_name, email, user_type, created_at
+        first_name, last_name, email, password_hash, user_type, email_verified
+      ) VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id, first_name, last_name, email, user_type, email_verified, created_at
     `, [
-      first_name, last_name, email, password_hash, dbUserType
+      first_name, last_name, email, password_hash, dbUserType, shouldAutoVerify
     ]);
 
     const user = result.rows[0];
@@ -156,8 +157,9 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Check if email is verified
-    if (!user.email_verified) {
+    // Check if email is verified (configurable via environment variable)
+    const requireEmailVerification = process.env.REQUIRE_EMAIL_VERIFICATION === 'true';
+    if (!user.email_verified && requireEmailVerification) {
       return res.status(403).json({
         success: false,
         error: 'Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.',

@@ -107,17 +107,25 @@ const corsOptions = {
       'https://fixia.com.ar',
       'https://www.fixia.com.ar',
       'http://localhost:3000',
-      'https://fixia-frontend.vercel.app'
-    ];
+      'https://fixia-frontend.vercel.app',
+      'https://fixia-zillah777s-projects.vercel.app',
+      process.env.FRONTEND_URL,
+      process.env.CORS_ORIGIN
+    ].filter(Boolean);
+    
+    console.log('🌐 CORS allowed origins:', allowedOrigins);
     
     // Allow requests with no origin (like mobile apps or curl requests) in development
     if (!origin && process.env.NODE_ENV === 'development') {
       return callback(null, true);
     }
     
+    console.log('🔍 CORS check - Origin:', origin, 'Allowed:', allowedOrigins.includes(origin));
+    
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
+      console.error('❌ CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
