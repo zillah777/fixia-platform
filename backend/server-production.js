@@ -135,6 +135,42 @@ app.get('/debug/tables', async (req, res) => {
   }
 });
 
+// Debug endpoint to check service requests and interests
+app.get('/debug/service-data', async (req, res) => {
+  try {
+    const { query } = require('./src/config/database');
+    
+    console.log('🔍 Checking service requests...');
+    const requests = await query('SELECT id, title, explorer_id, status FROM explorer_service_requests LIMIT 5');
+    console.log('✅ Service requests found:', requests.rows.length);
+    
+    console.log('🔍 Checking service interests...');
+    const interests = await query('SELECT id, request_id, as_id, status FROM as_service_interests LIMIT 5');
+    console.log('✅ Service interests found:', interests.rows.length);
+    
+    console.log('🔍 Checking for request ID 1...');
+    const request1 = await query('SELECT * FROM explorer_service_requests WHERE id = 1');
+    console.log('✅ Request 1 found:', request1.rows.length > 0);
+    
+    let interests1 = { rows: [] };
+    if (request1.rows.length > 0) {
+      console.log('🔍 Checking interests for request 1...');
+      interests1 = await query('SELECT * FROM as_service_interests WHERE request_id = 1');
+      console.log('✅ Interests for request 1:', interests1.rows.length);
+    }
+    
+    res.json({
+      service_requests: requests.rows,
+      service_interests: interests.rows,
+      request_1: request1.rows,
+      request_1_interests: interests1.rows
+    });
+  } catch (error) {
+    console.error('❌ Debug service data error:', error);
+    res.status(500).json({ error: error.message, stack: error.stack });
+  }
+});
+
 // Debug login endpoint to see detailed errors
 app.post('/debug/login', async (req, res) => {
   try {
@@ -514,28 +550,29 @@ console.log('📁 Setting up static file serving for uploads...');
 
 // MOVED: Static file serving for uploads with CORS (moved here to be before 404)
 app.use('/uploads', (req, res, next) => {
-  const origin = req.headers.origin;
+  const origin = req.headers.origin || req.headers.referer;
   
-  console.log('📁 Static file request:', req.url, 'from:', origin);
+  console.log('📁 Static file request:', {
+    url: req.url,
+    originalUrl: req.originalUrl,
+    origin: origin,
+    referer: req.headers.referer,
+    userAgent: req.headers['user-agent']?.substring(0, 50)
+  });
   
-  // Set CORS headers for static files
-  if (origin && origin.includes('fixia-platform.vercel.app')) {
-    res.header('Access-Control-Allow-Origin', origin);
-  } else {
-    res.header('Access-Control-Allow-Origin', 'https://fixia-platform.vercel.app');
-  }
-  
+  // Always allow CORS for images (since origin might be undefined for direct requests)
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
+    console.log('📁 Static file OPTIONS handled');
     return res.status(200).end();
   }
   
   // Add cache control for images
-  if (req.path.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+  if (req.url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
     res.header('Cache-Control', 'public, max-age=31536000'); // 1 year
   }
   
