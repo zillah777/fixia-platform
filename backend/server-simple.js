@@ -46,13 +46,40 @@ app.get('/health', (req, res) => {
 
 // Test auth routes  
 app.post('/api/auth/register', (req, res) => {
-  console.log('📝 Registration attempt:', req.body?.email);
+  console.log('📝 Registration attempt:', {
+    email: req.body?.email,
+    hasPassword: !!req.body?.password,
+    firstName: req.body?.first_name,
+    lastName: req.body?.last_name,
+    userType: req.body?.user_type,
+    origin: req.headers.origin,
+    userAgent: req.headers['user-agent']
+  });
+  
+  // Simulate different responses based on input
+  if (!req.body?.email || !req.body?.password) {
+    return res.status(400).json({
+      success: false,
+      error: 'Email y contraseña son requeridos',
+      missing: {
+        email: !req.body?.email,
+        password: !req.body?.password
+      }
+    });
+  }
+  
   res.json({
     success: true,
-    message: 'Servidor funcionando - endpoint de prueba',
+    message: 'Registro exitoso - servidor de prueba funcionando correctamente',
     data: { 
       test: true,
-      received: req.body 
+      user: {
+        email: req.body.email,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        user_type: req.body.user_type || 'customer'
+      },
+      token: 'test-token-12345'
     }
   });
 });
