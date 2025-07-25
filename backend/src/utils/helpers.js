@@ -41,6 +41,13 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 
 const sanitizeUser = (user) => {
   const { password_hash, ...sanitized } = user;
+  
+  // Convert relative image URLs to full URLs
+  if (sanitized.profile_image && sanitized.profile_image.startsWith('/uploads/')) {
+    const baseUrl = process.env.BACKEND_URL || 'https://fixia-platform-production.up.railway.app';
+    sanitized.profile_image = `${baseUrl}${sanitized.profile_image}`;
+  }
+  
   // Apply user type transformation for frontend
   const { transformUserForFrontend } = require('./userTypeTransformer');
   return transformUserForFrontend(sanitized);
