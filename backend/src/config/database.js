@@ -40,14 +40,16 @@ const testConnection = async () => {
   }
 };
 
-// Helper function for queries with proper error handling
-const query = async (text, params = []) => {
+// Helper function for queries with proper error handling and retry logic
+const query = async (text, params = [], retries = 3) => {
   const start = Date.now();
   let client;
-  try {
-    client = await pool.connect();
-    const res = await client.query(text, params);
-    const duration = Date.now() - start;
+  
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      client = await pool.connect();
+      const res = await client.query(text, params);
+      const duration = Date.now() - start;
     
     // Only log in development
     if (process.env.NODE_ENV === 'development') {
@@ -58,19 +60,33 @@ const query = async (text, params = []) => {
       });
     }
     
-    return res;
-  } catch (error) {
-    console.error('❌ Query failed:', { 
-      text: text.substring(0, 50) + '...', 
-      params: params?.length || 0,
-      error: error.message 
-    });
-    throw error;
-  } finally {
-    if (client) {
-      client.release();
+      return res;
+    } catch (error) {
+      // If it's a connection error and we have retries left, try again
+      if ((error.code === 'ECONNRESET' || error.message.includes('Connection terminated') || error.message.includes('timeout')) && attempt < retries) {
+        console.warn(`⚠️ Query attempt ${attempt} failed, retrying... (${error.message})`);
+        
+        // Wait a bit before retrying (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+        continue;
+      }
+      
+      console.error('❌ Query failed:', { 
+        text: text.substring(0, 50) + '...', 
+        params: params?.length || 0,
+        error: error.message,
+        attempt: attempt
+      });
+      throw error;
+    } finally {
+      if (client) {
+        client.release();
+      }
     }
   }
+  
+  // If we get here, all retries failed
+  throw new Error('Database query failed after all retries')
 };
 
 module.exports = {
