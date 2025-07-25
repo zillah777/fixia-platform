@@ -54,14 +54,28 @@ const io = socketIo(server, {
 
 const PORT = process.env.PORT || 8080;
 
-// Rate limiting with logging
-const limiter = rateLimit({
-  windowMs: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000,
-  max: process.env.RATE_LIMIT_MAX || 100,
+// Environment-based rate limiting
+const rateLimitConfig = process.env.NODE_ENV === 'production' ? {
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: {
+    error: 'Demasiadas solicitudes desde esta IP, intenta de nuevo más tarde.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for health checks
+    return req.url === '/health';
+  }
+} : {
+  windowMs: 15 * 60 * 1000,
+  max: 1000, // More permissive in development
   message: {
     error: 'Demasiadas solicitudes desde esta IP, intenta de nuevo más tarde.'
   }
-});
+};
+
+const limiter = rateLimit(rateLimitConfig);
 
 // Request logging middleware
 app.use(requestLogger);
@@ -76,55 +90,70 @@ app.use((req, res, next) => {
   next();
 });
 
-// Security middleware - order is important
-app.use(helmet({
+// Production-grade security headers
+const helmetConfig = process.env.NODE_ENV === 'production' ? {
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:", "*"], // Allow images from any source
-      connectSrc: ["'self'"],
-      fontSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:", "*.vercel.app", "*.railway.app"],
+      connectSrc: ["'self'", "*.vercel.app", "*.railway.app"],
+      fontSrc: ["'self'", "https:", "data:"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
       frameSrc: ["'none'"],
     },
   },
   crossOriginEmbedderPolicy: false,
-  crossOriginResourcePolicy: { policy: "cross-origin" } // Allow cross-origin resource sharing
-}));
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+} : {
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+};
+
+app.use(helmet(helmetConfig));
 app.use(compression());
 app.use(securityHeaders);
 app.use(securityLogger);
 app.use(validateBodySize);
 
+// CORS configuration - production ready
 const corsOptions = {
-  origin: true, // Allow all origins temporarily
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://fixia-platform.vercel.app',
+      'https://fixia.com.ar',
+      'https://www.fixia.com.ar',
+      'http://localhost:3000',
+      'https://fixia-frontend.vercel.app',
+      process.env.FRONTEND_URL,
+      process.env.CORS_ORIGIN
+    ].filter(Boolean);
+    
+    // Allow requests with no origin (mobile apps, server-to-server)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  optionsSuccessStatus: 200
+  maxAge: 86400 // 24 hours
 };
 
 app.use(cors(corsOptions));
-
-// Additional CORS headers middleware for extra safety
-app.use((req, res, next) => {
-  console.log('🌐 Request from origin:', req.headers.origin);
-  console.log('🌐 Request method:', req.method);
-  console.log('🌐 Request URL:', req.url);
-  
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  if (req.method === 'OPTIONS') {
-    console.log('✅ Handling preflight OPTIONS request');
-    return res.status(200).json({ success: true });
-  }
-  
-  next();
-});
 app.use(limiter);
 app.use(validateContentType);
 app.use(express.json({ limit: '5mb' })); // Reduced from 10mb

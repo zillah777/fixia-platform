@@ -64,15 +64,14 @@ exports.register = async (req, res) => {
     // Hash password
     const password_hash = await hashPassword(password);
 
-    // Create user with minimal fields (auto-verify if email verification not required)
-    const shouldAutoVerify = process.env.REQUIRE_EMAIL_VERIFICATION !== 'true';
+    // Create user with minimal fields
     const result = await query(`
       INSERT INTO users (
-        first_name, last_name, email, password_hash, user_type, email_verified
-      ) VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING id, first_name, last_name, email, user_type, email_verified, created_at
+        first_name, last_name, email, password_hash, user_type
+      ) VALUES ($1, $2, $3, $4, $5)
+      RETURNING id, first_name, last_name, email, user_type, created_at
     `, [
-      first_name, last_name, email, password_hash, dbUserType, shouldAutoVerify
+      first_name, last_name, email, password_hash, dbUserType
     ]);
 
     const user = result.rows[0];
@@ -89,27 +88,40 @@ exports.register = async (req, res) => {
       user_type: user.user_type 
     });
 
-    // Send verification email
-    try {
-      const emailResult = await EmailService.sendVerificationEmail(user, user.user_type);
-      if (emailResult.success) {
-        console.log(`✅ Verification email sent to ${user.email}`);
-      } else {
-        console.error('⚠️ Failed to send verification email:', emailResult.error);
+    // Send verification email in production only
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        const emailResult = await EmailService.sendVerificationEmail(user, user.user_type);
+        if (emailResult.success) {
+          console.log(`✅ Verification email sent to ${user.email}`);
+        } else {
+          console.error('⚠️ Failed to send verification email:', emailResult.error);
+        }
+      } catch (emailError) {
+        console.error('⚠️ Error sending verification email:', emailError);
       }
-    } catch (emailError) {
-      console.error('⚠️ Error sending verification email:', emailError);
-    }
 
-    res.status(201).json({
-      success: true,
-      message: 'Usuario registrado exitosamente. Revisa tu email para verificar tu cuenta.',
-      data: {
-        user: sanitizeUser(user),
-        emailVerificationRequired: true,
-        requiresVerification: true
-      }
-    });
+      res.status(201).json({
+        success: true,
+        message: 'Usuario registrado exitosamente. Revisa tu email para verificar tu cuenta.',
+        data: {
+          user: sanitizeUser(user),
+          emailVerificationRequired: true,
+          requiresVerification: true
+        }
+      });
+    } else {
+      // Development mode - auto-login
+      res.status(201).json({
+        success: true,
+        message: 'Usuario registrado exitosamente.',
+        data: {
+          user: sanitizeUser(user),
+          token,
+          emailVerificationRequired: false
+        }
+      });
+    }
 
   } catch (error) {
     console.error('Registration error:', error);
@@ -157,9 +169,8 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Check if email is verified (configurable via environment variable)
-    const requireEmailVerification = process.env.REQUIRE_EMAIL_VERIFICATION === 'true';
-    if (!user.email_verified && requireEmailVerification) {
+    // Check if email is verified (production security)
+    if (!user.email_verified && process.env.NODE_ENV === 'production') {
       return res.status(403).json({
         success: false,
         error: 'Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.',
