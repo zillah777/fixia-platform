@@ -78,10 +78,18 @@ app.use(express.urlencoded({ extended: true }));
 
 // Static file serving for uploads with CORS
 app.use('/uploads', (req, res, next) => {
+  const origin = req.headers.origin;
+  
   // Set CORS headers for static files
-  res.header('Access-Control-Allow-Origin', '*');
+  if (origin && origin.includes('fixia-platform.vercel.app')) {
+    res.header('Access-Control-Allow-Origin', origin);
+  } else {
+    res.header('Access-Control-Allow-Origin', 'https://fixia-platform.vercel.app');
+  }
+  
   res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
