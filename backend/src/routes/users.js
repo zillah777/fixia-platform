@@ -115,8 +115,15 @@ router.post('/profile/photo', upload.single('photo'), async (req, res) => {
     }
 
     const photoUrl = `/uploads/profiles/${req.file.filename}`;
-    // Full URL for frontend display
-    const fullPhotoUrl = `${process.env.BACKEND_URL || 'https://fixia-platform-production.up.railway.app'}${photoUrl}`;
+    // Force clean URL construction
+    const fullPhotoUrl = `https://fixia-platform-production.up.railway.app${photoUrl}`;
+
+    console.log('📸 Photo upload:', {
+      filename: req.file.filename,
+      photoUrl: photoUrl,
+      fullPhotoUrl: fullPhotoUrl,
+      backendUrl: process.env.BACKEND_URL
+    });
 
     await query(
       'UPDATE users SET profile_image = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
