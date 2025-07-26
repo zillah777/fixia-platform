@@ -1,266 +1,819 @@
-/* 🎨 FIXIA 2025 - Sistema de Diseño Visual Simplificado */
+/* 🎨 FIXIA 2025 - Sistema de Diseño Visual Completo */
 /* "Conecta. Confía. Resuelve." - Filosofía: "Confianza Líquida" */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Fonts */
+/* =============================================================================
+   FONTS - FIXIA TYPOGRAPHY SYSTEM
+   ============================================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* Design Tokens */
-:root {
-  /* Fixia Brand Colors */
-  --fixia-primary: #226F83;
-  --fixia-primary-light: #5B9BAA;
-  --fixia-primary-dark: #1A5A6B;
-  --fixia-secondary: #FC8940;
-  --fixia-accent: #FEC113;
-  
-  /* Text Colors */
-  --fixia-text-primary: #2C2C2C;
-  --fixia-text-secondary: #6B7280;
-  --fixia-text-muted: #9CA3AF;
-  
-  /* Surface Colors */
-  --fixia-border: #E5E7EB;
-  --fixia-surface: #F9FAFB;
-  
-  /* Dark Mode */
-  --fixia-dark-bg: #0F172A;
-  --fixia-dark-surface: #1E293B;
-  --fixia-dark-border: #334155;
-  --fixia-dark-text: #F1F5F9;
-  --fixia-dark-text-muted: #94A3B8;
-}
-
-.dark {
-  --fixia-text-primary: var(--fixia-dark-text);
-  --fixia-text-secondary: var(--fixia-dark-text-muted);
-  --fixia-surface: var(--fixia-dark-surface);
-  --fixia-border: var(--fixia-dark-border);
-}
-
+/* =============================================================================
+   BASE LAYER - DEFAULTS & TYPOGRAPHY
+   ============================================================================= */
 @layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
   body {
-    @apply antialiased;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: var(--fixia-text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #2C2C2C;
+    background-color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #2C2C2C;
+    margin: 0;
+  }
+  
+  h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+  }
+  
+  h3 {
+    font-size: 1.875rem;
+    font-weight: 600;
+  }
+  
+  h4 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  h5 {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  
+  h6 {
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+  
+  p {
+    margin: 0 0 1rem 0;
+    color: #2C2C2C;
+  }
+  
+  a {
+    color: #226F83;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  a:hover {
+    color: #1A5A6B;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #F9FAFB;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #5B9BAA;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #226F83;
   }
 }
 
+/* =============================================================================
+   COMPONENTS LAYER - FIXIA UI SYSTEM
+   ============================================================================= */
 @layer components {
-  /* Typography */
+  
+  /* 📝 TYPOGRAPHY CLASSES */
   .fixia-h1 {
-    font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
-    @apply text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight;
-    color: var(--fixia-text-primary);
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #2C2C2C;
+    margin-bottom: 1.5rem;
   }
   
   .fixia-h2 {
-    font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
-    @apply text-3xl sm:text-4xl font-semibold leading-tight;
-    color: var(--fixia-text-primary);
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #2C2C2C;
+    margin-bottom: 1.25rem;
   }
   
   .fixia-h3 {
-    font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
-    @apply text-2xl sm:text-3xl font-semibold;
-    color: var(--fixia-text-primary);
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.875rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #2C2C2C;
+    margin-bottom: 1rem;
   }
   
-  .fixia-body {
-    @apply text-base leading-normal;
-    color: var(--fixia-text-primary);
+  .fixia-h4 {
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #2C2C2C;
+    margin-bottom: 0.875rem;
+  }
+  
+  .fixia-h5 {
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #2C2C2C;
+    margin-bottom: 0.75rem;
+  }
+  
+  .fixia-h6 {
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #2C2C2C;
+    margin-bottom: 0.5rem;
   }
   
   .fixia-body-large {
-    @apply text-lg leading-relaxed;
-    color: var(--fixia-text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #2C2C2C;
+  }
+  
+  .fixia-body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #2C2C2C;
   }
   
   .fixia-body-small {
-    @apply text-sm;
-    color: var(--fixia-text-secondary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #4B5563;
   }
   
-  /* Buttons */
+  .fixia-caption {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.3;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6B7280;
+  }
+  
+  .fixia-label {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4B5563;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* 🧱 BUTTON COMPONENTS */
   .fixia-btn {
-    @apply inline-flex items-center justify-center px-6 py-3 font-semibold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.01em;
+  }
+  
+  .fixia-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(34, 111, 131, 0.3);
+  }
+  
+  .fixia-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
   
   .fixia-btn-primary {
-    background: linear-gradient(135deg, var(--fixia-primary), var(--fixia-primary-dark));
-    @apply text-white shadow-lg hover:shadow-xl;
+    background: linear-gradient(135deg, #226F83 0%, #1A5A6B 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(34, 111, 131, 0.3);
+  }
+  
+  .fixia-btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(34, 111, 131, 0.4);
   }
   
   .fixia-btn-secondary {
-    background: var(--fixia-secondary);
-    @apply text-white shadow-lg hover:shadow-xl;
+    background: linear-gradient(135deg, #FC8940 0%, #ea580c 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(252, 137, 64, 0.3);
+  }
+  
+  .fixia-btn-secondary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(252, 137, 64, 0.4);
   }
   
   .fixia-btn-outline {
-    @apply border-2 text-primary-500 hover:bg-primary-500 hover:text-white bg-white;
-    border-color: var(--fixia-primary);
-    color: var(--fixia-primary);
+    background: white;
+    border: 2px solid #226F83;
+    color: #226F83;
   }
   
-  .fixia-btn-outline:hover {
-    background: var(--fixia-primary);
+  .fixia-btn-outline:hover:not(:disabled) {
+    background: #226F83;
     color: white;
   }
   
-  /* Cards */
+  .fixia-btn-ghost {
+    background: transparent;
+    color: #226F83;
+  }
+  
+  .fixia-btn-ghost:hover:not(:disabled) {
+    background: rgba(34, 111, 131, 0.1);
+  }
+  
+  .fixia-btn-accent {
+    background: linear-gradient(135deg, #FEC113 0%, #d97706 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(254, 193, 19, 0.3);
+  }
+  
+  /* Button Sizes */
+  .fixia-btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .fixia-btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  }
+  
+  .fixia-btn-xl {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.25rem;
+  }
+  
+  /* 📋 CARD COMPONENTS */
   .fixia-card {
-    @apply bg-white rounded-2xl overflow-hidden transition-all duration-300 shadow-sm hover:shadow-lg;
-    border: 1px solid var(--fixia-border);
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .fixia-card:hover {
     transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: rgba(34, 111, 131, 0.2);
   }
   
   .fixia-provider-card {
-    @apply fixia-card;
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
   }
   
   .fixia-provider-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(34, 111, 131, 0.12);
+    box-shadow: 0 20px 40px rgba(34, 111, 131, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
   }
   
   .fixia-card-header {
-    @apply px-6 py-5;
-    border-bottom: 1px solid var(--fixia-border);
-    background-color: var(--fixia-surface);
+    padding: 1.5rem;
+    border-bottom: 1px solid #E5E7EB;
+    background-color: #F9FAFB;
   }
   
   .fixia-card-body {
-    @apply px-6 py-5;
+    padding: 1.5rem;
   }
   
   .fixia-card-footer {
-    @apply px-6 py-4;
-    border-top: 1px solid var(--fixia-border);
-    background-color: var(--fixia-surface);
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #E5E7EB;
+    background-color: #F9FAFB;
   }
   
-  /* Navigation */
+  .fixia-card-title {
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2C2C2C;
+    margin-bottom: 0.5rem;
+  }
+  
+  .fixia-card-subtitle {
+    font-size: 0.875rem;
+    color: #6B7280;
+  }
+  
+  /* 🧭 NAVIGATION COMPONENTS */
   .fixia-nav {
-    @apply sticky top-0 z-50 bg-white/80 backdrop-blur-xl;
-    border-bottom: 1px solid var(--fixia-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid #E5E7EB;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   }
   
+  .fixia-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
   .fixia-nav-link {
-    @apply px-4 py-2 font-medium transition-colors duration-200 rounded-lg hover:bg-primary-50;
-    color: var(--fixia-text-secondary);
+    padding: 0.5rem 1rem;
+    color: #6B7280;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-radius: 0.5rem;
   }
   
   .fixia-nav-link:hover {
-    color: var(--fixia-primary);
+    color: #226F83;
+    background-color: rgba(34, 111, 131, 0.05);
   }
   
-  /* Badges */
+  .fixia-nav-link-active {
+    color: #226F83;
+    background-color: rgba(34, 111, 131, 0.05);
+  }
+  
+  /* 🏷️ BADGE COMPONENTS */
   .fixia-badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
   }
   
   .fixia-badge-primary {
-    @apply bg-primary-100 text-primary-800;
+    background-color: rgba(34, 111, 131, 0.1);
+    color: #226F83;
+  }
+  
+  .fixia-badge-secondary {
+    background-color: rgba(252, 137, 64, 0.1);
+    color: #FC8940;
+  }
+  
+  .fixia-badge-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+  }
+  
+  .fixia-badge-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #F59E0B;
+  }
+  
+  .fixia-badge-error {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
   }
   
   .fixia-badge-verified {
-    background: linear-gradient(135deg, var(--fixia-primary), var(--fixia-primary-dark));
-    @apply text-white;
+    background: linear-gradient(135deg, #226F83, #1A5A6B);
+    color: white;
   }
   
-  /* Hero */
+  /* 🏆 HERO COMPONENTS */
   .fixia-hero {
-    @apply min-h-screen flex items-center justify-center relative overflow-hidden;
-    background: linear-gradient(135deg, rgba(34, 111, 131, 0.05) 0%, rgba(255, 255, 255, 1) 50%, rgba(91, 155, 170, 0.05) 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(34, 111, 131, 0.1) 0%, rgba(255, 255, 255, 1) 50%, rgba(254, 193, 19, 0.1) 100%);
+    position: relative;
+    overflow: hidden;
   }
   
   .fixia-hero-content {
-    @apply text-center max-w-4xl mx-auto px-4 relative z-10;
+    text-align: center;
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 10;
   }
   
   .fixia-hero-title {
-    @apply fixia-h1 mb-6;
-    background: linear-gradient(135deg, var(--fixia-primary), var(--fixia-primary-light));
+    font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #226F83, #5B9BAA);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   
   .fixia-hero-subtitle {
-    @apply fixia-body-large mb-8 max-w-2xl mx-auto;
-    color: var(--fixia-text-secondary);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: #6B7280;
+    margin-bottom: 2rem;
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .fixia-hero-cta {
-    @apply flex flex-col sm:flex-row gap-4 justify-center items-center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
   }
   
-  /* Animations */
-  .fixia-fade-in {
-    animation: fadeIn 0.3s ease-out forwards;
+  /* 🔘 FORM COMPONENTS */
+  .fixia-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.75rem;
+    background: white;
+    font-size: 1rem;
+    color: #2C2C2C;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   }
   
-  .fixia-float {
-    animation: float 3s ease-in-out infinite;
+  .fixia-input:focus {
+    outline: none;
+    border-color: #226F83;
+    box-shadow: 0 0 0 3px rgba(34, 111, 131, 0.1);
   }
   
-  /* Mobile Navigation */
+  .fixia-input:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .fixia-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.75rem;
+    background: white;
+    font-size: 1rem;
+    color: #2C2C2C;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    resize: vertical;
+    min-height: 120px;
+  }
+  
+  .fixia-textarea:focus {
+    outline: none;
+    border-color: #226F83;
+    box-shadow: 0 0 0 3px rgba(34, 111, 131, 0.1);
+  }
+  
+  /* 🔍 SEARCH COMPONENTS */
+  .fixia-search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .fixia-search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.75rem;
+    background: white;
+    font-size: 1.125rem;
+    color: #2C2C2C;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .fixia-search-input:focus {
+    outline: none;
+    border-color: #226F83;
+    box-shadow: 0 0 0 3px rgba(34, 111, 131, 0.1);
+  }
+  
+  .fixia-search-input::placeholder {
+    color: #6B7280;
+  }
+  
+  .fixia-search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6B7280;
+    pointer-events: none;
+  }
+  
+  /* 📱 MOBILE NAVIGATION */
   .fixia-bottom-nav {
-    @apply fixed bottom-0 left-0 right-0 z-50 bg-white;
-    border-top: 1px solid var(--fixia-border);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: white;
+    border-top: 1px solid #E5E7EB;
     box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
   }
   
-  /* Dark Mode Overrides */
-  .dark .fixia-card {
-    background-color: var(--fixia-dark-surface);
-    border-color: var(--fixia-dark-border);
+  .fixia-bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6B7280;
+    text-decoration: none;
+    transition: color 0.2s ease;
   }
   
-  .dark .fixia-nav {
-    background-color: rgba(15, 23, 42, 0.8);
-    border-color: var(--fixia-dark-border);
+  .fixia-bottom-nav-item:hover,
+  .fixia-bottom-nav-item-active {
+    color: #226F83;
   }
   
-  /* Responsive helpers */
+  /* RESPONSIVE UTILITIES */
   .fixia-mobile-only {
-    @apply block sm:hidden;
+    display: block;
   }
   
   .fixia-desktop-only {
-    @apply hidden sm:block;
+    display: none;
+  }
+  
+  @media (min-width: 640px) {
+    .fixia-mobile-only {
+      display: none;
+    }
+    
+    .fixia-desktop-only {
+      display: block;
+    }
+    
+    .fixia-hero-title {
+      font-size: 4.5rem;
+    }
+    
+    .fixia-hero-cta {
+      flex-direction: row;
+    }
+    
+    .fixia-btn {
+      width: auto;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .fixia-hero-title {
+      font-size: 6rem;
+    }
   }
 }
 
-/* Keyframes */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* =============================================================================
+   UTILITY CLASSES
+   ============================================================================= */
+@layer utilities {
+  .fixia-text-gradient-primary {
+    background: linear-gradient(135deg, #226F83, #5B9BAA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .fixia-text-gradient-secondary {
+    background: linear-gradient(135deg, #FC8940, #FEC113);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .fixia-bg-gradient-primary {
+    background: linear-gradient(135deg, #226F83 0%, #5B9BAA 100%);
+  }
+  
+  .fixia-bg-gradient-secondary {
+    background: linear-gradient(135deg, #FC8940 0%, #FEC113 100%);
+  }
+  
+  .fixia-hover-lift:hover {
+    transform: translateY(-4px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .fixia-hover-scale:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .fixia-hover-glow:hover {
+    box-shadow: 0 0 20px rgba(34, 111, 131, 0.3);
+    transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .fixia-fade-in {
+    animation: fixia-fadeIn 0.3s ease-out forwards;
+  }
+  
+  .fixia-slide-up {
+    animation: fixia-slideUp 0.4s ease-out forwards;
+  }
+  
+  .fixia-float {
+    animation: fixia-float 3s ease-in-out infinite;
+  }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+/* =============================================================================
+   KEYFRAMES - ANIMATIONS
+   ============================================================================= */
+@keyframes fixia-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-/* Utility Classes */
-.fixia-hover-lift:hover {
-  transform: translateY(-4px);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+@keyframes fixia-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.fixia-text-gradient-primary {
-  background: linear-gradient(135deg, var(--fixia-primary), var(--fixia-primary-light));
+@keyframes fixia-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* =============================================================================
+   DARK MODE SUPPORT
+   ============================================================================= */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  background-color: #0F172A;
+  color: #F1F5F9;
+}
+
+.dark .fixia-card,
+.dark .fixia-provider-card {
+  background-color: #1E293B;
+  border-color: #334155;
+}
+
+.dark .fixia-card-header,
+.dark .fixia-card-footer {
+  background-color: #0F172A;
+  border-color: #334155;
+}
+
+.dark .fixia-nav {
+  background-color: rgba(15, 23, 42, 0.8);
+  border-color: #334155;
+}
+
+.dark .fixia-hero {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(15, 23, 42, 1) 50%, rgba(251, 146, 60, 0.1) 100%);
+}
+
+.dark .fixia-input,
+.dark .fixia-textarea,
+.dark .fixia-search-input {
+  background-color: #1E293B;
+  border-color: #334155;
+  color: #F1F5F9;
+}
+
+.dark .fixia-input:focus,
+.dark .fixia-textarea:focus,
+.dark .fixia-search-input:focus {
+  border-color: #38BDF8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+}
+
+.dark .fixia-bottom-nav {
+  background-color: #1E293B;
+  border-color: #334155;
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #F1F5F9;
+}
+
+.dark p {
+  color: #F1F5F9;
+}
+
+.dark .fixia-card-title {
+  color: #F1F5F9;
+}
+
+.dark .fixia-hero-title {
+  background: linear-gradient(135deg, #38BDF8, #5B9BAA);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* =============================================================================
+   PRINT STYLES
+   ============================================================================= */
+@media print {
+  .fixia-nav,
+  .fixia-bottom-nav,
+  .fixia-btn {
+    display: none !important;
+  }
+  
+  .fixia-card {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+  }
+  
+  * {
+    color: #000 !important;
+    background: #fff !important;
+  }
 }
