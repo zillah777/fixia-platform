@@ -99,33 +99,58 @@ app.use(securityHeaders);
 app.use(securityLogger);
 app.use(validateBodySize);
 
-// CORS middleware - direct implementation for better control
+// CORS middleware - enhanced for static files and API
 app.use((req, res, next) => {
   const origin = req.headers.origin;
+  const referer = req.headers.referer;
   
   console.log('🌐 CORS Request:', {
     origin: origin,
+    referer: referer,
     method: req.method,
     url: req.url,
-    headers: Object.keys(req.headers)
+    isUpload: req.url.startsWith('/uploads')
   });
   
-  // Set CORS headers
-  if (origin && origin.includes('fixia-platform.vercel.app')) {
-    res.header('Access-Control-Allow-Origin', origin);
-    console.log('✅ CORS: Allowed fixia-platform.vercel.app');
-  } else if (origin && (
-    origin.includes('fixia.com.ar') ||
-    origin.includes('localhost:3000')
-  )) {
-    res.header('Access-Control-Allow-Origin', origin);  
-    console.log('✅ CORS: Allowed approved origin');
+  const allowedOrigins = [
+    'https://fixia-platform.vercel.app',
+    'https://fixia.com.ar',
+    'http://localhost:3000',
+    'http://localhost:3001'
+  ];
+  
+  // Special handling for static files (uploads)
+  if (req.url.startsWith('/uploads')) {
+    // For static files, be more permissive with CORS
+    if (origin && allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+      console.log('✅ CORS Uploads: Allowed known origin');
+    } else if (referer && allowedOrigins.some(allowed => referer.startsWith(allowed))) {
+      // Allow based on referer for image requests
+      const matchedOrigin = allowedOrigins.find(allowed => referer.startsWith(allowed));
+      res.header('Access-Control-Allow-Origin', matchedOrigin);
+      console.log('✅ CORS Uploads: Allowed via referer');
+    } else {
+      // For direct access or unknown origins, allow all for static files
+      res.header('Access-Control-Allow-Origin', '*');
+      console.log('✅ CORS Uploads: Allowed wildcard');
+    }
+    res.header('Access-Control-Allow-Credentials', 'false'); // Disable credentials for wildcard
   } else {
-    res.header('Access-Control-Allow-Origin', 'https://fixia-platform.vercel.app');
-    console.log('✅ CORS: Using default origin');
+    // For API routes, use strict CORS
+    if (origin && allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+      console.log('✅ CORS API: Allowed known origin');
+    } else if (origin && origin.includes('fixia-platform') && origin.includes('vercel.app')) {
+      res.header('Access-Control-Allow-Origin', origin);
+      console.log('✅ CORS API: Allowed Vercel preview');
+    } else {
+      res.header('Access-Control-Allow-Origin', 'https://fixia-platform.vercel.app');
+      console.log('✅ CORS API: Using default origin');
+    }
+    res.header('Access-Control-Allow-Credentials', 'true');
   }
   
-  res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
   res.header('Access-Control-Max-Age', '86400');
@@ -151,43 +176,14 @@ app.use('/uploads', assetOptimization({
   enablePreloadHints: false
 }));
 
-// CORS-enabled static file serving with security headers
+// Static file serving with security headers (CORS handled by main middleware)
 app.use('/uploads', (req, res, next) => {
-  // Enhanced CORS headers for static files
-  const allowedOrigins = [
-    'https://fixia-platform.vercel.app',
-    'https://fixia.com.ar',
-    'http://localhost:3000',
-    'http://localhost:3001'
-  ];
-  
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin) || !origin) {
-    res.header('Access-Control-Allow-Origin', origin || '*');
-  }
-  
-  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control');
-  res.header('Access-Control-Max-Age', '86400'); // 24 hours cache
-  
-  // Enhanced security headers for uploaded files
+  // Security headers for uploaded files
   res.header('X-Content-Type-Options', 'nosniff');
-  res.header('X-Frame-Options', 'SAMEORIGIN'); // Changed from DENY to allow same origin
+  res.header('X-Frame-Options', 'SAMEORIGIN');
   
-  // Fixed CSP policy to allow cross-origin images
-  const cspPolicy = [
-    "default-src 'none'",
-    "img-src 'self' data: https: blob:",
-    "style-src 'unsafe-inline'",
-    "connect-src 'self' https://fixia-platform.vercel.app https://fixia.com.ar"
-  ].join('; ');
-  
-  res.header('Content-Security-Policy', cspPolicy);
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  // Simplified CSP policy for image serving
+  res.header('Content-Security-Policy', "default-src 'none'; img-src *; media-src *;");
   
   // Enhanced cache control for images
   if (req.path.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i)) {
