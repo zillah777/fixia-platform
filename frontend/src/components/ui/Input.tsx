@@ -8,7 +8,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   variant?: 'default' | 'filled' | 'outline';
-  inputSize?: 'sm' | 'md' | 'lg';
+  inputSize?: 'sm' | 'md' | 'lg' | 'xl';
   fullWidth?: boolean;
   showPasswordToggle?: boolean;
 }
@@ -90,7 +90,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
   const sizes = {
     sm: "px-3 py-2 text-sm rounded-md",
     md: "px-4 py-2.5 text-base rounded-lg",
-    lg: "px-5 py-3 text-lg rounded-xl"
+    lg: "px-5 py-3 text-lg rounded-xl",
+    xl: "px-6 py-4 text-xl rounded-2xl"
   };
 
   const PasswordToggleIcon = () => (

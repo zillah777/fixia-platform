@@ -185,11 +185,12 @@ module.exports = {
         },
       },
       fontFamily: {
-        // 📝 FIXIA TYPOGRAPHY SYSTEM
-        'display': ['Work Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'], // Títulos
-        'body': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],                 // Body text
-        'ui': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],                   // UI elements
-        'mono': ['JetBrains Mono', 'Fira Code', 'Monaco', 'monospace'],               // Code
+        // 📝 ULTRA-MODERN FIXIA TYPOGRAPHY SYSTEM
+        'display': ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'], // Hero & display text
+        'heading': ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'], // Headings
+        'body': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],   // Body text
+        'ui': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],                          // UI elements
+        'mono': ['JetBrains Mono', 'SF Mono', 'Monaco', 'Cascadia Code', 'monospace'],        // Code
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem' }],      // 12px
@@ -241,25 +242,29 @@ module.exports = {
         'modal': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
       },
       animation: {
-        // Enhanced marketplace animations
-        'fade-in': 'fadeIn 0.3s ease-out',
-        'fade-in-slow': 'fadeIn 0.6s ease-out',
-        'scale-in': 'scaleIn 0.2s ease-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'slide-down': 'slideDown 0.3s ease-out',
-        'slide-left': 'slideLeft 0.3s ease-out',
-        'slide-right': 'slideRight 0.3s ease-out',
-        'bounce-in': 'bounceIn 0.5s ease-out',
-        'float': 'float 3s ease-in-out infinite',
-        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        // Ultra-modern marketplace animations
+        'fade-in': 'fadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
+        'fade-in-slow': 'fadeIn 1.2s cubic-bezier(0.23, 1, 0.32, 1)',
+        'scale-in': 'scaleIn 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+        'slide-up': 'slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
+        'slide-down': 'slideDown 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
+        'slide-left': 'slideLeft 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
+        'slide-right': 'slideRight 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
+        'bounce-in': 'bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        'float': 'float 4s ease-in-out infinite',
+        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
         'shimmer': 'shimmer 2s ease-in-out infinite',
-        'spin-slow': 'spin 3s linear infinite',
-        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
-        // Marketplace-specific animations
-        'card-hover': 'cardHover 0.2s ease-out',
-        'button-press': 'buttonPress 0.1s ease-out',
-        'modal-enter': 'modalEnter 0.3s ease-out',
-        'toast-enter': 'toastEnter 0.3s ease-out',
+        'gradient': 'gradient-shift 3s ease-in-out infinite',
+        'typewriter': 'typewriter 3s steps(40, end)',
+        'spin-slow': 'spin 8s linear infinite',
+        'ping-slow': 'ping 4s cubic-bezier(0, 0, 0.2, 1) infinite',
+        // Enhanced marketplace-specific animations
+        'card-hover': 'cardHover 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+        'button-press': 'buttonPress 0.15s cubic-bezier(0.23, 1, 0.32, 1)',
+        'modal-enter': 'modalEnter 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
+        'toast-enter': 'toastEnter 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
+        'hero-float': 'float 6s ease-in-out infinite',
+        'text-reveal': 'fadeIn 1s cubic-bezier(0.23, 1, 0.32, 1) 0.3s both',
       },
       keyframes: {
         // Core animations
@@ -311,10 +316,14 @@ module.exports = {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' },
         },
-        // Marketplace-specific keyframes
+        gradientShift: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        // Enhanced marketplace-specific keyframes
         cardHover: {
-          '0%': { transform: 'scale(1) translateY(0)' },
-          '100%': { transform: 'scale(1.02) translateY(-2px)' },
+          '0%': { transform: 'scale(1) translateY(0) rotate(0deg)' },
+          '100%': { transform: 'scale(1.03) translateY(-4px) rotate(0.5deg)' },
         },
         buttonPress: {
           '0%': { transform: 'scale(1)' },

@@ -394,13 +394,23 @@ const LandingPage: NextPage = () => {
           )}
         </header>
 
-        {/* Hero Section - Marketplace 2.0 Design */}
-        <section className="relative min-h-screen bg-gradient-to-br from-surface-50 via-white to-primary-50/20 dark:from-neutral-950 dark:via-neutral-900 dark:to-primary-950/20 overflow-hidden">
-          {/* Background Decorative Elements */}
-          <div className="absolute inset-0">
-            <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-float" />
-            <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-primary-500/5 to-secondary-500/5 rounded-full blur-3xl" />
+        {/* Hero Section - Premium Marketplace Design */}
+        <section className="relative min-h-screen bg-gradient-to-br from-primary-50/30 via-white to-secondary-50/20 dark:from-neutral-950 dark:via-neutral-900 dark:to-primary-950/20 overflow-hidden">
+          {/* Enhanced Background Elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            {/* Floating geometric shapes */}
+            <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-primary-500/15 to-primary-600/10 rounded-full blur-3xl animate-float" />
+            <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-secondary-500/15 to-accent-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+            <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-r from-accent-500/8 to-primary-500/8 rounded-full blur-2xl animate-float" style={{ animationDelay: '4s' }} />
+            
+            {/* Subtle grid pattern */}
+            <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]" style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(34, 111, 131, 0.3) 1px, transparent 0)`,
+              backgroundSize: '40px 40px'
+            }} />
+            
+            {/* Central gradient overlay */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-primary-500/5 via-transparent to-secondary-500/5 rounded-full" />
           </div>
 
           {/* Hero Content */}
@@ -408,11 +418,14 @@ const LandingPage: NextPage = () => {
             <div className="max-w-6xl mx-auto text-center">
               <div className="space-y-12 animate-fade-in">
                 
-                {/* Status Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700 rounded-full shadow-sm">
-                  <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse" />
-                  <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                    Marketplace de Servicios Profesionales
+                {/* Enhanced Status Badge */}
+                <div className="inline-flex items-center gap-3 px-6 py-3 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-md border border-primary-200/50 dark:border-neutral-700 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div className="relative">
+                    <div className="w-3 h-3 bg-gradient-to-r from-success-500 to-success-400 rounded-full animate-pulse" />
+                    <div className="absolute inset-0 w-3 h-3 bg-success-500/20 rounded-full animate-ping" />
+                  </div>
+                  <span className="text-sm font-semibold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent dark:from-primary-400 dark:to-primary-500">
+                    🚀 Marketplace de Elite - Servicios Profesionales
                   </span>
                 </div>
 
@@ -422,99 +435,169 @@ const LandingPage: NextPage = () => {
                     <Logo size="2xl" variant="primary" animated showText={false} />
                   </div>
                   
-                  <div className="space-y-6">
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-display text-neutral-900 dark:text-white leading-tight">
-                      <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-                        Fixia
+                  <div className="space-y-8">
+                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-display leading-[0.9] tracking-tight">
+                      <span className="relative">
+                        <span className="bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-600 bg-clip-text text-transparent animate-gradient bg-300% bg-[length:300%_100%]">
+                          Fixia
+                        </span>
+                        {/* Subtle glow effect */}
+                        <span className="absolute inset-0 bg-gradient-to-r from-primary-600/20 via-primary-500/20 to-secondary-600/20 blur-xl -z-10" aria-hidden="true">
+                          Fixia
+                        </span>
                       </span>
                       <br />
-                      <span className="text-neutral-600 dark:text-neutral-400 text-3xl md:text-4xl lg:text-5xl">
-                        Conecta. Confía. Resuelve.
+                      <span className="text-neutral-700 dark:text-neutral-300 text-2xl md:text-3xl lg:text-4xl font-semibold tracking-wide">
+                        Conecta • Confía • Resuelve
                       </span>
                     </h1>
                     
-                    <p className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 max-w-4xl mx-auto leading-relaxed">
-                      El marketplace que conecta a los mejores profesionales con clientes que buscan 
-                      <span className="font-semibold text-primary-600 dark:text-primary-400"> calidad excepcional</span>.
+                    <p className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 max-w-4xl mx-auto leading-relaxed font-medium">
+                      El marketplace inteligente que conecta a 
+                      <span className="relative inline-block">
+                        <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent font-bold">profesionales de elite</span>
+                        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-full"></span>
+                      </span>
+                      {' '}con clientes que buscan 
+                      <span className="relative inline-block">
+                        <span className="bg-gradient-to-r from-accent-600 to-secondary-600 bg-clip-text text-transparent font-bold">resultados extraordinarios</span>
+                        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-accent-600 to-secondary-600 rounded-full"></span>
+                      </span>
+                      .
                     </p>
                   </div>
 
-                  {/* Trust Indicators */}
-                  <div className="flex items-center justify-center gap-8 text-neutral-500 dark:text-neutral-400">
-                    <div className="flex items-center gap-2">
-                      <ShieldCheckIcon className="h-5 w-5 text-success-500" />
-                      <span className="text-sm font-medium">Verificado</span>
+                  {/* Enhanced Trust Indicators */}
+                  <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
+                    <div className="flex items-center gap-3 px-4 py-2 bg-white/70 dark:bg-neutral-800/70 backdrop-blur-sm rounded-full border border-success-200/50 dark:border-success-700/50">
+                      <div className="relative">
+                        <ShieldCheckIcon className="h-5 w-5 text-success-500" />
+                        <div className="absolute inset-0 h-5 w-5 bg-success-500/20 rounded-full animate-ping" />
+                      </div>
+                      <span className="text-sm font-semibold text-success-700 dark:text-success-400">100% Verificado</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <BoltIcon className="h-5 w-5 text-warning-500" />
-                      <span className="text-sm font-medium">Sin comisiones</span>
+                    <div className="flex items-center gap-3 px-4 py-2 bg-white/70 dark:bg-neutral-800/70 backdrop-blur-sm rounded-full border border-warning-200/50 dark:border-warning-700/50">
+                      <BoltIcon className="h-5 w-5 text-warning-500 animate-pulse" />
+                      <span className="text-sm font-semibold text-warning-700 dark:text-warning-400">0% Comisiones</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <StarIcon className="h-5 w-5 text-secondary-500" />
-                      <span className="text-sm font-medium">4.9/5 rating</span>
+                    <div className="flex items-center gap-3 px-4 py-2 bg-white/70 dark:bg-neutral-800/70 backdrop-blur-sm rounded-full border border-secondary-200/50 dark:border-secondary-700/50">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <StarIconSolid key={i} className="h-4 w-4 text-warning-400" />
+                        ))}
+                      </div>
+                      <span className="text-sm font-semibold text-secondary-700 dark:text-secondary-400">4.9★ Rating</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Search Card */}
-                <div className="max-w-3xl mx-auto">
-                  <Card variant="glass" padding="lg" className="backdrop-blur-md">
-                    <form onSubmit={handleSearch} className="space-y-6">
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
-                          ¿Qué servicio necesitas?
+                {/* Enhanced Search Card */}
+                <div className="max-w-4xl mx-auto">
+                  <Card variant="glass" padding="xl" className="backdrop-blur-xl border-primary-200/30 dark:border-primary-700/30 shadow-2xl">
+                    <form onSubmit={handleSearch} className="space-y-8">
+                      <div className="text-center space-y-4">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-950/50 dark:to-secondary-950/50 rounded-full">
+                          <SparklesIcon className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                          <span className="text-sm font-medium text-primary-700 dark:text-primary-300">Búsqueda Inteligente</span>
+                        </div>
+                        <h3 className="text-2xl md:text-3xl font-bold font-display text-neutral-900 dark:text-white">
+                          ¿Qué servicio 
+                          <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">extraordinario</span>
+                          {' '}necesitas?
                         </h3>
-                        
+                        <p className="text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+                          Conecta con profesionales de elite verificados en segundos
+                        </p>
+                      </div>
+                      
+                      <div className="relative">
                         <Input
                           type="text"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder="Ej: Plomero, electricista, limpieza..."
+                          placeholder="Ej: Plomero certificado, electricista industrial, limpieza profunda..."
                           variant="filled"
-                          inputSize="lg"
-                          leftIcon={<MagnifyingGlassIcon className="h-6 w-6" />}
+                          inputSize="xl"
+                          leftIcon={<MagnifyingGlassIcon className="h-6 w-6 text-primary-500" />}
                           fullWidth
+                          className="pr-32"
                         />
+                        {/* Quick suggestions */}
+                        <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                          <Button
+                            type="submit"
+                            variant="primary"
+                            size="md"
+                            disabled={!searchQuery.trim()}
+                            leftIcon={<RocketLaunchIcon className="h-4 w-4" />}
+                            className="shadow-lg"
+                          >
+                            Buscar
+                          </Button>
+                        </div>
                       </div>
                       
-                      <Button
-                        type="submit"
-                        variant="primary"
-                        size="lg"
-                        fullWidth
-                        disabled={!searchQuery.trim()}
-                        leftIcon={<RocketLaunchIcon className="h-5 w-5" />}
-                      >
-                        Buscar Profesionales
-                      </Button>
+                      {/* Popular searches */}
+                      <div className="flex flex-wrap justify-center gap-2">
+                        <span className="text-sm text-neutral-500 dark:text-neutral-400 mr-2">Popular:</span>
+                        {['Plomería', 'Electricidad', 'Limpieza', 'Reparaciones'].map((tag) => (
+                          <button
+                            key={tag}
+                            type="button"
+                            onClick={() => setSearchQuery(tag)}
+                            className="px-3 py-1 text-xs font-medium bg-primary-50 hover:bg-primary-100 dark:bg-primary-900/30 dark:hover:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-full transition-colors duration-200 border border-primary-200/50 dark:border-primary-700/50"
+                          >
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
                     </form>
                   </Card>
                 </div>
 
-                {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+                {/* Enhanced CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-6 justify-center pt-12">
                   <Link href="/auth/registro?type=customer">
                     <Button
                       variant="primary"
-                      size="lg"
-                      leftIcon={<UserGroupIcon className="h-6 w-6" />}
+                      size="xl"
+                      leftIcon={<UserGroupIcon className="h-7 w-7" />}
                       rightIcon={<ArrowRightIcon className="h-5 w-5" />}
-                      className="min-w-[200px]"
+                      className="min-w-[280px] shadow-2xl hover:shadow-primary-500/25 transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600"
                     >
-                      Soy Cliente
+                      🚀 Soy Explorador
                     </Button>
                   </Link>
                   <Link href="/auth/registro?type=provider">
                     <Button
                       variant="outline"
-                      size="lg"
-                      leftIcon={<BriefcaseIcon className="h-6 w-6" />}
+                      size="xl"
+                      leftIcon={<BriefcaseIcon className="h-7 w-7" />}
                       rightIcon={<ArrowRightIcon className="h-5 w-5" />}
-                      className="min-w-[200px]"
+                      className="min-w-[280px] border-2 border-primary-500 hover:border-primary-600 shadow-xl hover:shadow-primary-500/20 transform hover:scale-105 transition-all duration-300 bg-gradient-to-r from-white to-primary-50 hover:from-primary-50 hover:to-primary-100 dark:from-neutral-900 dark:to-neutral-800"
                     >
-                      Soy Profesional
+                      🏆 Soy Especialista
                     </Button>
                   </Link>
+                </div>
+                
+                {/* Trust metrics preview */}
+                <div className="mt-16 text-center">
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-4">Únete a miles que ya confían en Fixia</p>
+                  <div className="flex items-center justify-center gap-8 text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-success-500 rounded-full"></div>
+                      <span className="text-neutral-600 dark:text-neutral-400">500+ Especialistas</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                      <span className="text-neutral-600 dark:text-neutral-400">2000+ Proyectos</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-warning-500 rounded-full"></div>
+                      <span className="text-neutral-600 dark:text-neutral-400">4.9⭐ Rating</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -593,15 +676,29 @@ const LandingPage: NextPage = () => {
           </div>
         </section>
 
-        {/* Service Categories - Clean & Modern */}
-        <section id="servicios" className="py-20 bg-gray-50">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Servicios que Transforman
+        {/* Service Categories - Ultra-Modern Design */}
+        <section id="servicios" className="py-24 bg-gradient-to-br from-surface-50 via-white to-primary-50/30 relative overflow-hidden">
+          {/* Background pattern */}
+          <div className="absolute inset-0 fixia-grid-pattern opacity-30" />
+          
+          <div className="max-w-7xl mx-auto px-4 relative z-10">
+            <div className="text-center mb-20">
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-950/50 dark:to-secondary-950/50 rounded-2xl mb-8">
+                <CpuChipIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                <span className="text-sm font-semibold text-primary-700 dark:text-primary-300">Servicios de Elite</span>
+              </div>
+              
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black font-display text-neutral-900 dark:text-white mb-8 leading-tight">
+                <span className="fixia-text-gradient-primary">Servicios</span>
+                <br />
+                <span className="text-neutral-700 dark:text-neutral-300">que Transforman</span>
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Cada especialista es cuidadosamente seleccionado. Cada proyecto, una oportunidad de crear algo extraordinario.
+              
+              <p className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 max-w-4xl mx-auto leading-relaxed font-medium">
+                Cada especialista es 
+                <span className="bg-gradient-to-r from-accent-600 to-secondary-600 bg-clip-text text-transparent font-bold">cuidadosamente seleccionado</span>. 
+                Cada proyecto, una oportunidad de crear algo 
+                <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent font-bold">extraordinario</span>.
               </p>
             </div>
 
@@ -610,21 +707,50 @@ const LandingPage: NextPage = () => {
                 const IconComponent = category.icon;
                 return (
                   <Link key={category.id} href={`/explorador/buscar-servicio?category=${category.id}`}>
-                    <div className="bg-white border border-gray-200 rounded-2xl p-8 group cursor-pointer hover:shadow-md transition-all duration-300">
-                      <div className="mb-6 transform group-hover:scale-105 transition-transform duration-300">
-                        <div className="w-20 h-20 rounded-2xl bg-gray-900 flex items-center justify-center">
-                          <IconComponent className="h-10 w-10 text-white" />
+                    <div className="group relative">
+                      {/* Gradient border effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
+                      
+                      <div className="relative bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-3xl p-8 group cursor-pointer hover:shadow-2xl transition-all duration-500 transform group-hover:scale-[1.02] group-hover:-translate-y-2">
+                        {/* Background decoration */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-500/5 to-secondary-500/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        
+                        <div className="mb-8 transform group-hover:scale-110 transition-transform duration-500">
+                          <div className="relative">
+                            <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-neutral-900 to-neutral-800 dark:from-neutral-100 dark:to-neutral-200 flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-shadow duration-500">
+                              <IconComponent className="h-12 w-12 text-white dark:text-neutral-900" />
+                            </div>
+                            {/* Icon glow effect */}
+                            <div className="absolute inset-0 w-24 h-24 rounded-3xl bg-gradient-to-br from-primary-500/20 to-secondary-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md" />
+                          </div>
                         </div>
-                      </div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                        {category.name}
-                      </h3>
-                      {category.description && (
-                        <p className="text-gray-600 mb-6">{category.description}</p>
-                      )}
-                      <div className="flex items-center text-gray-900 font-medium group-hover:translate-x-2 transition-transform">
-                        <span>Explorar especialistas</span>
-                        <ArrowRightIcon className="h-5 w-5 ml-2" />
+                        
+                        <div className="space-y-4">
+                          <h3 className="text-2xl md:text-3xl font-bold font-display text-neutral-900 dark:text-white mb-4 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+                            {category.name}
+                          </h3>
+                          
+                          {category.description && (
+                            <p className="text-neutral-600 dark:text-neutral-400 mb-8 leading-relaxed font-medium">
+                              {category.description}
+                            </p>
+                          )}
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center text-primary-600 dark:text-primary-400 font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                              <span>Explorar especialistas</span>
+                              <ArrowRightIcon className="h-5 w-5 ml-2 group-hover:rotate-45 transition-transform duration-300" />
+                            </div>
+                            
+                            {/* Service count badge */}
+                            <div className="px-3 py-1 bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 rounded-full text-sm font-medium">
+                              50+
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Hover shimmer effect */}
+                        <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                       </div>
                     </div>
                   </Link>
@@ -634,61 +760,149 @@ const LandingPage: NextPage = () => {
           </div>
         </section>
 
-        {/* How It Works - Clean & Modern */}
-        <section id="como-funciona" className="py-20 bg-white">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                Tres Pasos Hacia la Excelencia
+        {/* How It Works - Ultra-Modern Process */}
+        <section id="como-funciona" className="py-24 bg-white dark:bg-neutral-950 relative overflow-hidden">
+          {/* Animated background elements */}
+          <div className="absolute inset-0">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-primary-500/5 to-secondary-500/5 rounded-full blur-3xl animate-hero-float" />
+            <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-accent-500/5 to-primary-500/5 rounded-full blur-3xl animate-hero-float" style={{ animationDelay: '3s' }} />
+          </div>
+          
+          <div className="max-w-7xl mx-auto px-4 relative z-10">
+            <div className="text-center mb-20">
+              <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-success-50 to-primary-50 dark:from-success-950/50 dark:to-primary-950/50 rounded-2xl mb-8">
+                <RocketLaunchIcon className="h-5 w-5 text-success-600 dark:text-success-400" />
+                <span className="text-sm font-semibold text-success-700 dark:text-success-300">Metodología Probada</span>
+              </div>
+              
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black font-display text-neutral-900 dark:text-white mb-8 leading-tight">
+                <span className="text-neutral-900 dark:text-white">Tres Pasos Hacia la</span>
+                <br />
+                <span className="fixia-text-gradient-secondary">Excelencia</span>
               </h2>
-              <p className="text-xl text-gray-600">
-                Una metodología diseñada para garantizar que cada conexión sea perfecta, cada resultado extraordinario.
+              
+              <p className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 max-w-4xl mx-auto leading-relaxed font-medium">
+                Una metodología 
+                <span className="bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent font-bold">científicamente diseñada</span>
+                {' '}para garantizar que cada conexión sea perfecta, cada resultado 
+                <span className="bg-gradient-to-r from-accent-600 to-secondary-600 bg-clip-text text-transparent font-bold">extraordinario</span>.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-20 h-20 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <EyeIcon className="h-8 w-8 text-white" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+              {/* Step 1 */}
+              <div className="text-center group">
+                <div className="relative mb-8">
+                  {/* Step number */}
+                  <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+                    01
+                  </div>
+                  
+                  {/* Icon container with enhanced styling */}
+                  <div className="relative mx-auto">
+                    <div className="w-24 h-24 bg-gradient-to-br from-primary-500 to-primary-600 rounded-3xl flex items-center justify-center mx-auto shadow-2xl group-hover:shadow-primary-500/25 transition-all duration-500 transform group-hover:scale-110 group-hover:rotate-3">
+                      <EyeIcon className="h-12 w-12 text-white" />
+                    </div>
+                    
+                    {/* Glow effect */}
+                    <div className="absolute inset-0 w-24 h-24 bg-gradient-to-br from-primary-500/30 to-primary-600/30 rounded-3xl mx-auto opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
+                    
+                    {/* Connection line to next step */}
+                    <div className="hidden md:block absolute top-12 left-full w-24 h-0.5 bg-gradient-to-r from-primary-500/50 to-transparent" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                
+                <h3 className="text-2xl md:text-3xl font-bold font-display text-neutral-900 dark:text-white mb-6 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
                   Descubrimiento Inteligente
                 </h3>
-                <p className="text-gray-600">
-                  Nuestra tecnología comprende tu visión y localiza especialistas que no solo ejecutan, sino que elevan tu proyecto.
+                
+                <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium text-lg">
+                  Nuestra 
+                  <span className="text-primary-600 dark:text-primary-400 font-semibold">IA avanzada</span>
+                  {' '}comprende tu visión y localiza especialistas que no solo ejecutan, sino que 
+                  <span className="text-accent-600 dark:text-accent-400 font-semibold">elevan tu proyecto</span>.
                 </p>
               </div>
 
-              <div className="text-center">
-                <div className="w-20 h-20 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <HandRaisedIcon className="h-8 w-8 text-white" />
+              {/* Step 2 */}
+              <div className="text-center group">
+                <div className="relative mb-8">
+                  {/* Step number */}
+                  <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+                    02
+                  </div>
+                  
+                  {/* Icon container */}
+                  <div className="relative mx-auto">
+                    <div className="w-24 h-24 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-3xl flex items-center justify-center mx-auto shadow-2xl group-hover:shadow-secondary-500/25 transition-all duration-500 transform group-hover:scale-110 group-hover:rotate-3">
+                      <HandRaisedIcon className="h-12 w-12 text-white" />
+                    </div>
+                    
+                    {/* Glow effect */}
+                    <div className="absolute inset-0 w-24 h-24 bg-gradient-to-br from-secondary-500/30 to-secondary-600/30 rounded-3xl mx-auto opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
+                    
+                    {/* Connection line to next step */}
+                    <div className="hidden md:block absolute top-12 left-full w-24 h-0.5 bg-gradient-to-r from-secondary-500/50 to-transparent" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                
+                <h3 className="text-2xl md:text-3xl font-bold font-display text-neutral-900 dark:text-white mb-6 group-hover:text-secondary-600 dark:group-hover:text-secondary-400 transition-colors duration-300">
                   Conexión Estratégica
                 </h3>
-                <p className="text-gray-600">
-                  Más que una coincidencia: una alianza estratégica entre tu necesidad y el talento excepcional que la materializa.
+                
+                <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium text-lg">
+                  Más que una coincidencia: una 
+                  <span className="text-secondary-600 dark:text-secondary-400 font-semibold">alianza estratégica</span>
+                  {' '}entre tu necesidad y el 
+                  <span className="text-accent-600 dark:text-accent-400 font-semibold">talento excepcional</span>
+                  {' '}que la materializa.
                 </p>
               </div>
 
-              <div className="text-center">
-                <div className="w-20 h-20 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <CheckCircleIcon className="h-8 w-8 text-white" />
+              {/* Step 3 */}
+              <div className="text-center group">
+                <div className="relative mb-8">
+                  {/* Step number */}
+                  <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-success-500 to-success-600 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+                    03
+                  </div>
+                  
+                  {/* Icon container */}
+                  <div className="relative mx-auto">
+                    <div className="w-24 h-24 bg-gradient-to-br from-success-500 to-success-600 rounded-3xl flex items-center justify-center mx-auto shadow-2xl group-hover:shadow-success-500/25 transition-all duration-500 transform group-hover:scale-110 group-hover:rotate-3">
+                      <CheckCircleIcon className="h-12 w-12 text-white" />
+                    </div>
+                    
+                    {/* Glow effect */}
+                    <div className="absolute inset-0 w-24 h-24 bg-gradient-to-br from-success-500/30 to-success-600/30 rounded-3xl mx-auto opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                
+                <h3 className="text-2xl md:text-3xl font-bold font-display text-neutral-900 dark:text-white mb-6 group-hover:text-success-600 dark:group-hover:text-success-400 transition-colors duration-300">
                   Garantía de Excelencia
                 </h3>
-                <p className="text-gray-600">
-                  Un ecosistema de confianza que asegura resultados superiores y relaciones duraderas.
+                
+                <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed font-medium text-lg">
+                  Un 
+                  <span className="text-success-600 dark:text-success-400 font-semibold">ecosistema de confianza</span>
+                  {' '}que asegura 
+                  <span className="text-accent-600 dark:text-accent-400 font-semibold">resultados superiores</span>
+                  {' '}y relaciones duraderas.
                 </p>
               </div>
             </div>
 
-            <div className="text-center mt-12">
+            <div className="text-center mt-16">
               <Link href="/auth/registro">
-                <button className="bg-gray-900 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-gray-800 transition-all duration-300">
-                  Experimentar la Diferencia
-                </button>
+                <Button
+                  variant="primary"
+                  size="xl"
+                  leftIcon={<SparklesIcon className="h-6 w-6" />}
+                  rightIcon={<ArrowRightIcon className="h-5 w-5" />}
+                  className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-500 hover:to-secondary-500 shadow-2xl hover:shadow-primary-500/25 transform hover:scale-105 transition-all duration-500 px-12 py-4"
+                >
+                  ✨ Experimentar la Diferencia
+                </Button>
               </Link>
             </div>
           </div>
