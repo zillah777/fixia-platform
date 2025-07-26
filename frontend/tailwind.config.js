@@ -24,32 +24,46 @@ module.exports = {
         'wide': {'min': '1440px'},
       },
       colors: {
-        // FIXIA 2025 - MARKETPLACE DESIGN SYSTEM 2.0
-        // Inspired by Airbnb, Upwork, Vinted - Professional Marketplace Palette
+        // 🎨 FIXIA DESIGN SYSTEM - "Trust & Flow" Palette
+        // Filosofía: "Confianza Líquida" - Sistema profesional de marketplace
         
-        // MARKETPLACE PRIMARY - Trust & Professional (Blue-based like Upwork)
+        // PRIMARY - Confianza Profesional (Trust Blue)
         primary: {
-          50: '#eff6ff',   // Ultra light
-          100: '#dbeafe',  // Very light
-          200: '#bfdbfe',  // Light
-          300: '#93c5fd',  // Light accent
-          400: '#60a5fa',  // Medium light
-          500: '#3b82f6',  // Primary brand color
-          600: '#2563eb',  // Medium dark
-          700: '#1d4ed8',  // Dark
-          800: '#1e40af',  // Very dark
-          900: '#1e3a8a',  // Ultra dark
-          950: '#172554',  // Near black
+          50: '#f0f9ff',   // Ultra light
+          100: '#e0f2fe',  // Very light
+          200: '#bae6fd',  // Light
+          300: '#7dd3fc',  // Light accent
+          400: '#38bdf8',  // Medium light
+          500: '#226F83',  // 🎯 BRAND PRIMARY - Azul Profundo
+          600: '#1A5A6B',  // Medium dark (hover states)
+          700: '#0c4a6e',  // Dark
+          800: '#075985',  // Very dark
+          900: '#0c4a6e',  // Ultra dark
+          950: '#062139',  // Near black
         },
         
-        // MARKETPLACE SECONDARY - Warmth & Action (Orange-based like Airbnb)
+        // PRIMARY LIGHT - Celeste suave para backgrounds
+        'primary-light': {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#5B9BAA',  // 🎯 CELESTE - Backgrounds, Cards
+          500: '#38bdf8',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+        
+        // SECONDARY - Energía & Acción (Trust Orange)
         secondary: {
           50: '#fff7ed',   // Ultra light
           100: '#ffedd5',  // Very light
           200: '#fed7aa',  // Light
           300: '#fdba74',  // Light accent
           400: '#fb923c',  // Medium light
-          500: '#f97316',  // Secondary brand color
+          500: '#FC8940',  // 🎯 BRAND SECONDARY - Naranja Active States
           600: '#ea580c',  // Medium dark
           700: '#c2410c',  // Dark
           800: '#9a3412',  // Very dark
@@ -57,19 +71,42 @@ module.exports = {
           950: '#431407',  // Near black
         },
         
-        // NEUTRAL GRAYS - Modern & Clean (Vinted-inspired)
-        neutral: {
-          50: '#fafafa',   // Almost white
-          100: '#f5f5f5',  // Very light gray
-          200: '#e5e5e5',  // Light gray
-          300: '#d4d4d4',  // Gray
-          400: '#a3a3a3',  // Medium gray
-          500: '#737373',  // Standard gray
-          600: '#525252',  // Dark gray
-          700: '#404040',  // Darker gray
-          800: '#262626',  // Very dark gray
-          900: '#171717',  // Near black
-          950: '#0a0a0a',  // Black
+        // ACCENT - Highlights & Success
+        accent: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#FEC113',  // 🎯 BRAND ACCENT - Amarillo Highlights
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+        },
+        
+        // NEUTRALS - Sofisticación (Fixia Grays)
+        // Colores neutros para texto y fondos - paleta profesional
+        'fixia-text': {
+          primary: '#2C2C2C',    // 🎯 Títulos y texto principal
+          secondary: '#6B7280',  // 🎯 Subtítulos
+          muted: '#9CA3AF',      // 🎯 Texto auxiliar
+        },
+        'fixia-surface': {
+          border: '#E5E7EB',     // 🎯 Bordes sutiles
+          surface: '#F9FAFB',    // 🎯 Fondos suaves
+          white: '#FFFFFF',      // 🎯 Base limpia
+        },
+        
+        // DARK MODE - "Midnight Professional"
+        'fixia-dark': {
+          bg: '#0F172A',         // 🎯 Fondo principal
+          surface: '#1E293B',    // 🎯 Cards y elementos
+          border: '#334155',     // 🎯 Bordes sutiles
+          text: '#F1F5F9',       // 🎯 Texto principal
+          'text-muted': '#94A3B8', // 🎯 Texto secundario
+          primary: '#38BDF8',    // 🎯 Azul más brillante
+          accent: '#FB923C',     // 🎯 Naranja más suave
         },
         
         // SUCCESS - Growth & Positive Actions
@@ -148,9 +185,11 @@ module.exports = {
         },
       },
       fontFamily: {
-        'display': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        'body': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        'mono': ['JetBrains Mono', 'Fira Code', 'Monaco', 'monospace'],
+        // 📝 FIXIA TYPOGRAPHY SYSTEM
+        'display': ['Work Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'], // Títulos
+        'body': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],                 // Body text
+        'ui': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],                   // UI elements
+        'mono': ['JetBrains Mono', 'Fira Code', 'Monaco', 'monospace'],               // Code
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem' }],      // 12px
