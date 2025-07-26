@@ -184,9 +184,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const result = await authService.uploadProfilePhoto(file);
       
+      console.log('Upload photo result:', result);
+      
       // Update user with new photo URL
       if (user) {
         const updatedUser = { ...user, profile_photo_url: result.profile_photo_url };
+        console.log('Updating user context with new photo:', updatedUser);
         setUser(updatedUser);
         authService.updateStoredUser(updatedUser);
       }
@@ -194,6 +197,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       toast.success('Foto de perfil actualizada exitosamente');
       return result.profile_photo_url;
     } catch (error: any) {
+      console.error('Upload photo error in context:', error);
       const message = error.response?.data?.error || 'Error al subir la foto';
       toast.error(message);
       throw error;

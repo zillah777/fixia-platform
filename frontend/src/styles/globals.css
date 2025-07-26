@@ -12,6 +12,19 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800;900&display=swap');
 
+/* Local font fallbacks */
+@font-face {
+  font-family: 'Inter-fallback';
+  src: local('Inter'), local('system-ui'), local('-apple-system'), local('BlinkMacSystemFont');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans-fallback';
+  src: local('Plus Jakarta Sans'), local('Inter'), local('system-ui'), local('-apple-system');
+  font-display: swap;
+}
+
 /* =============================================================================
    BASE LAYER - DEFAULTS & TYPOGRAPHY
    ============================================================================= */

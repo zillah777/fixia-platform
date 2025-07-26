@@ -185,12 +185,12 @@ module.exports = {
         },
       },
       fontFamily: {
-        // 📝 ULTRA-MODERN FIXIA TYPOGRAPHY SYSTEM
-        'display': ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'], // Hero & display text
-        'heading': ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'], // Headings
-        'body': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],   // Body text
-        'ui': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],                          // UI elements
-        'mono': ['JetBrains Mono', 'SF Mono', 'Monaco', 'Cascadia Code', 'monospace'],        // Code
+        // 📝 ULTRA-MODERN FIXIA TYPOGRAPHY SYSTEM with fallbacks
+        'display': ['Plus Jakarta Sans', 'Plus Jakarta Sans-fallback', 'Inter', 'system-ui', '-apple-system', 'sans-serif'], // Hero & display text
+        'heading': ['Plus Jakarta Sans', 'Plus Jakarta Sans-fallback', 'Inter', 'system-ui', '-apple-system', 'sans-serif'], // Headings
+        'body': ['Inter', 'Inter-fallback', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],   // Body text
+        'ui': ['Inter', 'Inter-fallback', 'system-ui', '-apple-system', 'sans-serif'],                          // UI elements
+        'mono': ['JetBrains Mono', 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', 'monospace'],        // Code
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem' }],      // 12px

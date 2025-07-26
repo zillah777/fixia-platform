@@ -153,26 +153,56 @@ app.use('/uploads', assetOptimization({
 
 // CORS-enabled static file serving with security headers
 app.use('/uploads', (req, res, next) => {
-  // Set CORS headers for static files
-  res.header('Access-Control-Allow-Origin', '*');
+  // Enhanced CORS headers for static files
+  const allowedOrigins = [
+    'https://fixia-platform.vercel.app',
+    'https://fixia.com.ar',
+    'http://localhost:3000',
+    'http://localhost:3001'
+  ];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin) || !origin) {
+    res.header('Access-Control-Allow-Origin', origin || '*');
+  }
+  
   res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control');
   res.header('Access-Control-Max-Age', '86400'); // 24 hours cache
   
-  // Security headers for uploaded files
+  // Enhanced security headers for uploaded files
   res.header('X-Content-Type-Options', 'nosniff');
-  res.header('X-Frame-Options', 'DENY');
-  res.header('Content-Security-Policy', "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'");
+  res.header('X-Frame-Options', 'SAMEORIGIN'); // Changed from DENY to allow same origin
+  
+  // Fixed CSP policy to allow cross-origin images
+  const cspPolicy = [
+    "default-src 'none'",
+    "img-src 'self' data: https: blob:",
+    "style-src 'unsafe-inline'",
+    "connect-src 'self' https://fixia-platform.vercel.app https://fixia.com.ar"
+  ].join('; ');
+  
+  res.header('Content-Security-Policy', cspPolicy);
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
   
-  // Add cache control for images
-  if (req.path.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
-    res.header('Cache-Control', 'public, max-age=31536000'); // 1 year
+  // Enhanced cache control for images
+  if (req.path.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i)) {
+    res.header('Cache-Control', 'public, max-age=31536000, immutable');
+    res.header('Vary', 'Accept-Encoding');
   }
+  
+  // Log static file requests for debugging
+  console.log(`📁 Static file request: {
+  url: '${req.url}',
+  originalUrl: '${req.originalUrl}',
+  origin: '${req.headers.origin || 'none'}',
+  referer: '${req.headers.referer || 'none'}',
+  userAgent: '${req.headers['user-agent']?.substring(0, 50) || 'none'}'
+}`);
   
   next();
 }, express.static(path.join(__dirname, 'uploads'), {

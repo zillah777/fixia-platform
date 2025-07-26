@@ -53,16 +53,22 @@ const EditarPerfil: NextPage = () => {
         bio: user.bio || ''
       });
     }
-    
-    // Set photo preview if user has profile photo
-    if (user?.profile_photo_url) {
+  }, [user, loading, router]);
+
+  // Separate effect for photo preview to avoid conflicts
+  useEffect(() => {
+    if (user?.profile_photo_url && !uploadingPhoto) {
       // If URL is already complete, use it directly, otherwise prepend API URL
       const photoUrl = user.profile_photo_url.startsWith('http') 
         ? user.profile_photo_url 
         : `${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`;
+      
+      console.log('Setting photo preview from user context:', photoUrl);
       setPhotoPreview(photoUrl);
+    } else if (!user?.profile_photo_url && !uploadingPhoto) {
+      setPhotoPreview(null);
     }
-  }, [user, loading, router]);
+  }, [user?.profile_photo_url, uploadingPhoto]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,9 +120,23 @@ const EditarPerfil: NextPage = () => {
       // Upload photo
       const photoUrl = await uploadProfilePhoto(file);
       
-      // Update preview with server URL
-      URL.revokeObjectURL(tempPreview); // Clean up temp URL
-      setPhotoPreview(`${process.env.NEXT_PUBLIC_API_URL}${photoUrl}`);
+      console.log('Photo upload success:', {
+        filename: file.name,
+        photoUrl: photoUrl,
+        fullPhotoUrl: `${process.env.NEXT_PUBLIC_API_URL}${photoUrl}`,
+        backendUrl: process.env.NEXT_PUBLIC_API_URL
+      });
+      
+      // Clean up temp URL
+      URL.revokeObjectURL(tempPreview);
+      
+      // Set the final photo URL
+      const finalPhotoUrl = photoUrl.startsWith('http') 
+        ? photoUrl 
+        : `${process.env.NEXT_PUBLIC_API_URL}${photoUrl}`;
+      
+      setPhotoPreview(finalPhotoUrl);
+      setMessage('Foto de perfil actualizada exitosamente');
       
     } catch (err: any) {
       console.error('Photo upload error:', err);
@@ -124,11 +144,10 @@ const EditarPerfil: NextPage = () => {
       
       // Restore original photo on error
       if (user?.profile_photo_url) {
-        // If URL is already complete, use it directly, otherwise prepend API URL
-        const photoUrl = user.profile_photo_url.startsWith('http') 
+        const originalPhotoUrl = user.profile_photo_url.startsWith('http') 
           ? user.profile_photo_url 
           : `${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`;
-        setPhotoPreview(photoUrl);
+        setPhotoPreview(originalPhotoUrl);
       } else {
         setPhotoPreview(null);
       }
@@ -228,10 +247,29 @@ const EditarPerfil: NextPage = () => {
                           alt="Foto de perfil" 
                           className="w-full h-full object-cover"
                           onError={(e) => {
-                            // Fallback if image fails to load
+                            console.error('Error loading image:', photoPreview);
+                            // Don't immediately remove the preview, try to recover
                             const target = e.target as HTMLImageElement;
                             target.style.display = 'none';
-                            setPhotoPreview(null);
+                            
+                            // Try to reconstruct the URL if it's a relative path
+                            if (user?.profile_photo_url && !photoPreview.startsWith('http')) {
+                              const newUrl = `${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`;
+                              if (newUrl !== photoPreview) {
+                                setPhotoPreview(newUrl);
+                                return;
+                              }
+                            }
+                            
+                            // Only remove if all recovery attempts fail
+                            setTimeout(() => {
+                              if (target.style.display === 'none') {
+                                setPhotoPreview(null);
+                              }
+                            }, 2000);
+                          }}
+                          onLoad={() => {
+                            console.log('Image loaded successfully:', photoPreview);
                           }}
                         />
                       ) : (
