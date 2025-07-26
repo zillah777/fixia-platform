@@ -57,15 +57,28 @@ const EditarPerfil: NextPage = () => {
 
   // Separate effect for photo preview to avoid conflicts
   useEffect(() => {
+    console.log('📸 Photo preview effect triggered:', {
+      hasUser: !!user,
+      profilePhotoUrl: user?.profile_photo_url,
+      uploadingPhoto,
+      currentPreview: photoPreview,
+      apiUrl: process.env.NEXT_PUBLIC_API_URL
+    });
+
     if (user?.profile_photo_url && !uploadingPhoto) {
       // If URL is already complete, use it directly, otherwise prepend API URL
       const photoUrl = user.profile_photo_url.startsWith('http') 
         ? user.profile_photo_url 
         : `${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`;
       
-      console.log('Setting photo preview from user context:', photoUrl);
+      console.log('✅ Setting photo preview from user context:', {
+        original: user.profile_photo_url,
+        constructed: photoUrl,
+        isFullUrl: user.profile_photo_url.startsWith('http')
+      });
       setPhotoPreview(photoUrl);
     } else if (!user?.profile_photo_url && !uploadingPhoto) {
+      console.log('❌ No photo URL found, clearing preview');
       setPhotoPreview(null);
     }
   }, [user?.profile_photo_url, uploadingPhoto]);
@@ -240,40 +253,63 @@ const EditarPerfil: NextPage = () => {
                 {/* Profile Picture */}
                 <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
                   <div className="relative">
-                    <div className="w-24 h-24 sm:w-20 sm:h-20 bg-gradient-to-br from-navy-500 to-blue-600 rounded-2xl flex items-center justify-center overflow-hidden shadow-lg">
+                    {/* Debug info */}
+                    {process.env.NODE_ENV === 'development' && (
+                      <div className="absolute -top-8 left-0 text-xs text-gray-500 z-50">
+                        Preview: {photoPreview ? 'yes' : 'no'} | URL: {photoPreview?.substring(0, 30)}...
+                      </div>
+                    )}
+                    
+                    <div className="w-32 h-32 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center overflow-hidden shadow-lg border-4 border-white">
                       {photoPreview ? (
                         <img 
                           src={photoPreview} 
                           alt="Foto de perfil" 
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover rounded-xl"
+                          style={{ display: 'block', minWidth: '100%', minHeight: '100%' }}
                           onError={(e) => {
-                            console.error('Error loading image:', photoPreview);
-                            // Don't immediately remove the preview, try to recover
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
+                            console.error('❌ Image load error:', {
+                              url: photoPreview,
+                              error: e,
+                              timestamp: new Date().toISOString()
+                            });
                             
-                            // Try to reconstruct the URL if it's a relative path
+                            const target = e.target as HTMLImageElement;
+                            // Don't hide immediately, show a red border for debugging
+                            target.style.border = '2px solid red';
+                            target.style.backgroundColor = 'rgba(255,0,0,0.1)';
+                            
+                            // Try to recover with a different URL construction
                             if (user?.profile_photo_url && !photoPreview.startsWith('http')) {
                               const newUrl = `${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`;
                               if (newUrl !== photoPreview) {
+                                console.log('🔄 Trying recovery URL:', newUrl);
                                 setPhotoPreview(newUrl);
                                 return;
                               }
                             }
                             
-                            // Only remove if all recovery attempts fail
+                            // Remove after delay if recovery fails
                             setTimeout(() => {
-                              if (target.style.display === 'none') {
+                              if (target.style.border.includes('red')) {
+                                console.log('🗑️ Removing failed image after timeout');
                                 setPhotoPreview(null);
+                                setError('Error al cargar la imagen. Intenta subirla nuevamente.');
                               }
-                            }, 2000);
+                            }, 3000);
                           }}
                           onLoad={() => {
-                            console.log('Image loaded successfully:', photoPreview);
+                            console.log('✅ Image loaded successfully:', {
+                              url: photoPreview,
+                              timestamp: new Date().toISOString()
+                            });
                           }}
                         />
                       ) : (
-                        <UserIcon className="w-12 h-12 sm:w-10 sm:h-10 text-white" />
+                        <div className="flex flex-col items-center justify-center text-white">
+                          <UserIcon className="w-12 h-12 mb-2" />
+                          <span className="text-xs font-medium">Sin foto</span>
+                        </div>
                       )}
                     </div>
                     {uploadingPhoto && (
@@ -299,7 +335,7 @@ const EditarPerfil: NextPage = () => {
                         className={`px-4 py-2 rounded-xl text-sm font-medium cursor-pointer inline-flex items-center transition-all shadow-sm ${
                           uploadingPhoto 
                             ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                            : 'bg-navy-50 text-navy-600 hover:bg-navy-100 hover:shadow-md'
+                            : 'bg-primary-50 text-primary-600 hover:bg-primary-100 hover:shadow-md'
                         }`}
                       >
                         <CameraIcon className="w-4 h-4 mr-2" />
@@ -332,7 +368,7 @@ const EditarPerfil: NextPage = () => {
                         required
                         value={formData.first_name}
                         onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                         placeholder="Tu nombre"
                       />
                     </div>
@@ -349,7 +385,7 @@ const EditarPerfil: NextPage = () => {
                         required
                         value={formData.last_name}
                         onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                         placeholder="Tu apellido"
                       />
                     </div>
@@ -366,7 +402,7 @@ const EditarPerfil: NextPage = () => {
                         required
                         value={formData.email}
                         onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                         placeholder="tu@email.com"
                       />
                     </div>
@@ -382,7 +418,7 @@ const EditarPerfil: NextPage = () => {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                         placeholder="+54 9 280 123-4567"
                       />
                     </div>
@@ -413,7 +449,7 @@ const EditarPerfil: NextPage = () => {
                     value={formData.bio}
                     onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
                     rows={4}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all resize-none"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all resize-none"
                     placeholder="Cuéntanos un poco sobre ti..."
                   />
                 </div>
