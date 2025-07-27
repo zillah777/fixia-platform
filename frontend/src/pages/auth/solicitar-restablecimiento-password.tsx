@@ -5,9 +5,9 @@ import Link from 'next/link';
 
 import MarketplaceLayout from '@/components/layouts/MarketplaceLayout';
 import Logo from '@/components/Logo';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function SolicitarRestablecimientoPassword() {
   const router = useRouter();

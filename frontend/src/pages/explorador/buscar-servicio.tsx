@@ -25,7 +25,7 @@ import { explorerService } from '@/services/explorer';
 import { categoriesService } from '@/services/categories';
 import { apiLocalitiesService } from '@/services/api';
 import { ExplorerServiceRequestForm } from '@/types/explorer';
-import { CorporateHeader, CorporateCard, CorporateButton, CorporateInput } from '@/components/ui';
+import { CorporateHeader, CorporateCard, CorporateButton, Input as CorporateInput } from '@/components/ui';
 import Logo from '@/components/Logo';
 
 // Localidades de Chubut - ahora se cargan desde la API

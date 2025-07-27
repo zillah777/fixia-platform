@@ -14,7 +14,9 @@ import {
 } from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { CorporateNavigation } from '@/components/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const CambiarPassword: NextPage = () => {
   const { user, loading, changePassword } = useAuth();
