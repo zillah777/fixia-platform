@@ -247,7 +247,7 @@ const NavegarProfesionalesPage: NextPage = () => {
             <div className="flex items-center justify-between h-20">
               <div className="flex items-center space-x-4">
                 <Link href="/explorador/dashboard">
-                  <Button variant="ghost" size="sm" className="p-2 hover:bg-primary-50">
+                  <Button className="p-2 h-9 px-3 glass hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-medium rounded-lg transition-all duration-200">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
@@ -304,8 +304,7 @@ const NavegarProfesionalesPage: NextPage = () => {
               </div>
               <Button
                 onClick={() => setShowFilters(!showFilters)}
-                variant={showFilters ? "default" : "outline"}
-                className="relative group shadow-lg hover:shadow-xl transition-all duration-300"
+                className={`relative group shadow-lg hover:shadow-xl transition-all duration-300 font-semibold rounded-lg px-4 py-2 h-10 flex items-center gap-2 ${showFilters ? 'bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white' : 'glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400'}`}
               >
                 <span className="mr-2">📊</span>
                 <span className="relative z-10">
@@ -354,9 +353,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                   
                   <Button
                     onClick={() => setShowFilters(false)}
-                    variant="ghost"
-                    size="sm"
-                    className="text-secondary-600 hover:text-secondary-900 relative group"
+                    className="h-9 px-3 glass hover:glass-medium text-secondary-600 hover:text-secondary-900 relative group font-medium rounded-lg transition-all duration-200"
                   >
                     <span className="transform group-hover:rotate-90 transition-transform duration-300">×</span>
                   </Button>
@@ -510,9 +507,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                 <div className="flex items-center space-x-4">
                   <Button
                     onClick={clearFilters}
-                    variant="ghost"
-                    size="default"
-                    className="text-secondary-600 hover:text-secondary-900 group"
+                    className="h-10 px-4 glass hover:glass-medium text-secondary-600 hover:text-secondary-900 group font-medium rounded-lg transition-all duration-200"
                   >
                     <span className="mr-2 group-hover:rotate-90 transition-transform duration-300">×</span>
                     Limpiar filtros
@@ -772,9 +767,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                     <div className="grid grid-cols-2 gap-4 mb-6">
                       <Link href={`/explorador/profesional/${professional.id}`}>
                         <Button
-                          className="w-full group relative overflow-hidden"
-                          size="default"
-                          variant="outline"
+                          className="w-full group relative overflow-hidden h-10 px-4 glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                         >
                           <span className="relative z-10 font-bold tracking-tight">Ver Perfil</span>
                           <Eye className="h-4 w-4 ml-2 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
@@ -784,8 +777,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                       
                       <Link href={`/explorador/chat/new?as_id=${professional.id}`}>
                         <Button
-                          className="w-full group relative overflow-hidden"
-                          size="default"
+                          className="w-full group relative overflow-hidden h-10 px-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                         >
                           <span className="relative z-10 font-bold tracking-tight">Chatear</span>
                           <MessageSquare className="h-4 w-4 ml-2 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300" />
@@ -880,9 +872,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-500 via-trust-500 to-accent-500 rounded-2xl opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-500"></div>
                 <Button
                   onClick={() => loadProfessionals()}
-                  size="lg"
-                  variant="outline"
-                  className="relative px-12 py-4 font-black tracking-tight group"
+                  className="relative px-12 py-4 h-11 font-black tracking-tight group glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   <span className="relative z-10">Descubrir Más AS</span>
                   <Rocket className="h-5 w-5 ml-2 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
@@ -959,9 +949,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <Button
                       onClick={clearFilters}
-                      variant="outline"
-                      size="lg"
-                      className="group px-8"
+                      className="group px-8 h-11 glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                     >
                       <span className="mr-2 group-hover:rotate-90 transition-transform duration-300">×</span>
                       <span className="font-bold tracking-tight">Limpiar Filtros</span>
@@ -969,8 +957,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                     
                     <Button
                       onClick={() => window.location.reload()}
-                      size="lg"
-                      className="group px-8"
+                      className="group px-8 h-11 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                     >
                       <span className="font-bold tracking-tight">Recargar Búsqueda</span>
                       <span className="ml-2 group-hover:rotate-180 transition-transform duration-500">⟳</span>

@@ -139,18 +139,23 @@ const ConfiguracionEmail: NextPage = () => {
       </Head>
 
       <CorporateLayout variant="default">
-        <CorporateHeader
-          title="Configuración de Email"
-          subtitle="Personaliza cómo y cuándo recibir notificaciones"
-          backUrl={`/${user?.user_type === 'provider' ? 'as' : 'explorador'}/dashboard`}
-        />
+        <div className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-lg">
+              ←
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Configuración de Email</h1>
+              <p className="text-gray-600">Personaliza cómo y cuándo recibir notificaciones</p>
+            </div>
+          </div>
+        </div>
 
         <div className="max-w-4xl mx-auto py-8">
           {/* Status Message */}
           {message && (
-            <CorporateCard 
-              variant="elevated" 
-              className={`mb-6 border-l-4 ${
+            <div 
+              className={`mb-6 border-l-4 glass backdrop-blur-md shadow-xl border border-white/20 p-6 ${
                 message.type === 'success' ? 'border-l-success-500' : 'border-l-error-500'
               }`}
             >
@@ -172,11 +177,11 @@ const ConfiguracionEmail: NextPage = () => {
                   {message.text}
                 </p>
               </div>
-            </CorporateCard>
+            </div>
           )}
 
           {/* Account Info */}
-          <CorporateCard variant="elevated" className="mb-8">
+          <div className="mb-8 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
             <div className="flex items-center space-x-4 pb-6 border-b border-secondary-200">
               <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-trust-500 rounded-xl flex items-center justify-center">
                 <span className="text-white text-lg">✉</span>
@@ -197,19 +202,18 @@ const ConfiguracionEmail: NextPage = () => {
                   Todas las notificaciones se enviarán a esta dirección
                 </p>
               </div>
-              <CorporateButton
-                variant="outline"
-                size="sm"
+              <button
+                className="h-9 px-3 glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-medium rounded-lg transition-all duration-200 flex items-center gap-2"
                 onClick={handleTestEmail}
-                leftIcon={<span>✉</span>}
               >
+                <span>✉</span>
                 Enviar Email de Prueba
-              </CorporateButton>
+              </button>
             </div>
-          </CorporateCard>
+          </div>
 
           {/* Email Preferences */}
-          <CorporateCard variant="elevated" className="mb-8">
+          <div className="mb-8 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
             <div className="flex items-center space-x-4 pb-6 border-b border-secondary-200">
               <div className="w-12 h-12 bg-gradient-to-r from-trust-500 to-secondary-500 rounded-xl flex items-center justify-center">
                 <span className="text-white text-lg">🔔</span>
@@ -272,23 +276,24 @@ const ConfiguracionEmail: NextPage = () => {
                 </div>
               ))}
             </div>
-          </CorporateCard>
+          </div>
 
           {/* Save Button */}
           <div className="flex justify-center">
-            <CorporateButton
+            <button
               onClick={handleSave}
-              loading={saving}
-              size="lg"
-              className="px-8"
-              rightIcon={!saving ? <span>✓</span> : undefined}
+              disabled={saving}
+              className="h-11 px-8 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
             >
               {saving ? 'Guardando...' : 'Guardar Configuración'}
-            </CorporateButton>
+              {!saving && <span>✓</span>}
+            </button>
           </div>
         </div>
 
-        <CorporateFooter variant="minimal" />
+        <div className="mt-12 text-center text-gray-500 text-sm">
+          © 2025 FIXIA. Todos los derechos reservados.
+        </div>
       </CorporateLayout>
     </>
   );

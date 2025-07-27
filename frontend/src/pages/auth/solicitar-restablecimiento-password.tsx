@@ -86,7 +86,7 @@ export default function SolicitarRestablecimientoPassword() {
             </div>
 
             {/* Password Reset Card */}
-            <Card variant="glass" padding="xl" className="backdrop-blur-md">
+            <Card className="glass backdrop-blur-md p-8">
               {/* Header */}
               <div className="text-center mb-8">
                 <div className="mb-4">
@@ -129,11 +129,9 @@ export default function SolicitarRestablecimientoPassword() {
                 <div className="space-y-3">
                   <Button
                     onClick={() => router.push('/auth/login')}
-                    variant="primary"
-                    size="lg"
-                    fullWidth
-                    leftIcon={<span>←</span>}
+                    className="w-full h-11 px-8 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                   >
+                    <span>←</span>
                     Volver al Login
                   </Button>
                 </div>
@@ -162,16 +160,20 @@ export default function SolicitarRestablecimientoPassword() {
                 )}
 
                 <div className="space-y-4">
-                  <Input
-                    label="Dirección de Email"
-                    type="email"
-                    placeholder="tu@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    leftIcon={<span>✉</span>}
-                    fullWidth
-                    required
-                  />
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-neutral-900 dark:text-white">Dirección de Email</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500">✉</span>
+                      <Input
+                        type="email"
+                        placeholder="tu@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Security Notice */}
@@ -192,14 +194,11 @@ export default function SolicitarRestablecimientoPassword() {
 
                 <Button
                   type="submit"
-                  variant="primary"
-                  size="lg"
-                  fullWidth
-                  loading={status === 'loading'}
-                  disabled={!email.trim()}
-                  rightIcon={<span>✈</span>}
+                  className="w-full h-11 px-8 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                  disabled={!email.trim() || status === 'loading'}
                 >
                   {status === 'loading' ? 'Enviando...' : 'Enviar Enlace de Restablecimiento'}
+                  <span>✈</span>
                 </Button>
 
                 {/* Divider */}
@@ -218,11 +217,9 @@ export default function SolicitarRestablecimientoPassword() {
 
                 <Link href="/auth/login">
                   <Button
-                    variant="ghost"
-                    size="md"
-                    fullWidth
-                    leftIcon={<span>←</span>}
+                    className="w-full h-10 px-4 glass hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                   >
+                    <span>←</span>
                     Volver al Login
                   </Button>
                 </Link>

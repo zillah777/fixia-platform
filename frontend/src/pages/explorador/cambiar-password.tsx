@@ -149,11 +149,16 @@ const CambiarPassword: NextPage = () => {
       </Head>
 
       <div className="min-h-screen bg-gray-50">
-        <CorporateNavigation 
-          userType="customer" 
-          user={user} 
-          onLogout={() => {}}
-        />
+        <div className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-semibold text-gray-900">Cambiar Contraseña</h1>
+              <button onClick={() => router.back()} className="text-gray-500 hover:text-gray-700">
+                ← Volver
+              </button>
+            </div>
+          </div>
+        </div>
 
         <div className="sidebar-desktop:ml-72 xs:sidebar-desktop:ml-80">
           <div className="p-6 space-y-6">

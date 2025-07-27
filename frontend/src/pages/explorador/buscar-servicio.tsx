@@ -213,7 +213,7 @@ const BuscarServicioPage: NextPage = () => {
   if (success) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50 flex items-center justify-center">
-        <CorporateCard variant="elevated" className="max-w-md w-full mx-4 text-center">
+        <CorporateCard className="max-w-md w-full mx-4 text-center glass backdrop-blur-md shadow-xl border border-white/20 p-6">
           <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="h-10 w-10 text-white" />
           </div>
@@ -242,22 +242,28 @@ const BuscarServicioPage: NextPage = () => {
 
       <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50">
         {/* Corporate Professional Header */}
-        <CorporateHeader
-          title="Solicitar Servicio Profesional"
-          subtitle="Conecta con AS certificados en Chubut para tu proyecto"
-          backUrl="/explorador/dashboard"
-          variant="featured"
-          rightActions={
-            <CorporateButton
-              variant="outline"
-              size="sm"
-              onClick={logout}
-              leftIcon={<LogOut className="h-4 w-4" />}
-            >
-              Cerrar Sesión
-            </CorporateButton>
-          }
-        />
+        <div className="bg-white/95 backdrop-blur-xl border-b border-secondary-200/50 shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-lg">
+                  ←
+                </button>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">Solicitar Servicio Profesional</h1>
+                  <p className="text-gray-600">Conecta con AS certificados en Chubut para tu proyecto</p>
+                </div>
+              </div>
+              <button
+                className="h-9 px-3 glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-medium rounded-lg transition-all duration-200 flex items-center gap-2"
+                onClick={logout}
+              >
+                <LogOut className="h-4 w-4" />
+                Cerrar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* Professional Stats Bar */}
         <div className="bg-white/80 backdrop-blur-xl border-b border-secondary-200/50">
@@ -283,7 +289,7 @@ const BuscarServicioPage: NextPage = () => {
         <div className="max-w-6xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* Professional System Status */}
           {process.env.NODE_ENV === 'development' && (
-            <CorporateCard variant="minimal" className="mb-6">
+            <CorporateCard className="mb-6 glass p-4 rounded-lg border border-white/10">
               <div className="flex items-center space-x-3">
                 <Building className="h-5 w-5 text-tech-600" />
                 <h4 className="font-semibold text-secondary-800">Sistema Profesional</h4>
@@ -298,7 +304,7 @@ const BuscarServicioPage: NextPage = () => {
 
           {/* Professional Blocking Alert */}
           {blockingStatus?.is_blocked && (
-            <CorporateCard variant="elevated" className="mb-8 border-l-4 border-l-error-500">
+            <CorporateCard className="mb-8 border-l-4 border-l-error-500 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
               <div className="flex items-start space-x-4">
                 <div className="w-12 h-12 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
                   <AlertTriangle className="h-6 w-6 text-error-600" />
@@ -311,9 +317,9 @@ const BuscarServicioPage: NextPage = () => {
                     {blockingStatus.message}
                   </p>
                   <Link href="/explorador/calificaciones">
-                    <CorporateButton variant="danger">
+                    <button className="bg-gradient-to-r from-error-500 to-error-600 hover:from-error-600 hover:to-error-700 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 px-4 py-2">
                       Completar Calificaciones Pendientes
-                    </CorporateButton>
+                    </button>
                   </Link>
                 </div>
               </div>
@@ -324,7 +330,7 @@ const BuscarServicioPage: NextPage = () => {
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Professional Error Messages */}
               {errors.length > 0 && (
-                <CorporateCard variant="elevated" className="border-l-4 border-l-error-500">
+                <CorporateCard className="border-l-4 border-l-error-500 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
                   <div className="flex items-start space-x-4">
                     <div className="w-10 h-10 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
                       <AlertTriangle className="h-5 w-5 text-error-600" />
@@ -342,7 +348,7 @@ const BuscarServicioPage: NextPage = () => {
               )}
 
               {/* Service Selection Section */}
-              <CorporateCard variant="elevated" className="space-y-8">
+              <CorporateCard className="space-y-8 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
                 <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
                   <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-trust-500 rounded-xl flex items-center justify-center">
                     <Search className="h-5 w-5 text-white" />
@@ -442,7 +448,7 @@ const BuscarServicioPage: NextPage = () => {
               </CorporateCard>
 
               {/* Project Description Section */}
-              <CorporateCard variant="elevated" className="space-y-8">
+              <CorporateCard className="space-y-8 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
                 <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
                   <div className="w-10 h-10 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center">
                     <span className="text-white text-lg font-bold">📝</span>
@@ -490,7 +496,7 @@ const BuscarServicioPage: NextPage = () => {
               </CorporateCard>
 
               {/* Professional Budget Section */}
-              <CorporateCard variant="elevated" className="space-y-8">
+              <CorporateCard className="space-y-8 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
                 <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
                   <div className="w-10 h-10 bg-gradient-to-r from-success-500 to-success-600 rounded-xl flex items-center justify-center">
                     <DollarSign className="h-5 w-5 text-white" />
@@ -553,7 +559,7 @@ const BuscarServicioPage: NextPage = () => {
               </CorporateCard>
 
               {/* Professional Timing Section */}
-              <CorporateCard variant="elevated" className="space-y-8">
+              <CorporateCard className="space-y-8 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
                 <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
                   <div className="w-10 h-10 bg-gradient-to-r from-trust-500 to-trust-600 rounded-xl flex items-center justify-center">
                     <Calendar className="h-5 w-5 text-white" />
@@ -616,7 +622,7 @@ const BuscarServicioPage: NextPage = () => {
               </CorporateCard>
 
               {/* Professional Submission Section */}
-              <CorporateCard variant="elevated" className="bg-gradient-to-br from-primary-50 via-white to-trust-50 border-2 border-primary-200">
+              <CorporateCard className="bg-gradient-to-br from-primary-50 via-white to-trust-50 border-2 border-primary-200 glass backdrop-blur-md shadow-xl p-6">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
                   <div className="flex-1">
                     <div className="flex items-center space-x-4 mb-4">
@@ -653,25 +659,21 @@ const BuscarServicioPage: NextPage = () => {
                   
                   <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 lg:ml-8">
                     <Link href="/explorador/dashboard">
-                      <CorporateButton 
-                        variant="outline"
-                        size="lg"
-                        className="w-full sm:w-auto"
+                      <button 
+                        className="w-full sm:w-auto h-11 px-8 glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                       >
                         Cancelar
-                      </CorporateButton>
+                      </button>
                     </Link>
                     
-                    <CorporateButton
+                    <button
                       type="submit"
                       disabled={submitting || blockingStatus?.is_blocked}
-                      size="lg"
-                      loading={submitting}
-                      className="w-full sm:w-auto px-8"
-                      rightIcon={!submitting ? <LogOut className="h-4 w-4" /> : undefined}
+                      className="w-full sm:w-auto px-8 h-11 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
                     >
                       {submitting ? 'Enviando Solicitud...' : 'Enviar Solicitud Profesional'}
-                    </CorporateButton>
+                      {!submitting && <LogOut className="h-4 w-4" />}
+                    </button>
                   </div>
                 </div>
               </CorporateCard>
