@@ -4,14 +4,14 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-  KeyIcon,
-  EyeIcon,
-  EyeSlashIcon,
-  ArrowLeftIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  ShieldCheckIcon
-} from '@heroicons/react/24/outline';
+  Key,
+  Eye,
+  EyeOff,
+  ArrowLeft,
+  CheckCircle,
+  AlertTriangle,
+  ShieldCheck
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { CorporateNavigation } from '@/components/ui';
@@ -159,7 +159,7 @@ const CambiarPassword: NextPage = () => {
               <div className="flex items-center space-x-4">
                 <Link href="/explorador/dashboard">
                   <button className="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center hover:bg-gray-50 transition-all">
-                    <ArrowLeftIcon className="w-5 h-5 text-gray-600" />
+                    <ArrowLeft className="w-5 h-5 text-gray-600" />
                   </button>
                 </Link>
                 <div>
@@ -172,14 +172,14 @@ const CambiarPassword: NextPage = () => {
             {/* Messages */}
             {message && (
               <div className="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-center space-x-3">
-                <CheckCircleIcon className="w-5 h-5 text-green-600" />
+                <CheckCircle className="w-5 h-5 text-green-600" />
                 <span className="text-green-800 font-medium">{message}</span>
               </div>
             )}
             
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center space-x-3">
-                <ExclamationTriangleIcon className="w-5 h-5 text-red-600" />
+                <AlertTriangle className="w-5 h-5 text-red-600" />
                 <span className="text-red-800 font-medium">{error}</span>
               </div>
             )}
@@ -187,7 +187,7 @@ const CambiarPassword: NextPage = () => {
             {/* Security Tips */}
             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
               <div className="flex items-start space-x-3">
-                <ShieldCheckIcon className="w-6 h-6 text-blue-600 mt-1" />
+                <ShieldCheck className="w-6 h-6 text-blue-600 mt-1" />
                 <div>
                   <h3 className="text-lg font-semibold text-blue-900 mb-2">Consejos de Seguridad</h3>
                   <ul className="text-blue-800 text-sm space-y-1">
@@ -209,7 +209,7 @@ const CambiarPassword: NextPage = () => {
                     Contraseña Actual *
                   </label>
                   <div className="relative">
-                    <KeyIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type={showPasswords.current ? 'text' : 'password'}
                       required
@@ -223,7 +223,7 @@ const CambiarPassword: NextPage = () => {
                       onClick={() => setShowPasswords(prev => ({ ...prev, current: !prev.current }))}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     >
-                      {showPasswords.current ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+                      {showPasswords.current ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                 </div>
@@ -234,7 +234,7 @@ const CambiarPassword: NextPage = () => {
                     Nueva Contraseña *
                   </label>
                   <div className="relative">
-                    <KeyIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type={showPasswords.new ? 'text' : 'password'}
                       required
@@ -248,7 +248,7 @@ const CambiarPassword: NextPage = () => {
                       onClick={() => setShowPasswords(prev => ({ ...prev, new: !prev.new }))}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     >
-                      {showPasswords.new ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+                      {showPasswords.new ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
 
@@ -289,7 +289,7 @@ const CambiarPassword: NextPage = () => {
                     Confirmar Nueva Contraseña *
                   </label>
                   <div className="relative">
-                    <KeyIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type={showPasswords.confirm ? 'text' : 'password'}
                       required
@@ -303,7 +303,7 @@ const CambiarPassword: NextPage = () => {
                       onClick={() => setShowPasswords(prev => ({ ...prev, confirm: !prev.confirm }))}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                     >
-                      {showPasswords.confirm ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+                      {showPasswords.confirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                   

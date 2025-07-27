@@ -4,24 +4,21 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { 
-  ArrowLeftIcon,
-  StarIcon,
-  MapPinIcon,
-  CurrencyDollarIcon,
-  CheckBadgeIcon,
-  UserIcon,
-  ChatBubbleLeftRightIcon,
-  ClockIcon,
-  BuildingOffice2Icon,
-  PhotoIcon,
-  PhoneIcon,
-  EnvelopeIcon,
-  CalendarDaysIcon,
-  AcademicCapIcon
-} from '@heroicons/react/24/outline';
-import { 
-  StarIcon as StarIconSolid 
-} from '@heroicons/react/24/solid';
+  ArrowLeft,
+  Star,
+  MapPin,
+  DollarSign,
+  ShieldCheck,
+  User,
+  MessageCircle,
+  Clock,
+  Building,
+  Image,
+  Phone,
+  Mail,
+  Calendar,
+  GraduationCap
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -79,7 +76,7 @@ const ProfesionalDetailPage: NextPage = () => {
     return (
       <div className="flex items-center">
         {[1, 2, 3, 4, 5].map((star) => (
-          <StarIcon
+          <Star
             key={star}
             className={`h-5 w-5 ${
               star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
@@ -149,7 +146,7 @@ const ProfesionalDetailPage: NextPage = () => {
             <div className="flex items-center py-6">
               <Link href="/explorador/navegar-profesionales">
                 <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                  <ArrowLeft className="h-6 w-6 text-gray-600" />
                 </button>
               </Link>
               <div>
@@ -192,7 +189,7 @@ const ProfesionalDetailPage: NextPage = () => {
                           {profile.basic_info.first_name} {profile.basic_info.last_name}
                         </h2>
                         {profile.basic_info.verification_status === 'verified' && (
-                          <CheckBadgeIcon className="h-8 w-8 text-green-600" />
+                          <ShieldCheck className="h-8 w-8 text-green-600" />
                         )}
                       </div>
                       
@@ -219,7 +216,7 @@ const ProfesionalDetailPage: NextPage = () => {
                         
                         {profile.basic_info.years_experience && (
                           <div className="flex items-center text-gray-600">
-                            <AcademicCapIcon className="h-5 w-5 mr-1" />
+                            <GraduationCap className="h-5 w-5 mr-1" />
                             <span className="text-sm">
                               {profile.basic_info.years_experience} años de experiencia
                             </span>
@@ -228,7 +225,7 @@ const ProfesionalDetailPage: NextPage = () => {
                       </div>
 
                       <div className="text-gray-600 text-sm">
-                        <CalendarDaysIcon className="h-4 w-4 inline mr-1" />
+                        <Calendar className="h-4 w-4 inline mr-1" />
                         {formatMemberSince(profile.basic_info.created_at)}
                       </div>
                     </div>
@@ -289,7 +286,7 @@ const ProfesionalDetailPage: NextPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {profile.locations.map((location) => (
                             <div key={location.id} className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                              <MapPinIcon className="h-5 w-5 text-blue-600" />
+                              <MapPin className="h-5 w-5 text-blue-600" />
                               <span className="text-gray-900">{location.locality}</span>
                               {location.service_radius > 0 && (
                                 <span className="text-sm text-gray-600">
@@ -365,7 +362,7 @@ const ProfesionalDetailPage: NextPage = () => {
                         </div>
                       ) : (
                         <div className="text-center py-12">
-                          <PhotoIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                          <Image className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                           <p className="text-gray-500">El profesional no ha agregado trabajos a su portafolio</p>
                         </div>
                       )}
@@ -441,7 +438,7 @@ const ProfesionalDetailPage: NextPage = () => {
                     onClick={() => setShowContactModal(true)}
                     className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium flex items-center justify-center"
                   >
-                    <ChatBubbleLeftRightIcon className="h-5 w-5 mr-2" />
+                    <MessageCircle className="h-5 w-5 mr-2" />
                     Contactar Directo
                   </button>
                 </div>
@@ -449,11 +446,11 @@ const ProfesionalDetailPage: NextPage = () => {
                 <div className="mt-6 pt-6 border-t">
                   <div className="text-sm text-gray-600 space-y-2">
                     <div className="flex items-center">
-                      <ClockIcon className="h-4 w-4 mr-2" />
+                      <Clock className="h-4 w-4 mr-2" />
                       <span>Responde en promedio en 2 horas</span>
                     </div>
                     <div className="flex items-center">
-                      <BuildingOffice2Icon className="h-4 w-4 mr-2" />
+                      <Building className="h-4 w-4 mr-2" />
                       <span>Trabajos completados: {profile.basic_info.total_reviews}</span>
                     </div>
                   </div>
@@ -499,12 +496,12 @@ const ProfesionalDetailPage: NextPage = () => {
                     <div className="flex items-center">
                       {profile.basic_info.verification_status === 'verified' ? (
                         <>
-                          <CheckBadgeIcon className="h-5 w-5 text-green-600 mr-1" />
+                          <ShieldCheck className="h-5 w-5 text-green-600 mr-1" />
                           <span className="text-green-600 font-medium">Verificado</span>
                         </>
                       ) : (
                         <>
-                          <UserIcon className="h-5 w-5 text-gray-400 mr-1" />
+                          <User className="h-5 w-5 text-gray-400 mr-1" />
                           <span className="text-gray-500">Pendiente</span>
                         </>
                       )}

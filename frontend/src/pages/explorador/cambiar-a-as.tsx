@@ -4,18 +4,18 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { 
-  ArrowLeftIcon,
-  UserGroupIcon,
-  StarIcon,
-  CheckCircleIcon,
-  ArrowRightIcon,
-  ShieldCheckIcon,
-  CurrencyDollarIcon,
-  LightBulbIcon,
-  ExclamationTriangleIcon,
-  ClockIcon,
-  FireIcon
-} from '@heroicons/react/24/outline';
+  ArrowLeft,
+  Users,
+  Star,
+  CheckCircle,
+  ArrowRight,
+  ShieldCheck,
+  DollarSign,
+  Lightbulb,
+  AlertTriangle,
+  Clock,
+  Flame
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -90,7 +90,7 @@ const CambiarAASPage: NextPage = () => {
             <div className="flex items-center py-6">
               <Link href="/explorador/dashboard">
                 <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                  <ArrowLeft className="h-6 w-6 text-gray-600" />
                 </button>
               </Link>
               <div className="flex-1">
@@ -110,7 +110,7 @@ const CambiarAASPage: NextPage = () => {
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl text-white p-8 mb-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <UserGroupIcon className="h-8 w-8 text-white" />
+                <Users className="h-8 w-8 text-white" />
               </div>
               <h2 className="text-3xl font-bold mb-4">
                 ¡Únete a los Mejores Profesionales de Chubut!
@@ -120,15 +120,15 @@ const CambiarAASPage: NextPage = () => {
               </p>
               <div className="flex items-center justify-center space-x-6 text-sm">
                 <div className="flex items-center">
-                  <CheckCircleIcon className="h-5 w-5 mr-2" />
+                  <CheckCircle className="h-5 w-5 mr-2" />
                   <span>Clientes verificados</span>
                 </div>
                 <div className="flex items-center">
-                  <CurrencyDollarIcon className="h-5 w-5 mr-2" />
+                  <DollarSign className="h-5 w-5 mr-2" />
                   <span>Pagos seguros</span>
                 </div>
                 <div className="flex items-center">
-                  <StarIcon className="h-5 w-5 mr-2" />
+                  <Star className="h-5 w-5 mr-2" />
                   <span>Sistema de calificaciones</span>
                 </div>
               </div>
@@ -139,7 +139,7 @@ const CambiarAASPage: NextPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <CurrencyDollarIcon className="h-6 w-6 text-green-600" />
+                <DollarSign className="h-6 w-6 text-green-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Genera Ingresos Extra
@@ -151,7 +151,7 @@ const CambiarAASPage: NextPage = () => {
 
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <UserGroupIcon className="h-6 w-6 text-blue-600" />
+                <Users className="h-6 w-6 text-blue-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Clientes en Tu Zona
@@ -163,7 +163,7 @@ const CambiarAASPage: NextPage = () => {
 
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                <ShieldCheckIcon className="h-6 w-6 text-purple-600" />
+                <ShieldCheck className="h-6 w-6 text-purple-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Plataforma Segura
@@ -227,7 +227,7 @@ const CambiarAASPage: NextPage = () => {
           <div className="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl text-white p-6 mb-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <FireIcon className="h-8 w-8 mr-4" />
+                <Flame className="h-8 w-8 mr-4" />
                 <div>
                   <h3 className="text-xl font-bold">¡Oferta de Lanzamiento!</h3>
                   <p className="text-orange-100">
@@ -245,7 +245,7 @@ const CambiarAASPage: NextPage = () => {
           {/* Important Notes */}
           <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-8">
             <div className="flex items-start">
-              <ExclamationTriangleIcon className="h-6 w-6 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+              <AlertTriangle className="h-6 w-6 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
               <div>
                 <h3 className="text-lg font-semibold text-yellow-800 mb-2">
                   Importante: Mantén Ambos Roles
@@ -263,7 +263,7 @@ const CambiarAASPage: NextPage = () => {
           {/* Action Section */}
           <div className="bg-white rounded-xl shadow-sm border p-8 text-center">
             <div className="max-w-2xl mx-auto">
-              <LightBulbIcon className="h-16 w-16 text-blue-600 mx-auto mb-4" />
+              <Lightbulb className="h-16 w-16 text-blue-600 mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
                 ¿Listo para Empezar tu Carrera como AS?
               </h3>
@@ -282,14 +282,14 @@ const CambiarAASPage: NextPage = () => {
                   onClick={() => setShowConfirmModal(true)}
                   className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors font-medium flex items-center justify-center"
                 >
-                  <UserGroupIcon className="h-5 w-5 mr-2" />
+                  <Users className="h-5 w-5 mr-2" />
                   Convertirse en AS
-                  <ArrowRightIcon className="h-5 w-5 ml-2" />
+                  <ArrowRight className="h-5 w-5 ml-2" />
                 </button>
               </div>
               
               <div className="flex items-center justify-center mt-4 text-sm text-gray-500">
-                <ClockIcon className="h-4 w-4 mr-1" />
+                <Clock className="h-4 w-4 mr-1" />
                 <span>El cambio es instantáneo y reversible</span>
               </div>
             </div>
@@ -301,7 +301,7 @@ const CambiarAASPage: NextPage = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl max-w-md w-full p-6">
               <div className="text-center">
-                <UserGroupIcon className="h-16 w-16 text-blue-600 mx-auto mb-4" />
+                <Users className="h-16 w-16 text-blue-600 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
                   ¿Confirmar Conversión a AS?
                 </h3>
@@ -311,7 +311,7 @@ const CambiarAASPage: NextPage = () => {
                 
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
                   <div className="flex items-center text-sm text-green-700">
-                    <FireIcon className="h-4 w-4 mr-2" />
+                    <Flame className="h-4 w-4 mr-2" />
                     <span className="font-medium">¡Incluye 2 meses gratis de suscripción premium!</span>
                   </div>
                 </div>

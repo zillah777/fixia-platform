@@ -4,22 +4,19 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { 
-  ArrowLeftIcon,
-  StarIcon,
-  MapPinIcon,
-  CurrencyDollarIcon,
-  CheckBadgeIcon,
-  ChatBubbleLeftRightIcon,
-  ClockIcon,
-  UserGroupIcon,
-  FireIcon,
-  CalendarDaysIcon,
-  HandThumbUpIcon,
-  ExclamationTriangleIcon
-} from '@heroicons/react/24/outline';
-import { 
-  StarIcon as StarIconSolid 
-} from '@heroicons/react/24/solid';
+  ArrowLeft,
+  Star,
+  MapPin,
+  DollarSign,
+  ShieldCheck,
+  MessageCircle,
+  Clock,
+  Users,
+  Flame,
+  Calendar,
+  ThumbsUp,
+  AlertTriangle
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -108,7 +105,7 @@ const SolicitudDetailPage: NextPage = () => {
     return (
       <div className="flex items-center">
         {[1, 2, 3, 4, 5].map((star) => (
-          <StarIcon
+          <Star
             key={star}
             className={`h-4 w-4 ${
               star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
@@ -177,7 +174,7 @@ const SolicitudDetailPage: NextPage = () => {
             <div className="flex items-center py-6">
               <Link href="/explorador/dashboard">
                 <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                  <ArrowLeft className="h-6 w-6 text-gray-600" />
                 </button>
               </Link>
               <div className="flex-1">
@@ -204,15 +201,15 @@ const SolicitudDetailPage: NextPage = () => {
                     </h2>
                     <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
                       <span className="flex items-center">
-                        <MapPinIcon className="h-4 w-4 mr-1" />
+                        <MapPin className="h-4 w-4 mr-1" />
                         {request.locality}
                       </span>
                       <span className="flex items-center">
-                        <CalendarDaysIcon className="h-4 w-4 mr-1" />
+                        <Calendar className="h-4 w-4 mr-1" />
                         {formatTimeAgo(request.created_at)}
                       </span>
                       <span className="flex items-center">
-                        <ClockIcon className="h-4 w-4 mr-1" />
+                        <Clock className="h-4 w-4 mr-1" />
                         Expira: {new Date(request.expires_at).toLocaleDateString()}
                       </span>
                     </div>
@@ -230,7 +227,7 @@ const SolicitudDetailPage: NextPage = () => {
 
                 {(request.budget_min || request.budget_max) && (
                   <div className="flex items-center space-x-2 mb-4">
-                    <CurrencyDollarIcon className="h-5 w-5 text-green-600" />
+                    <DollarSign className="h-5 w-5 text-green-600" />
                     <span className="font-medium text-gray-900">
                       Presupuesto: 
                       {request.budget_min && request.budget_max 
@@ -245,7 +242,7 @@ const SolicitudDetailPage: NextPage = () => {
 
                 {request.preferred_date && (
                   <div className="flex items-center space-x-2">
-                    <CalendarDaysIcon className="h-5 w-5 text-blue-600" />
+                    <Calendar className="h-5 w-5 text-blue-600" />
                     <span className="text-gray-700">
                       Fecha preferida: {new Date(request.preferred_date).toLocaleDateString()}
                       {request.preferred_time && ` a las ${request.preferred_time}`}
@@ -269,7 +266,7 @@ const SolicitudDetailPage: NextPage = () => {
 
                 {interests.length === 0 ? (
                   <div className="text-center py-12">
-                    <UserGroupIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h4 className="text-lg font-medium text-gray-900 mb-2">
                       Aún no hay AS interesados
                     </h4>
@@ -306,7 +303,7 @@ const SolicitudDetailPage: NextPage = () => {
                                   {interest.first_name} {interest.last_name}
                                 </h4>
                                 {interest.verification_status === 'verified' && (
-                                  <CheckBadgeIcon className="h-5 w-5 text-green-600" />
+                                  <ShieldCheck className="h-5 w-5 text-green-600" />
                                 )}
                                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                                   interest.subscription_type === 'premium' 
@@ -356,7 +353,7 @@ const SolicitudDetailPage: NextPage = () => {
                         {interest.message && (
                           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                             <div className="flex items-start">
-                              <ChatBubbleLeftRightIcon className="h-5 w-5 text-blue-600 mt-0.5 mr-2" />
+                              <MessageCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-2" />
                               <div>
                                 <div className="font-medium text-blue-800 mb-1">Mensaje del AS:</div>
                                 <p className="text-blue-700">{interest.message}</p>
@@ -369,13 +366,13 @@ const SolicitudDetailPage: NextPage = () => {
                           <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
                             {interest.availability_date && (
                               <span className="flex items-center">
-                                <CalendarDaysIcon className="h-4 w-4 mr-1" />
+                                <Calendar className="h-4 w-4 mr-1" />
                                 Disponible: {new Date(interest.availability_date).toLocaleDateString()}
                               </span>
                             )}
                             {interest.availability_time && (
                               <span className="flex items-center">
-                                <ClockIcon className="h-4 w-4 mr-1" />
+                                <Clock className="h-4 w-4 mr-1" />
                                 {interest.availability_time}
                               </span>
                             )}
@@ -401,7 +398,7 @@ const SolicitudDetailPage: NextPage = () => {
                               </>
                             ) : (
                               <>
-                                <HandThumbUpIcon className="h-5 w-5 mr-2" />
+                                <ThumbsUp className="h-5 w-5 mr-2" />
                                 Aceptar y Chatear
                               </>
                             )}

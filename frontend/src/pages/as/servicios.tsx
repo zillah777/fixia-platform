@@ -4,22 +4,22 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-  ArrowLeftIcon,
-  PlusIcon,
-  BriefcaseIcon,
-  EyeIcon,
-  PencilIcon,
-  TrashIcon,
-  MapPinIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-  PhotoIcon,
-  TagIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  MagnifyingGlassIcon,
-  StarIcon
-} from '@heroicons/react/24/outline';
+  ArrowLeft,
+  Plus,
+  Briefcase,
+  Eye,
+  Pencil,
+  Trash,
+  MapPin,
+  Clock,
+  DollarSign,
+  Image,
+  Tag,
+  CheckCircle,
+  XCircle,
+  Search,
+  Star
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { Service, ServiceCategory, CreateServiceData } from '@/types';
@@ -241,7 +241,7 @@ const ASServicios: NextPage = () => {
               <div className="flex items-center">
                 <Link href="/as/dashboard">
                   <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                    <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                    <ArrowLeft className="h-6 w-6 text-gray-600" />
                   </button>
                 </Link>
                 <div>
@@ -256,7 +256,7 @@ const ASServicios: NextPage = () => {
                 onClick={() => setShowCreateModal(true)}
                 className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
-                <PlusIcon className="h-5 w-5 mr-2" />
+                <Plus className="h-5 w-5 mr-2" />
                 Nuevo Servicio
               </button>
             </div>
@@ -269,7 +269,7 @@ const ASServicios: NextPage = () => {
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <div className="relative">
-                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
                     type="text"
                     placeholder="Buscar servicios..."
@@ -305,7 +305,7 @@ const ASServicios: NextPage = () => {
                   <p className="text-gray-600 text-sm font-medium">Total Servicios</p>
                   <p className="text-3xl font-bold text-blue-600">{services.length}</p>
                 </div>
-                <BriefcaseIcon className="h-8 w-8 text-blue-600" />
+                <Briefcase className="h-8 w-8 text-blue-600" />
               </div>
             </div>
 
@@ -317,7 +317,7 @@ const ASServicios: NextPage = () => {
                     {services.filter(s => s.is_active).length}
                   </p>
                 </div>
-                <CheckCircleIcon className="h-8 w-8 text-green-600" />
+                <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
             </div>
 
@@ -329,7 +329,7 @@ const ASServicios: NextPage = () => {
                     {services.filter(s => !s.is_active).length}
                   </p>
                 </div>
-                <XCircleIcon className="h-8 w-8 text-orange-600" />
+                <XCircle className="h-8 w-8 text-orange-600" />
               </div>
             </div>
           </div>
@@ -345,7 +345,7 @@ const ASServicios: NextPage = () => {
             <div className="divide-y divide-gray-200">
               {filteredServices.length === 0 ? (
                 <div className="p-12 text-center">
-                  <BriefcaseIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <Briefcase className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
                     No hay servicios
                   </h3>
@@ -394,22 +394,22 @@ const ASServicios: NextPage = () => {
                           
                           <div className="flex items-center space-x-6 text-sm text-gray-500">
                             <div className="flex items-center">
-                              <CurrencyDollarIcon className="h-4 w-4 mr-1" />
+                              <DollarSign className="h-4 w-4 mr-1" />
                               <span className="font-medium">${service.price?.toLocaleString() || '0'}</span>
                             </div>
                             <div className="flex items-center">
-                              <ClockIcon className="h-4 w-4 mr-1" />
+                              <Clock className="h-4 w-4 mr-1" />
                               <span>{Math.floor((service.duration_minutes || 60) / 60)}h {(service.duration_minutes || 60) % 60}min</span>
                             </div>
                             {service.address && (
                               <div className="flex items-center">
-                                <MapPinIcon className="h-4 w-4 mr-1" />
+                                <MapPin className="h-4 w-4 mr-1" />
                                 <span>{service.address}</span>
                               </div>
                             )}
                             {(service.total_reviews || 0) > 0 && (
                               <div className="flex items-center">
-                                <StarIcon className="h-4 w-4 mr-1 text-yellow-400" />
+                                <Star className="h-4 w-4 mr-1 text-yellow-400" />
                                 <span>{service.average_rating} ({service.total_reviews} reseñas)</span>
                               </div>
                             )}
@@ -422,7 +422,7 @@ const ASServicios: NextPage = () => {
                             className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                             title="Ver servicio"
                           >
-                            <EyeIcon className="h-5 w-5" />
+                            <Eye className="h-5 w-5" />
                           </button>
                           
                           <button
@@ -430,7 +430,7 @@ const ASServicios: NextPage = () => {
                             className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                             title="Editar servicio"
                           >
-                            <PencilIcon className="h-5 w-5" />
+                            <Pencil className="h-5 w-5" />
                           </button>
                           
                           <button
@@ -443,9 +443,9 @@ const ASServicios: NextPage = () => {
                             title={service.is_active ? 'Pausar servicio' : 'Activar servicio'}
                           >
                             {service.is_active ? (
-                              <XCircleIcon className="h-5 w-5" />
+                              <XCircle className="h-5 w-5" />
                             ) : (
-                              <CheckCircleIcon className="h-5 w-5" />
+                              <CheckCircle className="h-5 w-5" />
                             )}
                           </button>
                           
@@ -454,7 +454,7 @@ const ASServicios: NextPage = () => {
                             className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             title="Eliminar servicio"
                           >
-                            <TrashIcon className="h-5 w-5" />
+                            <Trash className="h-5 w-5" />
                           </button>
                         </div>
                       </div>
@@ -533,7 +533,7 @@ const ASServicios: NextPage = () => {
                       Precio ($) *
                     </label>
                     <div className="relative">
-                      <CurrencyDollarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                      <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                       <input
                         type="number"
                         value={newService.price}
@@ -550,7 +550,7 @@ const ASServicios: NextPage = () => {
                       Duración (minutos) *
                     </label>
                     <div className="relative">
-                      <ClockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                      <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                       <input
                         type="number"
                         value={newService.duration_minutes}
@@ -568,7 +568,7 @@ const ASServicios: NextPage = () => {
                       Ubicación (Opcional)
                     </label>
                     <div className="relative">
-                      <MapPinIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                       <input
                         type="text"
                         value={newService.address || ''}

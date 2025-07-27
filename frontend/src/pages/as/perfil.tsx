@@ -4,21 +4,21 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-  ArrowLeftIcon,
-  UserIcon,
-  CameraIcon,
-  MapPinIcon,
-  PhoneIcon,
-  EnvelopeIcon,
-  BriefcaseIcon,
-  AcademicCapIcon,
-  StarIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  DocumentTextIcon,
-  ClockIcon,
-  TruckIcon
-} from '@heroicons/react/24/outline';
+  ArrowLeft,
+  User,
+  Camera,
+  MapPin,
+  Phone,
+  Mail,
+  Briefcase,
+  GraduationCap,
+  Star,
+  CheckCircle,
+  AlertTriangle,
+  FileText,
+  Clock,
+  Truck
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -140,7 +140,7 @@ const ASPerfil: NextPage = () => {
             <div className="flex items-center py-6">
               <Link href="/as/dashboard">
                 <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                  <ArrowLeft className="h-6 w-6 text-gray-600" />
                 </button>
               </Link>
               <div className="flex-1">
@@ -200,9 +200,9 @@ const ASPerfil: NextPage = () => {
               {completionItems.map((item, index) => (
                 <div key={index} className="flex items-center text-sm">
                   {item.completed ? (
-                    <CheckCircleIcon className="h-5 w-5 text-green-500 mr-2" />
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
                   ) : (
-                    <ExclamationTriangleIcon className="h-5 w-5 text-yellow-500 mr-2" />
+                    <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2" />
                   )}
                   <span className={item.completed ? 'text-gray-900' : 'text-gray-600'}>
                     {item.label}
@@ -266,12 +266,12 @@ const ASPerfil: NextPage = () => {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <UserIcon className="h-12 w-12 text-gray-400" />
+                      <User className="h-12 w-12 text-gray-400" />
                     )}
                   </div>
                   {isEditing && (
                     <button className="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors">
-                      <CameraIcon className="h-4 w-4" />
+                      <Camera className="h-4 w-4" />
                     </button>
                   )}
                 </div>
@@ -282,7 +282,7 @@ const ASPerfil: NextPage = () => {
                   <p className="text-gray-600">{profileData.profession || 'Profesional AS'}</p>
                   {profileData.verification_status === 'verified' && (
                     <div className="flex items-center mt-1">
-                      <CheckCircleIcon className="h-4 w-4 text-green-500 mr-1" />
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
                       <span className="text-sm text-green-600">Verificado</span>
                     </div>
                   )}
@@ -295,7 +295,7 @@ const ASPerfil: NextPage = () => {
                     Nombre
                   </label>
                   <div className="relative">
-                    <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="text"
                       value={profileData.first_name}
@@ -311,7 +311,7 @@ const ASPerfil: NextPage = () => {
                     Apellido
                   </label>
                   <div className="relative">
-                    <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="text"
                       value={profileData.last_name}
@@ -327,7 +327,7 @@ const ASPerfil: NextPage = () => {
                     Email
                   </label>
                   <div className="relative">
-                    <EnvelopeIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="email"
                       value={profileData.email}
@@ -343,7 +343,7 @@ const ASPerfil: NextPage = () => {
                     Teléfono
                   </label>
                   <div className="relative">
-                    <PhoneIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="tel"
                       value={profileData.phone}
@@ -360,7 +360,7 @@ const ASPerfil: NextPage = () => {
                     Dirección
                   </label>
                   <div className="relative">
-                    <MapPinIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="text"
                       value={profileData.address}
@@ -377,7 +377,7 @@ const ASPerfil: NextPage = () => {
                     Ciudad
                   </label>
                   <div className="relative">
-                    <MapPinIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="text"
                       value={profileData.city}
@@ -419,7 +419,7 @@ const ASPerfil: NextPage = () => {
                     Profesión
                   </label>
                   <div className="relative">
-                    <BriefcaseIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="text"
                       value={profileData.profession}
@@ -436,7 +436,7 @@ const ASPerfil: NextPage = () => {
                     Años de Experiencia
                   </label>
                   <div className="relative">
-                    <ClockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="number"
                       value={profileData.years_experience}
@@ -454,7 +454,7 @@ const ASPerfil: NextPage = () => {
                     Especialización
                   </label>
                   <div className="relative">
-                    <StarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Star className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="text"
                       value={profileData.specialization}
@@ -471,7 +471,7 @@ const ASPerfil: NextPage = () => {
                     Número de Matrícula/Licencia (Opcional)
                   </label>
                   <div className="relative">
-                    <AcademicCapIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <GraduationCap className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                       type="text"
                       value={profileData.license_number}
@@ -495,7 +495,7 @@ const ASPerfil: NextPage = () => {
                     className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <label htmlFor="has_mobility" className="ml-3 flex items-center text-sm text-gray-700">
-                    <TruckIcon className="h-5 w-5 mr-2 text-gray-400" />
+                    <Truck className="h-5 w-5 mr-2 text-gray-400" />
                     Tengo movilidad propia (vehículo/moto)
                   </label>
                 </div>
@@ -520,9 +520,9 @@ const ASPerfil: NextPage = () => {
                       'bg-gray-100'
                     }`}>
                       {profileData.verification_status === 'verified' ? (
-                        <CheckCircleIcon className="h-6 w-6 text-green-600" />
+                        <CheckCircle className="h-6 w-6 text-green-600" />
                       ) : (
-                        <DocumentTextIcon className="h-6 w-6 text-gray-600" />
+                        <FileText className="h-6 w-6 text-gray-600" />
                       )}
                     </div>
                     <div className="ml-4">
@@ -556,19 +556,19 @@ const ASPerfil: NextPage = () => {
                   <h4 className="font-semibold text-blue-900 mb-3">¿Por qué verificar tu identidad?</h4>
                   <ul className="space-y-2 text-sm text-blue-800">
                     <li className="flex items-center">
-                      <CheckCircleIcon className="h-4 w-4 mr-2 text-blue-600" />
+                      <CheckCircle className="h-4 w-4 mr-2 text-blue-600" />
                       Mayor confianza de los clientes
                     </li>
                     <li className="flex items-center">
-                      <CheckCircleIcon className="h-4 w-4 mr-2 text-blue-600" />
+                      <CheckCircle className="h-4 w-4 mr-2 text-blue-600" />
                       Mejor posicionamiento en búsquedas
                     </li>
                     <li className="flex items-center">
-                      <CheckCircleIcon className="h-4 w-4 mr-2 text-blue-600" />
+                      <CheckCircle className="h-4 w-4 mr-2 text-blue-600" />
                       Acceso a funciones premium
                     </li>
                     <li className="flex items-center">
-                      <CheckCircleIcon className="h-4 w-4 mr-2 text-blue-600" />
+                      <CheckCircle className="h-4 w-4 mr-2 text-blue-600" />
                       Insignia de "Verificado" en tu perfil
                     </li>
                   </ul>
@@ -584,7 +584,7 @@ const ASPerfil: NextPage = () => {
               {profileData.verification_status === 'verified' && (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-6">
                   <div className="flex items-center">
-                    <CheckCircleIcon className="h-8 w-8 text-green-600 mr-3" />
+                    <CheckCircle className="h-8 w-8 text-green-600 mr-3" />
                     <div>
                       <h4 className="font-semibold text-green-900">¡Felicitaciones!</h4>
                       <p className="text-green-800">Tu identidad ha sido verificada exitosamente.</p>

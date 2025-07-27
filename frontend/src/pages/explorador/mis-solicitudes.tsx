@@ -4,20 +4,20 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { 
-  ArrowLeftIcon,
-  MagnifyingGlassIcon,
-  EyeIcon,
-  UserGroupIcon,
-  ClockIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  ExclamationTriangleIcon,
-  PlusIcon,
-  CalendarDaysIcon,
-  MapPinIcon,
-  CurrencyDollarIcon,
-  FireIcon
-} from '@heroicons/react/24/outline';
+  ArrowLeft,
+  Search,
+  Eye,
+  Users,
+  Clock,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  Plus,
+  Calendar,
+  MapPin,
+  DollarSign,
+  Flame
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -110,10 +110,10 @@ const MisSolicitudesPage: NextPage = () => {
 
   const getStatusBadge = (status: string) => {
     const badges = {
-      active: { text: 'Activa', color: 'bg-blue-100 text-blue-800', icon: ClockIcon },
-      in_progress: { text: 'En Progreso', color: 'bg-orange-100 text-orange-800', icon: ExclamationTriangleIcon },
-      completed: { text: 'Completada', color: 'bg-green-100 text-green-800', icon: CheckCircleIcon },
-      cancelled: { text: 'Cancelada', color: 'bg-red-100 text-red-800', icon: XCircleIcon }
+      active: { text: 'Activa', color: 'bg-blue-100 text-blue-800', icon: Clock },
+      in_progress: { text: 'En Progreso', color: 'bg-orange-100 text-orange-800', icon: AlertTriangle },
+      completed: { text: 'Completada', color: 'bg-green-100 text-green-800', icon: CheckCircle },
+      cancelled: { text: 'Cancelada', color: 'bg-red-100 text-red-800', icon: XCircle }
     };
     return badges[status as keyof typeof badges] || badges.active;
   };
@@ -176,7 +176,7 @@ const MisSolicitudesPage: NextPage = () => {
               <div className="flex items-center">
                 <Link href="/explorador/dashboard">
                   <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                    <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                    <ArrowLeft className="h-6 w-6 text-gray-600" />
                   </button>
                 </Link>
                 <div>
@@ -191,7 +191,7 @@ const MisSolicitudesPage: NextPage = () => {
 
               <Link href="/explorador/buscar-servicio">
                 <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
-                  <PlusIcon className="h-5 w-5 mr-2" />
+                  <Plus className="h-5 w-5 mr-2" />
                   Nueva Solicitud
                 </button>
               </Link>
@@ -204,7 +204,7 @@ const MisSolicitudesPage: NextPage = () => {
           <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
               <div className="relative flex-1 max-w-md">
-                <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Search className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Buscar solicitudes..."
@@ -247,7 +247,7 @@ const MisSolicitudesPage: NextPage = () => {
             <div className="p-6">
               {filteredRequests.length === 0 ? (
                 <div className="text-center py-12">
-                  <UserGroupIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
                     {searchText ? 'No se encontraron solicitudes' : 'No tienes solicitudes en esta categoría'}
                   </h3>
@@ -301,18 +301,18 @@ const MisSolicitudesPage: NextPage = () => {
                             
                             <div className="flex items-center space-x-6 text-sm text-gray-500">
                               <span className="flex items-center">
-                                <MapPinIcon className="h-4 w-4 mr-1" />
+                                <MapPin className="h-4 w-4 mr-1" />
                                 {request.locality}
                               </span>
                               
                               <span className="flex items-center">
-                                <CalendarDaysIcon className="h-4 w-4 mr-1" />
+                                <Calendar className="h-4 w-4 mr-1" />
                                 {formatTimeAgo(request.created_at)}
                               </span>
                               
                               {(request.budget_min || request.budget_max) && (
                                 <span className="flex items-center text-green-600">
-                                  <CurrencyDollarIcon className="h-4 w-4 mr-1" />
+                                  <DollarSign className="h-4 w-4 mr-1" />
                                   {request.budget_min && request.budget_max 
                                     ? `${formatPrice(request.budget_min)} - ${formatPrice(request.budget_max)}`
                                     : request.budget_min 
@@ -323,7 +323,7 @@ const MisSolicitudesPage: NextPage = () => {
                               )}
                               
                               <span className="flex items-center">
-                                <EyeIcon className="h-4 w-4 mr-1" />
+                                <Eye className="h-4 w-4 mr-1" />
                                 {request.views_count} vistas
                               </span>
                             </div>
@@ -397,7 +397,7 @@ const MisSolicitudesPage: NextPage = () => {
               <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <PlusIcon className="h-6 w-6 text-blue-600" />
+                    <Plus className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Nueva Solicitud</h3>
@@ -411,7 +411,7 @@ const MisSolicitudesPage: NextPage = () => {
               <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <UserGroupIcon className="h-6 w-6 text-purple-600" />
+                    <Users className="h-6 w-6 text-purple-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Explorar AS</h3>
@@ -425,7 +425,7 @@ const MisSolicitudesPage: NextPage = () => {
               <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <FireIcon className="h-6 w-6 text-orange-600" />
+                    <Flame className="h-6 w-6 text-orange-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Calificaciones</h3>

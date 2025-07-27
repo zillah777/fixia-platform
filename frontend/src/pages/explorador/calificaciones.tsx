@@ -4,19 +4,16 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { 
-  ArrowLeftIcon,
-  StarIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  CameraIcon,
-  PaperAirplaneIcon,
-  FireIcon,
-  UserCircleIcon
-} from '@heroicons/react/24/outline';
-import { 
-  StarIcon as StarIconSolid 
-} from '@heroicons/react/24/solid';
+  ArrowLeft,
+  Star,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Camera,
+  Send,
+  Flame,
+  UserCircle
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -145,7 +142,7 @@ const CalificacionesPage: NextPage = () => {
             disabled={!onRate}
             className={`${size} ${onRate ? 'cursor-pointer hover:scale-110 transition-transform' : ''}`}
           >
-            <StarIcon
+            <Star
               className={`${size} ${
                 star <= rating 
                   ? 'text-yellow-400 fill-current' 
@@ -199,7 +196,7 @@ const CalificacionesPage: NextPage = () => {
             <div className="flex items-center py-6">
               <Link href="/explorador/dashboard">
                 <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                  <ArrowLeft className="h-6 w-6 text-gray-600" />
                 </button>
               </Link>
               <div className="flex-1">
@@ -225,7 +222,7 @@ const CalificacionesPage: NextPage = () => {
           {blockingStatus?.is_blocked && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
               <div className="flex items-start">
-                <ExclamationTriangleIcon className="h-6 w-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
+                <AlertTriangle className="h-6 w-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-red-800 mb-2">
                     🚨 CALIFICA A LOS AS PARA CONTINUAR BUSCANDO A LOS MEJORES
@@ -243,7 +240,7 @@ const CalificacionesPage: NextPage = () => {
 
           {obligations.length === 0 ? (
             <div className="bg-white rounded-xl shadow-sm border p-12 text-center">
-              <CheckCircleIcon className="h-16 w-16 text-green-600 mx-auto mb-4" />
+              <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 ¡Todo al día!
               </h2>
@@ -283,7 +280,7 @@ const CalificacionesPage: NextPage = () => {
                               {obligation.as_name} {obligation.as_last_name}
                             </h3>
                             {obligation.verification_status === 'verified' && (
-                              <CheckCircleIcon className="h-5 w-5 text-green-600" />
+                              <CheckCircle className="h-5 w-5 text-green-600" />
                             )}
                           </div>
                           
@@ -444,7 +441,7 @@ const CalificacionesPage: NextPage = () => {
                                 </>
                               ) : (
                                 <>
-                                  <PaperAirplaneIcon className="h-4 w-4 mr-2" />
+                                  <Send className="h-4 w-4 mr-2" />
                                   Enviar Calificación
                                 </>
                               )}

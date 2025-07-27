@@ -4,14 +4,14 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-  ArrowLeftIcon,
-  ChatBubbleLeftRightIcon,
-  UserIcon,
-  MagnifyingGlassIcon,
-  ClockIcon,
-  CheckIcon,
-  CheckCircleIcon
-} from '@heroicons/react/24/outline';
+  ArrowLeft,
+  MessageCircle,
+  User,
+  Search,
+  Clock,
+  Check,
+  CheckCircle
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { Chat } from '@/types';
@@ -149,7 +149,7 @@ const ASChats: NextPage = () => {
             <div className="flex items-center py-6">
               <Link href="/as/dashboard">
                 <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                  <ArrowLeft className="h-6 w-6 text-gray-600" />
                 </button>
               </Link>
               <div className="flex-1">
@@ -171,7 +171,7 @@ const ASChats: NextPage = () => {
           {/* Search */}
           <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
             <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
                 placeholder="Buscar conversaciones..."
@@ -186,7 +186,7 @@ const ASChats: NextPage = () => {
           <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
             {filteredChats.length === 0 ? (
               <div className="p-12 text-center">
-                <ChatBubbleLeftRightIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   {searchQuery ? 'No se encontraron conversaciones' : 'No hay conversaciones'}
                 </h3>
@@ -213,7 +213,7 @@ const ASChats: NextPage = () => {
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <UserIcon className="h-6 w-6 text-gray-400" />
+                              <User className="h-6 w-6 text-gray-400" />
                             )}
                           </div>
                           {chat.unread_count > 0 && (
@@ -251,7 +251,7 @@ const ASChats: NextPage = () => {
                             
                             {chat.unread_count === 0 && (
                               <div className="ml-2 text-gray-400">
-                                <CheckCircleIcon className="h-4 w-4" />
+                                <CheckCircle className="h-4 w-4" />
                               </div>
                             )}
                           </div>
@@ -270,19 +270,19 @@ const ASChats: NextPage = () => {
               <h3 className="text-lg font-semibold text-blue-900 mb-3">💡 Consejos para un mejor servicio</h3>
               <ul className="space-y-2 text-sm text-blue-800">
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 mr-2 text-blue-600" />
+                  <Check className="h-4 w-4 mr-2 text-blue-600" />
                   Responde rápidamente para generar confianza
                 </li>
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 mr-2 text-blue-600" />
+                  <Check className="h-4 w-4 mr-2 text-blue-600" />
                   Confirma siempre los detalles del servicio y horario
                 </li>
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 mr-2 text-blue-600" />
+                  <Check className="h-4 w-4 mr-2 text-blue-600" />
                   Mantén una comunicación profesional y cordial
                 </li>
                 <li className="flex items-center">
-                  <CheckIcon className="h-4 w-4 mr-2 text-blue-600" />
+                  <Check className="h-4 w-4 mr-2 text-blue-600" />
                   Avisa si necesitas reprogramar con anticipación
                 </li>
               </ul>

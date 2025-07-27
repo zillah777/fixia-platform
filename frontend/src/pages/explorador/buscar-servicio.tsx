@@ -4,21 +4,21 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { 
-  ArrowLeftIcon,
-  MapPinIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-  CalendarDaysIcon,
-  BoltIcon,
-  ArrowRightOnRectangleIcon,
-  MagnifyingGlassIcon,
-  BuildingOfficeIcon,
-  ShieldCheckIcon,
-  UsersIcon,
-  SparklesIcon
-} from '@heroicons/react/24/outline';
+  ArrowLeft,
+  MapPin,
+  Clock,
+  DollarSign,
+  AlertTriangle,
+  CheckCircle,
+  Calendar,
+  Zap,
+  LogOut,
+  Search,
+  Building,
+  ShieldCheck,
+  Users,
+  Sparkles
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -165,7 +165,7 @@ const BuscarServicioPage: NextPage = () => {
         bgColor: 'bg-secondary-100',
         borderColor: 'border-secondary-300',
         description: 'Sin prisa, cuando puedas',
-        icon: ClockIcon,
+        icon: Clock,
         badge: 'Flexible'
       },
       medium: { 
@@ -174,7 +174,7 @@ const BuscarServicioPage: NextPage = () => {
         bgColor: 'bg-primary-100',
         borderColor: 'border-primary-300',
         description: 'Plazo estándar de servicio',
-        icon: CalendarDaysIcon,
+        icon: Calendar,
         badge: 'Normal'
       },
       high: { 
@@ -183,7 +183,7 @@ const BuscarServicioPage: NextPage = () => {
         bgColor: 'bg-warning-100',
         borderColor: 'border-warning-300',
         description: 'Prioridad alta',
-        icon: BoltIcon,
+        icon: Zap,
         badge: 'Urgente'
       },
       emergency: { 
@@ -192,7 +192,7 @@ const BuscarServicioPage: NextPage = () => {
         bgColor: 'bg-error-100',
         borderColor: 'border-error-300',
         description: 'Atención inmediata requerida',
-        icon: ExclamationTriangleIcon,
+        icon: AlertTriangle,
         badge: 'Emergencia'
       }
     };
@@ -215,7 +215,7 @@ const BuscarServicioPage: NextPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50 flex items-center justify-center">
         <CorporateCard variant="elevated" className="max-w-md w-full mx-4 text-center">
           <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircleIcon className="h-10 w-10 text-white" />
+            <CheckCircle className="h-10 w-10 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-secondary-900 mb-3">
             ¡Solicitud Profesional Enviada!
@@ -224,7 +224,7 @@ const BuscarServicioPage: NextPage = () => {
             Los AS certificados de tu zona han sido notificados y responderán en breve
           </p>
           <div className="flex items-center justify-center space-x-2 text-primary-600">
-            <SparklesIcon className="h-5 w-5 animate-pulse" />
+            <Sparkles className="h-5 w-5 animate-pulse" />
             <span className="font-medium">Redirigiendo al panel profesional...</span>
           </div>
         </CorporateCard>
@@ -252,7 +252,7 @@ const BuscarServicioPage: NextPage = () => {
               variant="outline"
               size="sm"
               onClick={logout}
-              leftIcon={<ArrowRightOnRectangleIcon className="h-4 w-4" />}
+              leftIcon={<LogOut className="h-4 w-4" />}
             >
               Cerrar Sesión
             </CorporateButton>
@@ -264,15 +264,15 @@ const BuscarServicioPage: NextPage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-center space-x-8">
               <div className="flex items-center space-x-2">
-                <ShieldCheckIcon className="h-5 w-5 text-success-600" />
+                <ShieldCheck className="h-5 w-5 text-success-600" />
                 <span className="text-sm font-semibold text-secondary-700">126+ Servicios Disponibles</span>
               </div>
               <div className="flex items-center space-x-2">
-                <UsersIcon className="h-5 w-5 text-primary-600" />
+                <Users className="h-5 w-5 text-primary-600" />
                 <span className="text-sm font-semibold text-secondary-700">AS Certificados</span>
               </div>
               <div className="flex items-center space-x-2">
-                <BoltIcon className="h-5 w-5 text-warning-600" />
+                <Zap className="h-5 w-5 text-warning-600" />
                 <span className="text-sm font-semibold text-secondary-700">Respuesta en 5 min</span>
               </div>
             </div>
@@ -285,7 +285,7 @@ const BuscarServicioPage: NextPage = () => {
           {process.env.NODE_ENV === 'development' && (
             <CorporateCard variant="minimal" className="mb-6">
               <div className="flex items-center space-x-3">
-                <BuildingOfficeIcon className="h-5 w-5 text-tech-600" />
+                <Building className="h-5 w-5 text-tech-600" />
                 <h4 className="font-semibold text-secondary-800">Sistema Profesional</h4>
               </div>
               <p className="text-sm text-secondary-600 mt-2">
@@ -301,7 +301,7 @@ const BuscarServicioPage: NextPage = () => {
             <CorporateCard variant="elevated" className="mb-8 border-l-4 border-l-error-500">
               <div className="flex items-start space-x-4">
                 <div className="w-12 h-12 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <ExclamationTriangleIcon className="h-6 w-6 text-error-600" />
+                  <AlertTriangle className="h-6 w-6 text-error-600" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-secondary-900 mb-2">
@@ -327,7 +327,7 @@ const BuscarServicioPage: NextPage = () => {
                 <CorporateCard variant="elevated" className="border-l-4 border-l-error-500">
                   <div className="flex items-start space-x-4">
                     <div className="w-10 h-10 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <ExclamationTriangleIcon className="h-5 w-5 text-error-600" />
+                      <AlertTriangle className="h-5 w-5 text-error-600" />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-bold text-secondary-900 mb-2">Errores de Validación</h3>
@@ -345,7 +345,7 @@ const BuscarServicioPage: NextPage = () => {
               <CorporateCard variant="elevated" className="space-y-8">
                 <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
                   <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-trust-500 rounded-xl flex items-center justify-center">
-                    <MagnifyingGlassIcon className="h-5 w-5 text-white" />
+                    <Search className="h-5 w-5 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-secondary-900">
                     Detalles del Servicio Profesional
@@ -379,7 +379,7 @@ const BuscarServicioPage: NextPage = () => {
                   {/* Professional Location */}
                   <div>
                     <label className="block text-sm font-bold text-secondary-900 mb-3">
-                      <MapPinIcon className="h-4 w-4 inline mr-2 text-primary-600" />
+                      <MapPin className="h-4 w-4 inline mr-2 text-primary-600" />
                       Localidad en Chubut *
                     </label>
                     <select
@@ -400,7 +400,7 @@ const BuscarServicioPage: NextPage = () => {
                   {/* Professional Priority Level */}
                   <div>
                     <label className="block text-sm font-bold text-secondary-900 mb-3">
-                      <BoltIcon className="h-4 w-4 inline mr-2 text-warning-600" />
+                      <Zap className="h-4 w-4 inline mr-2 text-warning-600" />
                       Nivel de Prioridad
                     </label>
                     <select
@@ -429,7 +429,7 @@ const BuscarServicioPage: NextPage = () => {
                   <div className="mt-8 p-6 bg-gradient-to-r from-primary-50 to-trust-50 border-2 border-primary-200 rounded-xl">
                     <div className="flex items-start space-x-4">
                       <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <SparklesIcon className="h-5 w-5 text-white" />
+                        <Sparkles className="h-5 w-5 text-white" />
                       </div>
                       <div className="flex-1">
                         <h3 className="font-bold text-primary-800 mb-2">Título Generado Automáticamente</h3>
@@ -472,7 +472,7 @@ const BuscarServicioPage: NextPage = () => {
 
                   <div>
                     <label className="block text-sm font-bold text-secondary-900 mb-3">
-                      <MapPinIcon className="h-4 w-4 inline mr-2 text-primary-600" />
+                      <MapPin className="h-4 w-4 inline mr-2 text-primary-600" />
                       Dirección Específica (Opcional)
                     </label>
                     <input
@@ -493,7 +493,7 @@ const BuscarServicioPage: NextPage = () => {
               <CorporateCard variant="elevated" className="space-y-8">
                 <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
                   <div className="w-10 h-10 bg-gradient-to-r from-success-500 to-success-600 rounded-xl flex items-center justify-center">
-                    <CurrencyDollarIcon className="h-5 w-5 text-white" />
+                    <DollarSign className="h-5 w-5 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-secondary-900">
                     Presupuesto Referencial (Opcional)
@@ -556,7 +556,7 @@ const BuscarServicioPage: NextPage = () => {
               <CorporateCard variant="elevated" className="space-y-8">
                 <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
                   <div className="w-10 h-10 bg-gradient-to-r from-trust-500 to-trust-600 rounded-xl flex items-center justify-center">
-                    <CalendarDaysIcon className="h-5 w-5 text-white" />
+                    <Calendar className="h-5 w-5 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-secondary-900">
                     Disponibilidad Horaria
@@ -621,7 +621,7 @@ const BuscarServicioPage: NextPage = () => {
                   <div className="flex-1">
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-12 h-12 bg-gradient-to-r from-primary-600 to-trust-600 rounded-xl flex items-center justify-center">
-                        <CheckCircleIcon className="h-6 w-6 text-white" />
+                        <CheckCircle className="h-6 w-6 text-white" />
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-secondary-900">
@@ -636,15 +636,15 @@ const BuscarServicioPage: NextPage = () => {
                     <div className="bg-white rounded-xl p-4 border border-primary-200">
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                         <div className="flex items-center justify-center space-x-2">
-                          <BoltIcon className="h-4 w-4 text-warning-600" />
+                          <Zap className="h-4 w-4 text-warning-600" />
                           <span className="text-xs font-bold text-secondary-700">Respuesta en 5 min</span>
                         </div>
                         <div className="flex items-center justify-center space-x-2">
-                          <ShieldCheckIcon className="h-4 w-4 text-success-600" />
+                          <ShieldCheck className="h-4 w-4 text-success-600" />
                           <span className="text-xs font-bold text-secondary-700">AS Verificados</span>
                         </div>
                         <div className="flex items-center justify-center space-x-2">
-                          <SparklesIcon className="h-4 w-4 text-primary-600" />
+                          <Sparkles className="h-4 w-4 text-primary-600" />
                           <span className="text-xs font-bold text-secondary-700">Garantía de Calidad</span>
                         </div>
                       </div>
@@ -668,7 +668,7 @@ const BuscarServicioPage: NextPage = () => {
                       size="lg"
                       loading={submitting}
                       className="w-full sm:w-auto px-8"
-                      rightIcon={!submitting ? <ArrowRightOnRectangleIcon className="h-4 w-4" /> : undefined}
+                      rightIcon={!submitting ? <LogOut className="h-4 w-4" /> : undefined}
                     >
                       {submitting ? 'Enviando Solicitud...' : 'Enviar Solicitud Profesional'}
                     </CorporateButton>
@@ -685,7 +685,7 @@ const BuscarServicioPage: NextPage = () => {
               <span className="text-sm font-bold text-secondary-700">
                 Sistema Profesional Certificado
               </span>
-              <ShieldCheckIcon className="h-4 w-4 text-success-600" />
+              <ShieldCheck className="h-4 w-4 text-success-600" />
             </div>
           </div>
         </div>

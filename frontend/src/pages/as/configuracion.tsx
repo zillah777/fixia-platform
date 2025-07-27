@@ -4,24 +4,24 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-  ArrowLeftIcon,
-  UserIcon,
-  BellIcon,
-  ShieldCheckIcon,
-  CreditCardIcon,
-  QuestionMarkCircleIcon,
-  ArrowRightOnRectangleIcon,
-  EyeIcon,
-  EyeSlashIcon,
-  DevicePhoneMobileIcon,
-  EnvelopeIcon,
-  ClockIcon,
-  MapPinIcon,
-  CurrencyDollarIcon,
-  StarIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon
-} from '@heroicons/react/24/outline';
+  ArrowLeft,
+  User,
+  Bell,
+  ShieldCheck,
+  CreditCard,
+  HelpCircle,
+  LogOut,
+  Eye,
+  EyeOff,
+  Smartphone,
+  Mail,
+  Clock,
+  MapPin,
+  DollarSign,
+  Star,
+  CheckCircle,
+  AlertTriangle
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -113,11 +113,11 @@ const ASConfiguracion: NextPage = () => {
   };
 
   const tabs = [
-    { id: 'account' as const, label: 'Cuenta', icon: UserIcon },
-    { id: 'notifications' as const, label: 'Notificaciones', icon: BellIcon },
-    { id: 'privacy' as const, label: 'Privacidad', icon: ShieldCheckIcon },
-    { id: 'service' as const, label: 'Servicios', icon: CurrencyDollarIcon },
-    { id: 'help' as const, label: 'Ayuda', icon: QuestionMarkCircleIcon }
+    { id: 'account' as const, label: 'Cuenta', icon: User },
+    { id: 'notifications' as const, label: 'Notificaciones', icon: Bell },
+    { id: 'privacy' as const, label: 'Privacidad', icon: ShieldCheck },
+    { id: 'service' as const, label: 'Servicios', icon: DollarSign },
+    { id: 'help' as const, label: 'Ayuda', icon: HelpCircle }
   ];
 
   const workingDaysOptions = [
@@ -155,7 +155,7 @@ const ASConfiguracion: NextPage = () => {
             <div className="flex items-center py-6">
               <Link href="/as/dashboard">
                 <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                  <ArrowLeft className="h-6 w-6 text-gray-600" />
                 </button>
               </Link>
               <div className="flex-1">
@@ -213,7 +213,7 @@ const ASConfiguracion: NextPage = () => {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <UserIcon className="h-8 w-8 text-gray-400" />
+                            <User className="h-8 w-8 text-gray-400" />
                           )}
                         </div>
                         <div>
@@ -233,7 +233,7 @@ const ASConfiguracion: NextPage = () => {
                         <div className="border border-gray-200 rounded-lg p-4">
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-sm font-medium text-gray-700">Estado de Verificación</span>
-                            <CheckCircleIcon className="h-5 w-5 text-green-500" />
+                            <CheckCircle className="h-5 w-5 text-green-500" />
                           </div>
                           <p className="text-sm text-gray-600">Cuenta verificada</p>
                         </div>
@@ -241,7 +241,7 @@ const ASConfiguracion: NextPage = () => {
                         <div className="border border-gray-200 rounded-lg p-4">
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-sm font-medium text-gray-700">Tipo de Cuenta</span>
-                            <StarIcon className="h-5 w-5 text-blue-500" />
+                            <Star className="h-5 w-5 text-blue-500" />
                           </div>
                           <p className="text-sm text-gray-600">Profesional AS</p>
                         </div>
@@ -252,7 +252,7 @@ const ASConfiguracion: NextPage = () => {
                         <div className="space-y-3">
                           <Link href="/explorador/dashboard">
                             <button className="w-full md:w-auto flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-                              <UserIcon className="h-4 w-4 mr-2" />
+                              <User className="h-4 w-4 mr-2" />
                               Cambiar a Explorador
                             </button>
                           </Link>
@@ -261,7 +261,7 @@ const ASConfiguracion: NextPage = () => {
                             onClick={() => setShowLogoutModal(true)}
                             className="w-full md:w-auto flex items-center px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors"
                           >
-                            <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
+                            <LogOut className="h-4 w-4 mr-2" />
                             Cerrar Sesión
                           </button>
                         </div>
@@ -281,7 +281,7 @@ const ASConfiguracion: NextPage = () => {
                         <div className="space-y-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                              <EnvelopeIcon className="h-5 w-5 text-gray-400 mr-3" />
+                              <Mail className="h-5 w-5 text-gray-400 mr-3" />
                               <div>
                                 <span className="text-sm font-medium text-gray-900">Email</span>
                                 <p className="text-xs text-gray-600">Recibir notificaciones por correo electrónico</p>
@@ -297,7 +297,7 @@ const ASConfiguracion: NextPage = () => {
 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                              <DevicePhoneMobileIcon className="h-5 w-5 text-gray-400 mr-3" />
+                              <Smartphone className="h-5 w-5 text-gray-400 mr-3" />
                               <div>
                                 <span className="text-sm font-medium text-gray-900">Push</span>
                                 <p className="text-xs text-gray-600">Notificaciones en el navegador y app móvil</p>
@@ -313,7 +313,7 @@ const ASConfiguracion: NextPage = () => {
 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                              <DevicePhoneMobileIcon className="h-5 w-5 text-gray-400 mr-3" />
+                              <Smartphone className="h-5 w-5 text-gray-400 mr-3" />
                               <div>
                                 <span className="text-sm font-medium text-gray-900">SMS</span>
                                 <p className="text-xs text-gray-600">Mensajes de texto a tu teléfono</p>
@@ -649,7 +649,7 @@ const ASConfiguracion: NextPage = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl max-w-md w-full p-6">
               <div className="text-center">
-                <ExclamationTriangleIcon className="h-16 w-16 text-red-600 mx-auto mb-4" />
+                <AlertTriangle className="h-16 w-16 text-red-600 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
                   ¿Cerrar Sesión?
                 </h3>
