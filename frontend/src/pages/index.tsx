@@ -113,8 +113,23 @@ const HomePage: NextPage = () => {
       <div className="min-h-screen relative overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 bg-background">
+          {/* Orbe superior izquierdo - Original */}
           <div className="absolute top-1/4 -left-32 w-64 h-64 liquid-gradient rounded-full blur-3xl opacity-20 animate-float"></div>
+          
+          {/* Orbe inferior derecho - Original */}
           <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
+          
+          {/* Orbe cerca del título "Conecta con los mejores profesionales" */}
+          <div className="absolute top-1/2 right-1/4 w-48 h-48 bg-gradient-to-r from-blue-400 to-cyan-300 rounded-full blur-3xl opacity-15 animate-float" style={{ animationDelay: '4s' }}></div>
+          
+          {/* Orbe medio izquierdo */}
+          <div className="absolute top-3/4 -left-24 w-56 h-56 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full blur-3xl opacity-18 animate-float" style={{ animationDelay: '1s' }}></div>
+          
+          {/* Orbe superior centro-derecho */}
+          <div className="absolute top-16 right-16 w-40 h-40 bg-gradient-to-r from-violet-400 to-purple-600 rounded-full blur-3xl opacity-12 animate-float" style={{ animationDelay: '3s' }}></div>
+          
+          {/* Orbe inferior centro */}
+          <div className="absolute bottom-10 left-1/3 w-52 h-52 bg-gradient-to-r from-pink-400 to-rose-500 rounded-full blur-3xl opacity-16 animate-float" style={{ animationDelay: '5s' }}></div>
         </div>
 
         {/* Navigation Header */}
