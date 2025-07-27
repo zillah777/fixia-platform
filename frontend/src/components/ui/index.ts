@@ -38,32 +38,21 @@ export const CorporateLayout: React.FC<{ children: React.ReactNode; variant?: st
   children, 
   variant = 'default', 
   maxWidth = 'full' 
-}) => (
-  <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900 relative overflow-hidden">
-    <div className="absolute inset-0">
-      <div className="absolute top-20 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}} />
-    </div>
-    <main className="relative z-10">
-      {children}
-    </main>
-  </div>
-);
+}) => 
+  React.createElement('div', 
+    { className: 'min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900 relative overflow-hidden' },
+    React.createElement('div', { className: 'absolute inset-0' },
+      React.createElement('div', { className: 'absolute top-20 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl animate-float' }),
+      React.createElement('div', { className: 'absolute bottom-20 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-float', style: { animationDelay: '2s' } })
+    ),
+    React.createElement('main', { className: 'relative z-10' }, children)
+  );
 
-export const CorporateHeader: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <header className="glass border-b border-white/10 p-6">
-    {children}
-  </header>
-);
+export const CorporateHeader: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+  React.createElement('header', { className: 'glass border-b border-white/10 p-6' }, children);
 
-export const CorporateFooter: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <footer className="glass border-t border-white/10 p-6 mt-auto">
-    {children}
-  </footer>
-);
+export const CorporateFooter: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+  React.createElement('footer', { className: 'glass border-t border-white/10 p-6 mt-auto' }, children);
 
-export const CorporateNavigation: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <nav className="glass border-b border-white/10 p-4">
-    {children}
-  </nav>
-);
+export const CorporateNavigation: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+  React.createElement('nav', { className: 'glass border-b border-white/10 p-4' }, children);

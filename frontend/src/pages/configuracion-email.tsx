@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/AuthContext';
-import { CorporateLayout, CorporateCard, CorporateButton, CorporateHeader } from '@/components/ui';
+import { CorporateLayout, CorporateCard, CorporateButton, CorporateHeader, CorporateFooter } from '@/components/ui';
 
 interface EmailPreferences {
   serviceNotifications: boolean;
