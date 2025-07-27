@@ -362,7 +362,7 @@ const ProfesionalDetailPage: NextPage = () => {
                         </div>
                       ) : (
                         <div className="text-center py-12">
-                          <Image className="h-12 w-12 text-gray-400 mx-auto mb-4" alt="Sin portafolio" />
+                          <Image className="h-12 w-12 text-gray-400 mx-auto mb-4" aria-label="Sin portafolio" />
                           <p className="text-gray-500">El profesional no ha agregado trabajos a su portafolio</p>
                         </div>
                       )}
