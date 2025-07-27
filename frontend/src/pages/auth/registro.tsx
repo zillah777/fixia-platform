@@ -12,7 +12,7 @@ const Registro: NextPage = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    user_type: 'customer'
+    user_type: 'customer' as 'customer' | 'provider'
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +22,7 @@ const Registro: NextPage = () => {
   useEffect(() => {
     const type = router.query.type;
     if (type === 'provider' || type === 'customer') {
-      setFormData(prev => ({ ...prev, user_type: type }));
+      setFormData(prev => ({ ...prev, user_type: type as 'provider' | 'customer' }));
     }
   }, [router.query.type]);
 
@@ -100,7 +100,7 @@ const Registro: NextPage = () => {
                         type="radio"
                         value="customer"
                         checked={formData.user_type === 'customer'}
-                        onChange={(e) => setFormData(prev => ({ ...prev, user_type: e.target.value }))}
+                        onChange={(e) => setFormData(prev => ({ ...prev, user_type: e.target.value as 'customer' | 'provider' }))}
                       />
                       Cliente (busco servicios)
                     </label>
@@ -109,7 +109,7 @@ const Registro: NextPage = () => {
                         type="radio"
                         value="provider"
                         checked={formData.user_type === 'provider'}
-                        onChange={(e) => setFormData(prev => ({ ...prev, user_type: e.target.value }))}
+                        onChange={(e) => setFormData(prev => ({ ...prev, user_type: e.target.value as 'customer' | 'provider' }))}
                       />
                       Profesional (ofrezco servicios)
                     </label>
