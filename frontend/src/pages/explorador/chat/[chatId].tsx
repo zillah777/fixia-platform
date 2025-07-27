@@ -4,16 +4,16 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { 
-  ArrowLeftIcon,
-  PaperAirplaneIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  StarIcon,
-  UserIcon,
-  CheckBadgeIcon,
-  PhoneIcon,
-  VideoCameraIcon
-} from '@heroicons/react/24/outline';
+  ArrowLeft,
+  Send,
+  CheckCircle,
+  AlertTriangle,
+  Star,
+  User,
+  CheckCircle as CheckBadge,
+  Phone,
+  Video
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -253,7 +253,7 @@ const ChatPage: NextPage = () => {
               <div className="flex items-center">
                 <Link href="/explorador/chats">
                   <button className="group mr-6 p-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 rounded-2xl transition-all duration-300 border border-transparent hover:border-blue-200">
-                    <ArrowLeftIcon className="h-6 w-6 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" />
+                    <ArrowLeft className="h-6 w-6 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" />
                   </button>
                 </Link>
                 
@@ -277,7 +277,7 @@ const ChatPage: NextPage = () => {
                     <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-green-600 border-3 border-white rounded-full animate-pulse shadow-lg"></div>
                     {connection.verification_status === 'verified' && (
                       <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
-                        <CheckBadgeIcon className="h-4 w-4 text-white" />
+                        <CheckBadge className="h-4 w-4 text-white" />
                       </div>
                     )}
                   </div>
@@ -301,7 +301,7 @@ const ChatPage: NextPage = () => {
               <div className="flex items-center space-x-2">
                 <Link href={`/explorador/profesional/${connection.as_id}`}>
                   <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Ver perfil">
-                    <UserIcon className="h-5 w-5 text-gray-600" />
+                    <User className="h-5 w-5 text-gray-600" />
                   </button>
                 </Link>
                 
@@ -337,7 +337,7 @@ const ChatPage: NextPage = () => {
         {connection.status === 'completed' && (
           <div className="bg-green-50 border-b border-green-200 px-4 py-3">
             <div className="max-w-4xl mx-auto flex items-center">
-              <CheckCircleIcon className="h-5 w-5 text-green-600 mr-2" />
+              <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
               <span className="text-green-800 text-sm font-medium">
                 Servicio completado. ¡No olvides calificar al AS!
               </span>
@@ -422,7 +422,7 @@ const ChatPage: NextPage = () => {
                   {sendingMessage ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                   ) : (
-                    <PaperAirplaneIcon className="h-5 w-5" />
+                    <Send className="h-5 w-5" />
                   )}
                 </button>
               </form>

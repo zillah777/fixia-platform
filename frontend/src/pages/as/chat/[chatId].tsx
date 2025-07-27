@@ -4,16 +4,16 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-  ArrowLeftIcon,
-  PaperAirplaneIcon,
-  PhotoIcon,
-  UserIcon,
-  PhoneIcon,
-  MapPinIcon,
-  ClockIcon,
-  CheckIcon,
-  CheckCircleIcon
-} from '@heroicons/react/24/outline';
+  ArrowLeft,
+  Send,
+  Image,
+  User,
+  Phone,
+  MapPin,
+  Clock,
+  Check,
+  CheckCircle
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { Message, Chat } from '@/types';
@@ -220,7 +220,7 @@ const ASChatDetail: NextPage = () => {
             <div className="flex items-center py-4">
               <Link href="/as/chat">
                 <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                  <ArrowLeft className="h-6 w-6 text-gray-600" />
                 </button>
               </Link>
               
@@ -233,7 +233,7 @@ const ASChatDetail: NextPage = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <UserIcon className="h-5 w-5 text-gray-400" />
+                    <User className="h-5 w-5 text-gray-400" />
                   )}
                 </div>
                 
@@ -249,10 +249,10 @@ const ASChatDetail: NextPage = () => {
               
               <div className="flex items-center space-x-2">
                 <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                  <PhoneIcon className="h-5 w-5" />
+                  <Phone className="h-5 w-5" />
                 </button>
                 <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                  <MapPinIcon className="h-5 w-5" />
+                  <MapPin className="h-5 w-5" />
                 </button>
               </div>
             </div>
@@ -291,7 +291,7 @@ const ASChatDetail: NextPage = () => {
                                     className="w-full h-full object-cover"
                                   />
                                 ) : (
-                                  <UserIcon className="h-3 w-3 text-gray-400" />
+                                  <User className="h-3 w-3 text-gray-400" />
                                 )}
                               </div>
                               <span className="text-xs text-gray-500">
@@ -317,9 +317,9 @@ const ASChatDetail: NextPage = () => {
                             {isOwn && (
                               <div className="text-gray-400">
                                 {message.is_read ? (
-                                  <CheckCircleIcon className="h-3 w-3" />
+                                  <CheckCircle className="h-3 w-3" />
                                 ) : (
-                                  <CheckIcon className="h-3 w-3" />
+                                  <Check className="h-3 w-3" />
                                 )}
                               </div>
                             )}
@@ -343,7 +343,7 @@ const ASChatDetail: NextPage = () => {
                 type="button"
                 className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <PhotoIcon className="h-5 w-5" />
+                <Image className="h-5 w-5" />
               </button>
               
               <div className="flex-1">
@@ -371,7 +371,7 @@ const ASChatDetail: NextPage = () => {
                 {sending ? (
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                 ) : (
-                  <PaperAirplaneIcon className="h-5 w-5" />
+                  <Send className="h-5 w-5" />
                 )}
               </button>
             </form>
