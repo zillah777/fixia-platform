@@ -223,12 +223,12 @@ const NavegarProfesionalesPage: NextPage = () => {
 
   if (loading) {
     return (
-      <CorporateLayout variant="centered">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50/30 via-white to-trust-50/20 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-3 border-primary-600 mx-auto mb-6"></div>
           <p className="text-secondary-600 font-semibold">Cargando profesionales...</p>
         </div>
-      </CorporateLayout>
+      </div>
     );
   }
 
@@ -240,12 +240,27 @@ const NavegarProfesionalesPage: NextPage = () => {
         <meta name="keywords" content="AS, ases, servicios, Chubut, FIXIA, explorar, buscar" />
       </Head>
 
-      <CorporateLayout variant="default">
-        <CorporateHeader
-          title="Explorar AS"
-          subtitle="Descubre los mejores AS certificados de Chubut"
-          backUrl="/explorador/dashboard"
-        />
+      <div className="min-h-screen bg-gradient-to-br from-primary-50/30 via-white to-trust-50/20">
+        {/* Header */}
+        <header className="bg-white/95 backdrop-blur-xl border-b border-secondary-200/50 shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-20">
+              <div className="flex items-center space-x-4">
+                <Link href="/explorador/dashboard">
+                  <Button variant="ghost" size="sm" className="p-2 hover:bg-primary-50">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </Button>
+                </Link>
+                <div>
+                  <h1 className="text-2xl font-black text-secondary-900 tracking-tight">Explorar AS</h1>
+                  <p className="text-secondary-600 text-sm font-medium">Descubre los mejores AS certificados de Chubut</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Expert-level Header with Perfect Spacing & Hierarchy */}
@@ -287,25 +302,26 @@ const NavegarProfesionalesPage: NextPage = () => {
                 <span>Filtros</span>
                 <div className={`w-2 h-2 rounded-full transition-all duration-300 ${showFilters ? 'bg-primary-500' : 'bg-secondary-300'}`}></div>
               </div>
-              <CorporateButton
+              <Button
                 onClick={() => setShowFilters(!showFilters)}
-                variant={showFilters ? "primary" : "outline"}
-                leftIcon={<span>📊</span>}
+                variant={showFilters ? "default" : "outline"}
                 className="relative group shadow-lg hover:shadow-xl transition-all duration-300"
               >
+                <span className="mr-2">📊</span>
                 <span className="relative z-10">
                   {showFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'}
                 </span>
                 {/* Subtle hover effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-trust-500 rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-              </CorporateButton>
+              </Button>
             </div>
           </div>
 
           {/* Expert-level Filters Panel with Perfect Visual Hierarchy */}
           {showFilters && (
             <div className="mb-12 transform transition-all duration-500 ease-out">
-              <CorporateCard variant="glass" className="relative backdrop-blur-2xl bg-white/98 border border-white/60 shadow-2xl overflow-hidden">
+              <Card className="relative backdrop-blur-2xl bg-white/98 border border-white/60 shadow-2xl overflow-hidden">
+                <CardContent className="p-8">
                 {/* Subtle background pattern */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-50/50 via-white/80 to-trust-50/30 -z-10"></div>
                 
@@ -336,14 +352,14 @@ const NavegarProfesionalesPage: NextPage = () => {
                     </div>
                   </div>
                   
-                  <CorporateButton
+                  <Button
                     onClick={() => setShowFilters(false)}
                     variant="ghost"
                     size="sm"
                     className="text-secondary-600 hover:text-secondary-900 relative group"
                   >
                     <span className="transform group-hover:rotate-90 transition-transform duration-300">×</span>
-                  </CorporateButton>
+                  </Button>
                 </div>
 
               {/* Expert-level Filter Grid with Perfect Visual Balance */}
@@ -492,15 +508,15 @@ const NavegarProfesionalesPage: NextPage = () => {
               {/* Premium Filter Footer */}
               <div className="flex items-center justify-between mt-12 pt-8 border-t border-gradient-to-r from-transparent via-secondary-200 to-transparent">
                 <div className="flex items-center space-x-4">
-                  <CorporateButton
+                  <Button
                     onClick={clearFilters}
                     variant="ghost"
-                    size="md"
+                    size="default"
                     className="text-secondary-600 hover:text-secondary-900 group"
-                    leftIcon={<span className="group-hover:rotate-90 transition-transform duration-300">×</span>}
                   >
+                    <span className="mr-2 group-hover:rotate-90 transition-transform duration-300">×</span>
                     Limpiar filtros
-                  </CorporateButton>
+                  </Button>
                   
                   <div className="hidden md:flex items-center space-x-2 text-xs text-secondary-500">
                     <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse"></div>
@@ -529,20 +545,19 @@ const NavegarProfesionalesPage: NextPage = () => {
                   </div>
                 </div>
               </div>
-            </CorporateCard>
+                </CardContent>
+            </Card>
             </div>
           )}
 
           {/* Premium AS Grid - Expert Level Design */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {professionals.map((professional) => (
-              <CorporateCard 
+              <Card 
                 key={professional.id} 
-                variant="elevated" 
-                hover 
-                glow 
-                className="group cursor-pointer transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl relative overflow-hidden"
+                className="group cursor-pointer transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl relative overflow-hidden bg-white shadow-lg hover:shadow-xl"
               >
+                <CardContent className="p-6">
                 {/* Premium Background Gradients */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-primary-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 via-trust-500 to-accent-500 transform -translate-y-1 group-hover:translate-y-0 transition-transform duration-500" />
@@ -756,26 +771,26 @@ const NavegarProfesionalesPage: NextPage = () => {
                     
                     <div className="grid grid-cols-2 gap-4 mb-6">
                       <Link href={`/explorador/profesional/${professional.id}`}>
-                        <CorporateButton
+                        <Button
                           className="w-full group relative overflow-hidden"
-                          size="md"
+                          size="default"
                           variant="outline"
-                          rightIcon={<Eye className="h-4 w-4 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />}
                         >
                           <span className="relative z-10 font-bold tracking-tight">Ver Perfil</span>
+                          <Eye className="h-4 w-4 ml-2 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
                           <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-trust-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </CorporateButton>
+                        </Button>
                       </Link>
                       
                       <Link href={`/explorador/chat/new?as_id=${professional.id}`}>
-                        <CorporateButton
+                        <Button
                           className="w-full group relative overflow-hidden"
-                          size="md"
-                          rightIcon={<MessageSquare className="h-4 w-4 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300" />}
+                          size="default"
                         >
                           <span className="relative z-10 font-bold tracking-tight">Chatear</span>
+                          <MessageSquare className="h-4 w-4 ml-2 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300" />
                           <div className="absolute inset-0 bg-gradient-to-r from-primary-600/10 to-success-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </CorporateButton>
+                        </Button>
                       </Link>
                     </div>
                     
@@ -821,15 +836,16 @@ const NavegarProfesionalesPage: NextPage = () => {
                     </div>
                   </div>
                 </div>
-              </CorporateCard>
+                </CardContent>
+              </Card>
             ))}
           </div>
 
           {/* Premium Loading State */}
           {loadingProfessionals && (
             <div className="text-center py-20">
-              <CorporateCard variant="elevated" className="max-w-md mx-auto" glow>
-                <div className="flex flex-col items-center space-y-6">
+              <Card className="max-w-md mx-auto bg-white shadow-xl">
+                <CardContent className="flex flex-col items-center space-y-6 p-8">
                   {/* Advanced Loading Animation */}
                   <div className="relative">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-r from-primary-500 via-trust-500 to-accent-500 animate-spin"></div>
@@ -852,8 +868,8 @@ const NavegarProfesionalesPage: NextPage = () => {
                       <div className="w-2 h-2 bg-accent-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
                   </div>
-                </div>
-              </CorporateCard>
+                </CardContent>
+              </Card>
             </div>
           )}
 
@@ -862,16 +878,16 @@ const NavegarProfesionalesPage: NextPage = () => {
             <div className="text-center mt-16">
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-500 via-trust-500 to-accent-500 rounded-2xl opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-500"></div>
-                <CorporateButton
+                <Button
                   onClick={() => loadProfessionals()}
                   size="lg"
                   variant="outline"
                   className="relative px-12 py-4 font-black tracking-tight group"
-                  rightIcon={<Rocket className="h-5 w-5 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />}
                 >
                   <span className="relative z-10">Descubrir Más AS</span>
+                  <Rocket className="h-5 w-5 ml-2 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
                   <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-accent-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
-                </CorporateButton>
+                </Button>
               </div>
             </div>
           )}
@@ -879,12 +895,12 @@ const NavegarProfesionalesPage: NextPage = () => {
           {/* Premium No More Results */}
           {!loadingProfessionals && !hasMore && professionals.length > 0 && (
             <div className="text-center mt-16">
-              <CorporateCard variant="elevated" className="max-w-lg mx-auto relative overflow-hidden" glow>
+              <Card className="max-w-lg mx-auto relative overflow-hidden bg-white shadow-xl">
                 {/* Celebration background */}
                 <div className="absolute inset-0 bg-gradient-to-br from-success-50/80 via-white to-accent-50/80"></div>
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-success-500 via-accent-500 to-primary-500"></div>
                 
-                <div className="relative z-10 flex items-center space-x-6 p-2">
+                <CardContent className="relative z-10 flex items-center space-x-6 p-6">
                   <div className="w-16 h-16 bg-gradient-to-br from-success-500 via-success-600 to-accent-500 rounded-3xl flex items-center justify-center shadow-xl">
                     <span className="text-2xl text-white drop-shadow-sm">✓</span>
                   </div>
@@ -896,20 +912,20 @@ const NavegarProfesionalesPage: NextPage = () => {
                       Has visto todos los AS disponibles. Prueba ajustando los filtros para descubrir más opciones.
                     </p>
                   </div>
-                </div>
-              </CorporateCard>
+                </CardContent>
+              </Card>
             </div>
           )}
 
           {/* Premium No Results State */}
           {!loadingProfessionals && professionals.length === 0 && (
             <div className="text-center py-24">
-              <CorporateCard variant="elevated" className="max-w-2xl mx-auto relative overflow-hidden" glow>
+              <Card className="max-w-2xl mx-auto relative overflow-hidden bg-white shadow-xl">
                 {/* Subtle background pattern */}
                 <div className="absolute inset-0 bg-gradient-to-br from-secondary-50/90 via-white to-primary-50/30"></div>
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary-500 via-trust-500 to-accent-500"></div>
                 
-                <div className="relative z-10 space-y-8 p-4">
+                <CardContent className="relative z-10 space-y-8 p-8">
                   {/* Enhanced illustration */}
                   <div className="relative">
                     <div className="w-24 h-24 bg-gradient-to-br from-secondary-400 via-secondary-500 to-trust-500 rounded-3xl flex items-center justify-center mx-auto shadow-xl ring-8 ring-secondary-100/50">
@@ -941,24 +957,24 @@ const NavegarProfesionalesPage: NextPage = () => {
                   
                   {/* Enhanced action buttons */}
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <CorporateButton
+                    <Button
                       onClick={clearFilters}
                       variant="outline"
                       size="lg"
                       className="group px-8"
-                      leftIcon={<span className="group-hover:rotate-90 transition-transform duration-300">×</span>}
                     >
+                      <span className="mr-2 group-hover:rotate-90 transition-transform duration-300">×</span>
                       <span className="font-bold tracking-tight">Limpiar Filtros</span>
-                    </CorporateButton>
+                    </Button>
                     
-                    <CorporateButton
+                    <Button
                       onClick={() => window.location.reload()}
                       size="lg"
                       className="group px-8"
-                      rightIcon={<span className="group-hover:rotate-180 transition-transform duration-500">⟳</span>}
                     >
                       <span className="font-bold tracking-tight">Recargar Búsqueda</span>
-                    </CorporateButton>
+                      <span className="ml-2 group-hover:rotate-180 transition-transform duration-500">⟳</span>
+                    </Button>
                   </div>
                   
                   {/* Help suggestion */}
@@ -972,12 +988,12 @@ const NavegarProfesionalesPage: NextPage = () => {
                       </p>
                     </div>
                   </div>
-                </div>
-              </CorporateCard>
+                </CardContent>
+              </Card>
             </div>
           )}
         </div>
-      </CorporateLayout>
+      </div>
     </>
   );
 };
