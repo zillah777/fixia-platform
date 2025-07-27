@@ -106,10 +106,16 @@ function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/50">
-              <span className="text-white font-bold text-lg">F</span>
+            <div className="relative">
+              <div className="h-10 w-10 liquid-gradient rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-lg">F</span>
+              </div>
+              <div className="absolute -inset-1 liquid-gradient rounded-xl blur opacity-20 animate-pulse-slow"></div>
             </div>
-            <span className="text-2xl font-bold text-white">Fixia</span>
+            <div className="flex flex-col">
+              <span className="text-xl font-semibold tracking-tight text-white">Fixia</span>
+              <span className="text-xs text-white/60 -mt-1">Conecta. Confía. Resuelve.</span>
+            </div>
           </Link>
 
           {/* Navigation */}
@@ -452,14 +458,20 @@ function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/50">
-                <span className="text-white font-bold text-xl">F</span>
+              <div className="relative">
+                <div className="h-12 w-12 liquid-gradient rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-xl">F</span>
+                </div>
+                <div className="absolute -inset-1 liquid-gradient rounded-xl blur opacity-20 animate-pulse-slow"></div>
               </div>
-              <span className="text-3xl font-bold text-white">Fixia</span>
+              <div className="flex flex-col">
+                <span className="text-3xl font-bold text-white">Fixia</span>
+                <span className="text-sm text-white/60 -mt-1">Conecta. Confía. Resuelve.</span>
+              </div>
             </div>
             <p className="text-white/80 mb-6 leading-relaxed max-w-md">
-              La plataforma líder en Chubut para conectar profesionales de servicios con clientes. 
-              Confiable, segura y verificada.
+              Marketplace de microservicios diseñado para conectar profesionales 
+              altamente calificados con usuarios que necesitan soluciones efectivas.
             </p>
             <div className="text-white/60 text-sm">
               © 2025 Fixia. Todos los derechos reservados.
