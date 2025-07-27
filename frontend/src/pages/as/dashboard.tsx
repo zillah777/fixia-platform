@@ -75,7 +75,7 @@ const ASDashboard: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Panel AS - {user?.full_name || 'Usuario'} - Fixia</title>
+        <title>Panel AS - {user?.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : 'Usuario'} - Fixia</title>
         <meta name="description" content="Panel de control para profesionales en la plataforma Fixia" />
       </Head>
 

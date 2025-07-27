@@ -23,8 +23,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
 import { categoriesService } from '@/services/categories';
 import { ExplorerBrowseParams } from '@/types/explorer';
-import { CorporateLayout, CorporateCard, CorporateButton, CorporateInput, CorporateHeader } from '@/components/ui';
-import Logo from '@/components/Logo';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 
 // Localidades de Chubut
 const CHUBUT_LOCALITIES = [
@@ -197,9 +199,9 @@ const NavegarProfesionalesPage: NextPage = () => {
 
   const getVerificationBadge = (status: string) => {
     const badges = {
-      verified: { text: 'Verificado', color: 'text-green-600', icon: CheckBadgeIcon },
-      pending: { text: 'Pendiente', color: 'text-yellow-600', icon: UserIcon },
-      rejected: { text: 'No verificado', color: 'text-gray-600', icon: UserIcon }
+      verified: { text: 'Verificado', color: 'text-green-600', icon: Shield },
+      pending: { text: 'Pendiente', color: 'text-yellow-600', icon: Clock },
+      rejected: { text: 'No verificado', color: 'text-gray-600', icon: Shield }
     };
     return badges[status as keyof typeof badges] || badges.pending;
   };

@@ -46,7 +46,7 @@ const ExplorerDashboard: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Dashboard Explorador - {user?.full_name || 'Usuario'} - Fixia</title>
+        <title>Dashboard Explorador - {user?.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : 'Usuario'} - Fixia</title>
         <meta name="description" content="Panel de control para exploradores en la plataforma Fixia" />
       </Head>
 
