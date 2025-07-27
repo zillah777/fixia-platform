@@ -68,7 +68,12 @@ const HomePage: NextPage = () => {
         <meta name="keywords" content="servicios profesionales, Chubut, plomeros, electricistas, carpinteros, AS certificados" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-purple-900/40 relative overflow-hidden">
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 bg-background">
+          <div className="absolute top-1/4 -left-32 w-64 h-64 liquid-gradient rounded-full blur-3xl opacity-20 animate-float"></div>
+          <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
+        </div>
 
         {/* Navigation Header */}
         <Header />
