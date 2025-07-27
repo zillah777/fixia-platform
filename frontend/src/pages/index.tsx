@@ -109,7 +109,7 @@ const HomePage: NextPage = () => {
         <meta name="keywords" content="servicios profesionales, Chubut, plomeros, electricistas, carpinteros, AS certificados" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-purple-900/40 relative overflow-hidden">
 
         {/* Navigation Header */}
         <Header />
@@ -149,7 +149,7 @@ function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 liquid-gradient rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/50">
               <span className="text-white font-bold text-lg">F</span>
             </div>
             <span className="text-2xl font-bold text-white">Fixia</span>
@@ -562,7 +562,7 @@ function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 liquid-gradient rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/50">
                 <span className="text-white font-bold text-xl">F</span>
               </div>
               <span className="text-3xl font-bold text-white">Fixia</span>
