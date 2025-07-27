@@ -3,6 +3,21 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import {
+  Star,
+  Eye,
+  Settings,
+  Tag,
+  BarChart3,
+  Trophy,
+  DollarSign,
+  Camera,
+  MessageSquare,
+  Shield,
+  Clock,
+  Heart,
+  Rocket
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -193,7 +208,7 @@ const NavegarProfesionalesPage: NextPage = () => {
     return (
       <div className="flex items-center">
         {[1, 2, 3, 4, 5].map((star) => (
-          <StarIcon
+          <Star
             key={star}
             className={`h-4 w-4 ${
               star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
@@ -238,7 +253,7 @@ const NavegarProfesionalesPage: NextPage = () => {
               <div className="relative">
                 <div className="w-16 h-16 bg-gradient-to-br from-primary-500 via-trust-500 to-secondary-500 rounded-2xl flex items-center justify-center shadow-2xl transform hover:scale-105 transition-all duration-300">
                   <div className="w-14 h-14 bg-gradient-to-br from-white/20 to-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                    <EyeIcon className="h-7 w-7 text-white drop-shadow-lg" />
+                    <Eye className="h-7 w-7 text-white drop-shadow-lg" />
                   </div>
                 </div>
                 {/* Subtle glow effect */}
@@ -298,7 +313,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                     <div className="relative group">
                       <div className="w-14 h-14 bg-gradient-to-br from-secondary-500 via-trust-500 to-primary-500 rounded-2xl flex items-center justify-center shadow-xl transform group-hover:scale-105 transition-all duration-300">
                         <div className="w-12 h-12 bg-gradient-to-br from-white/20 to-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                          <AdjustmentsHorizontalIcon className="h-6 w-6 text-white drop-shadow-lg" />
+                          <Settings className="h-6 w-6 text-white drop-shadow-lg" />
                         </div>
                       </div>
                       <div className="absolute inset-0 bg-gradient-to-br from-secondary-500 via-trust-500 to-primary-500 rounded-2xl opacity-20 blur-xl -z-10"></div>
@@ -336,7 +351,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                   <label className="block text-sm font-bold text-secondary-800 mb-4 tracking-tight">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-trust-500 rounded-lg flex items-center justify-center shadow-lg">
-                        <TagIcon className="h-4 w-4 text-white" />
+                        <Tag className="h-4 w-4 text-white" />
                       </div>
                       <div>
                         <span className="text-base">Categoría</span>
@@ -443,7 +458,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                   <label className="block text-sm font-bold text-secondary-800 mb-4 tracking-tight">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-accent-500 to-success-500 rounded-lg flex items-center justify-center shadow-lg">
-                        <PresentationChartLineIcon className="h-4 w-4 text-white" />
+                        <BarChart3 className="h-4 w-4 text-white" />
                       </div>
                       <div>
                         <span className="text-base">Ordenar</span>
@@ -600,7 +615,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                               <>
                                 <div className="flex items-center space-x-1">
                                   {[1, 2, 3, 4, 5].map((star) => (
-                                    <StarIcon
+                                    <Star
                                       key={star}
                                       className={`h-4 w-4 transition-all duration-300 ${
                                         star <= Math.round(professional.avg_rating) 
@@ -640,7 +655,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                     {professional.years_experience && (
                       <div className="group/indicator flex items-center space-x-3 p-3 bg-gradient-to-r from-success-50/80 to-accent-50/80 rounded-2xl border border-success-200/50 hover:border-success-300 transition-all duration-300">
                         <div className="w-10 h-10 bg-gradient-to-br from-success-500 via-success-600 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg group-hover/indicator:scale-110 transition-transform duration-300">
-                          <TrophyIcon className="h-5 w-5 text-white drop-shadow-sm" />
+                          <Trophy className="h-5 w-5 text-white drop-shadow-sm" />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-baseline space-x-2">
@@ -680,7 +695,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                     {professional.base_price && (
                       <div className="group/indicator flex items-center space-x-3 p-3 bg-gradient-to-r from-success-50/80 to-trust-50/80 rounded-2xl border border-success-200/50 hover:border-success-300 transition-all duration-300">
                         <div className="w-10 h-10 bg-gradient-to-br from-success-500 via-success-600 to-trust-500 rounded-2xl flex items-center justify-center shadow-lg group-hover/indicator:scale-110 transition-transform duration-300">
-                          <CurrencyDollarIcon className="h-5 w-5 text-white drop-shadow-sm" />
+                          <DollarSign className="h-5 w-5 text-white drop-shadow-sm" />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-baseline space-x-2">
@@ -700,7 +715,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                     {professional.portfolio_count > 0 && (
                       <div className="group/indicator flex items-center space-x-3 p-3 bg-gradient-to-r from-accent-50/80 to-trust-50/80 rounded-2xl border border-accent-200/50 hover:border-accent-300 transition-all duration-300">
                         <div className="w-10 h-10 bg-gradient-to-br from-accent-500 via-accent-600 to-trust-500 rounded-2xl flex items-center justify-center shadow-lg group-hover/indicator:scale-110 transition-transform duration-300">
-                          <CameraIcon className="h-5 w-5 text-white drop-shadow-sm" />
+                          <Camera className="h-5 w-5 text-white drop-shadow-sm" />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-baseline space-x-2">
@@ -743,7 +758,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                           className="w-full group relative overflow-hidden"
                           size="md"
                           variant="outline"
-                          rightIcon={<EyeIcon className="h-4 w-4 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />}
+                          rightIcon={<Eye className="h-4 w-4 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />}
                         >
                           <span className="relative z-10 font-bold tracking-tight">Ver Perfil</span>
                           <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-trust-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -754,7 +769,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                         <CorporateButton
                           className="w-full group relative overflow-hidden"
                           size="md"
-                          rightIcon={<ChatBubbleLeftRightIcon className="h-4 w-4 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300" />}
+                          rightIcon={<MessageSquare className="h-4 w-4 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300" />}
                         >
                           <span className="relative z-10 font-bold tracking-tight">Chatear</span>
                           <div className="absolute inset-0 bg-gradient-to-r from-primary-600/10 to-success-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -766,7 +781,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                     <div className="grid grid-cols-3 gap-3">
                       <div className="group/trust flex flex-col items-center space-y-2 p-3 bg-gradient-to-br from-success-50/80 to-success-100/60 rounded-2xl border border-success-200/50 hover:border-success-300 transition-all duration-300">
                         <div className="w-8 h-8 bg-gradient-to-br from-success-500 to-success-600 rounded-xl flex items-center justify-center shadow-lg group-hover/trust:scale-110 transition-transform duration-300">
-                          <ShieldCheckIcon className="h-4 w-4 text-white drop-shadow-sm" />
+                          <Shield className="h-4 w-4 text-white drop-shadow-sm" />
                         </div>
                         <span className="text-xs font-bold text-success-700 uppercase tracking-wide text-center leading-tight">
                           Verificado
@@ -775,7 +790,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                       
                       <div className="group/trust flex flex-col items-center space-y-2 p-3 bg-gradient-to-br from-primary-50/80 to-primary-100/60 rounded-2xl border border-primary-200/50 hover:border-primary-300 transition-all duration-300">
                         <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg group-hover/trust:scale-110 transition-transform duration-300">
-                          <ClockIcon className="h-4 w-4 text-white drop-shadow-sm" />
+                          <Clock className="h-4 w-4 text-white drop-shadow-sm" />
                         </div>
                         <span className="text-xs font-bold text-primary-700 uppercase tracking-wide text-center leading-tight">
                           Responde<br />2h
@@ -784,7 +799,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                       
                       <div className="group/trust flex flex-col items-center space-y-2 p-3 bg-gradient-to-br from-accent-50/80 to-accent-100/60 rounded-2xl border border-accent-200/50 hover:border-accent-300 transition-all duration-300">
                         <div className="w-8 h-8 bg-gradient-to-br from-accent-500 to-accent-600 rounded-xl flex items-center justify-center shadow-lg group-hover/trust:scale-110 transition-transform duration-300">
-                          <HeartIcon className="h-4 w-4 text-white drop-shadow-sm" />
+                          <Heart className="h-4 w-4 text-white drop-shadow-sm" />
                         </div>
                         <span className="text-xs font-bold text-accent-700 uppercase tracking-wide text-center leading-tight">
                           Confiable
@@ -850,7 +865,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                   size="lg"
                   variant="outline"
                   className="relative px-12 py-4 font-black tracking-tight group"
-                  rightIcon={<RocketLaunchIcon className="h-5 w-5 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />}
+                  rightIcon={<Rocket className="h-5 w-5 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />}
                 >
                   <span className="relative z-10">Descubrir Más AS</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-accent-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
@@ -904,7 +919,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                       <span className="text-white">★</span>
                     </div>
                     <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-gradient-to-br from-primary-400 to-primary-500 rounded-xl flex items-center justify-center shadow-lg animate-bounce" style={{ animationDelay: '0.5s' }}>
-                      <HeartIcon className="h-3 w-3 text-white" />
+                      <Heart className="h-3 w-3 text-white" />
                     </div>
                   </div>
                   

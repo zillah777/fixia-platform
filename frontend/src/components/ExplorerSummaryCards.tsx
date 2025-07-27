@@ -24,7 +24,7 @@ export function ExplorerSummaryCards() {
             Gestiona tus proyectos y conecta con los mejores profesionales
           </p>
         </div>
-        <Badge variant="outline" className="glass border-white/20">
+        <Badge className="glass border-white/20">
           Últimos 30 días
         </Badge>
       </div>
@@ -144,7 +144,7 @@ export function ExplorerSummaryCards() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Mensajes sin leer</span>
-                    <Badge variant="destructive" className="text-xs">3</Badge>
+                    <Badge className="text-xs bg-red-500 text-white">3</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Chats activos</span>
@@ -152,7 +152,7 @@ export function ExplorerSummaryCards() {
                   </div>
                 </div>
                 <Link href="/explorador/chats">
-                  <Button size="sm" className="w-full glass-medium hover:glass-strong transition-all duration-300">
+                  <Button className="w-full glass-medium hover:glass-strong transition-all duration-300 h-9 px-3">
                     Ver Mensajes
                   </Button>
                 </Link>

@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { CheckCircle } from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -214,7 +215,7 @@ const ChatsPage: NextPage = () => {
                                   {connection.as_name} {connection.as_last_name}
                                 </h3>
                                 {connection.verification_status === 'verified' && (
-                                  <CheckBadgeIcon className="h-5 w-5 text-green-600 flex-shrink-0" />
+                                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
                                 )}
                               </div>
                               

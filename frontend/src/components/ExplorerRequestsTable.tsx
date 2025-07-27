@@ -204,7 +204,7 @@ export function ExplorerRequestsTable() {
                       <div className="flex items-center space-x-2">
                         {request.messages > 0 && (
                           <Link href={`/explorador/chat/${request.id}`}>
-                            <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:glass-medium relative">
+                            <Button className="h-8 w-8 p-0 hover:glass-medium relative">
                               <MessageSquare className="h-4 w-4" />
                               {request.messages > 0 && (
                                 <span className="absolute -top-1 -right-1 h-4 w-4 bg-primary rounded-full flex items-center justify-center text-xs text-white">
@@ -217,7 +217,7 @@ export function ExplorerRequestsTable() {
                         )}
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0 hover:glass-medium">
+                            <Button className="h-8 w-8 p-0 hover:glass-medium">
                               <span className="sr-only">Abrir menú</span>
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
@@ -259,7 +259,7 @@ export function ExplorerRequestsTable() {
               Mostrando 3 de 7 solicitudes activas
             </div>
             <Link href="/explorador/mis-solicitudes">
-              <Button variant="outline" className="glass border-white/20 hover:glass-medium">
+              <Button className="glass border-white/20 hover:glass-medium">
                 Ver todas las solicitudes
               </Button>
             </Link>

@@ -266,7 +266,7 @@ export function ExplorerHeroPanel() {
               
               <div className="pt-4 border-t border-white/10">
                 <Link href="/explorador/navegar-profesionales">
-                  <Button variant="outline" className="w-full glass border-white/20 hover:glass-medium">
+                  <Button className="w-full glass border-white/20 hover:glass-medium">
                     Ver más profesionales
                   </Button>
                 </Link>

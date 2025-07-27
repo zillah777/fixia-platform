@@ -61,25 +61,25 @@ export function FixiaNavigation() {
           
           <nav className="hidden lg:flex items-center space-x-1">
             <Link href={user?.user_type === 'provider' ? '/as/dashboard' : '/explorador/dashboard'}>
-              <Button variant="ghost" className="glass-medium hover:glass-strong transition-all duration-300">
+              <Button className="glass-medium hover:glass-strong transition-all duration-300">
                 Inicio
               </Button>
             </Link>
             {user?.user_type === 'customer' && (
               <Link href="/explorador/buscar-servicio">
-                <Button variant="ghost" className="hover:glass-medium transition-all duration-300">
+                <Button className="hover:glass-medium transition-all duration-300">
                   Buscar Servicios
                 </Button>
               </Link>
             )}
             {user?.user_type === 'provider' && (
               <Link href="/as/servicios">
-                <Button variant="ghost" className="hover:glass-medium transition-all duration-300">
+                <Button className="hover:glass-medium transition-all duration-300">
                   Mis Servicios
                 </Button>
               </Link>
             )}
-            <Button variant="ghost" className="hover:glass-medium transition-all duration-300 flex items-center space-x-2">
+            <Button className="hover:glass-medium transition-all duration-300 flex items-center space-x-2">
               <Shield className="h-4 w-4" />
               <span>Centro de Confianza</span>
             </Button>
@@ -101,7 +101,7 @@ export function FixiaNavigation() {
           <div className="flex items-center space-x-2">
             {user?.user_type === 'customer' && (
               <Link href="/explorador/buscar-servicio">
-                <Button size="sm" className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
+                <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg h-9 px-3">
                   <Plus className="mr-2 h-4 w-4" />
                   Nuevo Proyecto
                 </Button>
@@ -109,14 +109,14 @@ export function FixiaNavigation() {
             )}
             {user?.user_type === 'provider' && (
               <Link href="/as/servicios">
-                <Button size="sm" className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
+                <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg h-9 px-3">
                   <Plus className="mr-2 h-4 w-4" />
                   Nuevo Servicio
                 </Button>
               </Link>
             )}
 
-            <Button variant="ghost" size="icon" className="relative hover:glass-medium transition-all duration-300">
+            <Button className="relative hover:glass-medium transition-all duration-300 h-10 w-10">
               <Bell className="h-4 w-4" />
               <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 bg-destructive text-xs">
                 3
@@ -127,7 +127,7 @@ export function FixiaNavigation() {
           {/* User Avatar Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:glass-medium transition-all duration-300">
+              <Button className="relative h-10 w-10 rounded-full hover:glass-medium transition-all duration-300">
                 <Avatar className="h-10 w-10 ring-2 ring-primary/20">
                   <AvatarImage src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined} alt="Usuario" />
                   <AvatarFallback className="glass">{getInitials()}</AvatarFallback>
@@ -190,7 +190,7 @@ export function FixiaNavigation() {
           </DropdownMenu>
 
           {/* Mobile Menu */}
-          <Button variant="ghost" size="icon" className="lg:hidden hover:glass-medium">
+          <Button className="lg:hidden hover:glass-medium h-10 w-10">
             <Menu className="h-5 w-5" />
           </Button>
         </div>

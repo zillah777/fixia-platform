@@ -196,14 +196,14 @@ export function FixiaServicesTable() {
                     <TableCell>
                       <div className="flex items-center space-x-2">
                         {service.messages > 0 && (
-                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:glass-medium">
+                          <Button className="h-8 w-8 p-0 hover:glass-medium">
                             <MessageSquare className="h-4 w-4" />
                             <span className="sr-only">Mensajes</span>
                           </Button>
                         )}
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0 hover:glass-medium">
+                            <Button className="h-8 w-8 p-0 hover:glass-medium">
                               <span className="sr-only">Abrir menú</span>
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
@@ -237,7 +237,7 @@ export function FixiaServicesTable() {
               Mostrando 3 de 8 servicios activos
             </div>
             <Link href={user?.user_type === 'provider' ? '/as/servicios' : '/explorador/mis-solicitudes'}>
-              <Button variant="outline" className="glass border-white/20 hover:glass-medium">
+              <Button className="glass border-white/20 hover:glass-medium">
                 Ver todos los servicios
               </Button>
             </Link>

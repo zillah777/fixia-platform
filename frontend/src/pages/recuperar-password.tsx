@@ -4,10 +4,10 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 import MarketplaceLayout from '@/components/layouts/MarketplaceLayout';
-import Logo from '@/components/Logo';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
+// import Logo from '@/components/Logo';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function RecuperarPassword() {
   const router = useRouter();
@@ -104,17 +104,19 @@ export default function RecuperarPassword() {
             {/* Back to Home */}
             <div className="text-center">
               <Link href="/" className="inline-flex items-center gap-2 text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 transition-colors">
-                <Logo size="sm" variant="primary" />
+                <span className="text-primary-600 font-bold">Fixia</span>
                 <span className="text-sm font-medium">Volver al inicio</span>
               </Link>
             </div>
 
             {/* Password Reset Card */}
-            <Card variant="glass" padding="xl" className="backdrop-blur-md">
+            <Card className="glass border-white/10 backdrop-blur-md p-8">
               {/* Header */}
               <div className="text-center mb-8">
                 <div className="mb-4">
-                  <Logo size="lg" variant="primary" showText={false} />
+                  <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-xl">F</span>
+                  </div>
                 </div>
                 <h1 className="text-3xl font-bold font-display text-neutral-900 dark:text-white mb-2">
                   Restablecer Contraseña
@@ -171,27 +173,19 @@ export default function RecuperarPassword() {
 
                 <div className="space-y-4">
                   <Input
-                    label="Nueva Contraseña"
                     type="password"
                     placeholder="Mínimo 6 caracteres"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    leftIcon={<span>🔒</span>}
-                    showPasswordToggle
-                    fullWidth
                     required
                     minLength={6}
                   />
 
                   <Input
-                    label="Confirmar Contraseña"
                     type="password"
                     placeholder="Confirma tu nueva contraseña"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    leftIcon={<span>🛡</span>}
-                    showPasswordToggle
-                    fullWidth
                     required
                     minLength={6}
                   />
@@ -231,12 +225,8 @@ export default function RecuperarPassword() {
 
                 <Button
                   type="submit"
-                  variant="primary"
-                  size="lg"
-                  fullWidth
-                  loading={status === 'loading'}
+                  className="w-full h-11"
                   disabled={!password || !confirmPassword}
-                  rightIcon={<span>✓</span>}
                 >
                   {status === 'loading' ? 'Restableciendo...' : 'Restablecer Contraseña'}
                 </Button>

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import Logo from '@/components/Logo';
-import { CorporateLayout, CorporateCard, CorporateButton } from '@/components/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function VerificarEmail() {
   const router = useRouter();
@@ -82,23 +82,31 @@ export default function VerificarEmail() {
         <meta name="keywords" content="verificar email, FIXIA, servicios profesionales, verificación cuenta" />
       </Head>
 
-      <CorporateLayout variant="centered" maxWidth="md">
-        <div className="w-full max-w-md mx-auto">
-          {/* Corporate Logo */}
-          <div className="text-center mb-8">
-            <div className="mb-6">
-              <Logo size="xl" variant="gradient" className="justify-center" />
+      <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}} />
+        </div>
+        
+        <div className="relative flex items-center justify-center min-h-screen py-12 px-4">
+          <div className="w-full max-w-md mx-auto">
+            {/* Logo */}
+            <div className="text-center mb-8">
+              <div className="mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-white/20 to-white/10 rounded-full flex items-center justify-center mx-auto">
+                  <span className="text-white font-bold text-2xl">F</span>
+                </div>
+              </div>
+              <h1 className="text-2xl font-bold text-white mb-2">
+                Verificación de Email
+              </h1>
+              <p className="text-white/70 font-medium">
+                Sistema Profesional Certificado
+              </p>
             </div>
-            <h1 className="text-2xl font-bold text-secondary-900 mb-2">
-              Verificación de Email
-            </h1>
-            <p className="text-secondary-600 font-medium">
-              Sistema Profesional Certificado
-            </p>
-          </div>
 
-          {/* Corporate Verification Card */}
-          <CorporateCard variant="glass" className="text-center backdrop-blur-2xl bg-white/90 border border-white/50 shadow-2xl">
+            <Card className="glass border-white/10 text-center">
+              <CardContent className="p-8">
             
             {status === 'loading' && (
               <div className="space-y-8">
@@ -108,10 +116,10 @@ export default function VerificarEmail() {
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-secondary-900 mb-3">
+                  <h2 className="text-2xl font-bold text-white mb-3">
                     Verificando tu email...
                   </h2>
-                  <p className="text-secondary-600 font-medium">
+                  <p className="text-white/70 font-medium">
                     Por favor espera mientras procesamos tu verificación de cuenta profesional.
                   </p>
                 </div>
@@ -126,15 +134,15 @@ export default function VerificarEmail() {
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-success-800 mb-3">
+                  <h2 className="text-2xl font-bold text-green-400 mb-3">
                     ¡Email Verificado!
                   </h2>
-                  <p className="text-secondary-600 font-medium mb-6">
+                  <p className="text-white/70 font-medium mb-6">
                     {message}
                   </p>
-                  <div className="bg-gradient-to-r from-success-50 to-accent-50 border-2 border-success-200 rounded-xl p-6">
-                    <div className="flex items-center justify-center text-success-700">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-success-600 mr-3"></div>
+                  <div className="glass-light rounded-xl p-6">
+                    <div className="flex items-center justify-center text-green-400">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-400 mr-3"></div>
                       <span className="font-semibold">Redirigiendo al panel profesional...</span>
                     </div>
                   </div>
@@ -150,46 +158,45 @@ export default function VerificarEmail() {
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-error-800 mb-3">
+                  <h2 className="text-2xl font-bold text-red-400 mb-3">
                     Error de Verificación
                   </h2>
-                  <p className="text-secondary-600 font-medium mb-8">
+                  <p className="text-white/70 font-medium mb-8">
                     {message}
                   </p>
                   <div className="space-y-4">
-                    <CorporateButton
+                    <Button
                       onClick={handleResendEmail}
-                      size="lg"
-                      className="w-full"
+                      className="w-full h-11 mb-3"
                     >
                       Reenviar Email de Verificación
-                    </CorporateButton>
-                    <CorporateButton
+                    </Button>
+                    <Button
                       onClick={() => router.push('/auth/login')}
-                      variant="outline"
-                      size="lg"
-                      className="w-full"
+                      className="w-full h-11 glass border-white/20 hover:glass-medium"
                     >
                       Ir al Login
-                    </CorporateButton>
+                    </Button>
                   </div>
                 </div>
               </div>
             )}
-          </CorporateCard>
+              </CardContent>
+            </Card>
 
-          {/* Corporate Footer */}
-          <div className="text-center mt-8 space-y-3">
-            <p className="text-secondary-500 text-sm font-medium">¿Problemas con la verificación?</p>
-            <a 
-              href="mailto:contacto@fixia.com.ar" 
-              className="text-primary-600 hover:text-primary-700 font-semibold text-sm transition-colors"
-            >
-              Contáctanos en contacto@fixia.com.ar
-            </a>
+            {/* Footer */}
+            <div className="text-center mt-8 space-y-3">
+              <p className="text-white/60 text-sm font-medium">¿Problemas con la verificación?</p>
+              <a 
+                href="mailto:contacto@fixia.com.ar" 
+                className="text-white hover:text-white/80 font-semibold text-sm transition-colors"
+              >
+                Contáctanos en contacto@fixia.com.ar
+              </a>
+            </div>
           </div>
         </div>
-      </CorporateLayout>
+      </div>
     </>
   );
 }

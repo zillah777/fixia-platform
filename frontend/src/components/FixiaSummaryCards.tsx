@@ -24,7 +24,7 @@ export function FixiaSummaryCards() {
             Transparencia líquida: ves todo lo que necesitas saber
           </p>
         </div>
-        <Badge variant="outline" className="glass border-white/20">
+        <Badge className="glass border-white/20">
           Últimos 30 días
         </Badge>
       </div>
@@ -145,7 +145,7 @@ export function FixiaSummaryCards() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Sin leer</span>
-                    <Badge variant="destructive" className="text-xs">7</Badge>
+                    <Badge className="text-xs bg-red-500 text-white">7</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Consultas nuevas</span>
@@ -153,7 +153,7 @@ export function FixiaSummaryCards() {
                   </div>
                 </div>
                 <Link href={user?.user_type === 'provider' ? '/as/chats' : '/explorador/chats'}>
-                  <Button size="sm" className="w-full glass-medium hover:glass-strong transition-all duration-300">
+                  <Button className="w-full glass-medium hover:glass-strong transition-all duration-300 h-9 px-3">
                     Revisar Mensajes
                   </Button>
                 </Link>
@@ -181,7 +181,7 @@ export function FixiaSummaryCards() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Esta semana</span>
-                    <Badge variant="destructive" className="text-xs">2</Badge>
+                    <Badge className="text-xs bg-red-500 text-white">2</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Próxima semana</span>

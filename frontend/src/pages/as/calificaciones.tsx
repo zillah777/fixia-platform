@@ -4,14 +4,14 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-  ArrowLeftIcon,
-  StarIcon,
-  UserIcon,
-  CalendarDaysIcon,
-  FunnelIcon,
-  ArrowTrendingUpIcon,
-  MinusIcon
-} from '@heroicons/react/24/outline';
+  ArrowLeft,
+  Star,
+  User,
+  Calendar,
+  Filter,
+  TrendingUp,
+  Minus
+} from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { Review, ReviewStats } from '@/types';
@@ -192,7 +192,7 @@ const ASCalificaciones: NextPage = () => {
     return (
       <div className="flex">
         {[1, 2, 3, 4, 5].map((star) => (
-          <StarIconSolid
+          <Star
             key={star}
             className={`${sizeClasses[size]} ${
               star <= rating ? 'text-yellow-400' : 'text-gray-300'
@@ -255,7 +255,7 @@ const ASCalificaciones: NextPage = () => {
             <div className="flex items-center py-6">
               <Link href="/as/dashboard">
                 <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                  <ArrowLeft className="h-6 w-6 text-gray-600" />
                 </button>
               </Link>
               <div className="flex-1">
@@ -284,9 +284,9 @@ const ASCalificaciones: NextPage = () => {
                     trend.type === 'up' ? 'text-green-600' :
                     trend.type === 'down' ? 'text-red-600' : 'text-gray-600'
                   }`}>
-                    {trend.type === 'up' && <ArrowTrendingUpIcon className="h-4 w-4 mr-1" />}
-                    {trend.type === 'down' && <MinusIcon className="h-4 w-4 mr-1" />}
-                    {trend.type === 'stable' && <MinusIcon className="h-4 w-4 mr-1" />}
+                    {trend.type === 'up' && <TrendingUp className="h-4 w-4 mr-1" />}
+                    {trend.type === 'down' && <Minus className="h-4 w-4 mr-1" />}
+                    {trend.type === 'stable' && <Minus className="h-4 w-4 mr-1" />}
                     {trend.type === 'stable' ? 'Estable' : `${trend.value.toFixed(1)} vs anterior`}
                   </div>
                 )}
@@ -322,7 +322,7 @@ const ASCalificaciones: NextPage = () => {
                   return (
                     <div key={rating} className="flex items-center text-sm">
                       <span className="w-3 text-gray-600">{rating}</span>
-                      <StarIconSolid className="h-4 w-4 text-yellow-400 mx-2" />
+                      <Star className="h-4 w-4 text-yellow-400 mx-2" />
                       <div className="flex-1 bg-gray-200 rounded-full h-2 mr-2">
                         <div 
                           className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
@@ -340,7 +340,7 @@ const ASCalificaciones: NextPage = () => {
           {/* Filter */}
           <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
             <div className="flex items-center space-x-4">
-              <FunnelIcon className="h-5 w-5 text-gray-400" />
+              <Filter className="h-5 w-5 text-gray-400" />
               <select
                 value={filterRating}
                 onChange={(e) => setFilterRating(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
@@ -363,7 +363,7 @@ const ASCalificaciones: NextPage = () => {
           <div className="space-y-6">
             {filteredReviews.length === 0 ? (
               <div className="bg-white rounded-xl shadow-sm border p-12 text-center">
-                <StarIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <Star className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   {filterRating === 'all' ? 'No hay reseñas aún' : 'No hay reseñas con esta calificación'}
                 </h3>
@@ -387,7 +387,7 @@ const ASCalificaciones: NextPage = () => {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <UserIcon className="h-6 w-6 text-gray-400" />
+                          <User className="h-6 w-6 text-gray-400" />
                         )}
                       </div>
                       <div>
@@ -401,7 +401,7 @@ const ASCalificaciones: NextPage = () => {
                     <div className="text-right">
                       {renderStars(review.rating, 'md')}
                       <div className="flex items-center text-sm text-gray-500 mt-1">
-                        <CalendarDaysIcon className="h-4 w-4 mr-1" />
+                        <Calendar className="h-4 w-4 mr-1" />
                         {formatDate(review.created_at)}
                       </div>
                     </div>
