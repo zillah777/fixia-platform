@@ -67,6 +67,11 @@ function transformUserForFrontend(userData) {
     transformed.user_type = transformToFrontend(transformed.user_type);
   }
   
+  // Map profile_image to profile_photo_url for frontend compatibility
+  if (transformed.profile_image && !transformed.profile_photo_url) {
+    transformed.profile_photo_url = transformed.profile_image;
+  }
+  
   return transformed;
 }
 
