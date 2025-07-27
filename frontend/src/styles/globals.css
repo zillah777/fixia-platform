@@ -2,173 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  --font-size: 16px;
-  
-  /* Fixia Brand Colors - Liquid Glass Theme */
-  --background: #0a0a0b;
-  --foreground: rgba(255, 255, 255, 0.95);
-  --card: rgba(255, 255, 255, 0.05);
-  --card-foreground: rgba(255, 255, 255, 0.9);
-  --popover: rgba(20, 20, 23, 0.95);
-  --popover-foreground: rgba(255, 255, 255, 0.9);
-  
-  /* Primary - Liquid Blue */
-  --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary-solid: #667eea;
-  --primary-foreground: rgba(255, 255, 255, 0.98);
-  
-  /* Secondary - Glass Effect */
-  --secondary: rgba(255, 255, 255, 0.08);
-  --secondary-foreground: rgba(255, 255, 255, 0.8);
-  
-  /* Muted - Translucent */
-  --muted: rgba(255, 255, 255, 0.05);
-  --muted-foreground: rgba(255, 255, 255, 0.6);
-  
-  /* Accent - Liquid Accent */
-  --accent: rgba(102, 126, 234, 0.15);
-  --accent-foreground: rgba(255, 255, 255, 0.9);
-  
-  /* Status Colors */
-  --destructive: #ff6b6b;
-  --destructive-foreground: rgba(255, 255, 255, 0.98);
-  --success: #51cf66;
-  --success-foreground: rgba(255, 255, 255, 0.98);
-  --warning: #ffd93d;
-  --warning-foreground: rgba(0, 0, 0, 0.9);
-  
-  /* UI Elements */
-  --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.05);
-  --input-background: rgba(255, 255, 255, 0.08);
-  --ring: rgba(102, 126, 234, 0.3);
-  
-  /* Glass Effects */
-  --glass-light: rgba(255, 255, 255, 0.1);
-  --glass-medium: rgba(255, 255, 255, 0.15);
-  --glass-strong: rgba(255, 255, 255, 0.2);
-  
-  /* Typography */
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --font-weight-semibold: 600;
-  
-  /* Radius */
-  --radius: 1rem;
-  
-  /* Charts */
-  --chart-1: #667eea;
-  --chart-2: #764ba2;
-  --chart-3: #f093fb;
-  --chart-4: #51cf66;
-  --chart-5: #ffd93d;
-}
-
-.light {
-  --background: #fafbfc;
-  --foreground: rgba(10, 10, 11, 0.95);
-  --card: rgba(255, 255, 255, 0.8);
-  --card-foreground: rgba(10, 10, 11, 0.9);
-  --popover: rgba(255, 255, 255, 0.95);
-  --popover-foreground: rgba(10, 10, 11, 0.9);
-  
-  --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary-solid: #667eea;
-  --primary-foreground: rgba(255, 255, 255, 0.98);
-  
-  --secondary: rgba(10, 10, 11, 0.05);
-  --secondary-foreground: rgba(10, 10, 11, 0.8);
-  
-  --muted: rgba(10, 10, 11, 0.03);
-  --muted-foreground: rgba(10, 10, 11, 0.6);
-  
-  --accent: rgba(102, 126, 234, 0.1);
-  --accent-foreground: rgba(10, 10, 11, 0.9);
-  
-  --border: rgba(10, 10, 11, 0.1);
-  --input: rgba(10, 10, 11, 0.03);
-  --input-background: rgba(10, 10, 11, 0.05);
-  --ring: rgba(102, 126, 234, 0.3);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary-solid);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-input-background: var(--input-background);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-}
-
+/* Liquid Glass Design System - Identical to modeloapp */
 @layer base {
+  :root {
+    --font-size: 16px;
+  }
+
   * {
     box-sizing: border-box;
   }
   
+  html {
+    font-size: var(--font-size);
+  }
+  
   body {
-    @apply bg-background text-foreground;
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-    background: var(--background);
+    background: #0a0a0b;
+    color: rgba(255, 255, 255, 0.95);
     background-image: 
       radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
       radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
       radial-gradient(circle at 40% 80%, rgba(240, 147, 251, 0.1) 0%, transparent 50%);
   }
+
+  /* Typography matching modeloapp exactly */
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.025em;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.025em;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  p {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
 }
 
-/* Glass morphism utilities */
+/* Glass morphism animations matching modeloapp */
 @layer utilities {
-  .glass {
-    background: var(--glass-light);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border);
-  }
-  
-  .glass-medium {
-    background: var(--glass-medium);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--border);
-  }
-  
-  .glass-strong {
-    background: var(--glass-strong);
-    backdrop-filter: blur(32px);
-    -webkit-backdrop-filter: blur(32px);
-    border: 1px solid var(--border);
-  }
-  
-  .liquid-gradient {
-    background: var(--primary);
-  }
-  
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
@@ -181,66 +93,13 @@
   .animate-pulse-slow {
     animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
-}
-
-/**
- * Base typography following Fixia brand guidelines
- */
-@layer base {
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
-    h1 {
-      font-size: 2.25rem;
-      font-weight: var(--font-weight-semibold);
-      line-height: 1.2;
-      letter-spacing: -0.025em;
-    }
-
-    h2 {
-      font-size: 1.875rem;
-      font-weight: var(--font-weight-semibold);
-      line-height: 1.3;
-      letter-spacing: -0.025em;
-    }
-
-    h3 {
-      font-size: 1.5rem;
-      font-weight: var(--font-weight-medium);
-      line-height: 1.4;
-      letter-spacing: -0.025em;
-    }
-
-    h4 {
-      font-size: 1.25rem;
-      font-weight: var(--font-weight-medium);
-      line-height: 1.4;
-    }
-
-    p {
-      font-size: 1rem;
-      font-weight: var(--font-weight-normal);
-      line-height: 1.6;
-    }
-
-    label {
-      font-size: 0.875rem;
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    button {
-      font-size: 0.875rem;
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    input {
-      font-size: 1rem;
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
   }
-}
-
-html {
-  font-size: var(--font-size);
+  
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
 }
