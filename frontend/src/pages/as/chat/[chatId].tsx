@@ -343,7 +343,7 @@ const ASChatDetail: NextPage = () => {
                 type="button"
                 className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <Image className="h-5 w-5" />
+                <Image className="h-5 w-5" alt="Adjuntar imagen" />
               </button>
               
               <div className="flex-1">
