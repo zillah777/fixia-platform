@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
+
 import { useAuth } from '@/contexts/AuthContext';
+import { FixiaNavigation } from '@/components/FixiaNavigation';
+import { ExplorerHeroPanel } from '@/components/ExplorerHeroPanel';
+import { ExplorerSummaryCards } from '@/components/ExplorerSummaryCards';
+import { ExplorerRequestsTable } from '@/components/ExplorerRequestsTable';
 
 const ExplorerDashboard: NextPage = () => {
-  const { user, loading, logout } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
-  const [stats, setStats] = useState({
-    totalRequests: 0,
-    activeBookings: 0,
-    completedBookings: 0,
-    savedProfessionals: 0
-  });
 
   useEffect(() => {
     if (!loading && (!user || user.user_type !== 'customer')) {
@@ -22,14 +21,24 @@ const ExplorerDashboard: NextPage = () => {
     }
   }, [user, loading, router]);
 
-  const handleLogout = () => {
-    logout();
-  };
-
   if (loading) {
     return (
-      <div>
-        <div>Cargando dashboard...</div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
+          <div className="relative mb-8">
+            <div className="h-16 w-16 liquid-gradient rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+              <span className="text-white font-bold text-2xl">F</span>
+            </div>
+            <div className="absolute -inset-2 liquid-gradient rounded-2xl blur opacity-30 animate-pulse"></div>
+          </div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Cargando tu panel de explorador...</p>
+        </motion.div>
       </div>
     );
   }
@@ -37,92 +46,61 @@ const ExplorerDashboard: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Dashboard Explorador | Fixia</title>
-        <meta name="description" content="Panel de control para exploradores" />
+        <title>Dashboard Explorador - {user?.full_name || 'Usuario'} - Fixia</title>
+        <meta name="description" content="Panel de control para exploradores en la plataforma Fixia" />
       </Head>
 
-      <div>
+      <div className="min-h-screen bg-background">
+        {/* Background */}
+        <div className="absolute inset-0 bg-background">
+          <div className="absolute top-1/4 -left-32 w-64 h-64 liquid-gradient rounded-full blur-3xl opacity-20 animate-float"></div>
+          <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
+        </div>
+
         {/* Navigation */}
-        <nav>
-          <div>
-            <div>
-              <h1>Fixia</h1>
-            </div>
-            <div>
-              <Link href="/explorador/perfil">Mi Perfil</Link>
-              <button onClick={handleLogout}>Cerrar Sesión</button>
-            </div>
-          </div>
-        </nav>
-
+        <FixiaNavigation />
+        
         {/* Main Content */}
-        <main>
-          <div>
-            <h1>Bienvenido, {user?.first_name}</h1>
-            <p>Panel de control del explorador</p>
-
-            {/* Quick Actions */}
-            <div>
-              <h2>Acciones Rápidas</h2>
-              <div>
-                <Link href="/explorador/buscar-servicio">
-                  <div>
-                    <h3>Buscar Servicios</h3>
-                    <p>Encuentra profesionales para tus proyectos</p>
-                  </div>
-                </Link>
-                <Link href="/explorador/mis-solicitudes">
-                  <div>
-                    <h3>Mis Solicitudes</h3>
-                    <p>Ver el estado de tus solicitudes</p>
-                  </div>
-                </Link>
-                <Link href="/explorador/chats">
-                  <div>
-                    <h3>Mensajes</h3>
-                    <p>Comunícate con profesionales</p>
-                  </div>
-                </Link>
-                <Link href="/explorador/calificaciones">
-                  <div>
-                    <h3>Calificaciones</h3>
-                    <p>Califica los servicios recibidos</p>
-                  </div>
-                </Link>
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div>
-              <h2>Estadísticas</h2>
-              <div>
-                <div>
-                  <div>{stats.totalRequests}</div>
-                  <div>Solicitudes Totales</div>
+        <main className="container mx-auto px-6 py-8 space-y-12 relative">
+          {/* Hero Panel */}
+          <ExplorerHeroPanel />
+          
+          {/* Summary Cards */}
+          <ExplorerSummaryCards />
+          
+          {/* Requests Table */}
+          <ExplorerRequestsTable />
+          
+          {/* Footer with Fixia branding */}
+          <motion.footer 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 2 }}
+            className="text-center py-8 border-t border-white/10"
+          >
+            <div className="glass-medium rounded-xl p-6 max-w-2xl mx-auto">
+              <div className="flex items-center justify-center space-x-3 mb-3">
+                <div className="h-8 w-8 liquid-gradient rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold">F</span>
                 </div>
                 <div>
-                  <div>{stats.activeBookings}</div>
-                  <div>Servicios Activos</div>
-                </div>
-                <div>
-                  <div>{stats.completedBookings}</div>
-                  <div>Servicios Completados</div>
-                </div>
-                <div>
-                  <div>{stats.savedProfessionals}</div>
-                  <div>Profesionales Guardados</div>
+                  <div className="font-semibold">Fixia</div>
+                  <div className="text-xs text-muted-foreground">Conecta. Confía. Resuelve.</div>
                 </div>
               </div>
-            </div>
-
-            {/* Recent Activity */}
-            <div>
-              <h2>Actividad Reciente</h2>
-              <div>
-                <p>No hay actividad reciente</p>
+              <p className="text-sm text-muted-foreground">
+                Conecta con profesionales verificados y encuentra soluciones de calidad para todos tus proyectos.
+                Plataforma diseñada para exploradores que buscan resultados excepcionales.
+              </p>
+              <div className="mt-4 flex items-center justify-center space-x-6 text-xs text-muted-foreground">
+                <span>© 2025 Fixia</span>
+                <span>•</span>
+                <span>Exploradores inteligentes, decisiones acertadas</span>
+                <span>•</span>
+                <span>Transparencia líquida</span>
               </div>
             </div>
-          </div>
+          </motion.footer>
         </main>
       </div>
     </>

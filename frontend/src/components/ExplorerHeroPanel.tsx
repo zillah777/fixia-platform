@@ -1,14 +1,15 @@
-import { TrendingUp, Users, Star, Zap, Target, DollarSign, CheckCircle, Clock } from "lucide-react";
+import { Search, Target, MapPin, Star, Users, Clock, CheckCircle, Zap } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 
-export function FixiaHeroPanel() {
+export function ExplorerHeroPanel() {
   const { user } = useAuth();
   
-  const userName = user?.first_name || 'Usuario';
+  const userName = user?.first_name || 'Explorador';
 
   return (
     <div className="space-y-8">
@@ -22,16 +23,18 @@ export function FixiaHeroPanel() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-              ¡Hola {userName}! 👋
+              ¡Hola {userName}! 🔍
             </h1>
             <p className="text-muted-foreground text-lg">
-              Tu tiempo vale. Fixia lo cuida. Aquí está tu resumen de actividad.
+              Conecta con profesionales verificados. Encuentra la solución perfecta para tu proyecto.
             </p>
           </div>
-          <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
-            <Target className="mr-2 h-4 w-4" />
-            Ver Oportunidades
-          </Button>
+          <Link href="/explorador/buscar-servicio">
+            <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
+              <Search className="mr-2 h-4 w-4" />
+              Buscar Servicios
+            </Button>
+          </Link>
         </div>
       </motion.div>
 
@@ -39,35 +42,35 @@ export function FixiaHeroPanel() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {[
           {
-            title: "Servicios Completados",
-            value: "127",
-            change: "+23% este mes",
-            icon: CheckCircle,
-            color: "text-green-400",
+            title: "Solicitudes Activas",
+            value: "5",
+            change: "2 nuevas esta semana",
+            icon: Clock,
+            color: "text-blue-400",
             delay: 0.1
           },
           {
-            title: "Ingresos Totales",
-            value: "$33,640",
-            change: "+38% este mes", 
-            icon: DollarSign,
-            color: "text-primary",
+            title: "Servicios Completados",
+            value: "23",
+            change: "+3 este mes", 
+            icon: CheckCircle,
+            color: "text-green-400",
             delay: 0.2
           },
           {
-            title: "Rating Promedio",
-            value: "4.9",
-            change: "Excelente reputación",
+            title: "Profesionales Favoritos",
+            value: "12",
+            change: "Siempre disponibles",
             icon: Star,
             color: "text-yellow-400",
             delay: 0.3
           },
           {
-            title: "Tiempo de Respuesta",
-            value: "2.3h",
-            change: "30% más rápido",
-            icon: Clock,
-            color: "text-blue-400",
+            title: "Promedio de Respuesta",
+            value: "1.2h",
+            change: "Respuestas rápidas",
+            icon: Zap,
+            color: "text-purple-400",
             delay: 0.4
           }
         ].map((stat, index) => (
@@ -96,7 +99,7 @@ export function FixiaHeroPanel() {
         ))}
       </div>
 
-      {/* Activity and Achievements */}
+      {/* Activity and Discovery */}
       <div className="grid gap-6 md:grid-cols-12">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -107,35 +110,38 @@ export function FixiaHeroPanel() {
           <Card className="glass border-white/10">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <TrendingUp className="h-5 w-5 text-primary" />
+                <Clock className="h-5 w-5 text-primary" />
                 <span>Actividad Reciente</span>
               </CardTitle>
               <CardDescription>
-                Tus últimas interacciones en la plataforma
+                Tus últimas interacciones con profesionales
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {[
                 {
-                  time: "Hace 2 horas",
-                  action: "Servicio completado",
-                  description: "Desarrollo de landing page para StartupTech",
-                  status: "Completado",
-                  amount: "$850"
+                  time: "Hace 1 hora",
+                  action: "Nueva propuesta recibida",
+                  description: "Desarrollo de aplicación móvil - React Native",
+                  status: "Pendiente revisión",
+                  professional: "Carlos Mendoza",
+                  price: "$2,500"
                 },
                 {
-                  time: "Hace 5 horas", 
-                  action: "Nueva solicitud",
-                  description: "App móvil para tienda de ropa",
-                  status: "En revisión",
-                  amount: "$1,200"
+                  time: "Hace 3 horas", 
+                  action: "Servicio completado",
+                  description: "Diseño de logo y branding corporativo",
+                  status: "Completado",
+                  professional: "Ana García",
+                  price: "$800"
                 },
                 {
                   time: "Ayer",
-                  action: "Pago recibido",
-                  description: "Sistema de gestión de inventario",
-                  status: "Pagado",
-                  amount: "$2,100"
+                  action: "Nuevo mensaje",
+                  description: "Consulta sobre desarrollo web",
+                  status: "Respondido",
+                  professional: "Luis Torres",
+                  price: "Consulta gratuita"
                 }
               ].map((activity, index) => (
                 <motion.div
@@ -150,17 +156,21 @@ export function FixiaHeroPanel() {
                       <span className="font-medium">{activity.action}</span>
                       <Badge className={`text-xs ${
                         activity.status === 'Completado' ? 'bg-green-500/20 text-green-400' :
-                        activity.status === 'Pagado' ? 'bg-blue-500/20 text-blue-400' :
+                        activity.status === 'Respondido' ? 'bg-blue-500/20 text-blue-400' :
                         'bg-yellow-500/20 text-yellow-400'
                       } border-0`}>
                         {activity.status}
                       </Badge>
                     </div>
                     <p className="text-sm text-muted-foreground">{activity.description}</p>
-                    <p className="text-xs text-muted-foreground">{activity.time}</p>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <span className="text-xs text-muted-foreground">{activity.time}</span>
+                      <span className="text-xs text-muted-foreground">•</span>
+                      <span className="text-xs text-muted-foreground">{activity.professional}</span>
+                    </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-primary">{activity.amount}</div>
+                    <div className="font-bold text-primary">{activity.price}</div>
                   </div>
                 </motion.div>
               ))}
@@ -177,71 +187,89 @@ export function FixiaHeroPanel() {
           <Card className="glass border-white/10 h-full">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Zap className="h-5 w-5 text-yellow-400" />
-                <span>Logros Recientes</span>
+                <Target className="h-5 w-5 text-green-400" />
+                <span>Recomendaciones</span>
               </CardTitle>
               <CardDescription>
-                Tus últimos hitos en la plataforma
+                Profesionales perfectos para ti
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {[
                 {
-                  title: "🎯 Meta Alcanzada",
-                  description: "100 servicios completados",
-                  badge: "Nuevo",
+                  name: "María Rodríguez",
+                  specialty: "Diseño UX/UI",
+                  rating: "4.9",
+                  location: "Buenos Aires",
+                  badge: "Recomendado",
                   color: "bg-green-500/20 text-green-400"
                 },
                 {
-                  title: "⭐ Súper Profesional",
-                  description: "Rating 4.9+ por 3 meses",
-                  badge: "Logro",
+                  name: "Andrés Silva",
+                  specialty: "Desarrollo Full Stack",
+                  rating: "4.8",
+                  location: "Córdoba",
+                  badge: "Popular",
+                  color: "bg-blue-500/20 text-blue-400"
+                },
+                {
+                  name: "Carmen López",
+                  specialty: "Marketing Digital",
+                  rating: "5.0",
+                  location: "Rosario",
+                  badge: "Top Rated",
                   color: "bg-yellow-500/20 text-yellow-400"
                 },
                 {
-                  title: "🚀 Crecimiento Rápido",
-                  description: "+200% en ingresos",
-                  badge: "Tendencia",
-                  color: "bg-primary/20 text-primary"
-                },
-                {
-                  title: "💎 Top Vendedor",
-                  description: "En categoría Desarrollo",
-                  badge: "Élite",
+                  name: "Diego Fernández",
+                  specialty: "Fotografía Profesional",
+                  rating: "4.7",
+                  location: "Mendoza",
+                  badge: "Nuevo",
                   color: "bg-purple-500/20 text-purple-400"
                 }
-              ].map((achievement, index) => (
+              ].map((professional, index) => (
                 <motion.div
-                  key={achievement.title}
+                  key={professional.name}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.7 + (index * 0.1) }}
-                  className="flex items-start space-x-3 p-3 rounded-lg glass-medium hover:glass-strong transition-all duration-300"
+                  className="flex items-start space-x-3 p-3 rounded-lg glass-medium hover:glass-strong transition-all duration-300 cursor-pointer"
                 >
+                  <div className="h-10 w-10 liquid-gradient rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">
+                      {professional.name.split(' ').map(n => n[0]).join('')}
+                    </span>
+                  </div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-medium text-sm">{achievement.title}</span>
-                      <Badge className={`text-xs ${achievement.color} border-0`}>
-                        {achievement.badge}
+                      <span className="font-medium text-sm">{professional.name}</span>
+                      <Badge className={`text-xs ${professional.color} border-0`}>
+                        {professional.badge}
                       </Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground">{achievement.description}</p>
+                    <p className="text-xs text-muted-foreground">{professional.specialty}</p>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-3 w-3 text-yellow-400 fill-current" />
+                        <span className="text-xs text-muted-foreground">{professional.rating}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">•</span>
+                      <div className="flex items-center space-x-1">
+                        <MapPin className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">{professional.location}</span>
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               ))}
               
               <div className="pt-4 border-t border-white/10">
-                <div className="text-center space-y-2">
-                  <div className="text-sm text-muted-foreground">Próximo objetivo</div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Mentor Certificado</span>
-                    <span className="text-xs text-muted-foreground">15/20</span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-gradient-to-r from-primary to-purple-500 h-2 rounded-full transition-all duration-500" 
-                         style={{ width: '75%' }}></div>
-                  </div>
-                </div>
+                <Link href="/explorador/navegar-profesionales">
+                  <Button variant="outline" className="w-full glass border-white/20 hover:glass-medium">
+                    Ver más profesionales
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>

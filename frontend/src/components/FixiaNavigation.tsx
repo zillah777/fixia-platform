@@ -18,8 +18,10 @@ export function FixiaNavigation() {
     router.push('/auth/login');
   };
 
-  const getInitials = (name: string) => {
-    return name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
+  const getInitials = () => {
+    const firstName = user?.first_name || '';
+    const lastName = user?.last_name || '';
+    return `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase() || 'U';
   };
 
   return (
@@ -63,7 +65,7 @@ export function FixiaNavigation() {
                 Inicio
               </Button>
             </Link>
-            {user?.user_type === 'explorer' && (
+            {user?.user_type === 'customer' && (
               <Link href="/explorador/buscar-servicio">
                 <Button variant="ghost" className="hover:glass-medium transition-all duration-300">
                   Buscar Servicios
@@ -97,7 +99,7 @@ export function FixiaNavigation() {
 
           {/* Quick Actions */}
           <div className="flex items-center space-x-2">
-            {user?.user_type === 'explorer' && (
+            {user?.user_type === 'customer' && (
               <Link href="/explorador/buscar-servicio">
                 <Button size="sm" className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
                   <Plus className="mr-2 h-4 w-4" />
@@ -128,7 +130,7 @@ export function FixiaNavigation() {
               <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:glass-medium transition-all duration-300">
                 <Avatar className="h-10 w-10 ring-2 ring-primary/20">
                   <AvatarImage src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined} alt="Usuario" />
-                  <AvatarFallback className="glass">{getInitials(user?.full_name || user?.email || '')}</AvatarFallback>
+                  <AvatarFallback className="glass">{getInitials()}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -138,10 +140,10 @@ export function FixiaNavigation() {
                   <div className="flex items-center space-x-3">
                     <Avatar className="h-12 w-12">
                       <AvatarImage src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined} alt="Usuario" />
-                      <AvatarFallback>{getInitials(user?.full_name || user?.email || '')}</AvatarFallback>
+                      <AvatarFallback>{getInitials()}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium">{user?.full_name || 'Usuario'}</p>
+                      <p className="font-medium">{user?.first_name} {user?.last_name}</p>
                       <p className="text-sm text-muted-foreground">
                         {user?.user_type === 'provider' ? 'Profesional' : 'Explorador'}
                       </p>
