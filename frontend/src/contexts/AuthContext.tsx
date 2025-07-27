@@ -171,7 +171,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const updateProfile = async (profileData: any) => {
     try {
       const updatedUser = await authService.updateProfile(profileData);
-      setUser(updatedUser);
+      
+      // Preserve profile photo from current state if missing in response
+      const finalUser = { ...updatedUser };
+      if (user?.profile_photo_url && !finalUser.profile_photo_url) {
+        finalUser.profile_photo_url = user.profile_photo_url;
+      }
+      
+      setUser(finalUser);
       toast.success('Perfil actualizado exitosamente');
     } catch (error: any) {
       const message = error.response?.data?.error || 'Error al actualizar el perfil';

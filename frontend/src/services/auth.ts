@@ -234,6 +234,13 @@ export const authService = {
   async updateProfile(profileData: any): Promise<User> {
     const response = await api.put<ApiResponse<User>>('/api/users/profile', profileData);
     const updatedUser = response.data.data;
+    
+    // Preserve profile photo if not included in response
+    const currentUser = this.getStoredUser();
+    if (currentUser?.profile_photo_url && !updatedUser.profile_photo_url) {
+      updatedUser.profile_photo_url = currentUser.profile_photo_url;
+    }
+    
     this.updateStoredUser(updatedUser);
     return updatedUser;
   },
