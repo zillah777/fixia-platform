@@ -3,16 +3,17 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Clock, CheckCircle, X } from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { Booking, BookingStatus } from '@/types';
 
 const statusMap = {
-  pending: { label: 'Pendiente', color: 'yellow', icon: ClockIcon },
-  confirmed: { label: 'Confirmado', color: 'blue', icon: CheckCircleIcon },
-  in_progress: { label: 'En Progreso', color: 'purple', icon: ClockIcon },
-  completed: { label: 'Completado', color: 'green', icon: CheckCircleIcon },
-  cancelled: { label: 'Cancelado', color: 'red', icon: XMarkIcon }
+  pending: { label: 'Pendiente', color: 'yellow', icon: Clock },
+  confirmed: { label: 'Confirmado', color: 'blue', icon: CheckCircle },
+  in_progress: { label: 'En Progreso', color: 'purple', icon: Clock },
+  completed: { label: 'Completado', color: 'green', icon: CheckCircle },
+  cancelled: { label: 'Cancelado', color: 'red', icon: X }
 };
 
 const ASSolicitudes: NextPage = () => {
