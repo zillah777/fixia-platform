@@ -2,14 +2,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import { 
-  CheckCircleIcon, 
-  ExclamationTriangleIcon,
-  ExclamationCircleIcon,
-  EnvelopeIcon,
-  ArrowLeftIcon,
-  PaperAirplaneIcon
-} from '@heroicons/react/24/outline';
 
 import MarketplaceLayout from '@/components/layouts/MarketplaceLayout';
 import Logo from '@/components/Logo';
@@ -112,7 +104,7 @@ export default function SolicitarRestablecimientoPassword() {
               <div className="text-center space-y-8">
                 <div className="flex justify-center">
                   <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-success-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <CheckCircleIcon className="h-10 w-10 text-white" />
+                    <span className="text-2xl text-white">✓</span>
                   </div>
                 </div>
                 <div>
@@ -124,7 +116,7 @@ export default function SolicitarRestablecimientoPassword() {
                   </p>
                   <div className="p-4 bg-success-50 dark:bg-success-950/50 border border-success-200 dark:border-success-800 rounded-lg">
                     <div className="flex items-start gap-3">
-                      <EnvelopeIcon className="h-5 w-5 text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5" />
+                      <span className="text-success-600 dark:text-success-400 flex-shrink-0 mt-0.5">✉</span>
                       <div className="text-left">
                         <p className="font-semibold text-success-700 dark:text-success-300 mb-1">Revisa tu bandeja de entrada</p>
                         <p className="text-sm text-success-600 dark:text-success-400">
@@ -140,7 +132,7 @@ export default function SolicitarRestablecimientoPassword() {
                     variant="primary"
                     size="lg"
                     fullWidth
-                    leftIcon={<ArrowLeftIcon className="h-5 w-5" />}
+                    leftIcon={<span>←</span>}
                   >
                     Volver al Login
                   </Button>
@@ -150,7 +142,7 @@ export default function SolicitarRestablecimientoPassword() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <EnvelopeIcon className="h-8 w-8 text-white" />
+                    <span className="text-2xl text-white">✉</span>
                   </div>
                   <p className="text-neutral-600 dark:text-neutral-400 font-medium">
                     Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.
@@ -161,7 +153,7 @@ export default function SolicitarRestablecimientoPassword() {
                 {status === 'error' && (
                   <div className="mb-6 p-4 bg-error-50 dark:bg-error-950/50 border border-error-200 dark:border-error-800 rounded-lg">
                     <div className="flex items-start gap-3">
-                      <ExclamationTriangleIcon className="h-5 w-5 text-error-600 dark:text-error-400 flex-shrink-0 mt-0.5" />
+                      <span className="text-error-600 dark:text-error-400 flex-shrink-0 mt-0.5">⚠</span>
                       <p className="text-sm text-error-700 dark:text-error-300">
                         {message}
                       </p>
@@ -176,7 +168,7 @@ export default function SolicitarRestablecimientoPassword() {
                     placeholder="tu@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    leftIcon={<EnvelopeIcon className="h-5 w-5" />}
+                    leftIcon={<span>✉</span>}
                     fullWidth
                     required
                   />
@@ -185,7 +177,7 @@ export default function SolicitarRestablecimientoPassword() {
                 {/* Security Notice */}
                 <div className="p-4 bg-info-50 dark:bg-info-950/50 border border-info-200 dark:border-info-800 rounded-lg">
                   <div className="flex items-start gap-3">
-                    <ExclamationCircleIcon className="h-5 w-5 text-info-600 dark:text-info-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-info-600 dark:text-info-400 flex-shrink-0 mt-0.5">ℹ</span>
                     <div>
                       <h3 className="font-semibold text-info-900 dark:text-info-300 mb-1">
                         Nota de Seguridad
@@ -205,7 +197,7 @@ export default function SolicitarRestablecimientoPassword() {
                   fullWidth
                   loading={status === 'loading'}
                   disabled={!email.trim()}
-                  rightIcon={<PaperAirplaneIcon className="h-5 w-5" />}
+                  rightIcon={<span>✈</span>}
                 >
                   {status === 'loading' ? 'Enviando...' : 'Enviar Enlace de Restablecimiento'}
                 </Button>
@@ -229,7 +221,7 @@ export default function SolicitarRestablecimientoPassword() {
                     variant="ghost"
                     size="md"
                     fullWidth
-                    leftIcon={<ArrowLeftIcon className="h-5 w-5" />}
+                    leftIcon={<span>←</span>}
                   >
                     Volver al Login
                   </Button>

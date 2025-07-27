@@ -12,7 +12,6 @@ import {
   ArrowTrendingUpIcon,
   MinusIcon
 } from '@heroicons/react/24/outline';
-import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { Review, ReviewStats } from '@/types';

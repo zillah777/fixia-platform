@@ -3,15 +3,6 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/AuthContext';
-import {
-  DocumentArrowUpIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  CameraIcon,
-  UserIcon,
-  ShieldCheckIcon,
-  IdentificationIcon
-} from '@heroicons/react/24/outline';
 
 const VerificacionDNI: NextPage = () => {
   const { user, loading } = useAuth();
@@ -114,7 +105,7 @@ const VerificacionDNI: NextPage = () => {
         <div className="max-w-2xl mx-auto px-4">
           {/* Header */}
           <div className="text-center mb-8">
-            <ShieldCheckIcon className="h-16 w-16 text-blue-600 mx-auto mb-4" />
+            <span className="block text-6xl text-blue-600 mb-4">🛡</span>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Verificación de Identidad
             </h1>
@@ -157,19 +148,19 @@ const VerificacionDNI: NextPage = () => {
           <div className="bg-white rounded-xl shadow-sm border p-6">
             {step === 1 && (
               <div className="text-center">
-                <IdentificationIcon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <span className="block text-4xl text-blue-600 mb-4">🆔</span>
                 <h2 className="text-xl font-semibold mb-4">¿Qué necesitas?</h2>
                 <div className="space-y-4 text-left max-w-md mx-auto">
                   <div className="flex items-start space-x-3">
-                    <CheckCircleIcon className="h-5 w-5 text-green-500 mt-0.5" />
+                    <span className="text-green-500 mt-0.5">✓</span>
                     <span className="text-gray-700">DNI argentino vigente (ambos lados)</span>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <CheckCircleIcon className="h-5 w-5 text-green-500 mt-0.5" />
+                    <span className="text-green-500 mt-0.5">✓</span>
                     <span className="text-gray-700">Selfie con el DNI en mano</span>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <CheckCircleIcon className="h-5 w-5 text-green-500 mt-0.5" />
+                    <span className="text-green-500 mt-0.5">✓</span>
                     <span className="text-gray-700">Buena iluminación y calidad</span>
                   </div>
                 </div>
@@ -201,7 +192,7 @@ const VerificacionDNI: NextPage = () => {
                         id="dniFront"
                       />
                       <label htmlFor="dniFront" className="cursor-pointer">
-                        <DocumentArrowUpIcon className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                        <span className="block text-4xl text-gray-400 mb-2">📄</span>
                         <p className="text-sm text-gray-600">
                           {documents.dniFront ? documents.dniFront.name : 'Subir imagen del frente'}
                         </p>
@@ -223,7 +214,7 @@ const VerificacionDNI: NextPage = () => {
                         id="dniBack"
                       />
                       <label htmlFor="dniBack" className="cursor-pointer">
-                        <DocumentArrowUpIcon className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                        <span className="block text-4xl text-gray-400 mb-2">📄</span>
                         <p className="text-sm text-gray-600">
                           {documents.dniBack ? documents.dniBack.name : 'Subir imagen del dorso'}
                         </p>
@@ -268,7 +259,7 @@ const VerificacionDNI: NextPage = () => {
                         id="selfie"
                       />
                       <label htmlFor="selfie" className="cursor-pointer">
-                        <CameraIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                        <span className="block text-6xl text-gray-400 mb-4">📷</span>
                         <p className="text-sm text-gray-600 mb-2">
                           {documents.selfie ? documents.selfie.name : 'Tomar selfie con DNI'}
                         </p>
@@ -283,7 +274,7 @@ const VerificacionDNI: NextPage = () => {
                 {error && (
                   <div className="mt-6 bg-red-50 border border-red-200 rounded-lg p-4">
                     <div className="flex items-center">
-                      <ExclamationTriangleIcon className="h-5 w-5 text-red-600 mr-2" />
+                      <span className="text-red-600 mr-2">⚠</span>
                       <p className="text-sm text-red-700">{error}</p>
                     </div>
                   </div>
@@ -309,7 +300,7 @@ const VerificacionDNI: NextPage = () => {
 
             {step === 4 && (
               <div className="text-center py-8">
-                <CheckCircleIcon className="h-16 w-16 text-green-500 mx-auto mb-4" />
+                <span className="block text-6xl text-green-500 mb-4">✓</span>
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">
                   ¡Verificación Enviada!
                 </h2>

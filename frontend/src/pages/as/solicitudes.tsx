@@ -3,21 +3,6 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {
-  ArrowLeftIcon,
-  ClockIcon,
-  CheckCircleIcon,
-  XMarkIcon,
-  ChatBubbleLeftRightIcon,
-  MapPinIcon,
-  CurrencyDollarIcon,
-  CalendarDaysIcon,
-  UserIcon,
-  PhoneIcon,
-  StarIcon,
-  InformationCircleIcon,
-  FunnelIcon
-} from '@heroicons/react/24/outline';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { Booking, BookingStatus } from '@/types';
@@ -189,7 +174,7 @@ const ASSolicitudes: NextPage = () => {
             <div className="flex items-center py-6">
               <Link href="/as/dashboard">
                 <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                  <span className="text-xl text-gray-600">←</span>
                 </button>
               </Link>
               <div className="flex-1">
@@ -211,7 +196,7 @@ const ASSolicitudes: NextPage = () => {
                   <p className="text-gray-600 text-sm font-medium">Pendientes</p>
                   <p className="text-3xl font-bold text-yellow-600">{pendingCount}</p>
                 </div>
-                <ClockIcon className="h-8 w-8 text-yellow-600" />
+                <span className="text-2xl text-yellow-600">🕰</span>
               </div>
             </div>
 
@@ -221,7 +206,7 @@ const ASSolicitudes: NextPage = () => {
                   <p className="text-gray-600 text-sm font-medium">Confirmados</p>
                   <p className="text-3xl font-bold text-blue-600">{confirmedCount}</p>
                 </div>
-                <CheckCircleIcon className="h-8 w-8 text-blue-600" />
+                <span className="text-2xl text-blue-600">✓</span>
               </div>
             </div>
 
@@ -231,7 +216,7 @@ const ASSolicitudes: NextPage = () => {
                   <p className="text-gray-600 text-sm font-medium">Completados</p>
                   <p className="text-3xl font-bold text-green-600">{completedCount}</p>
                 </div>
-                <CheckCircleIcon className="h-8 w-8 text-green-600" />
+                <span className="text-2xl text-green-600">✓</span>
               </div>
             </div>
           </div>
@@ -239,7 +224,7 @@ const ASSolicitudes: NextPage = () => {
           {/* Filter */}
           <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
             <div className="flex items-center space-x-4">
-              <FunnelIcon className="h-5 w-5 text-gray-400" />
+              <span className="text-gray-400">📊</span>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value as BookingStatus | 'all')}
@@ -259,7 +244,7 @@ const ASSolicitudes: NextPage = () => {
           <div className="space-y-6">
             {filteredBookings.length === 0 ? (
               <div className="bg-white rounded-xl shadow-sm border p-12 text-center">
-                <ClockIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <span className="block text-6xl text-gray-300 mb-4">🕰</span>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   No hay solicitudes
                 </h3>
@@ -289,7 +274,7 @@ const ASSolicitudes: NextPage = () => {
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <UserIcon className="h-6 w-6 text-gray-400" />
+                              <span className="text-xl text-gray-400">👤</span>
                             )}
                           </div>
                           <div>
@@ -308,7 +293,7 @@ const ASSolicitudes: NextPage = () => {
                             statusInfo.color === 'green' ? 'bg-green-100 text-green-800' :
                             'bg-red-100 text-red-800'
                           }`}>
-                            <StatusIcon className="h-4 w-4 inline mr-1" />
+                            <StatusIcon className="inline mr-1" />
                             {statusInfo.label}
                           </span>
                         </div>
@@ -322,19 +307,19 @@ const ASSolicitudes: NextPage = () => {
                             <h4 className="font-medium text-gray-900 mb-2">Detalles del Servicio</h4>
                             <div className="space-y-2 text-sm">
                               <div className="flex items-center">
-                                <CalendarDaysIcon className="h-4 w-4 text-gray-400 mr-2" />
+                                <span className="text-gray-400 mr-2">📅</span>
                                 <span>{new Date(booking.scheduled_date || '').toLocaleDateString('es-AR')} a las {booking.scheduled_time}</span>
                               </div>
                               <div className="flex items-center">
-                                <ClockIcon className="h-4 w-4 text-gray-400 mr-2" />
+                                <span className="text-gray-400 mr-2">🕰</span>
                                 <span>{Math.floor((booking.duration_minutes || 60) / 60)}h {(booking.duration_minutes || 60) % 60}min</span>
                               </div>
                               <div className="flex items-center">
-                                <CurrencyDollarIcon className="h-4 w-4 text-gray-400 mr-2" />
+                                <span className="text-gray-400 mr-2">$</span>
                                 <span className="font-medium">${booking.total_amount?.toLocaleString() || '0'}</span>
                               </div>
                               <div className="flex items-start">
-                                <MapPinIcon className="h-4 w-4 text-gray-400 mr-2 mt-0.5" />
+                                <span className="text-gray-400 mr-2 mt-0.5">📍</span>
                                 <span>{booking.customer_address}</span>
                               </div>
                             </div>
@@ -356,7 +341,7 @@ const ASSolicitudes: NextPage = () => {
                             <h4 className="font-medium text-gray-900 mb-2">Información de Contacto</h4>
                             <div className="space-y-2 text-sm">
                               <div className="flex items-center">
-                                <PhoneIcon className="h-4 w-4 text-gray-400 mr-2" />
+                                <span className="text-gray-400 mr-2">📞</span>
                                 <a href={`tel:${booking.customer_phone}`} className="text-blue-600 hover:text-blue-700">
                                   {booking.customer_phone}
                                 </a>
@@ -369,7 +354,7 @@ const ASSolicitudes: NextPage = () => {
                             {booking.status === 'pending' && (
                               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                                 <div className="flex items-center mb-3">
-                                  <InformationCircleIcon className="h-5 w-5 text-yellow-600 mr-2" />
+                                  <span className="text-yellow-600 mr-2">ℹ</span>
                                   <span className="font-medium text-yellow-800">Acción Requerida</span>
                                 </div>
                                 <p className="text-sm text-yellow-700 mb-4">
@@ -397,14 +382,14 @@ const ASSolicitudes: NextPage = () => {
                             <div className="flex space-x-3">
                               <Link href={`/as/chat/${booking.customer_id}`} className="flex-1">
                                 <button className="w-full flex items-center justify-center py-2 px-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium">
-                                  <ChatBubbleLeftRightIcon className="h-4 w-4 mr-2" />
+                                  <span className="mr-2">💬</span>
                                   Chat
                                 </button>
                               </Link>
                               
                               {booking.status === 'completed' && (
                                 <button className="flex-1 flex items-center justify-center py-2 px-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium">
-                                  <StarIcon className="h-4 w-4 mr-2" />
+                                  <span className="mr-2">★</span>
                                   Ver Reseña
                                 </button>
                               )}

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { CheckCircleIcon, XMarkIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import Logo from '@/components/Logo';
 import { CorporateLayout, CorporateCard, CorporateButton } from '@/components/ui';
 
@@ -105,7 +104,7 @@ export default function VerificarEmail() {
               <div className="space-y-8">
                 <div className="flex justify-center">
                   <div className="w-20 h-20 bg-gradient-to-r from-primary-500 to-trust-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <ArrowPathIcon className="h-10 w-10 text-white animate-spin" />
+                    <span className="text-2xl text-white">⟳</span>
                   </div>
                 </div>
                 <div>
@@ -123,7 +122,7 @@ export default function VerificarEmail() {
               <div className="space-y-8">
                 <div className="flex justify-center">
                   <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <CheckCircleIcon className="h-10 w-10 text-white" />
+                    <span className="text-2xl text-white">✓</span>
                   </div>
                 </div>
                 <div>
@@ -147,7 +146,7 @@ export default function VerificarEmail() {
               <div className="space-y-8">
                 <div className="flex justify-center">
                   <div className="w-20 h-20 bg-gradient-to-r from-error-500 to-error-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <XMarkIcon className="h-10 w-10 text-white" />
+                    <span className="text-2xl text-white">×</span>
                   </div>
                 </div>
                 <div>

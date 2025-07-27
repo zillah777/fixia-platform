@@ -2,17 +2,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import { 
-  CheckCircleIcon, 
-  XMarkIcon, 
-  ArrowPathIcon, 
-  ShieldCheckIcon,
-  LockClosedIcon,
-  ExclamationTriangleIcon,
-  ExclamationCircleIcon,
-  EyeIcon,
-  EyeSlashIcon
-} from '@heroicons/react/24/outline';
 
 import MarketplaceLayout from '@/components/layouts/MarketplaceLayout';
 import Logo from '@/components/Logo';
@@ -139,7 +128,7 @@ export default function RecuperarPassword() {
               <div className="text-center space-y-8">
                 <div className="flex justify-center">
                   <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-success-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <CheckCircleIcon className="h-10 w-10 text-white" />
+                    <span className="text-2xl text-white">✓</span>
                   </div>
                 </div>
                 <div>
@@ -161,7 +150,7 @@ export default function RecuperarPassword() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <LockClosedIcon className="h-8 w-8 text-white" />
+                    <span className="text-2xl text-white">🔒</span>
                   </div>
                   <p className="text-neutral-600 dark:text-neutral-400 font-medium">
                     Ingresa tu nueva contraseña para restablecer el acceso a tu cuenta.
@@ -172,7 +161,7 @@ export default function RecuperarPassword() {
                 {status === 'error' && (
                   <div className="mb-6 p-4 bg-error-50 dark:bg-error-950/50 border border-error-200 dark:border-error-800 rounded-lg">
                     <div className="flex items-start gap-3">
-                      <ExclamationTriangleIcon className="h-5 w-5 text-error-600 dark:text-error-400 flex-shrink-0 mt-0.5" />
+                      <span className="text-error-600 dark:text-error-400 flex-shrink-0 mt-0.5">⚠</span>
                       <p className="text-sm text-error-700 dark:text-error-300">
                         {message}
                       </p>
@@ -187,7 +176,7 @@ export default function RecuperarPassword() {
                     placeholder="Mínimo 6 caracteres"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    leftIcon={<LockClosedIcon className="h-5 w-5" />}
+                    leftIcon={<span>🔒</span>}
                     showPasswordToggle
                     fullWidth
                     required
@@ -200,7 +189,7 @@ export default function RecuperarPassword() {
                     placeholder="Confirma tu nueva contraseña"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    leftIcon={<ShieldCheckIcon className="h-5 w-5" />}
+                    leftIcon={<span>🛡</span>}
                     showPasswordToggle
                     fullWidth
                     required
@@ -247,7 +236,7 @@ export default function RecuperarPassword() {
                   fullWidth
                   loading={status === 'loading'}
                   disabled={!password || !confirmPassword}
-                  rightIcon={<CheckCircleIcon className="h-5 w-5" />}
+                  rightIcon={<span>✓</span>}
                 >
                   {status === 'loading' ? 'Restableciendo...' : 'Restablecer Contraseña'}
                 </Button>

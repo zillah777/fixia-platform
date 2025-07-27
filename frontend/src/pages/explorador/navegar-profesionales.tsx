@@ -3,61 +3,6 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { 
-  ArrowLeftIcon,
-  MagnifyingGlassIcon,
-  FunnelIcon,
-  StarIcon,
-  MapPinIcon,
-  CurrencyDollarIcon,
-  CheckBadgeIcon,
-  UserIcon,
-  AdjustmentsHorizontalIcon,
-  XMarkIcon,
-  ArrowPathIcon,
-  // 2025 Modern Icons
-  BuildingOfficeIcon,
-  ClockIcon,
-  EyeIcon,
-  HeartIcon,
-  IdentificationIcon,
-  LightBulbIcon,
-  PresentationChartLineIcon,
-  ShieldCheckIcon,
-  SunIcon,
-  TagIcon,
-  TrophyIcon,
-  ViewfinderCircleIcon,
-  WifiIcon,
-  BeakerIcon,
-  CameraIcon,
-  ChatBubbleLeftRightIcon,
-  ClipboardDocumentCheckIcon,
-  CogIcon,
-  ComputerDesktopIcon,
-  FaceSmileIcon,
-  GiftIcon,
-  HomeIcon,
-  KeyIcon,
-  LanguageIcon,
-  MegaphoneIcon,
-  NewspaperIcon,
-  PaperAirplaneIcon,
-  PhoneIcon,
-  PrinterIcon,
-  QrCodeIcon,
-  RocketLaunchIcon,
-  ServerIcon,
-  SparklesIcon,
-  TruckIcon,
-  VideoCameraIcon,
-  WindowIcon,
-  WrenchScrewdriverIcon
-} from '@heroicons/react/24/outline';
-import { 
-  StarIcon as StarIconSolid,
-  CheckCircleIcon 
-} from '@heroicons/react/24/solid';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -328,7 +273,7 @@ const NavegarProfesionalesPage: NextPage = () => {
               <CorporateButton
                 onClick={() => setShowFilters(!showFilters)}
                 variant={showFilters ? "primary" : "outline"}
-                leftIcon={<FunnelIcon className="h-5 w-5" />}
+                leftIcon={<span>📊</span>}
                 className="relative group shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <span className="relative z-10">
@@ -380,7 +325,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                     size="sm"
                     className="text-secondary-600 hover:text-secondary-900 relative group"
                   >
-                    <XMarkIcon className="h-5 w-5 transform group-hover:rotate-90 transition-transform duration-300" />
+                    <span className="transform group-hover:rotate-90 transition-transform duration-300">×</span>
                   </CorporateButton>
                 </div>
 
@@ -428,7 +373,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                   <label className="block text-sm font-bold text-secondary-800 mb-4 tracking-tight">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-trust-500 to-accent-500 rounded-lg flex items-center justify-center shadow-lg">
-                        <MapPinIcon className="h-4 w-4 text-white" />
+                        <span className="text-white">📍</span>
                       </div>
                       <div>
                         <span className="text-base">Localidad</span>
@@ -464,7 +409,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                   <label className="block text-sm font-bold text-secondary-800 mb-4 tracking-tight">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center shadow-lg">
-                        <StarIcon className="h-4 w-4 text-white" />
+                        <span className="text-white">★</span>
                       </div>
                       <div>
                         <span className="text-base">Calificación</span>
@@ -535,7 +480,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                     variant="ghost"
                     size="md"
                     className="text-secondary-600 hover:text-secondary-900 group"
-                    leftIcon={<XMarkIcon className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />}
+                    leftIcon={<span className="group-hover:rotate-90 transition-transform duration-300">×</span>}
                   >
                     Limpiar filtros
                   </CorporateButton>
@@ -549,7 +494,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-success-500 to-accent-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <CheckCircleIcon className="h-5 w-5 text-white" />
+                      <span className="text-white">✓</span>
                     </div>
                     <div>
                       <div className="text-lg font-black text-secondary-900">
@@ -606,7 +551,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                       {/* Premium Verification Badge */}
                       {professional.verification_status === 'verified' && (
                         <div className="absolute -top-1 -right-1 w-7 h-7 bg-gradient-to-br from-success-500 to-success-600 rounded-full flex items-center justify-center shadow-lg ring-3 ring-white group-hover:scale-110 transition-all duration-300">
-                          <CheckBadgeIcon className="h-4 w-4 text-white" />
+                          <span className="text-white">✓</span>
                         </div>
                       )}
                       
@@ -715,7 +660,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                     {professional.work_localities && (
                       <div className="group/indicator flex items-center space-x-3 p-3 bg-gradient-to-r from-trust-50/80 to-primary-50/80 rounded-2xl border border-trust-200/50 hover:border-trust-300 transition-all duration-300">
                         <div className="w-10 h-10 bg-gradient-to-br from-trust-500 via-trust-600 to-primary-500 rounded-2xl flex items-center justify-center shadow-lg group-hover/indicator:scale-110 transition-transform duration-300">
-                          <MapPinIcon className="h-5 w-5 text-white drop-shadow-sm" />
+                          <span className="text-white drop-shadow-sm">📍</span>
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-baseline space-x-2">
@@ -924,7 +869,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                 
                 <div className="relative z-10 flex items-center space-x-6 p-2">
                   <div className="w-16 h-16 bg-gradient-to-br from-success-500 via-success-600 to-accent-500 rounded-3xl flex items-center justify-center shadow-xl">
-                    <CheckCircleIcon className="h-8 w-8 text-white drop-shadow-sm" />
+                    <span className="text-2xl text-white drop-shadow-sm">✓</span>
                   </div>
                   <div className="flex-1 text-left">
                     <h3 className="text-lg font-black text-secondary-900 tracking-tight mb-1">
@@ -951,12 +896,12 @@ const NavegarProfesionalesPage: NextPage = () => {
                   {/* Enhanced illustration */}
                   <div className="relative">
                     <div className="w-24 h-24 bg-gradient-to-br from-secondary-400 via-secondary-500 to-trust-500 rounded-3xl flex items-center justify-center mx-auto shadow-xl ring-8 ring-secondary-100/50">
-                      <MagnifyingGlassIcon className="h-12 w-12 text-white drop-shadow-lg" />
+                      <span className="text-4xl text-white drop-shadow-lg">🔍</span>
                     </div>
                     
                     {/* Floating search elements */}
                     <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-accent-400 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg animate-bounce">
-                      <StarIcon className="h-4 w-4 text-white" />
+                      <span className="text-white">★</span>
                     </div>
                     <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-gradient-to-br from-primary-400 to-primary-500 rounded-xl flex items-center justify-center shadow-lg animate-bounce" style={{ animationDelay: '0.5s' }}>
                       <HeartIcon className="h-3 w-3 text-white" />
@@ -984,7 +929,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                       variant="outline"
                       size="lg"
                       className="group px-8"
-                      leftIcon={<XMarkIcon className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />}
+                      leftIcon={<span className="group-hover:rotate-90 transition-transform duration-300">×</span>}
                     >
                       <span className="font-bold tracking-tight">Limpiar Filtros</span>
                     </CorporateButton>
@@ -993,7 +938,7 @@ const NavegarProfesionalesPage: NextPage = () => {
                       onClick={() => window.location.reload()}
                       size="lg"
                       className="group px-8"
-                      rightIcon={<ArrowPathIcon className="h-5 w-5 group-hover:rotate-180 transition-transform duration-500" />}
+                      rightIcon={<span className="group-hover:rotate-180 transition-transform duration-500">⟳</span>}
                     >
                       <span className="font-bold tracking-tight">Recargar Búsqueda</span>
                     </CorporateButton>

@@ -3,588 +3,203 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import {
-  EyeIcon,
-  EyeSlashIcon,
-  EnvelopeIcon,
-  LockClosedIcon,
-  UserIcon,
-  PhoneIcon,
-  MapPinIcon,
-  ArrowRightIcon,
-  ArrowLeftIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-  UserGroupIcon,
-  BriefcaseIcon,
-  MagnifyingGlassIcon
-} from '@heroicons/react/24/outline';
-
 import { useAuth } from '@/contexts/AuthContext';
-import { RegisterData } from '@/types';
-import MarketplaceLayout from '@/components/layouts/MarketplaceLayout';
-import Logo from '@/components/Logo';
-import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
 
-const registerSchema = yup.object().shape({
-  first_name: yup
-    .string()
-    .min(2, 'El nombre debe tener al menos 2 caracteres')
-    .required('El nombre es requerido'),
-  last_name: yup
-    .string()
-    .min(2, 'El apellido debe tener al menos 2 caracteres')
-    .required('El apellido es requerido'),
-  email: yup
-    .string()
-    .email('Ingresa un email válido')
-    .required('El email es requerido'),
-  password: yup
-    .string()
-    .min(8, 'La contraseña debe tener al menos 8 caracteres')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      'La contraseña debe contener al menos: 1 mayúscula, 1 minúscula y 1 número'
-    )
-    .required('La contraseña es requerida'),
-  confirm_password: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Las contraseñas no coinciden')
-    .required('Confirma tu contraseña'),
-  user_type: yup
-    .string()
-    .oneOf(['customer', 'provider'], 'Selecciona un tipo de cuenta')
-    .required('El tipo de cuenta es requerido'),
-  phone: yup
-    .string()
-    .matches(/^\+?[1-9]\d{1,14}$/, 'Ingresa un número de teléfono válido')
-    .optional(),
-  address: yup
-    .string()
-    .optional(),
-  latitude: yup
-    .number()
-    .optional(),
-  longitude: yup
-    .number()
-    .optional(),
-  terms_accepted: yup
-    .boolean()
-    .oneOf([true], 'Debes aceptar los términos y condiciones')
-    .required('Debes aceptar los términos y condiciones')
-});
-
-interface RegisterFormData extends RegisterData {
-  confirm_password: string;
-  terms_accepted: boolean;
-}
-
-const RegistroPage: NextPage = () => {
-  const { user, register: registerUser, loading } = useAuth();
-  const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [registerError, setRegisterError] = useState<string | null>(null);
-  const [currentStep, setCurrentStep] = useState(1);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    trigger,
-    setValue
-  } = useForm<RegisterFormData>({
-    resolver: yupResolver(registerSchema),
-    defaultValues: {
-      user_type: (router.query.type === 'provider' ? 'provider' : 'customer') as 'customer' | 'provider'
-    }
+const Registro: NextPage = () => {
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    user_type: 'customer'
   });
-
-  const watchedUserType = watch('user_type');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { register, isAuthenticated, user } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    if (!loading && user) {
-      // Redirect based on user type
+    const type = router.query.type;
+    if (type === 'provider' || type === 'customer') {
+      setFormData(prev => ({ ...prev, user_type: type }));
+    }
+  }, [router.query.type]);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
       if (user.user_type === 'provider') {
         router.push('/as/dashboard');
       } else {
         router.push('/explorador/dashboard');
       }
     }
-  }, [user, loading, router]);
+  }, [isAuthenticated, user, router]);
 
-  const handleNextStep = async () => {
-    const fieldsToValidate = currentStep === 1 
-      ? ['first_name', 'last_name', 'email'] 
-      : currentStep === 2
-      ? ['password', 'confirm_password']
-      : ['user_type', 'terms_accepted'];
-    
-    const isValid = await trigger(fieldsToValidate as any);
-    if (isValid) {
-      setCurrentStep(currentStep + 1);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      setIsLoading(false);
+      return;
     }
-  };
 
-  const handlePrevStep = () => {
-    setCurrentStep(currentStep - 1);
-  };
-
-  const onSubmit = async (data: RegisterFormData) => {
-    setIsSubmitting(true);
-    setRegisterError(null);
+    if (formData.password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      setIsLoading(false);
+      return;
+    }
 
     try {
-      const { confirm_password, terms_accepted, ...registerData } = data;
-      await registerUser(registerData);
-      // Navigation will be handled by useEffect above
-    } catch (error: any) {
-      setRegisterError(
-        error.response?.data?.error || 
-        'Error al crear la cuenta. Inténtalo nuevamente.'
-      );
+      const { confirmPassword, ...registerData } = formData;
+      await register(registerData);
+    } catch (err: any) {
+      setError(err.message || 'Error al crear cuenta');
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <MarketplaceLayout title="Cargando..." showHeader={false} showFooter={false}>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-6"></div>
-            <p className="text-neutral-600 dark:text-neutral-400 font-medium">Verificando sesión...</p>
-          </div>
-        </div>
-      </MarketplaceLayout>
-    );
-  }
-
-  if (user) {
-    return (
-      <MarketplaceLayout title="Redirigiendo..." showHeader={false} showFooter={false}>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-6"></div>
-            <p className="text-neutral-600 dark:text-neutral-400 font-medium">Redirigiendo...</p>
-          </div>
-        </div>
-      </MarketplaceLayout>
-    );
-  }
-
-  const totalSteps = 3;
-
   return (
-    <MarketplaceLayout 
-      title="Registro - Fixia"
-      description="Crea tu cuenta en Fixia y forma parte del marketplace de servicios más confiable de Argentina"
-      showHeader={false}
-      showFooter={false}
-      maxWidth="full"
-    >
-      {/* Auth Background */}
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-primary-950/20 relative overflow-hidden">
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-float" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}} />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-primary-500/5 to-secondary-500/5 rounded-full blur-3xl" />
-        </div>
-        
-        <div className="relative flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-lg w-full space-y-8 animate-fade-in">
-            {/* Back to Home */}
-            <div className="text-center">
-              <Link href="/" className="inline-flex items-center gap-2 text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 transition-colors">
-                <Logo size="sm" variant="primary" />
-                <span className="text-sm font-medium">Volver al inicio</span>
+    <>
+      <Head>
+        <title>Registro | Fixia</title>
+        <meta name="description" content="Crea tu cuenta en Fixia" />
+      </Head>
+
+      <div>
+        <div>
+          <div>
+            <div>
+              <Link href="/">
+                <h1>Fixia</h1>
               </Link>
             </div>
 
-            {/* Progress Bar */}
-            <Card variant="glass" padding="lg" className="backdrop-blur-md">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">Paso {currentStep} de {totalSteps}</span>
-                <span className="text-sm font-medium text-primary-600 dark:text-primary-400">{Math.round((currentStep / totalSteps) * 100)}%</span>
-              </div>
-              <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2 overflow-hidden">
-                <div 
-                  className="bg-gradient-to-r from-primary-500 to-primary-600 h-2 rounded-full transition-all duration-500 ease-out"
-                  style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-                ></div>
-              </div>
-            </Card>
+            <div>
+              <h2>Crear Cuenta</h2>
+              <p>
+                Únete a {formData.user_type === 'provider' ? 'profesionales' : 'clientes'} en Fixia
+              </p>
 
-            {/* Registration Form */}
-            <Card variant="glass" padding="xl" className="backdrop-blur-md">
-              {/* Header */}
-              <div className="text-center mb-8">
-                <div className="mb-4">
-                  <Logo size="lg" variant="primary" showText={false} />
-                </div>
-                <h1 className="text-3xl font-bold font-display text-neutral-900 dark:text-white mb-2">
-                  Únete a Fixia
-                </h1>
-                <p className="text-neutral-600 dark:text-neutral-400">
-                  Crea tu cuenta en el marketplace de servicios
-                </p>
-              </div>
-
-              {/* Registration Error */}
-              {registerError && (
-                <div className="mb-6 p-4 bg-error-50 dark:bg-error-950/50 border border-error-200 dark:border-error-800 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <ExclamationTriangleIcon className="h-5 w-5 text-error-600 dark:text-error-400 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-error-700 dark:text-error-300">
-                      {registerError}
-                    </p>
-                  </div>
+              {error && (
+                <div>
+                  <span>⚠ {error}</span>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {/* Step 1: Personal Information */}
-                {currentStep === 1 && (
-                  <div className="space-y-6 animate-fade-in">
-                    <div className="text-center mb-6">
-                      <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">Información Personal</h2>
-                      <p className="text-neutral-600 dark:text-neutral-400">Cuéntanos sobre ti</p>
-                    </div>
-
-                    <div className="space-y-4">
-                      <Input
-                        label="Nombre"
-                        type="text"
-                        placeholder="Tu nombre"
-                        error={errors.first_name?.message}
-                        leftIcon={<UserIcon className="h-5 w-5" />}
-                        fullWidth
-                        {...register('first_name')}
-                      />
-
-                      <Input
-                        label="Apellido"
-                        type="text"
-                        placeholder="Tu apellido"
-                        error={errors.last_name?.message}
-                        leftIcon={<UserIcon className="h-5 w-5" />}
-                        fullWidth
-                        {...register('last_name')}
-                      />
-
-                      <Input
-                        label="Email"
-                        type="email"
-                        placeholder="tu@email.com"
-                        error={errors.email?.message}
-                        leftIcon={<EnvelopeIcon className="h-5 w-5" />}
-                        fullWidth
-                        {...register('email')}
-                      />
-                    </div>
-
-                    <Button
-                      type="button"
-                      variant="primary"
-                      size="lg"
-                      fullWidth
-                      onClick={handleNextStep}
-                      rightIcon={<ArrowRightIcon className="h-5 w-5" />}
-                    >
-                      Continuar
-                    </Button>
-                  </div>
-                )}
-
-                {/* Step 2: Security */}
-                {currentStep === 2 && (
-                  <div className="space-y-6 animate-fade-in">
-                    <div className="text-center mb-6">
-                      <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-2">Seguridad</h2>
-                      <p className="text-neutral-600 dark:text-neutral-400">Crea una contraseña segura</p>
-                    </div>
-
-                    <div className="space-y-4">
-                      <Input
-                        label="Contraseña"
-                        type="password"
-                        placeholder="Tu contraseña"
-                        error={errors.password?.message}
-                        leftIcon={<LockClosedIcon className="h-5 w-5" />}
-                        showPasswordToggle
-                        fullWidth
-                        {...register('password')}
-                      />
-
-                      <Input
-                        label="Confirmar Contraseña"
-                        type="password"
-                        placeholder="Confirma tu contraseña"
-                        error={errors.confirm_password?.message}
-                        leftIcon={<LockClosedIcon className="h-5 w-5" />}
-                        showPasswordToggle
-                        fullWidth
-                        {...register('confirm_password')}
-                      />
-                    </div>
-
-                    {/* Navigation Buttons */}
-                    <div className="flex gap-4">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="lg"
-                        onClick={handlePrevStep}
-                        leftIcon={<ArrowLeftIcon className="h-5 w-5" />}
-                        className="flex-1"
-                      >
-                        Anterior
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="primary"
-                        size="lg"
-                        onClick={handleNextStep}
-                        rightIcon={<ArrowRightIcon className="h-5 w-5" />}
-                        className="flex-1"
-                      >
-                        Continuar
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Step 3: Account Type & Terms */}
-                {currentStep === 3 && (
-                  <div className="space-y-6 animate-fade-in">
-                    <div className="text-center mb-6">
-                      <h2 className="text-xl font-semibold text-primary mb-2">Tipo de Cuenta</h2>
-                      <p className="text-secondary">¿Cómo usarás Fixia?</p>
-                    </div>
-
-                    {/* Account Type Selection */}
-                    <div className="space-y-4">
-                      <div 
-                        className={`card cursor-pointer hover-lift hover-magnetic transition-all duration-300 ${
-                          watchedUserType === 'customer' 
-                            ? 'border-primary-500 bg-primary-50 shadow-lg' 
-                            : 'border-neutral-200 hover:border-primary-300'
-                        }`}
-                        onClick={() => setValue('user_type', 'customer', { shouldValidate: true })}
-                      >
-                        <input
-                          {...register('user_type')}
-                          type="radio"
-                          value="customer"
-                          id="customer"
-                          className="sr-only"
-                        />
-                        <div className="flex items-center space-x-4">
-                          <div className={`p-3 rounded-full ${
-                            watchedUserType === 'customer' 
-                              ? 'bg-primary-600 text-white' 
-                              : 'bg-neutral-100 text-neutral-600'
-                          }`}>
-                            <MagnifyingGlassIcon className="h-6 w-6" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-primary text-lg">Soy Explorador</h3>
-                            <p className="text-secondary">Busco servicios y necesito contratar AS</p>
-                          </div>
-                          {watchedUserType === 'customer' && (
-                            <CheckCircleIcon className="h-6 w-6 text-primary-600" />
-                          )}
-                        </div>
-                      </div>
-
-                      <div 
-                        className={`card cursor-pointer hover-lift hover-magnetic transition-all duration-300 ${
-                          watchedUserType === 'provider' 
-                            ? 'border-primary-500 bg-primary-50 shadow-lg' 
-                            : 'border-neutral-200 hover:border-primary-300'
-                        }`}
-                        onClick={() => setValue('user_type', 'provider', { shouldValidate: true })}
-                      >
-                        <input
-                          {...register('user_type')}
-                          type="radio"
-                          value="provider"
-                          id="provider"
-                          className="sr-only"
-                        />
-                        <div className="flex items-center space-x-4">
-                          <div className={`p-3 rounded-full ${
-                            watchedUserType === 'provider' 
-                              ? 'bg-primary-600 text-white' 
-                              : 'bg-neutral-100 text-neutral-600'
-                          }`}>
-                            <BriefcaseIcon className="h-6 w-6" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-primary text-lg">Soy AS (Anunciante)</h3>
-                            <p className="text-secondary">Ofrezco servicios y quiero conectar con Exploradores</p>
-                          </div>
-                          {watchedUserType === 'provider' && (
-                            <CheckCircleIcon className="h-6 w-6 text-primary-600" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {errors.user_type && (
-                      <p className="form-error animate-slide-down">{errors.user_type.message}</p>
-                    )}
-
-                    {/* Optional Fields for Provider */}
-                    {watchedUserType === 'provider' && (
-                      <div className="space-y-4 animate-slide-down">
-                        <div className="space-y-2">
-                          <label htmlFor="phone" className="form-label">
-                            Teléfono (Opcional)
-                          </label>
-                          <div className="relative">
-                            <PhoneIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400 transition-colors" />
-                            <input
-                              {...register('phone')}
-                              type="tel"
-                              id="phone"
-                              autoComplete="tel"
-                              className="form-input pl-12 pr-4 py-4 glass hover-lift w-full"
-                              placeholder="+54 11 1234-5678"
-                            />
-                          </div>
-                          {errors.phone && (
-                            <p className="form-error animate-slide-down">{errors.phone.message}</p>
-                          )}
-                        </div>
-
-                        <div className="space-y-2">
-                          <label htmlFor="address" className="form-label">
-                            Dirección (Opcional)
-                          </label>
-                          <div className="relative">
-                            <MapPinIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400 transition-colors" />
-                            <input
-                              {...register('address')}
-                              type="text"
-                              id="address"
-                              autoComplete="address-line1"
-                              className="form-input pl-12 pr-4 py-4 glass hover-lift w-full"
-                              placeholder="Tu dirección"
-                            />
-                          </div>
-                          {errors.address && (
-                            <p className="form-error animate-slide-down">{errors.address.message}</p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Terms and Conditions */}
-                    <div className="form-check">
+              <form onSubmit={handleSubmit}>
+                <div>
+                  <label>Tipo de cuenta</label>
+                  <div>
+                    <label>
                       <input
-                        {...register('terms_accepted')}
-                        type="checkbox"
-                        id="terms_accepted"
-                        className="form-check-input"
+                        type="radio"
+                        value="customer"
+                        checked={formData.user_type === 'customer'}
+                        onChange={(e) => setFormData(prev => ({ ...prev, user_type: e.target.value }))}
                       />
-                      <label htmlFor="terms_accepted" className="text-sm text-secondary cursor-pointer">
-                        Acepto los{' '}
-                        <Link href="/legal/terms">
-                          <span className="text-primary-600 hover:text-primary-700 font-medium hover-lift hover-magnetic">
-                            términos y condiciones
-                          </span>
-                        </Link>
-                        {' '}y la{' '}
-                        <Link href="/legal/privacy">
-                          <span className="text-primary-600 hover:text-primary-700 font-medium hover-lift hover-magnetic">
-                            política de privacidad
-                          </span>
-                        </Link>
-                      </label>
-                    </div>
-                    {errors.terms_accepted && (
-                      <p className="form-error animate-slide-down">{errors.terms_accepted.message}</p>
-                    )}
-
-                    {/* Navigation Buttons */}
-                    <div className="flex gap-4">
-                      <button
-                        type="button"
-                        onClick={handlePrevStep}
-                        className="btn btn-ghost btn-lg flex-1 hover-lift hover-magnetic"
-                      >
-                        <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                        Anterior
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="btn btn-primary btn-lg flex-1 btn-magnetic hover-lift animate-glow"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                            Creando cuenta...
-                          </>
-                        ) : (
-                          <>
-                            Crear Cuenta
-                            <CheckCircleIcon className="h-5 w-5 ml-2" />
-                          </>
-                        )}
-                      </button>
-                    </div>
+                      Cliente (busco servicios)
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        value="provider"
+                        checked={formData.user_type === 'provider'}
+                        onChange={(e) => setFormData(prev => ({ ...prev, user_type: e.target.value }))}
+                      />
+                      Profesional (ofrezco servicios)
+                    </label>
                   </div>
-                )}
-              </form>
-            </Card>
+                </div>
 
-            {/* Divider */}
-            <div className="mt-8 mb-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-neutral-300 dark:border-neutral-700" />
+                <div>
+                  <div>
+                    <label htmlFor="first_name">Nombre</label>
+                    <input
+                      id="first_name"
+                      type="text"
+                      required
+                      value={formData.first_name}
+                      onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
+                      placeholder="Tu nombre"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="last_name">Apellido</label>
+                    <input
+                      id="last_name"
+                      type="text"
+                      required
+                      value={formData.last_name}
+                      onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
+                      placeholder="Tu apellido"
+                    />
+                  </div>
                 </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400">
-                    ¿Ya tienes cuenta?
-                  </span>
+
+                <div>
+                  <label htmlFor="email">Email</label>
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="tu@email.com"
+                  />
                 </div>
+
+                <div>
+                  <label htmlFor="password">Contraseña</label>
+                  <input
+                    id="password"
+                    type="password"
+                    required
+                    value={formData.password}
+                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                    placeholder="Mínimo 6 caracteres"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="confirmPassword">Confirmar Contraseña</label>
+                  <input
+                    id="confirmPassword"
+                    type="password"
+                    required
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                    placeholder="Repite tu contraseña"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Creando cuenta...' : 'Crear Cuenta'}
+                </button>
+              </form>
+
+              <div>
+                <p>
+                  ¿Ya tienes cuenta?{' '}
+                  <Link href="/auth/login">
+                    Inicia sesión aquí
+                  </Link>
+                </p>
               </div>
             </div>
-
-            {/* Login Link */}
-            <Link href="/auth/login">
-              <Button
-                variant="ghost"
-                size="md"
-                fullWidth
-              >
-                Iniciar Sesión
-              </Button>
-            </Link>
           </div>
         </div>
       </div>
-    </MarketplaceLayout>
+    </>
   );
 };
 
-// Deshabilitar SSG para evitar errores de AuthProvider
-export async function getServerSideProps() {
-  return {
-    props: {},
-  };
-}
-
-export default RegistroPage;
+export default Registro;

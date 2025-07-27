@@ -2,16 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { 
-  EnvelopeIcon, 
-  BellIcon, 
-  ShieldCheckIcon, 
-  CheckCircleIcon,
-  XMarkIcon,
-  ArrowPathIcon,
-  InformationCircleIcon,
-  ExclamationTriangleIcon
-} from '@heroicons/react/24/outline';
 import { useAuth } from '@/contexts/AuthContext';
 import { CorporateLayout, CorporateCard, CorporateButton, CorporateHeader, CorporateFooter } from '@/components/ui';
 
@@ -100,42 +90,42 @@ const ConfiguracionEmail: NextPage = () => {
       key: 'serviceNotifications' as keyof EmailPreferences,
       title: 'Notificaciones de Servicios',
       description: 'Recibir emails sobre nuevas solicitudes y actualizaciones de servicios',
-      icon: BellIcon,
+      icon: () => <span>🔔</span>,
       essential: true
     },
     {
       key: 'securityAlerts' as keyof EmailPreferences,
       title: 'Alertas de Seguridad',
       description: 'Notificaciones sobre cambios en tu cuenta y actividad de seguridad',
-      icon: ShieldCheckIcon,
+      icon: () => <span>🛡</span>,
       essential: true
     },
     {
       key: 'instantNotifications' as keyof EmailPreferences,
       title: 'Notificaciones Instantáneas',
       description: 'Recibir emails inmediatamente cuando ocurra una acción importante',
-      icon: EnvelopeIcon,
+      icon: () => <span>✉</span>,
       essential: false
     },
     {
       key: 'loginAlerts' as keyof EmailPreferences,
       title: 'Alertas de Inicio de Sesión',
       description: 'Notificaciones cuando alguien acceda a tu cuenta',
-      icon: ExclamationTriangleIcon,
+      icon: () => <span>⚠</span>,
       essential: false
     },
     {
       key: 'weeklyDigest' as keyof EmailPreferences,
       title: 'Resumen Semanal',
       description: 'Recibir un resumen de tu actividad y estadísticas semanales',
-      icon: InformationCircleIcon,
+      icon: () => <span>ℹ</span>,
       essential: false
     },
     {
       key: 'marketingEmails' as keyof EmailPreferences,
       title: 'Emails de Marketing',
       description: 'Recibir novedades, promociones y consejos de FIXIA',
-      icon: EnvelopeIcon,
+      icon: () => <span>✉</span>,
       essential: false
     }
   ];
@@ -171,9 +161,9 @@ const ConfiguracionEmail: NextPage = () => {
                     : 'bg-error-100'
                 }`}>
                   {message.type === 'success' ? (
-                    <CheckCircleIcon className="h-5 w-5 text-success-600" />
+                    <span className="text-success-600">✓</span>
                   ) : (
-                    <XMarkIcon className="h-5 w-5 text-error-600" />
+                    <span className="text-error-600">×</span>
                   )}
                 </div>
                 <p className={`font-medium ${
@@ -189,7 +179,7 @@ const ConfiguracionEmail: NextPage = () => {
           <CorporateCard variant="elevated" className="mb-8">
             <div className="flex items-center space-x-4 pb-6 border-b border-secondary-200">
               <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-trust-500 rounded-xl flex items-center justify-center">
-                <EnvelopeIcon className="h-6 w-6 text-white" />
+                <span className="text-white text-lg">✉</span>
               </div>
               <div>
                 <h2 className="text-xl font-bold text-secondary-900">
@@ -211,7 +201,7 @@ const ConfiguracionEmail: NextPage = () => {
                 variant="outline"
                 size="sm"
                 onClick={handleTestEmail}
-                leftIcon={<EnvelopeIcon className="h-4 w-4" />}
+                leftIcon={<span>✉</span>}
               >
                 Enviar Email de Prueba
               </CorporateButton>
@@ -222,7 +212,7 @@ const ConfiguracionEmail: NextPage = () => {
           <CorporateCard variant="elevated" className="mb-8">
             <div className="flex items-center space-x-4 pb-6 border-b border-secondary-200">
               <div className="w-12 h-12 bg-gradient-to-r from-trust-500 to-secondary-500 rounded-xl flex items-center justify-center">
-                <BellIcon className="h-6 w-6 text-white" />
+                <span className="text-white text-lg">🔔</span>
               </div>
               <div>
                 <h2 className="text-xl font-bold text-secondary-900">
@@ -243,7 +233,7 @@ const ConfiguracionEmail: NextPage = () => {
                         ? 'bg-primary-100 text-primary-600' 
                         : 'bg-secondary-100 text-secondary-600'
                     }`}>
-                      <item.icon className="h-4 w-4" />
+                      <item.icon />
                     </div>
                   </div>
                   <div className="flex-1">
@@ -291,7 +281,7 @@ const ConfiguracionEmail: NextPage = () => {
               loading={saving}
               size="lg"
               className="px-8"
-              rightIcon={!saving ? <CheckCircleIcon className="h-5 w-5" /> : undefined}
+              rightIcon={!saving ? <span>✓</span> : undefined}
             >
               {saving ? 'Guardando...' : 'Guardar Configuración'}
             </CorporateButton>

@@ -3,15 +3,6 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { 
-  ArrowLeftIcon,
-  ChatBubbleLeftRightIcon,
-  MagnifyingGlassIcon,
-  CheckBadgeIcon,
-  ClockIcon,
-  ExclamationCircleIcon,
-  CheckCircleIcon
-} from '@heroicons/react/24/outline';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
@@ -137,7 +128,7 @@ const ChatsPage: NextPage = () => {
               <div className="flex items-center">
                 <Link href="/explorador/dashboard">
                   <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                    <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
+                    <span className="text-xl text-gray-600">←</span>
                   </button>
                 </Link>
                 <div>
@@ -157,7 +148,7 @@ const ChatsPage: NextPage = () => {
           {/* Search */}
           <div className="bg-white rounded-xl shadow-sm border p-4 mb-6">
             <div className="relative">
-              <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
               <input
                 type="text"
                 placeholder="Buscar conversaciones..."
@@ -172,7 +163,7 @@ const ChatsPage: NextPage = () => {
           <div className="bg-white rounded-xl shadow-sm border">
             {filteredConnections.length === 0 ? (
               <div className="text-center py-12">
-                <ChatBubbleLeftRightIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <span className="block text-4xl text-gray-400 mb-4">💬</span>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                   {searchText ? 'No se encontraron conversaciones' : 'No tienes conversaciones aún'}
                 </h3>
@@ -298,7 +289,7 @@ const ChatsPage: NextPage = () => {
               <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <ChatBubbleLeftRightIcon className="h-6 w-6 text-blue-600" />
+                    <span className="text-xl text-blue-600">💬</span>
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Nueva Solicitud</h3>
@@ -312,7 +303,7 @@ const ChatsPage: NextPage = () => {
               <div className="bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <ExclamationCircleIcon className="h-6 w-6 text-orange-600" />
+                    <span className="text-xl text-orange-600">ℹ</span>
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Calificaciones Pendientes</h3>
