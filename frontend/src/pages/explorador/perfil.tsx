@@ -55,6 +55,21 @@ const EditarPerfil: NextPage = () => {
     }
   }, [user, loading, router]);
 
+  // Helper function to get image URL with fallback to proxy
+  const getImageUrl = (originalUrl: string, useProxy = false) => {
+    if (!originalUrl) return null;
+    
+    const fullUrl = originalUrl.startsWith('http') 
+      ? originalUrl 
+      : `${process.env.NEXT_PUBLIC_API_URL}${originalUrl}`;
+    
+    if (useProxy) {
+      return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
+    }
+    
+    return fullUrl;
+  };
+
   // Separate effect for photo preview to avoid conflicts
   useEffect(() => {
     console.log('📸 Photo preview effect triggered:', {
@@ -66,10 +81,7 @@ const EditarPerfil: NextPage = () => {
     });
 
     if (user?.profile_photo_url && !uploadingPhoto) {
-      // If URL is already complete, use it directly, otherwise prepend API URL
-      const photoUrl = user.profile_photo_url.startsWith('http') 
-        ? user.profile_photo_url 
-        : `${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`;
+      const photoUrl = getImageUrl(user.profile_photo_url);
       
       console.log('✅ Setting photo preview from user context:', {
         original: user.profile_photo_url,
@@ -143,11 +155,8 @@ const EditarPerfil: NextPage = () => {
       // Clean up temp URL
       URL.revokeObjectURL(tempPreview);
       
-      // Set the final photo URL
-      const finalPhotoUrl = photoUrl.startsWith('http') 
-        ? photoUrl 
-        : `${process.env.NEXT_PUBLIC_API_URL}${photoUrl}`;
-      
+      // Set the final photo URL using helper function
+      const finalPhotoUrl = getImageUrl(photoUrl, false);
       setPhotoPreview(finalPhotoUrl);
       setMessage('Foto de perfil actualizada exitosamente');
       
@@ -275,28 +284,37 @@ const EditarPerfil: NextPage = () => {
                             });
                             
                             const target = e.target as HTMLImageElement;
-                            // Don't hide immediately, show a red border for debugging
-                            target.style.border = '2px solid red';
-                            target.style.backgroundColor = 'rgba(255,0,0,0.1)';
                             
-                            // Try to recover with a different URL construction
-                            if (user?.profile_photo_url && !photoPreview.startsWith('http')) {
-                              const newUrl = `${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`;
-                              if (newUrl !== photoPreview) {
-                                console.log('🔄 Trying recovery URL:', newUrl);
-                                setPhotoPreview(newUrl);
+                            // Try proxy fallback if not already using it
+                            if (user?.profile_photo_url && !photoPreview?.includes('/api/image-proxy')) {
+                              console.log('🔄 Trying proxy fallback for CORS issues');
+                              const proxyUrl = getImageUrl(user.profile_photo_url, true);
+                              setPhotoPreview(proxyUrl);
+                              return;
+                            }
+                            
+                            // If proxy also fails, try direct URL reconstruction
+                            if (user?.profile_photo_url && !photoPreview?.startsWith('http')) {
+                              const directUrl = getImageUrl(user.profile_photo_url, false);
+                              if (directUrl !== photoPreview) {
+                                console.log('🔄 Trying direct URL reconstruction:', directUrl);
+                                setPhotoPreview(directUrl);
                                 return;
                               }
                             }
                             
-                            // Remove after delay if recovery fails
+                            // Show visual error indicator
+                            target.style.border = '2px solid orange';
+                            target.style.backgroundColor = 'rgba(255,165,0,0.1)';
+                            
+                            // Final fallback - remove after delay
                             setTimeout(() => {
-                              if (target.style.border.includes('red')) {
-                                console.log('🗑️ Removing failed image after timeout');
+                              if (target.style.border.includes('orange')) {
+                                console.log('🗑️ All recovery attempts failed, removing image');
                                 setPhotoPreview(null);
-                                setError('Error al cargar la imagen. Intenta subirla nuevamente.');
+                                setError('Error al cargar la imagen. Problemas de conectividad.');
                               }
-                            }, 3000);
+                            }, 5000);
                           }}
                           onLoad={() => {
                             console.log('✅ Image loaded successfully:', {
