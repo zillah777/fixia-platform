@@ -53,60 +53,47 @@ const featuredProfessionals = [
 
 const serviceCategories = [
   {
-    id: "plomeria",
-    name: "Plomería",
-    icon: "🔧",
-    description: "Instalaciones y reparaciones",
-    professionals: 45
+    id: "desarrollo-web",
+    name: "Desarrollo Web",
+    badge: "Popular",
+    icon: "💻",
+    description: "Aplicaciones y sitios web profesionales",
+    services: "2,330+ servicios"
   },
   {
-    id: "electricidad", 
-    name: "Electricidad",
-    icon: "⚡",
-    description: "Instalaciones eléctricas",
-    professionals: 38
-  },
-  {
-    id: "carpinteria",
-    name: "Carpintería", 
-    icon: "🪚",
-    description: "Muebles y estructuras",
-    professionals: 32
-  },
-  {
-    id: "albañileria",
-    name: "Albañilería",
-    icon: "🧱", 
-    description: "Construcción y reparación",
-    professionals: 41
-  },
-  {
-    id: "pintura",
-    name: "Pintura",
+    id: "diseño-grafico", 
+    name: "Diseño Gráfico",
     icon: "🎨",
-    description: "Pintura y decoración", 
-    professionals: 29
+    description: "Identidad visual y diseño creativo",
+    services: "1,890+ servicios"
   },
   {
-    id: "jardineria",
-    name: "Jardinería",
-    icon: "🌱",
-    description: "Diseño y mantenimiento",
-    professionals: 24
+    id: "apps-moviles",
+    name: "Apps Móviles", 
+    icon: "📱",
+    description: "Desarrollo iOS y Android nativo",
+    services: "1,230+ servicios"
   },
   {
-    id: "limpieza",
-    name: "Limpieza",
-    icon: "🧽",
-    description: "Limpieza profesional",
-    professionals: 52
+    id: "marketing-digital",
+    name: "Marketing Digital",
+    icon: "📊", 
+    description: "SEO, SEM y estrategias de crecimiento",
+    services: "900+ servicios"
   },
   {
-    id: "electrodomesticos", 
-    name: "Electrodomésticos",
-    icon: "🔌",
-    description: "Reparación y mantenimiento",
-    professionals: 19
+    id: "redaccion",
+    name: "Redacción",
+    icon: "✍️",
+    description: "Contenido y copywriting profesional", 
+    services: "756+ servicios"
+  },
+  {
+    id: "video-animacion",
+    name: "Video & Animación",
+    icon: "🎬",
+    description: "Producción audiovisual y motion graphics",
+    services: "654+ servicios"
   }
 ];
 
@@ -122,13 +109,7 @@ const HomePage: NextPage = () => {
         <meta name="keywords" content="servicios profesionales, Chubut, plomeros, electricistas, carpinteros, AS certificados" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900 relative overflow-hidden">
-        {/* Background decorations */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-primary-500/10 rounded-full blur-3xl animate-float" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary-500/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}} />
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-primary-500/5 to-secondary-500/5 rounded-full blur-3xl" />
-        </div>
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
 
         {/* Navigation Header */}
         <Header />
@@ -148,8 +129,6 @@ const HomePage: NextPage = () => {
         {/* How It Works */}
         <HowItWorksSection />
 
-        {/* Testimonials */}
-        <TestimonialsSection />
 
         {/* CTA Section */}
         <CTASection />
@@ -234,20 +213,21 @@ function HeroSection() {
       <div className="container mx-auto px-6 text-center relative z-10">
         <div className="max-w-4xl mx-auto animate-fade-in">
           <div className="mb-8">
-            <div className="glass-medium border-white/20 text-primary mb-6 inline-flex items-center px-6 py-3 rounded-full text-sm font-semibold">
-              🚀 La plataforma de servicios más confiable de Chubut
+            <div className="glass-medium border-white/20 text-blue-400 mb-6 inline-flex items-center px-6 py-3 rounded-full text-sm font-semibold">
+              ✓ La plataforma de servicios más confiable
             </div>
           </div>
           
           <h1 className="text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-            Conectamos <span className="liquid-gradient bg-clip-text text-transparent">Profesionales</span>
+            Conecta con los mejores
             <br />
-            con Clientes en Chubut
+            profesionales
           </h1>
 
-          <p className="text-xl lg:text-2xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Encuentra los mejores AS certificados para tus proyectos o conecta con clientes que necesitan tus servicios. 
-            Plataforma confiable y segura para toda la provincia.
+          <p className="text-xl lg:text-2xl text-white/70 mb-12 max-w-3xl mx-auto leading-relaxed">
+            Tu tiempo vale. Fixia lo cuida. Encuentra profesionales altamente calificados
+            para resolver tus necesidades con transparencia líquida y resultados
+            garantizados.
           </p>
 
           {/* Search Bar */}
@@ -274,20 +254,20 @@ function HeroSection() {
             </div>
           </form>
 
-          {/* Quick Actions */}
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <Link href="/auth/registro">
-              <Button size="lg" className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg px-8 py-4 text-lg">
-                <Users className="mr-2 h-5 w-5" />
-                Buscar Profesionales
-              </Button>
-            </Link>
-            <Link href="/auth/registro?type=provider">
-              <Button size="lg" className="glass-strong border-white/20 text-white hover:glass-medium transition-all duration-300 px-8 py-4 text-lg">
-                <Star className="mr-2 h-5 w-5" />
-                Ofrecer Servicios
-              </Button>
-            </Link>
+          {/* Trust indicators */}
+          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-12 mb-12 text-white/60 text-sm">
+            <div className="flex items-center">
+              <Check className="h-4 w-4 text-green-400 mr-2" />
+              Más de 50,000 profesionales
+            </div>
+            <div className="flex items-center">
+              <Check className="h-4 w-4 text-green-400 mr-2" />
+              Pagos seguros
+            </div>
+            <div className="flex items-center">
+              <Check className="h-4 w-4 text-green-400 mr-2" />
+              Soporte 24/7
+            </div>
           </div>
         </div>
       </div>
@@ -298,46 +278,40 @@ function HeroSection() {
 function StatsSection() {
   const stats = [
     {
-      icon: Users,
-      value: "500+",
-      label: "Profesionales Activos",
-      description: "AS certificados en Chubut"
+      value: "50K+",
+      label: "Profesionales",
+      color: "text-blue-400"
     },
     {
-      icon: Check,
-      value: "2,450+", 
-      label: "Trabajos Completados",
-      description: "Con garantía de calidad"
+      value: "98%",
+      label: "Satisfacción",
+      color: "text-blue-400"
     },
     {
-      icon: Star,
-      value: "4.9/5",
-      label: "Calificación Promedio",
-      description: "Según nuestros clientes"
+      value: "24/7",
+      label: "Soporte",
+      color: "text-blue-400"
     },
     {
-      icon: Shield,
-      value: "100%",
-      label: "Verificados",
-      description: "Todos los AS son verificados"
+      value: "100K+",
+      label: "Proyectos",
+      color: "text-blue-400"
     }
   ];
 
   return (
-    <section className="py-20 relative">
+    <section className="py-16 relative">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
           {stats.map((stat, index) => (
-            <Card key={index} className="glass-medium border-white/20 text-center p-6 animate-fade-in">
-              <CardContent className="p-0">
-                <div className="w-16 h-16 liquid-gradient rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <stat.icon className="h-8 w-8 text-white" />
-                </div>
-                <div className="text-3xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="text-white font-semibold mb-1">{stat.label}</div>
-                <div className="text-white/60 text-sm">{stat.description}</div>
-              </CardContent>
-            </Card>
+            <div key={index} className="animate-fade-in">
+              <div className={`text-4xl lg:text-5xl font-bold ${stat.color} mb-2`}>
+                {stat.value}
+              </div>
+              <div className="text-white/70 text-lg font-medium">
+                {stat.label}
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -357,26 +331,35 @@ function CategoriesSection() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-            Servicios <span className="liquid-gradient bg-clip-text text-transparent">Disponibles</span>
+            Explora Categorías de Servicios
           </h2>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Encuentra profesionales certificados en todas las categorías que necesitas
+          <p className="text-xl text-white/70 max-w-3xl mx-auto">
+            Encuentra exactamente lo que necesitas en nuestras categorías especializadas. Cada
+            profesional está verificado y altamente calificado.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {serviceCategories.map((category) => (
             <Card 
               key={category.id} 
-              className="glass-medium border-white/20 hover:glass-strong transition-all duration-300 cursor-pointer transform hover:scale-105 animate-fade-in"
+              className="glass-medium border-white/20 hover:glass-strong transition-all duration-300 cursor-pointer group animate-fade-in"
               onClick={() => handleCategoryClick(category.id)}
             >
-              <CardContent className="p-6 text-center">
-                <div className="text-4xl mb-4">{category.icon}</div>
-                <h3 className="text-white font-semibold mb-2">{category.name}</h3>
-                <p className="text-white/60 text-sm mb-3">{category.description}</p>
-                <div className="text-primary text-sm font-semibold">
-                  {category.professionals} profesionales
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="text-4xl">{category.icon}</div>
+                  {category.badge && (
+                    <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                      {category.badge}
+                    </span>
+                  )}
+                  <ArrowRight className="h-5 w-5 text-white/40 group-hover:text-white/60 transition-colors" />
+                </div>
+                <h3 className="text-white font-bold text-xl mb-2">{category.name}</h3>
+                <p className="text-white/60 text-sm mb-4 leading-relaxed">{category.description}</p>
+                <div className="text-white/80 text-sm font-medium">
+                  {category.services}
                 </div>
               </CardContent>
             </Card>
@@ -458,19 +441,28 @@ function FeaturedProfessionals() {
 function HowItWorksSection() {
   const steps = [
     {
+      number: "01",
       icon: Search,
-      title: "Busca el Servicio",
-      description: "Describe lo que necesitas y explora profesionales en tu zona"
+      title: "Busca y Conecta",
+      description: "Encuentra profesionales verificados usando nuestros filtros inteligentes. Ve perfiles completos con portafolios y reseñas reales."
     },
     {
+      number: "02",
       icon: MessageSquare,
-      title: "Conecta y Negocia", 
-      description: "Chatea directamente con los AS y negocia precios y tiempos"
+      title: "Comunícate y Cotiza", 
+      description: "Chatea directamente con profesionales, recibe cotizaciones personalizadas y programa videollamadas de consulta gratuitas."
     },
     {
-      icon: Check,
-      title: "Recibe el Servicio",
-      description: "Disfruta de un servicio profesional y califica tu experiencia"
+      number: "03",
+      icon: Shield,
+      title: "Paga de Forma Segura",
+      description: "Realiza pagos seguros con protección de depósito. El profesional recibe el pago solo cuando estés completamente satisfecho."
+    },
+    {
+      number: "04",
+      icon: Star,
+      title: "Recibe y Evalúa",
+      description: "Sigue el progreso en tiempo real, recibe entregas de calidad y evalúa el servicio para ayudar a otros usuarios."
     }
   ];
 
@@ -479,22 +471,24 @@ function HowItWorksSection() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-            ¿Cómo <span className="liquid-gradient bg-clip-text text-transparent">Funciona?</span>
+            ¿Cómo Funciona Fixia?
           </h2>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Conectarte con profesionales nunca fue tan fácil
+          <p className="text-xl text-white/70 max-w-3xl mx-auto">
+            Transparencia líquida en cada paso. Nuestro proceso es simple, seguro y diseñado para
+            garantizar resultados excepcionales.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, index) => (
-            <Card key={index} className="glass-medium border-white/20 text-center p-8 animate-fade-in">
+            <Card key={index} className="glass-medium border-white/20 p-6 animate-fade-in">
               <CardContent className="p-0">
-                <div className="w-20 h-20 liquid-gradient rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                  <step.icon className="h-10 w-10 text-white" />
+                <div className="flex items-center justify-center w-16 h-16 bg-blue-500 rounded-2xl mb-6">
+                  <div className="text-white font-bold text-lg">{step.number}</div>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">{step.title}</h3>
-                <p className="text-white/80 leading-relaxed">{step.description}</p>
+                <step.icon className="h-8 w-8 text-blue-400 mb-4" />
+                <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
+                <p className="text-white/70 text-sm leading-relaxed">{step.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -504,101 +498,55 @@ function HowItWorksSection() {
   );
 }
 
-function TestimonialsSection() {
-  const testimonials = [
-    {
-      id: 1,
-      name: "María González",
-      role: "Cliente",
-      content: "Encontré un electricista excelente en menos de 2 horas. El trabajo quedó perfecto y a un precio justo.",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop&crop=face"
-    },
-    {
-      id: 2,
-      name: "Carlos Ruiz",
-      role: "AS Profesional",
-      content: "Como plomero, Fixia me ha permitido llegar a más clientes y generar más ingresos. Totalmente recomendado.",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face"
-    },
-    {
-      id: 3,
-      name: "Ana López",
-      role: "Cliente",
-      content: "La calidad de los profesionales es excelente. Todos verificados y muy responsables.",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=120&h=120&fit=crop&crop=face"
-    }
-  ];
-
-  return (
-    <section className="py-20 relative">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-            Lo que Dicen <span className="liquid-gradient bg-clip-text text-transparent">Nuestros Usuarios</span>
-          </h2>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial) => (
-            <Card key={testimonial.id} className="glass-medium border-white/20 p-6 animate-fade-in">
-              <CardContent className="p-0">
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <blockquote className="text-white/90 mb-6 italic leading-relaxed">
-                  "{testimonial.content}"
-                </blockquote>
-                <div className="flex items-center">
-                  <img 
-                    src={testimonial.image} 
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-xl object-cover mr-4"
-                  />
-                  <div>
-                    <div className="text-white font-semibold">{testimonial.name}</div>
-                    <div className="text-white/60 text-sm">{testimonial.role}</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function CTASection() {
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-6">
-        <Card className="glass-strong border-white/20 p-12 text-center animate-fade-in">
-          <CardContent className="p-0 max-w-4xl mx-auto">
+        <Card className="glass-strong border-white/20 p-12 text-center animate-fade-in max-w-4xl mx-auto">
+          <CardContent className="p-0">
+            <div className="mb-6">
+              <div className="glass-medium border-white/20 text-blue-400 mb-6 inline-flex items-center px-6 py-3 rounded-full text-sm font-semibold">
+                🚀 Únete a nuestra comunidad
+              </div>
+            </div>
+            
             <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-              ¿Listo para <span className="liquid-gradient bg-clip-text text-transparent">Comenzar?</span>
+              ¿Listo para dar el siguiente paso?
             </h2>
-            <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-              Únete a la plataforma de servicios más confiable de Chubut y conecta con profesionales verificados.
+            <p className="text-xl text-white/70 mb-10 max-w-2xl mx-auto">
+              Únete a miles de profesionales y clientes que confían en Fixia para conectar, colaborar y crear proyectos excepcionales.
             </p>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
               <Link href="/auth/registro">
-                <Button size="lg" className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg px-10 py-4 text-lg">
-                  <Users className="mr-2 h-6 w-6" />
+                <Button size="lg" className="bg-blue-500 hover:bg-blue-600 text-white px-10 py-4 text-lg rounded-2xl transition-all duration-300 shadow-lg">
                   Buscar Profesionales
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/auth/registro?type=provider">
-                <Button size="lg" className="glass-medium border-white/20 text-white hover:glass-strong transition-all duration-300 px-10 py-4 text-lg">
-                  <Star className="mr-2 h-6 w-6" />
-                  Ofrecer Mis Servicios
+                <Button size="lg" className="glass-medium border-white/20 text-white hover:glass-strong transition-all duration-300 px-10 py-4 text-lg rounded-2xl">
+                  Ofrecer Servicios
+                  <Zap className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
+            </div>
+
+            {/* Trust indicators */}
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-12 text-white/60 text-sm">
+              <div className="flex items-center">
+                <Shield className="h-4 w-4 text-green-400 mr-2" />
+                100% Seguro
+              </div>
+              <div className="flex items-center">
+                <Users className="h-4 w-4 text-blue-400 mr-2" />
+                Comunidad Verificada
+              </div>
+              <div className="flex items-center">
+                <Clock className="h-4 w-4 text-yellow-400 mr-2" />
+                Soporte 24/7
+              </div>
             </div>
           </CardContent>
         </Card>
