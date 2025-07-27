@@ -9,47 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from '@/contexts/AuthContext';
 
-const featuredProfessionals = [
-  {
-    id: "prof_1",
-    name: "Carlos Rodríguez",
-    specialty: "Plomería Especializada",
-    rating: 4.9,
-    reviews: 127,
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face",
-    price: "Desde $3,000/trabajo",
-    badge: "Top Rated",
-    skills: ["Instalaciones", "Reparaciones", "Emergencias"],
-    completedProjects: 187,
-    location: "Comodoro Rivadavia"
-  },
-  {
-    id: "prof_2", 
-    name: "Ana Martínez",
-    specialty: "Electricidad Residencial",
-    rating: 4.8,
-    reviews: 89,
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=120&h=120&fit=crop&crop=face",
-    price: "Desde $2,500/trabajo",
-    badge: "Pro",
-    skills: ["Instalaciones", "Tableros", "Iluminación"],
-    completedProjects: 156,
-    location: "Puerto Madryn"
-  },
-  {
-    id: "prof_3",
-    name: "Roberto Silva",
-    specialty: "Carpintería Premium",
-    rating: 4.9,
-    reviews: 156,
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face",
-    price: "Desde $4,000/trabajo",
-    badge: "Especialista",
-    skills: ["Muebles", "Renovaciones", "Diseño"],
-    completedProjects: 143,
-    location: "Trelew"
-  }
-];
 
 const serviceCategories = [
   {
@@ -123,8 +82,6 @@ const HomePage: NextPage = () => {
         {/* Categories Section */}
         <CategoriesSection />
 
-        {/* Featured Professionals */}
-        <FeaturedProfessionals />
 
         {/* How It Works */}
         <HowItWorksSection />
@@ -370,73 +327,6 @@ function CategoriesSection() {
   );
 }
 
-function FeaturedProfessionals() {
-  return (
-    <section className="py-20 relative">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-            Profesionales <span className="liquid-gradient bg-clip-text text-transparent">Destacados</span>
-          </h2>
-          <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Conoce a algunos de nuestros AS mejor calificados
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {featuredProfessionals.map((professional) => (
-            <Card key={professional.id} className="glass-medium border-white/20 hover:glass-strong transition-all duration-300 transform hover:scale-105 animate-fade-in">
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  <img 
-                    src={professional.image} 
-                    alt={professional.name}
-                    className="w-16 h-16 rounded-2xl object-cover mr-4"
-                  />
-                  <div className="flex-1">
-                    <h3 className="text-white font-semibold text-lg">{professional.name}</h3>
-                    <p className="text-white/60">{professional.specialty}</p>
-                    <p className="text-white/60 text-sm">{professional.location}</p>
-                  </div>
-                  <div className="glass-strong border-white/20 px-3 py-1 rounded-full text-primary text-sm font-semibold">
-                    {professional.badge}
-                  </div>
-                </div>
-
-                <div className="flex items-center mb-4">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                    <span className="text-white ml-2 font-semibold">{professional.rating}</span>
-                    <span className="text-white/60 ml-1">({professional.reviews} reseñas)</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {professional.skills.map((skill) => (
-                    <span key={skill} className="glass-strong border-white/20 px-3 py-1 rounded-full text-white/80 text-sm">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="text-white/60 text-sm">
-                    {professional.completedProjects} trabajos completados
-                  </div>
-                  <div className="text-primary font-semibold">
-                    {professional.price}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function HowItWorksSection() {
   const steps = [
