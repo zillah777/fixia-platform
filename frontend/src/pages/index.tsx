@@ -7,7 +7,48 @@ import { Search, Star, Shield, Zap, Users, ArrowRight, Play, Check, ChevronDown,
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { useAuth } from '@/contexts/AuthContext';
+
+const featuredProfessionals = [
+  {
+    id: "prof_1",
+    name: "Ana Martínez",
+    specialty: "Desarrollo Web Full Stack",
+    rating: 5.0,
+    reviews: 234,
+    image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=120&h=120&fit=crop&crop=face",
+    price: "Desde $50/hora",
+    badge: "Top Rated",
+    skills: ["React", "Node.js", "TypeScript"],
+    completedProjects: 187
+  },
+  {
+    id: "prof_2", 
+    name: "Carlos Ruiz",
+    specialty: "Diseño UI/UX",
+    rating: 4.9,
+    reviews: 189,
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face",
+    price: "Desde $40/hora",
+    badge: "Pro",
+    skills: ["Figma", "Adobe XD", "Sketch"],
+    completedProjects: 156
+  },
+  {
+    id: "prof_3",
+    name: "María González",
+    specialty: "Marketing Digital",
+    rating: 4.8,
+    reviews: 167,
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop&crop=face",
+    price: "Desde $35/hora",
+    badge: "Especialista",
+    skills: ["SEO", "Google Ads", "Analytics"],
+    completedProjects: 143
+  }
+];
 
 
 const serviceCategories = [
@@ -87,6 +128,8 @@ const HomePage: NextPage = () => {
         {/* Categories Section */}
         <CategoriesSection />
 
+        {/* Featured Professionals */}
+        <FeaturedProfessionals />
 
         {/* How It Works */}
         <HowItWorksSection />
@@ -515,6 +558,114 @@ function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+function FeaturedProfessionals() {
+  return (
+    <section className="py-20 bg-gradient-to-b from-transparent to-black/20 relative z-10">
+      <div className="container mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white">
+            Profesionales Destacados
+          </h2>
+          <p className="text-white/60 max-w-2xl mx-auto">
+            Profesionales reales, resultados concretos. Descubre a los mejores talentos 
+            verificados y altamente calificados en nuestra plataforma.
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {featuredProfessionals.map((professional, index) => (
+            <motion.div
+              key={professional.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card className="glass hover:glass-medium transition-all duration-300 border-white/10 group">
+                <CardHeader className="text-center">
+                  <div className="relative mx-auto mb-4">
+                    <Avatar className="h-20 w-20 ring-4 ring-primary/20 ring-offset-4 ring-offset-background">
+                      <AvatarImage src={professional.image} alt={professional.name} />
+                      <AvatarFallback>{professional.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <Badge className="absolute -top-2 -right-2 bg-green-500/20 text-green-400 border-green-500/30 text-xs">
+                      {professional.badge}
+                    </Badge>
+                  </div>
+                  
+                  <CardTitle className="text-lg text-white">{professional.name}</CardTitle>
+                  <CardDescription className="text-blue-400 font-medium">
+                    {professional.specialty}
+                  </CardDescription>
+                  
+                  <div className="flex items-center justify-center space-x-2 mt-2">
+                    <div className="flex items-center space-x-1">
+                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                      <span className="font-medium text-white">{professional.rating}</span>
+                    </div>
+                    <span className="text-white/60 text-sm">
+                      ({professional.reviews} reseñas)
+                    </span>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="space-y-4">
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {professional.skills.slice(0, 3).map((skill) => (
+                      <Badge key={skill} variant="outline" className="glass border-white/20 text-xs text-white/80">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-sm text-white/60">
+                    <span className="flex items-center space-x-1">
+                      <Check className="h-4 w-4 text-green-400" />
+                      <span>{professional.completedProjects} proyectos</span>
+                    </span>
+                    <span className="font-medium text-blue-400">{professional.price}</span>
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <Button size="sm" className="flex-1 liquid-gradient hover:opacity-90">
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      Contactar
+                    </Button>
+                    <Button size="sm" variant="outline" className="glass border-white/20 text-white hover:bg-white/10">
+                      Ver Perfil
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="text-center mt-12"
+        >
+          <Link href="/explorador/buscar-servicio">
+            <Button variant="outline" className="glass border-white/20 hover:glass-medium group text-white">
+              Ver Todos los Profesionales
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
+        </motion.div>
+      </div>
+    </section>
   );
 }
 
