@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AuthContext';
 
 const ContactPage: NextPage = () => {
@@ -379,14 +378,14 @@ const ContactPage: NextPage = () => {
                         <label htmlFor="message" className="block text-sm font-medium text-white/80 mb-2">
                           Mensaje *
                         </label>
-                        <Textarea
+                        <textarea
                           id="message"
                           name="message"
                           required
                           value={formData.message}
                           onChange={handleInputChange}
                           rows={6}
-                          className="glass border-white/20 bg-white/5 text-white placeholder:text-white/50 resize-none"
+                          className="glass border-white/20 bg-white/5 text-white placeholder:text-white/50 resize-none w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                           placeholder="Describe tu consulta o mensaje..."
                         />
                       </div>
