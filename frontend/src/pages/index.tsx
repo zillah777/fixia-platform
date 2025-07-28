@@ -520,7 +520,7 @@ function Footer() {
     <footer className="relative py-16 border-t border-white/10">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-4 gap-8 mb-12">
-          <div className="col-span-2">
+          <div className="col-span-2 md:col-span-1">
             <div className="flex items-center space-x-3 mb-6">
               <div className="relative">
                 <div className="h-12 w-12 liquid-gradient rounded-xl flex items-center justify-center shadow-lg">
@@ -543,7 +543,7 @@ function Footer() {
           </div>
           
           <div>
-            <h3 className="text-white font-semibold mb-4">Para Clientes</h3>
+            <h3 className="text-white font-semibold mb-4">Plataforma</h3>
             <div className="space-y-3">
               <Link href="/explorador/buscar-servicio" className="block text-white/80 hover:text-white transition-colors">
                 Buscar Servicios
@@ -551,17 +551,38 @@ function Footer() {
               <Link href="/como-funciona" className="block text-white/80 hover:text-white transition-colors">
                 Cómo Funciona
               </Link>
+              <Link href="/auth/registro?type=provider" className="block text-white/80 hover:text-white transition-colors">
+                Únete como AS
+              </Link>
             </div>
           </div>
           
           <div>
-            <h3 className="text-white font-semibold mb-4">Para Profesionales</h3>
+            <h3 className="text-white font-semibold mb-4">Empresa</h3>
             <div className="space-y-3">
-              <Link href="/auth/registro?type=provider" className="block text-white/80 hover:text-white transition-colors">
-                Únete como AS
+              <Link href="/company/about" className="block text-white/80 hover:text-white transition-colors">
+                Acerca de Nosotros
               </Link>
-              <Link href="/recursos" className="block text-white/80 hover:text-white transition-colors">
-                Recursos
+              <Link href="/company/contact" className="block text-white/80 hover:text-white transition-colors">
+                Contacto
+              </Link>
+              <Link href="/company/security" className="block text-white/80 hover:text-white transition-colors">
+                Seguridad
+              </Link>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-white font-semibold mb-4">Legal</h3>
+            <div className="space-y-3">
+              <Link href="/legal/terms" className="block text-white/80 hover:text-white transition-colors">
+                Términos y Condiciones
+              </Link>
+              <Link href="/legal/privacy" className="block text-white/80 hover:text-white transition-colors">
+                Política de Privacidad
+              </Link>
+              <Link href="/legal/updated-terms" className="block text-white/80 hover:text-white transition-colors">
+                Términos Actualizados
               </Link>
             </div>
           </div>
