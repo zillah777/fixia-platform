@@ -162,7 +162,7 @@ const ComoFunciona: NextPage = () => {
               <h1 className="text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight">
                 Cómo Funciona
                 <br />
-                <span className="liquid-gradient bg-clip-text text-transparent">Fixia</span>
+                <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Fixia</span>
               </h1>
 
               <p className="text-xl lg:text-2xl text-white/70 mb-12 max-w-3xl mx-auto leading-relaxed">
@@ -286,7 +286,7 @@ const ComoFunciona: NextPage = () => {
               className="text-center mb-16"
             >
               <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                ¿Por qué elegir <span className="liquid-gradient bg-clip-text text-transparent">Fixia</span>?
+                ¿Por qué elegir <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Fixia</span>?
               </h2>
               <p className="text-xl text-white/70 max-w-3xl mx-auto">
                 La plataforma más confiable para servicios profesionales en Chubut
