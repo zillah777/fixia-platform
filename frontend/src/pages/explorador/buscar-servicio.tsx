@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { 
   ArrowLeft,
+  ArrowRight,
   MapPin,
   Clock,
   DollarSign,
@@ -25,7 +26,11 @@ import { explorerService } from '@/services/explorer';
 import { categoriesService } from '@/services/categories';
 import { apiLocalitiesService } from '@/services/api';
 import { ExplorerServiceRequestForm } from '@/types/explorer';
-import { CorporateHeader, CorporateCard, CorporateButton, Input as CorporateInput } from '@/components/ui';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import Logo from '@/components/Logo';
 
 // Localidades de Chubut - ahora se cargan desde la API
@@ -201,10 +206,17 @@ const BuscarServicioPage: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-3 border-primary-600 mx-auto mb-6"></div>
-          <p className="text-secondary-600 font-medium">Cargando sistema profesional...</p>
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
+        {/* Background */}
+        <div className="absolute inset-0 bg-background">
+          <div className="absolute top-1/4 -left-32 w-64 h-64 liquid-gradient rounded-full blur-3xl opacity-20 animate-float"></div>
+          <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
+        </div>
+        <div className="relative z-10 text-center">
+          <div className="liquid-gradient w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+          </div>
+          <p className="text-white font-medium">Cargando sistema profesional...</p>
         </div>
       </div>
     );
@@ -212,22 +224,30 @@ const BuscarServicioPage: NextPage = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50 flex items-center justify-center">
-        <CorporateCard className="max-w-md w-full mx-4 text-center glass backdrop-blur-md shadow-xl border border-white/20 p-6">
-          <div className="w-20 h-20 bg-gradient-to-r from-success-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="h-10 w-10 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-secondary-900 mb-3">
-            ¡Solicitud Profesional Enviada!
-          </h2>
-          <p className="text-secondary-600 mb-6 font-medium">
-            Los AS certificados de tu zona han sido notificados y responderán en breve
-          </p>
-          <div className="flex items-center justify-center space-x-2 text-primary-600">
-            <Sparkles className="h-5 w-5 animate-pulse" />
-            <span className="font-medium">Redirigiendo al panel profesional...</span>
-          </div>
-        </CorporateCard>
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
+        {/* Background */}
+        <div className="absolute inset-0 bg-background">
+          <div className="absolute top-1/4 -left-32 w-64 h-64 liquid-gradient rounded-full blur-3xl opacity-20 animate-float"></div>
+          <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 right-1/4 w-48 h-48 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full blur-3xl opacity-15 animate-float" style={{ animationDelay: '4s' }}></div>
+        </div>
+        <Card className="glass border-white/10 shadow-2xl max-w-md w-full mx-4 text-center relative z-10">
+          <CardContent className="p-8">
+            <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="h-10 w-10 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-3">
+              ¡Solicitud Profesional Enviada!
+            </h2>
+            <p className="text-white/70 mb-6 font-medium">
+              Los AS certificados de tu zona han sido notificados y responderán en breve
+            </p>
+            <div className="flex items-center justify-center space-x-2 text-green-400">
+              <Sparkles className="h-5 w-5 animate-pulse" />
+              <span className="font-medium">Redirigiendo al panel profesional...</span>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -240,47 +260,65 @@ const BuscarServicioPage: NextPage = () => {
         <meta name="keywords" content="servicios profesionales, Chubut, AS certificados, solicitud servicio" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50">
-        {/* Corporate Professional Header */}
-        <div className="bg-white/95 backdrop-blur-xl border-b border-secondary-200/50 shadow-lg">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-lg">
-                  ←
-                </button>
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Solicitar Servicio Profesional</h1>
-                  <p className="text-gray-600">Conecta con AS certificados en Chubut para tu proyecto</p>
-                </div>
-              </div>
-              <button
-                className="h-9 px-3 glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-medium rounded-lg transition-all duration-200 flex items-center gap-2"
-                onClick={logout}
-              >
-                <LogOut className="h-4 w-4" />
-                Cerrar Sesión
-              </button>
-            </div>
-          </div>
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Background - Mismo estilo que homepage */}
+        <div className="absolute inset-0 bg-background">
+          <div className="absolute top-1/4 -left-32 w-64 h-64 liquid-gradient rounded-full blur-3xl opacity-20 animate-float"></div>
+          <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 right-1/4 w-48 h-48 bg-gradient-to-r from-blue-400 to-cyan-300 rounded-full blur-3xl opacity-15 animate-float" style={{ animationDelay: '4s' }}></div>
+          <div className="absolute top-3/4 left-1/3 w-32 h-32 bg-gradient-to-r from-green-400 to-blue-400 rounded-full blur-3xl opacity-10 animate-float" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-1/2 left-1/4 w-40 h-40 bg-gradient-to-r from-pink-400 to-red-400 rounded-full blur-3xl opacity-15 animate-float" style={{ animationDelay: '3s' }}></div>
+          <div className="absolute top-1/6 right-1/3 w-56 h-56 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full blur-3xl opacity-10 animate-float" style={{ animationDelay: '5s' }}></div>
         </div>
 
+        {/* Header */}
+        <header className="relative z-50 glass-medium border-b border-white/10">
+          <div className="container mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.back()}
+                  className="glass border-white/20 text-white hover:bg-white/10"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Volver
+                </Button>
+                <div>
+                  <h1 className="text-2xl font-bold text-white">Solicitar Servicio Profesional</h1>
+                  <p className="text-white/70">Conecta con AS certificados en Chubut para tu proyecto</p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="glass border-white/20 text-white hover:bg-white/10"
+                onClick={logout}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Cerrar Sesión
+              </Button>
+            </div>
+          </div>
+        </header>
+
         {/* Professional Stats Bar */}
-        <div className="bg-white/80 backdrop-blur-xl border-b border-secondary-200/50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="relative z-40 glass-light border-b border-white/10">
+          <div className="container mx-auto px-6 py-4">
             <div className="flex items-center justify-center space-x-8">
-              <div className="flex items-center space-x-2">
-                <ShieldCheck className="h-5 w-5 text-success-600" />
-                <span className="text-sm font-semibold text-secondary-700">126+ Servicios Disponibles</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Users className="h-5 w-5 text-primary-600" />
-                <span className="text-sm font-semibold text-secondary-700">AS Certificados</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Zap className="h-5 w-5 text-warning-600" />
-                <span className="text-sm font-semibold text-secondary-700">Respuesta en 5 min</span>
-              </div>
+              <Badge className="glass-medium border-white/20 text-green-400 px-4 py-2">
+                <ShieldCheck className="h-4 w-4 mr-2" />
+                126+ Servicios Disponibles
+              </Badge>
+              <Badge className="glass-medium border-white/20 text-blue-400 px-4 py-2">
+                <Users className="h-4 w-4 mr-2" />
+                AS Certificados
+              </Badge>
+              <Badge className="glass-medium border-white/20 text-yellow-400 px-4 py-2">
+                <Zap className="h-4 w-4 mr-2" />
+                Respuesta en 5 min
+              </Badge>
             </div>
           </div>
         </div>
@@ -289,407 +327,468 @@ const BuscarServicioPage: NextPage = () => {
         <div className="max-w-6xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* Professional System Status */}
           {process.env.NODE_ENV === 'development' && (
-            <CorporateCard className="mb-6 glass p-4 rounded-lg border border-white/10">
-              <div className="flex items-center space-x-3">
-                <Building className="h-5 w-5 text-tech-600" />
-                <h4 className="font-semibold text-secondary-800">Sistema Profesional</h4>
-              </div>
-              <p className="text-sm text-secondary-600 mt-2">
-                Estado: {blockingStatus ? 'Conectado' : 'Iniciando'} | 
-                Categorías: {categories.length} | 
-                Localidades: {localities.length}
-              </p>
-            </CorporateCard>
+            <Card className="mb-6 glass border-white/10 shadow-lg">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-3">
+                  <Building className="h-5 w-5 text-blue-400" />
+                  <h4 className="font-semibold text-white">Sistema Profesional</h4>
+                </div>
+                <p className="text-sm text-white/60 mt-2">
+                  Estado: {blockingStatus ? 'Conectado' : 'Iniciando'} | 
+                  Categorías: {categories.length} | 
+                  Localidades: {localities.length}
+                </p>
+              </CardContent>
+            </Card>
           )}
 
           {/* Professional Blocking Alert */}
           {blockingStatus?.is_blocked && (
-            <CorporateCard className="mb-8 border-l-4 border-l-error-500 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle className="h-6 w-6 text-error-600" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-secondary-900 mb-2">
-                    Cuenta Temporalmente Suspendida
-                  </h3>
-                  <p className="text-secondary-700 mb-4 font-medium">
-                    {blockingStatus.message}
-                  </p>
-                  <Link href="/explorador/calificaciones">
-                    <button className="bg-gradient-to-r from-error-500 to-error-600 hover:from-error-600 hover:to-error-700 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 px-4 py-2">
-                      Completar Calificaciones Pendientes
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </CorporateCard>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="mb-8"
+            >
+              <Card className="glass border-red-500/20 shadow-2xl">
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-red-400 to-red-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <AlertTriangle className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-red-300 mb-2">
+                        Cuenta Temporalmente Suspendida
+                      </h3>
+                      <p className="text-red-200 mb-4">
+                        {blockingStatus.message}
+                      </p>
+                      <Link href="/explorador/calificaciones">
+                        <Button className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white">
+                          Completar Calificaciones Pendientes
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           )}
 
           {!blockingStatus?.is_blocked && (
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Professional Error Messages */}
               {errors.length > 0 && (
-                <CorporateCard className="border-l-4 border-l-error-500 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 bg-error-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <AlertTriangle className="h-5 w-5 text-error-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-secondary-900 mb-2">Errores de Validación</h3>
-                      <ul className="space-y-1">
-                        {errors.map((error, index) => (
-                          <li key={index} className="text-sm text-error-700 font-medium">• {error}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </CorporateCard>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card className="glass border-red-500/20 shadow-2xl">
+                    <CardContent className="p-6">
+                      <div className="flex items-start space-x-4">
+                        <div className="w-10 h-10 bg-gradient-to-r from-red-400 to-red-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <AlertTriangle className="h-5 w-5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-red-300 mb-2">Errores de Validación</h3>
+                          <ul className="space-y-1">
+                            {errors.map((error, index) => (
+                              <li key={index} className="text-sm text-red-200">• {error}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               )}
 
               {/* Service Selection Section */}
-              <CorporateCard className="space-y-8 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
-                <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
-                  <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-trust-500 rounded-xl flex items-center justify-center">
-                    <Search className="h-5 w-5 text-white" />
-                  </div>
-                  <h2 className="text-xl font-bold text-secondary-900">
-                    Detalles del Servicio Profesional
-                  </h2>
-                </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+              >
+                <Card className="glass border-white/10 shadow-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-white flex items-center">
+                      <Search className="mr-3 h-6 w-6 text-blue-400" />
+                      Detalles del Servicio Profesional
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-                  {/* Professional Service Category */}
-                  <div className="lg:col-span-2">
-                    <label className="block text-sm font-bold text-secondary-900 mb-3">
-                      Categoría del Servicio Profesional *
-                    </label>
-                    <select
-                      value={formData.category_id}
-                      onChange={(e) => setFormData(prev => ({ ...prev, category_id: e.target.value ? parseInt(e.target.value) : '' }))}
-                      className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
-                      required
-                    >
-                      <option value="">Seleccionar categoría profesional...</option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id} className="py-2">
-                          {category.icon} {category.name}
-                        </option>
-                      ))}
-                    </select>
-                    <p className="text-xs text-secondary-600 mt-2 font-medium">
-                      {categories.length} servicios profesionales disponibles
-                    </p>
-                  </div>
-
-                  {/* Professional Location */}
-                  <div>
-                    <label className="block text-sm font-bold text-secondary-900 mb-3">
-                      <MapPin className="h-4 w-4 inline mr-2 text-primary-600" />
-                      Localidad en Chubut *
-                    </label>
-                    <select
-                      value={formData.locality}
-                      onChange={(e) => setFormData(prev => ({ ...prev, locality: e.target.value }))}
-                      className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
-                      required
-                    >
-                      <option value="">Seleccionar localidad...</option>
-                      {localities.map((locality) => (
-                        <option key={locality} value={locality} className="py-2">
-                          {locality}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Professional Priority Level */}
-                  <div>
-                    <label className="block text-sm font-bold text-secondary-900 mb-3">
-                      <Zap className="h-4 w-4 inline mr-2 text-warning-600" />
-                      Nivel de Prioridad
-                    </label>
-                    <select
-                      value={formData.urgency}
-                      onChange={(e) => setFormData(prev => ({ ...prev, urgency: e.target.value as any }))}
-                      className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
-                    >
-                      {['low', 'medium', 'high', 'emergency'].map((urgency) => {
-                        const info = getUrgencyInfo(urgency);
-                        const IconComponent = info.icon;
-                        return (
-                          <option key={urgency} value={urgency} className="py-2">
-                            {info.badge} - {info.label}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <div className={`mt-3 px-3 py-2 rounded-lg text-xs font-semibold ${getUrgencyInfo(formData.urgency).bgColor} ${getUrgencyInfo(formData.urgency).color} ${getUrgencyInfo(formData.urgency).borderColor} border`}>
-                      {getUrgencyInfo(formData.urgency).description}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Professional Title Preview */}
-                {formData.title && (
-                  <div className="mt-8 p-6 bg-gradient-to-r from-primary-50 to-trust-50 border-2 border-primary-200 rounded-xl">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Sparkles className="h-5 w-5 text-white" />
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Professional Service Category */}
+                      <div className="lg:col-span-2">
+                        <label className="block text-sm font-medium text-white/80 mb-3">
+                          Categoría del Servicio Profesional *
+                        </label>
+                        <select
+                          value={formData.category_id}
+                          onChange={(e) => setFormData(prev => ({ ...prev, category_id: e.target.value ? parseInt(e.target.value) : '' }))}
+                          className="glass border-white/20 bg-white/5 text-white w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                          required
+                        >
+                          <option value="" className="bg-gray-800 text-white">Seleccionar categoría profesional...</option>
+                          {categories.map((category) => (
+                            <option key={category.id} value={category.id} className="bg-gray-800 text-white py-2">
+                              {category.icon} {category.name}
+                            </option>
+                          ))}
+                        </select>
+                        <p className="text-xs text-white/60 mt-2">
+                          {categories.length} servicios profesionales disponibles
+                        </p>
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-bold text-primary-800 mb-2">Título Generado Automáticamente</h3>
-                        <p className="text-primary-700 font-bold text-lg bg-white px-4 py-2 rounded-lg border border-primary-200">{formData.title}</p>
-                        <p className="text-xs text-primary-600 mt-2 font-medium">Este título será visible para todos los AS de la zona</p>
+
+                      {/* Professional Location */}
+                      <div>
+                        <label className="block text-sm font-medium text-white/80 mb-3">
+                          <MapPin className="h-4 w-4 inline mr-2 text-blue-400" />
+                          Localidad en Chubut *
+                        </label>
+                        <select
+                          value={formData.locality}
+                          onChange={(e) => setFormData(prev => ({ ...prev, locality: e.target.value }))}
+                          className="glass border-white/20 bg-white/5 text-white w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                          required
+                        >
+                          <option value="" className="bg-gray-800 text-white">Seleccionar localidad...</option>
+                          {localities.map((locality) => (
+                            <option key={locality} value={locality} className="bg-gray-800 text-white py-2">
+                              {locality}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Professional Priority Level */}
+                      <div>
+                        <label className="block text-sm font-medium text-white/80 mb-3">
+                          <Zap className="h-4 w-4 inline mr-2 text-yellow-400" />
+                          Nivel de Prioridad
+                        </label>
+                        <select
+                          value={formData.urgency}
+                          onChange={(e) => setFormData(prev => ({ ...prev, urgency: e.target.value as any }))}
+                          className="glass border-white/20 bg-white/5 text-white w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                        >
+                          {['low', 'medium', 'high', 'emergency'].map((urgency) => {
+                            const info = getUrgencyInfo(urgency);
+                            return (
+                              <option key={urgency} value={urgency} className="bg-gray-800 text-white py-2">
+                                {info.badge} - {info.label}
+                              </option>
+                            );
+                          })}
+                        </select>
+                        <div className="mt-3 glass-medium border-white/20 px-3 py-2 rounded-lg text-xs text-white/70">
+                          {getUrgencyInfo(formData.urgency).description}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </CorporateCard>
+
+                    {/* Professional Title Preview */}
+                    {formData.title && (
+                      <div className="glass-medium border-blue-500/20 p-6 rounded-lg">
+                        <div className="flex items-start space-x-4">
+                          <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <Sparkles className="h-5 w-5 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-blue-300 mb-2">Título Generado Automáticamente</h3>
+                            <p className="text-white font-bold text-lg glass border-white/20 px-4 py-2 rounded-lg">{formData.title}</p>
+                            <p className="text-xs text-blue-200 mt-2">Este título será visible para todos los AS de la zona</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
 
               {/* Project Description Section */}
-              <CorporateCard className="space-y-8 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
-                <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
-                  <div className="w-10 h-10 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center">
-                    <span className="text-white text-lg font-bold">📝</span>
-                  </div>
-                  <h2 className="text-xl font-bold text-secondary-900">
-                    Descripción del Proyecto
-                  </h2>
-                </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <Card className="glass border-white/10 shadow-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-white flex items-center">
+                      <span className="mr-3 text-lg">📝</span>
+                      Descripción del Proyecto
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
 
-                <div className="space-y-8">
-                  <div>
-                    <label className="block text-sm font-bold text-secondary-900 mb-3">
-                      Descripción Técnica Detallada *
-                    </label>
-                    <textarea
-                      value={formData.description}
-                      onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                      placeholder="Describa detalladamente el trabajo requerido: materiales, dimensiones, especificaciones técnicas, herramientas necesarias, condiciones del lugar de trabajo..."
-                      rows={6}
-                      className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400 resize-none"
-                      required
-                    />
-                    <p className="text-xs text-secondary-600 mt-2 font-medium">
-                      Una descripción detallada ayuda a los AS a evaluar mejor el trabajo y dar presupuestos precisos
-                    </p>
-                  </div>
+                    <div>
+                      <label className="block text-sm font-medium text-white/80 mb-3">
+                        Descripción Técnica Detallada *
+                      </label>
+                      <textarea
+                        value={formData.description}
+                        onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                        placeholder="Describa detalladamente el trabajo requerido: materiales, dimensiones, especificaciones técnicas, herramientas necesarias, condiciones del lugar de trabajo..."
+                        rows={6}
+                        className="glass border-white/20 bg-white/5 text-white placeholder:text-white/50 resize-none w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                        required
+                      />
+                      <p className="text-xs text-white/60 mt-2">
+                        Una descripción detallada ayuda a los AS a evaluar mejor el trabajo y dar presupuestos precisos
+                      </p>
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-bold text-secondary-900 mb-3">
-                      <MapPin className="h-4 w-4 inline mr-2 text-primary-600" />
-                      Dirección Específica (Opcional)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.specific_address || ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, specific_address: e.target.value }))}
-                      placeholder="Ej: Barrio Centro, Av. San Martín 123, cerca del Banco Nación"
-                      className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
-                    />
-                    <p className="text-xs text-secondary-600 mt-2 font-medium">
-                      Facilita la evaluación de distancia y logística para los profesionales
-                    </p>
-                  </div>
-                </div>
-              </CorporateCard>
+                    <div>
+                      <label className="block text-sm font-medium text-white/80 mb-3">
+                        <MapPin className="h-4 w-4 inline mr-2 text-blue-400" />
+                        Dirección Específica (Opcional)
+                      </label>
+                      <Input
+                        type="text"
+                        value={formData.specific_address || ''}
+                        onChange={(e) => setFormData(prev => ({ ...prev, specific_address: e.target.value }))}
+                        placeholder="Ej: Barrio Centro, Av. San Martín 123, cerca del Banco Nación"
+                        className="glass border-white/20 bg-white/5 text-white placeholder:text-white/50"
+                      />
+                      <p className="text-xs text-white/60 mt-2">
+                        Facilita la evaluación de distancia y logística para los profesionales
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
               {/* Professional Budget Section */}
-              <CorporateCard className="space-y-8 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
-                <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
-                  <div className="w-10 h-10 bg-gradient-to-r from-success-500 to-success-600 rounded-xl flex items-center justify-center">
-                    <DollarSign className="h-5 w-5 text-white" />
-                  </div>
-                  <h2 className="text-xl font-bold text-secondary-900">
-                    Presupuesto Referencial (Opcional)
-                  </h2>
-                </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                <Card className="glass border-white/10 shadow-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-white flex items-center">
+                      <DollarSign className="mr-3 h-6 w-6 text-green-400" />
+                      Presupuesto Referencial (Opcional)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
 
-                <div className="bg-warning-50 border border-warning-200 rounded-xl p-4 mb-6">
-                  <p className="text-sm text-warning-800 font-medium">
-                    💡 <strong>Recomendación:</strong> Proporcionar un rango de presupuesto ayuda a los AS a evaluar si el proyecto se ajusta a sus servicios.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-                  <div>
-                    <label className="block text-sm font-bold text-secondary-900 mb-3">
-                      Presupuesto Mínimo (ARS)
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-secondary-500 font-bold">$</span>
-                      <input
-                        type="number"
-                        value={formData.budget_min || ''}
-                        onChange={(e) => setFormData(prev => ({ ...prev, budget_min: e.target.value ? parseFloat(e.target.value) : undefined }))}
-                        placeholder="15,000"
-                        className="w-full border-2 border-secondary-300 rounded-xl pl-8 pr-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
-                      />
+                    <div className="glass-medium border-yellow-500/20 p-4 rounded-lg">
+                      <p className="text-sm text-yellow-300">
+                        💡 <strong>Recomendación:</strong> Proporcionar un rango de presupuesto ayuda a los AS a evaluar si el proyecto se ajusta a sus servicios.
+                      </p>
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-sm font-bold text-secondary-900 mb-3">
-                      Presupuesto Máximo (ARS)
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-secondary-500 font-bold">$</span>
-                      <input
-                        type="number"
-                        value={formData.budget_max || ''}
-                        onChange={(e) => setFormData(prev => ({ ...prev, budget_max: e.target.value ? parseFloat(e.target.value) : undefined }))}
-                        placeholder="50,000"
-                        className="w-full border-2 border-secondary-300 rounded-xl pl-8 pr-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
-                      />
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-white/80 mb-3">
+                          Presupuesto Mínimo (ARS)
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60 font-bold">$</span>
+                          <Input
+                            type="number"
+                            value={formData.budget_min || ''}
+                            onChange={(e) => setFormData(prev => ({ ...prev, budget_min: e.target.value ? parseFloat(e.target.value) : undefined }))}
+                            placeholder="15,000"
+                            className="glass border-white/20 bg-white/5 text-white placeholder:text-white/50 pl-8"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-white/80 mb-3">
+                          Presupuesto Máximo (ARS)
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60 font-bold">$</span>
+                          <Input
+                            type="number"
+                            value={formData.budget_max || ''}
+                            onChange={(e) => setFormData(prev => ({ ...prev, budget_max: e.target.value ? parseFloat(e.target.value) : undefined }))}
+                            placeholder="50,000"
+                            className="glass border-white/20 bg-white/5 text-white placeholder:text-white/50 pl-8"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                {(formData.budget_min || formData.budget_max) && (
-                  <div className="bg-primary-50 border border-primary-200 rounded-xl p-4">
-                    <p className="text-sm text-primary-700 font-medium">
-                      🎯 Rango presupuestario: <strong>
-                        ${formData.budget_min ? formData.budget_min.toLocaleString() : '---'} - 
-                        ${formData.budget_max ? formData.budget_max.toLocaleString() : '---'}
-                      </strong>
-                    </p>
-                  </div>
-                )}
-              </CorporateCard>
+                    {(formData.budget_min || formData.budget_max) && (
+                      <div className="glass-medium border-blue-500/20 p-4 rounded-lg">
+                        <p className="text-sm text-blue-300">
+                          🎯 Rango presupuestario: <strong className="text-white">
+                            ${formData.budget_min ? formData.budget_min.toLocaleString() : '---'} - 
+                            ${formData.budget_max ? formData.budget_max.toLocaleString() : '---'}
+                          </strong>
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
 
               {/* Professional Timing Section */}
-              <CorporateCard className="space-y-8 glass backdrop-blur-md shadow-xl border border-white/20 p-6">
-                <div className="flex items-center space-x-3 pb-6 border-b border-secondary-200">
-                  <div className="w-10 h-10 bg-gradient-to-r from-trust-500 to-trust-600 rounded-xl flex items-center justify-center">
-                    <Calendar className="h-5 w-5 text-white" />
-                  </div>
-                  <h2 className="text-xl font-bold text-secondary-900">
-                    Disponibilidad Horaria
-                  </h2>
-                </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                <Card className="glass border-white/10 shadow-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-white flex items-center">
+                      <Calendar className="mr-3 h-6 w-6 text-purple-400" />
+                      Disponibilidad Horaria
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
 
-                <div className="space-y-6">
-                  <div className="bg-secondary-50 border border-secondary-200 rounded-xl p-6">
-                    <div className="flex items-start space-x-4">
-                      <input
-                        type="checkbox"
-                        id="flexible_timing"
-                        checked={formData.flexible_timing}
-                        onChange={(e) => setFormData(prev => ({ ...prev, flexible_timing: e.target.checked }))}
-                        className="mt-1 h-5 w-5 text-primary-600 focus:ring-primary-500 border-secondary-300 rounded"
-                      />
-                      <div className="flex-1">
-                        <label htmlFor="flexible_timing" className="block text-sm font-bold text-secondary-900 mb-1">
-                          Disponibilidad Flexible
-                        </label>
-                        <p className="text-xs text-secondary-600 font-medium">
-                          Me adapto a los horarios disponibles del profesional
-                        </p>
+                    <div className="glass-medium border-white/20 p-6 rounded-lg">
+                      <div className="flex items-start space-x-4">
+                        <input
+                          type="checkbox"
+                          id="flexible_timing"
+                          checked={formData.flexible_timing}
+                          onChange={(e) => setFormData(prev => ({ ...prev, flexible_timing: e.target.checked }))}
+                          className="mt-1 h-5 w-5 text-blue-600 focus:ring-blue-500 border-white/30 rounded bg-white/10"
+                        />
+                        <div className="flex-1">
+                          <label htmlFor="flexible_timing" className="block text-sm font-medium text-white mb-1">
+                            Disponibilidad Flexible
+                          </label>
+                          <p className="text-xs text-white/60">
+                            Me adapto a los horarios disponibles del profesional
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {!formData.flexible_timing && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-                      <div>
-                        <label className="block text-sm font-bold text-secondary-900 mb-3">
-                          Fecha Preferida
-                        </label>
-                        <input
-                          type="date"
-                          value={formData.preferred_date || ''}
-                          onChange={(e) => setFormData(prev => ({ ...prev, preferred_date: e.target.value }))}
-                          min={new Date().toISOString().split('T')[0]}
-                          className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
-                        />
-                      </div>
+                    {!formData.flexible_timing && (
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-white/80 mb-3">
+                            Fecha Preferida
+                          </label>
+                          <Input
+                            type="date"
+                            value={formData.preferred_date || ''}
+                            onChange={(e) => setFormData(prev => ({ ...prev, preferred_date: e.target.value }))}
+                            min={new Date().toISOString().split('T')[0]}
+                            className="glass border-white/20 bg-white/5 text-white"
+                          />
+                        </div>
 
-                      <div>
-                        <label className="block text-sm font-bold text-secondary-900 mb-3">
-                          Hora Preferida
-                        </label>
-                        <input
-                          type="time"
-                          value={formData.preferred_time || ''}
-                          onChange={(e) => setFormData(prev => ({ ...prev, preferred_time: e.target.value }))}
-                          className="w-full border-2 border-secondary-300 rounded-xl px-4 py-4 text-sm font-medium focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white hover:border-primary-400"
-                        />
+                        <div>
+                          <label className="block text-sm font-medium text-white/80 mb-3">
+                            Hora Preferida
+                          </label>
+                          <Input
+                            type="time"
+                            value={formData.preferred_time || ''}
+                            onChange={(e) => setFormData(prev => ({ ...prev, preferred_time: e.target.value }))}
+                            className="glass border-white/20 bg-white/5 text-white"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              </CorporateCard>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
 
               {/* Professional Submission Section */}
-              <CorporateCard className="bg-gradient-to-br from-primary-50 via-white to-trust-50 border-2 border-primary-200 glass backdrop-blur-md shadow-xl p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-primary-600 to-trust-600 rounded-xl flex items-center justify-center">
-                        <CheckCircle className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-secondary-900">
-                          Enviar Solicitud Profesional
-                        </h3>
-                        <p className="text-secondary-600 text-sm font-medium">
-                          Los AS certificados de tu zona serán notificados instantáneamente
-                        </p>
-                      </div>
-                    </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
+                <Card className="glass border-green-500/20 shadow-2xl">
+                  <CardContent className="p-8">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-4 mb-4">
+                          <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl flex items-center justify-center">
+                            <CheckCircle className="h-6 w-6 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold text-white">
+                              Enviar Solicitud Profesional
+                            </h3>
+                            <p className="text-white/70 text-sm">
+                              Los AS certificados de tu zona serán notificados instantáneamente
+                            </p>
+                          </div>
+                        </div>
 
-                    <div className="bg-white rounded-xl p-4 border border-primary-200">
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                        <div className="flex items-center justify-center space-x-2">
-                          <Zap className="h-4 w-4 text-warning-600" />
-                          <span className="text-xs font-bold text-secondary-700">Respuesta en 5 min</span>
-                        </div>
-                        <div className="flex items-center justify-center space-x-2">
-                          <ShieldCheck className="h-4 w-4 text-success-600" />
-                          <span className="text-xs font-bold text-secondary-700">AS Verificados</span>
-                        </div>
-                        <div className="flex items-center justify-center space-x-2">
-                          <Sparkles className="h-4 w-4 text-primary-600" />
-                          <span className="text-xs font-bold text-secondary-700">Garantía de Calidad</span>
+                        <div className="glass-medium border-white/20 p-4 rounded-lg">
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                            <div className="flex items-center justify-center space-x-2">
+                              <Zap className="h-4 w-4 text-yellow-400" />
+                              <span className="text-xs font-semibold text-white">Respuesta en 5 min</span>
+                            </div>
+                            <div className="flex items-center justify-center space-x-2">
+                              <ShieldCheck className="h-4 w-4 text-green-400" />
+                              <span className="text-xs font-semibold text-white">AS Verificados</span>
+                            </div>
+                            <div className="flex items-center justify-center space-x-2">
+                              <Sparkles className="h-4 w-4 text-blue-400" />
+                              <span className="text-xs font-semibold text-white">Garantía de Calidad</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
+                      
+                      <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 lg:ml-8">
+                        <Link href="/explorador/dashboard">
+                          <Button 
+                            variant="outline"
+                            className="glass border-white/20 text-white hover:bg-white/10 w-full sm:w-auto"
+                          >
+                            Cancelar
+                          </Button>
+                        </Link>
+                        
+                        <Button
+                          type="submit"
+                          disabled={submitting || blockingStatus?.is_blocked}
+                          className="liquid-gradient hover:opacity-90 transition-all duration-300 w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {submitting ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                              Enviando Solicitud...
+                            </>
+                          ) : (
+                            <>
+                              Enviar Solicitud Profesional
+                              <ArrowRight className="ml-2 h-4 w-4" />
+                            </>
+                          )}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 lg:ml-8">
-                    <Link href="/explorador/dashboard">
-                      <button 
-                        className="w-full sm:w-auto h-11 px-8 glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                      >
-                        Cancelar
-                      </button>
-                    </Link>
-                    
-                    <button
-                      type="submit"
-                      disabled={submitting || blockingStatus?.is_blocked}
-                      className="w-full sm:w-auto px-8 h-11 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                    >
-                      {submitting ? 'Enviando Solicitud...' : 'Enviar Solicitud Profesional'}
-                      {!submitting && <LogOut className="h-4 w-4" />}
-                    </button>
-                  </div>
-                </div>
-              </CorporateCard>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </form>
           )}
 
           {/* Professional Trust Footer */}
-          <div className="mt-12 text-center">
-            <div className="inline-flex items-center justify-center space-x-2 bg-white rounded-xl px-6 py-3 shadow-md border border-secondary-200">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mt-12 text-center"
+          >
+            <div className="inline-flex items-center justify-center space-x-2 glass border-white/20 rounded-xl px-6 py-3 shadow-lg">
               <Logo size="sm" showText={false} />
-              <span className="text-sm font-bold text-secondary-700">
+              <span className="text-sm font-semibold text-white">
                 Sistema Profesional Certificado
               </span>
-              <ShieldCheck className="h-4 w-4 text-success-600" />
+              <ShieldCheck className="h-4 w-4 text-green-400" />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </>
