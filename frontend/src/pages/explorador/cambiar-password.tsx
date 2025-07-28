@@ -10,14 +10,11 @@ import {
   ArrowLeft,
   CheckCircle,
   AlertTriangle,
-  ShieldCheck
+  ShieldCheck,
+  Lock
 } from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { CorporateNavigation } from '@/components/ui';
 
 const CambiarPassword: NextPage = () => {
   const { user, loading, changePassword } = useAuth();
@@ -130,10 +127,28 @@ const CambiarPassword: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-3 border-gray-900 mx-auto mb-6"></div>
-          <p className="text-gray-600 font-semibold">Cargando...</p>
+      <div className="min-h-screen relative overflow-hidden" style={{
+        background: 'radial-gradient(ellipse at top, #1e293b 0%, #0f172a 50%, #020617 100%)'
+      }}>
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full opacity-30" style={{
+            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, rgba(59, 130, 246, 0.1) 40%, transparent 70%)',
+            animation: 'float 20s ease-in-out infinite'
+          }} />
+          <div className="absolute top-1/2 -right-32 w-80 h-80 rounded-full opacity-40" style={{
+            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.1) 40%, transparent 70%)',
+            animation: 'float 25s ease-in-out infinite reverse'
+          }} />
+        </div>
+        <div className="relative flex items-center justify-center min-h-screen">
+          <div className="text-center p-8 rounded-3xl" style={{
+            background: 'rgba(30, 41, 59, 0.4)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <div className="w-12 h-12 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="text-white/90 font-medium text-lg">Cargando...</div>
+          </div>
         </div>
       </div>
     );
@@ -144,92 +159,176 @@ const CambiarPassword: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Cambiar Contraseña | Fixia</title>
-        <meta name="description" content="Cambia tu contraseña de forma segura" />
+        <title>Cambiar Contraseña | FIXIA</title>
+        <meta name="description" content="Cambia tu contraseña de forma segura - Sistema Liquid Glass" />
+        <meta name="keywords" content="cambiar contraseña, seguridad, FIXIA, explorador, password" />
       </Head>
 
-      <div className="min-h-screen bg-gray-50">
-        <div className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold text-gray-900">Cambiar Contraseña</h1>
-              <button onClick={() => router.back()} className="text-gray-500 hover:text-gray-700">
-                ← Volver
-              </button>
-            </div>
-          </div>
+      <div className="min-h-screen relative overflow-hidden" style={{
+        background: 'radial-gradient(ellipse at top, #1e293b 0%, #0f172a 50%, #020617 100%)'
+      }}>
+        {/* Floating Orbs Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full opacity-30" style={{
+            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, rgba(59, 130, 246, 0.1) 40%, transparent 70%)',
+            animation: 'float 20s ease-in-out infinite'
+          }} />
+          <div className="absolute top-1/2 -right-32 w-80 h-80 rounded-full opacity-40" style={{
+            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.1) 40%, transparent 70%)',
+            animation: 'float 25s ease-in-out infinite reverse'
+          }} />
+          <div className="absolute -bottom-32 left-1/3 w-64 h-64 rounded-full opacity-20" style={{
+            background: 'radial-gradient(circle, rgba(236, 72, 153, 0.4) 0%, rgba(236, 72, 153, 0.1) 40%, transparent 70%)',
+            animation: 'float 30s ease-in-out infinite'
+          }} />
         </div>
 
-        <div className="sidebar-desktop:ml-72 xs:sidebar-desktop:ml-80">
-          <div className="p-6 space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
+        <div className="relative z-10 min-h-screen py-8 px-4">
+          <div className="max-w-2xl mx-auto">
+            {/* Header con Liquid Glass */}
+            <div className="mb-8 p-6 rounded-3xl" style={{
+              background: 'rgba(30, 41, 59, 0.4)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 32px 64px rgba(0, 0, 0, 0.3), 0 16px 32px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+            }}>
+              <div className="flex items-center justify-between">
                 <Link href="/explorador/dashboard">
-                  <button className="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center hover:bg-gray-50 transition-all">
-                    <ArrowLeft className="w-5 h-5 text-gray-600" />
+                  <button className="flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105" style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    color: 'white'
+                  }}>
+                    <ArrowLeft className="w-5 h-5" />
+                    Volver
                   </button>
                 </Link>
-                <div>
-                  <h1 className="text-2xl font-semibold text-gray-900">Cambiar Contraseña</h1>
-                  <p className="text-gray-600 mt-1">Actualiza tu contraseña de forma segura</p>
+                <div className="text-right flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{
+                    background: 'rgba(59, 130, 246, 0.2)',
+                    backdropFilter: 'blur(12px)',
+                    border: '1px solid rgba(59, 130, 246, 0.3)'
+                  }}>
+                    <Lock className="w-6 h-6 text-blue-300" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-bold text-white mb-2" style={{
+                      textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                    }}>
+                      Cambiar Contraseña
+                    </h1>
+                    <p className="text-white/70 font-medium">
+                      Actualiza tu contraseña de forma segura
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Messages */}
+            {/* Messages con Liquid Glass */}
             {message && (
-              <div className="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-600" />
-                <span className="text-green-800 font-medium">{message}</span>
+              <div className="mb-6 p-4 rounded-2xl flex items-center gap-3" style={{
+                background: 'rgba(34, 197, 94, 0.1)',
+                backdropFilter: 'blur(16px)',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                boxShadow: '0 8px 16px rgba(34, 197, 94, 0.1)'
+              }}>
+                <CheckCircle className="w-6 h-6 text-green-300" />
+                <span className="text-green-300 font-medium">{message}</span>
               </div>
             )}
             
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-center space-x-3">
-                <AlertTriangle className="w-5 h-5 text-red-600" />
-                <span className="text-red-800 font-medium">{error}</span>
+              <div className="mb-6 p-4 rounded-2xl flex items-center gap-3" style={{
+                background: 'rgba(239, 68, 68, 0.1)',
+                backdropFilter: 'blur(16px)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                boxShadow: '0 8px 16px rgba(239, 68, 68, 0.1)'
+              }}>
+                <AlertTriangle className="w-6 h-6 text-red-300" />
+                <span className="text-red-300 font-medium">{error}</span>
               </div>
             )}
 
-            {/* Security Tips */}
-            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
-              <div className="flex items-start space-x-3">
-                <ShieldCheck className="w-6 h-6 text-blue-600 mt-1" />
+            {/* Security Tips con Liquid Glass */}
+            <div className="mb-6 p-6 rounded-3xl" style={{
+              background: 'rgba(30, 41, 59, 0.4)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(59, 130, 246, 0.3)',
+              boxShadow: '0 16px 32px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+            }}>
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style={{
+                  background: 'rgba(59, 130, 246, 0.2)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(59, 130, 246, 0.3)'
+                }}>
+                  <ShieldCheck className="w-6 h-6 text-blue-300" />
+                </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-blue-900 mb-2">Consejos de Seguridad</h3>
-                  <ul className="text-blue-800 text-sm space-y-1">
-                    <li>• Usa una contraseña única que no uses en otros sitios</li>
-                    <li>• Combina letras mayúsculas, minúsculas, números y símbolos</li>
-                    <li>• Evita información personal como nombres o fechas</li>
-                    <li>• Considera usar un gestor de contraseñas</li>
+                  <h3 className="text-xl font-bold text-white mb-4" style={{
+                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                  }}>
+                    Consejos de Seguridad
+                  </h3>
+                  <ul className="text-white/80 space-y-3 text-sm leading-relaxed">
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-300 font-bold">•</span>
+                      Usa una contraseña única que no uses en otros sitios
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-300 font-bold">•</span>
+                      Combina letras mayúsculas, minúsculas, números y símbolos
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-300 font-bold">•</span>
+                      Evita información personal como nombres o fechas
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-300 font-bold">•</span>
+                      Considera usar un gestor de contraseñas
+                    </li>
                   </ul>
                 </div>
               </div>
             </div>
 
-            {/* Password Form */}
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Password Form con Liquid Glass */}
+            <div className="rounded-3xl p-8" style={{
+              background: 'rgba(30, 41, 59, 0.4)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 32px 64px rgba(0, 0, 0, 0.3), 0 16px 32px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+            }}>
+              <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Current Password */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <div className="space-y-2">
+                  <label className="block text-white font-semibold text-lg mb-2" style={{
+                    textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
+                  }}>
                     Contraseña Actual *
                   </label>
                   <div className="relative">
-                    <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Key className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
                     <input
                       type={showPasswords.current ? 'text' : 'password'}
                       required
                       value={formData.currentPassword}
                       onChange={(e) => setFormData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                      className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
+                      className="w-full pl-12 pr-12 py-4 rounded-xl font-medium text-white placeholder-white/60 transition-all duration-300 focus:scale-105 focus:outline-none"
                       placeholder="Tu contraseña actual"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+                      }}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPasswords(prev => ({ ...prev, current: !prev.current }))}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white/80 transition-colors"
                     >
                       {showPasswords.current ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -237,54 +336,91 @@ const CambiarPassword: NextPage = () => {
                 </div>
 
                 {/* New Password */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <div className="space-y-2">
+                  <label className="block text-white font-semibold text-lg mb-2" style={{
+                    textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
+                  }}>
                     Nueva Contraseña *
                   </label>
                   <div className="relative">
-                    <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Key className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
                     <input
                       type={showPasswords.new ? 'text' : 'password'}
                       required
                       value={formData.newPassword}
                       onChange={(e) => handlePasswordChange(e.target.value)}
-                      className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
+                      className="w-full pl-12 pr-12 py-4 rounded-xl font-medium text-white placeholder-white/60 transition-all duration-300 focus:scale-105 focus:outline-none"
                       placeholder="Tu nueva contraseña"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+                      }}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPasswords(prev => ({ ...prev, new: !prev.new }))}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white/80 transition-colors"
                     >
                       {showPasswords.new ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
 
-                  {/* Password Strength */}
+                  {/* Password Strength con Liquid Glass */}
                   {formData.newPassword && (
-                    <div className="mt-3">
-                      <div className="flex items-center justify-between text-sm mb-2">
-                        <span className="text-gray-600">Fortaleza de contraseña:</span>
-                        <span className={`font-semibold ${strength.color.replace('bg-', 'text-')}`}>
+                    <div className="mt-4 p-4 rounded-2xl" style={{
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}>
+                      <div className="flex items-center justify-between text-sm mb-3">
+                        <span className="text-white/80 font-medium">Fortaleza de contraseña:</span>
+                        <span className={`font-semibold ${
+                          strength.color === 'bg-red-500' ? 'text-red-400' :
+                          strength.color === 'bg-red-400' ? 'text-red-300' :
+                          strength.color === 'bg-yellow-500' ? 'text-yellow-300' :
+                          strength.color === 'bg-blue-500' ? 'text-blue-300' :
+                          'text-green-300'
+                        }`}>
                           {strength.label}
                         </span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full rounded-full h-3" style={{
+                        background: 'rgba(255, 255, 255, 0.1)'
+                      }}>
                         <div
-                          className={`h-2 rounded-full transition-all duration-300 ${strength.color}`}
-                          style={{ width: strength.width }}
+                          className={`h-3 rounded-full transition-all duration-500 ${strength.color}`}
+                          style={{ 
+                            width: strength.width,
+                            boxShadow: strength.width !== '0%' ? `0 0 8px ${
+                              strength.color === 'bg-red-500' ? 'rgba(239, 68, 68, 0.5)' :
+                              strength.color === 'bg-red-400' ? 'rgba(248, 113, 113, 0.5)' :
+                              strength.color === 'bg-yellow-500' ? 'rgba(234, 179, 8, 0.5)' :
+                              strength.color === 'bg-blue-500' ? 'rgba(59, 130, 246, 0.5)' :
+                              'rgba(34, 197, 94, 0.5)'
+                            }` : 'none'
+                          }}
                         />
                       </div>
                     </div>
                   )}
 
-                  {/* Validation Errors */}
+                  {/* Validation Errors con Liquid Glass */}
                   {validationErrors.length > 0 && (
-                    <div className="mt-3 bg-red-50 border border-red-200 rounded-xl p-3">
-                      <p className="text-red-800 font-semibold text-sm mb-2">La contraseña debe cumplir:</p>
-                      <ul className="text-red-700 text-sm space-y-1">
+                    <div className="mt-4 p-4 rounded-2xl" style={{
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      backdropFilter: 'blur(16px)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      boxShadow: '0 8px 16px rgba(239, 68, 68, 0.1)'
+                    }}>
+                      <p className="text-red-300 font-semibold text-sm mb-3">La contraseña debe cumplir:</p>
+                      <ul className="text-red-200 text-sm space-y-2">
                         {validationErrors.map((error, index) => (
-                          <li key={index}>• {error}</li>
+                          <li key={index} className="flex items-start gap-2">
+                            <span className="text-red-300 font-bold">•</span>
+                            {error}
+                          </li>
                         ))}
                       </ul>
                     </div>
@@ -292,40 +428,63 @@ const CambiarPassword: NextPage = () => {
                 </div>
 
                 {/* Confirm Password */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <div className="space-y-2">
+                  <label className="block text-white font-semibold text-lg mb-2" style={{
+                    textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
+                  }}>
                     Confirmar Nueva Contraseña *
                   </label>
                   <div className="relative">
-                    <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Key className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
                     <input
                       type={showPasswords.confirm ? 'text' : 'password'}
                       required
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                      className="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 transition-all"
+                      className="w-full pl-12 pr-12 py-4 rounded-xl font-medium text-white placeholder-white/60 transition-all duration-300 focus:scale-105 focus:outline-none"
                       placeholder="Confirma tu nueva contraseña"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+                      }}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPasswords(prev => ({ ...prev, confirm: !prev.confirm }))}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white/80 transition-colors"
                     >
                       {showPasswords.confirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                   
                   {formData.confirmPassword && formData.newPassword !== formData.confirmPassword && (
-                    <p className="mt-2 text-red-600 text-sm">Las contraseñas no coinciden</p>
+                    <div className="mt-3 p-3 rounded-xl" style={{
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)'
+                    }}>
+                      <p className="text-red-300 text-sm font-medium">Las contraseñas no coinciden</p>
+                    </div>
                   )}
                 </div>
 
-                {/* Actions */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+                {/* Actions con Liquid Glass */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-8" style={{
+                  borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                }}>
                   <Link href="/explorador/dashboard" className="flex-1">
                     <button
                       type="button"
-                      className="w-full px-6 py-3 bg-white border border-gray-200 text-gray-900 rounded-xl font-semibold hover:bg-gray-50 transition-all"
+                      className="w-full px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+                        color: 'white'
+                      }}
                     >
                       Cancelar
                     </button>
@@ -333,9 +492,27 @@ const CambiarPassword: NextPage = () => {
                   <button
                     type="submit"
                     disabled={saving || validationErrors.length > 0 || !formData.currentPassword || !formData.newPassword || !formData.confirmPassword}
-                    className="flex-1 px-6 py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                      background: saving || validationErrors.length > 0 || !formData.currentPassword || !formData.newPassword || !formData.confirmPassword
+                        ? 'rgba(156, 163, 175, 0.3)' 
+                        : 'linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(139, 92, 246, 0.8) 100%)',
+                      backdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      boxShadow: saving || validationErrors.length > 0 || !formData.currentPassword || !formData.newPassword || !formData.confirmPassword
+                        ? '0 8px 32px rgba(0, 0, 0, 0.2)' 
+                        : '0 8px 32px rgba(59, 130, 246, 0.3)',
+                      color: 'white'
+                    }}
                   >
-                    {saving ? 'Cambiando...' : 'Cambiar Contraseña'}
+                    {saving ? (
+                      <div className="flex items-center justify-center gap-3">
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Cambiando...
+                      </div>
+                    ) : (
+                      'Cambiar Contraseña'
+                    )}
                   </button>
                 </div>
               </form>
