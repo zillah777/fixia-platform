@@ -1,6 +1,13 @@
 import React from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { ArrowLeft, Shield, Lock, Eye, Users, FileText, AlertTriangle, CheckCircle, CreditCard, Info } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/contexts/AuthContext';
 
 const PrivacyPage: NextPage = () => {
   return (
@@ -10,17 +17,88 @@ const PrivacyPage: NextPage = () => {
         <meta name="description" content="Política de privacidad y protección de datos de Fixia" />
       </Head>
 
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-lg shadow-sm p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">
-              Política de Privacidad y Protección de Datos
-            </h1>
-            
-            <div className="prose max-w-none">
-              <p className="text-lg text-gray-700 mb-6">
-                <strong>Última actualización:</strong> {new Date().toLocaleDateString('es-AR')}
+      <div className="min-h-screen relative overflow-hidden">
+        {/* Background - Mismo estilo que homepage */}
+        <div className="absolute inset-0 bg-background">
+          <div className="absolute top-1/4 -left-32 w-64 h-64 liquid-gradient rounded-full blur-3xl opacity-20 animate-float"></div>
+          <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 right-1/4 w-48 h-48 bg-gradient-to-r from-blue-400 to-cyan-300 rounded-full blur-3xl opacity-15 animate-float" style={{ animationDelay: '4s' }}></div>
+          <div className="absolute top-3/4 left-1/3 w-32 h-32 bg-gradient-to-r from-green-400 to-blue-400 rounded-full blur-3xl opacity-10 animate-float" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-1/2 left-1/4 w-40 h-40 bg-gradient-to-r from-pink-400 to-red-400 rounded-full blur-3xl opacity-15 animate-float" style={{ animationDelay: '3s' }}></div>
+          <div className="absolute top-1/6 right-1/3 w-56 h-56 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full blur-3xl opacity-10 animate-float" style={{ animationDelay: '5s' }}></div>
+        </div>
+
+        {/* Header Navigation */}
+        <Header />
+
+        <div className="relative z-10 pt-32 pb-20">
+          <div className="container mx-auto px-6">
+            {/* Breadcrumb */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mb-8"
+            >
+              <Link
+                href="/"
+                className="inline-flex items-center text-sm text-white/60 hover:text-white transition-colors"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Volver al inicio
+              </Link>
+            </motion.div>
+
+            {/* Hero Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="text-center mb-12"
+            >
+              <div className="mb-6">
+                <Badge className="glass-medium border-white/20 text-blue-400 mb-6 px-6 py-3 text-sm font-semibold">
+                  <Shield className="mr-2 h-4 w-4" />
+                  Privacidad Digital
+                </Badge>
+              </div>
+              
+              <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+                Política de <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Privacidad</span>
+              </h1>
+              
+              <p className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
+                Tu privacidad es fundamental. Conoce cómo protegemos, utilizamos y gestionamos tu información personal en nuestra plataforma.
               </p>
+            </motion.div>
+
+            {/* Content Cards */}
+            <div className="max-w-4xl mx-auto space-y-8">
+              
+              {/* Información General */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <Card className="glass border-white/10 shadow-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-white flex items-center">
+                      <Info className="mr-3 h-5 w-5 text-blue-400" />
+                      Información General
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-white/80 space-y-4">
+                    <p><strong>Última actualización:</strong> {new Date().toLocaleDateString('es-AR')}</p>
+                    <p>
+                      En Fixia.com.ar respetamos tu privacidad y nos comprometemos a proteger tus datos personales. 
+                      Esta política explica cómo recopilamos, utilizamos, almacenamos y protegemos tu información 
+                      en cumplimiento con la Ley 25.326 de Protección de Datos Personales de Argentina y el 
+                      Reglamento General de Protección de Datos (GDPR).
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
               <section className="mb-8">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Introducción</h2>
@@ -32,262 +110,399 @@ const PrivacyPage: NextPage = () => {
                 </p>
               </section>
 
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Responsable del Tratamiento</h2>
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <p><strong>Fixia.com.ar</strong></p>
-                  <p>Email: privacy@fixia.com.ar</p>
-                  <p>Dirección: [Dirección en Chubut, Argentina]</p>
-                </div>
-              </section>
+              {/* Responsable del Tratamiento */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                <Card className="glass border-white/10 shadow-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-white flex items-center">
+                      <FileText className="mr-3 h-5 w-5 text-green-400" />
+                      1. Responsable del Tratamiento
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-white/80 space-y-4">
+                    <div className="glass-medium border-blue-500/20 p-4 rounded-lg">
+                      <p className="font-semibold text-blue-300 mb-3">
+                        <strong>Fixia.com.ar</strong>
+                      </p>
+                      <ul className="space-y-2 text-blue-200">
+                        <li>• Email: privacy@fixia.com.ar</li>
+                        <li>• Dirección: [Dirección en Chubut, Argentina]</li>
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">3. Datos que Recopilamos</h2>
-                
-                <h3 className="text-xl font-semibold mt-6 mb-3">3.1. Datos de Registro</h3>
-                <ul className="list-disc ml-6">
-                  <li>Nombre y apellido</li>
-                  <li>Fecha de nacimiento</li>
-                  <li>Localidad y dirección</li>
-                  <li>Teléfono y correo electrónico</li>
-                  <li>Documento Nacional de Identidad (DNI) y número de trámite</li>
-                  <li>Fotografía de perfil</li>
-                </ul>
+              {/* Datos que Recopilamos */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                <Card className="glass border-white/10 shadow-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-white flex items-center">
+                      <Users className="mr-3 h-5 w-5 text-purple-400" />
+                      2. Datos que Recopilamos
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-white/80 space-y-6">
+                    
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <FileText className="mr-2 h-5 w-5 text-blue-400" />
+                        2.1. Datos de Registro
+                      </h3>
+                      <div className="glass border-white/10 p-4 rounded-lg space-y-2">
+                        <p>• Nombre y apellido</p>
+                        <p>• Fecha de nacimiento</p>
+                        <p>• Localidad y dirección</p>
+                        <p>• Teléfono y correo electrónico</p>
+                        <p>• Documento Nacional de Identidad (DNI) y número de trámite</p>
+                        <p>• Fotografía de perfil</p>
+                      </div>
+                    </div>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">3.2. Datos Profesionales (Solo AS)</h3>
-                <ul className="list-disc ml-6">
-                  <li>Profesión y especialización</li>
-                  <li>Número de matrícula profesional</li>
-                  <li>Años de experiencia</li>
-                  <li>Portafolio de trabajos</li>
-                  <li>Referencias personales</li>
-                </ul>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <Users className="mr-2 h-5 w-5 text-green-400" />
+                        2.2. Datos Profesionales (Solo AS)
+                      </h3>
+                      <div className="glass border-white/10 p-4 rounded-lg space-y-2">
+                        <p>• Profesión y especialización</p>
+                        <p>• Número de matrícula profesional</p>
+                        <p>• Años de experiencia</p>
+                        <p>• Portafolio de trabajos</p>
+                        <p>• Referencias personales</p>
+                      </div>
+                    </div>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">3.3. Datos de Verificación</h3>
-                <ul className="list-disc ml-6">
-                  <li>Fotografías del DNI (frente y dorso)</li>
-                  <li>Selfie sosteniendo el DNI</li>
-                  <li>Documentos de habilitación profesional</li>
-                </ul>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <Shield className="mr-2 h-5 w-5 text-yellow-400" />
+                        2.3. Datos de Verificación
+                      </h3>
+                      <div className="glass border-white/10 p-4 rounded-lg space-y-2">
+                        <p>• Fotografías del DNI (frente y dorso)</p>
+                        <p>• Selfie sosteniendo el DNI</p>
+                        <p>• Documentos de habilitación profesional</p>
+                      </div>
+                    </div>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">3.4. Datos de Uso</h3>
-                <ul className="list-disc ml-6">
-                  <li>Historial de búsquedas</li>
-                  <li>Servicios contratados o prestados</li>
-                  <li>Mensajes y comunicaciones</li>
-                  <li>Calificaciones y reseñas</li>
-                  <li>Geolocalización (con tu consentimiento)</li>
-                </ul>
-              </section>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <Eye className="mr-2 h-5 w-5 text-cyan-400" />
+                        2.4. Datos de Uso
+                      </h3>
+                      <div className="glass border-white/10 p-4 rounded-lg space-y-2">
+                        <p>• Historial de búsquedas</p>
+                        <p>• Servicios contratados o prestados</p>
+                        <p>• Mensajes y comunicaciones</p>
+                        <p>• Calificaciones y reseñas</p>
+                        <p>• Geolocalización (con tu consentimiento)</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">4. Finalidades del Tratamiento</h2>
-                <h3 className="text-xl font-semibold mt-6 mb-3">4.1. Finalidades Principales</h3>
-                <ul className="list-disc ml-6">
-                  <li>Facilitar la conexión entre profesionales y clientes</li>
-                  <li>Verificar la identidad de los usuarios</li>
-                  <li>Gestionar perfiles y servicios</li>
-                  <li>Procesar reservas y pagos</li>
-                  <li>Proporcionar soporte al cliente</li>
-                </ul>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">4.2. Finalidades Secundarias</h3>
-                <ul className="list-disc ml-6">
-                  <li>Mejorar nuestros servicios</li>
-                  <li>Prevenir fraudes y actividades ilícitas</li>
-                  <li>Cumplir con obligaciones legales</li>
-                  <li>Enviar comunicaciones de marketing (con tu consentimiento)</li>
-                </ul>
-              </section>
+              {/* Seguridad Digital */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
+                <Card className="glass border-white/10 shadow-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-white flex items-center">
+                      <Lock className="mr-3 h-5 w-5 text-green-400" />
+                      3. Seguridad Digital y Protección
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-white/80 space-y-6">
+                    <div className="glass-medium border-green-500/20 p-4 rounded-lg">
+                      <h3 className="font-semibold text-green-300 mb-2">Medidas de Seguridad Implementadas</h3>
+                    </div>
 
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">5. Seguridad Digital y Protección</h2>
-                
-                <div className="bg-green-50 p-4 rounded-lg mb-4">
-                  <h3 className="text-lg font-semibold text-green-800 mb-2">Medidas de Seguridad Implementadas</h3>
-                </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <Lock className="mr-2 h-5 w-5 text-blue-400" />
+                        3.1. Seguridad Técnica
+                      </h3>
+                      <div className="glass border-white/10 p-4 rounded-lg space-y-2">
+                        <p>• <strong>Encriptación:</strong> Todos los datos se transmiten usando HTTPS/TLS</p>
+                        <p>• <strong>Cifrado de base de datos:</strong> Información sensible encriptada en reposo</p>
+                        <p>• <strong>Autenticación:</strong> Sistema de tokens JWT seguros</p>
+                        <p>• <strong>Firewall:</strong> Protección contra accesos no autorizados</p>
+                        <p>• <strong>Monitoreo:</strong> Supervisión 24/7 de actividades sospechosas</p>
+                      </div>
+                    </div>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">5.1. Seguridad Técnica</h3>
-                <ul className="list-disc ml-6">
-                  <li><strong>Encriptación:</strong> Todos los datos se transmiten usando HTTPS/TLS</li>
-                  <li><strong>Cifrado de base de datos:</strong> Información sensible encriptada en reposo</li>
-                  <li><strong>Autenticación:</strong> Sistema de tokens JWT seguros</li>
-                  <li><strong>Firewall:</strong> Protección contra accesos no autorizados</li>
-                  <li><strong>Monitoreo:</strong> Supervisión 24/7 de actividades sospechosas</li>
-                </ul>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <Shield className="mr-2 h-5 w-5 text-purple-400" />
+                        3.2. Seguridad Organizacional
+                      </h3>
+                      <div className="glass border-white/10 p-4 rounded-lg space-y-2">
+                        <p>• Acceso limitado por roles y necesidad</p>
+                        <p>• Auditorías regulares de seguridad</p>
+                        <p>• Capacitación en protección de datos</p>
+                        <p>• Protocolos de respuesta a incidentes</p>
+                      </div>
+                    </div>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">5.2. Seguridad Organizacional</h3>
-                <ul className="list-disc ml-6">
-                  <li>Acceso limitado por roles y necesidad</li>
-                  <li>Auditorías regulares de seguridad</li>
-                  <li>Capacitación en protección de datos</li>
-                  <li>Protocolos de respuesta a incidentes</li>
-                </ul>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <FileText className="mr-2 h-5 w-5 text-cyan-400" />
+                        3.3. Almacenamiento Seguro
+                      </h3>
+                      <div className="glass border-white/10 p-4 rounded-lg space-y-2">
+                        <p>• Servidores en centros de datos certificados</p>
+                        <p>• Respaldos automáticos encriptados</p>
+                        <p>• Redundancia geográfica</p>
+                        <p>• Eliminación segura de datos</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
 
-                <h3 className="text-xl font-semibold mt-6 mb-3">5.3. Almacenamiento Seguro</h3>
-                <ul className="list-disc ml-6">
-                  <li>Servidores en centros de datos certificados</li>
-                  <li>Respaldos automáticos encriptados</li>
-                  <li>Redundancia geográfica</li>
-                  <li>Eliminación segura de datos</li>
-                </ul>
-              </section>
+              {/* MercadoPago Security */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                <Card className="glass border-white/10 shadow-2xl">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-white flex items-center">
+                      <CreditCard className="mr-3 h-5 w-5 text-green-400" />
+                      4. Seguridad de Pagos con MercadoPago
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-white/80 space-y-6">
+                    <div className="glass-medium border-blue-500/20 p-4 rounded-lg">
+                      <h3 className="font-semibold text-blue-300 mb-2">Protección en Transacciones</h3>
+                      <p className="text-blue-200">
+                        Fixia.com.ar utiliza MercadoPago como procesador de pagos, garantizando 
+                        los más altos estándares de seguridad financiera.
+                      </p>
+                    </div>
 
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. Seguridad de Pagos con MercadoPago</h2>
-                
-                <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                  <h3 className="text-lg font-semibold text-blue-800 mb-2">Protección en Transacciones</h3>
-                  <p className="text-blue-700">
-                    Fixia.com.ar utiliza MercadoPago como procesador de pagos, garantizando 
-                    los más altos estándares de seguridad financiera.
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <CheckCircle className="mr-2 h-5 w-5 text-green-400" />
+                        4.1. Características de Seguridad
+                      </h3>
+                      <div className="glass border-white/10 p-4 rounded-lg space-y-2">
+                        <p>• <strong>PCI DSS Compliance:</strong> Cumplimiento con estándares internacionales</p>
+                        <p>• <strong>Tokenización:</strong> Los datos de tarjetas no se almacenan en nuestros servidores</p>
+                        <p>• <strong>3D Secure:</strong> Autenticación adicional para mayor seguridad</p>
+                        <p>• <strong>Monitoreo anti-fraude:</strong> Detección automática de transacciones sospechosas</p>
+                        <p>• <strong>Certificación SSL:</strong> Comunicación segura en todos los pagos</p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                        <AlertTriangle className="mr-2 h-5 w-5 text-red-400" />
+                        4.2. Información que NO Almacenamos
+                      </h3>
+                      <div className="glass border-white/10 p-4 rounded-lg space-y-2">
+                        <p>• Números de tarjetas de crédito/débito completos</p>
+                        <p>• Códigos de seguridad (CVV)</p>
+                        <p>• Datos bancarios completos</p>
+                        <p>• PINs o contraseñas bancarias</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* CTA de Aceptación */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.7 }}
+                className="text-center pt-8"
+              >
+                <div className="glass border-white/10 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    ¿Tienes preguntas sobre tu privacidad?
+                  </h3>
+                  <p className="text-white/70 mb-6">
+                    Contáctanos para resolver cualquier duda sobre el manejo de tu información personal.
                   </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link href="mailto:privacy@fixia.com.ar">
+                      <Button className="liquid-gradient hover:opacity-90 transition-all duration-300">
+                        Contactar Privacidad
+                      </Button>
+                    </Link>
+                    <Link href="/">
+                      <Button variant="outline" className="glass border-white/20 text-white hover:bg-white/10">
+                        Volver al Inicio
+                      </Button>
+                    </Link>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <p className="text-sm text-white/60">
+                      Esta política de privacidad es efectiva desde la fecha indicada arriba.
+                    </p>
+                  </div>
                 </div>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">6.1. Características de Seguridad</h3>
-                <ul className="list-disc ml-6">
-                  <li><strong>PCI DSS Compliance:</strong> Cumplimiento con estándares internacionales</li>
-                  <li><strong>Tokenización:</strong> Los datos de tarjetas no se almacenan en nuestros servidores</li>
-                  <li><strong>3D Secure:</strong> Autenticación adicional para mayor seguridad</li>
-                  <li><strong>Monitoreo anti-fraude:</strong> Detección automática de transacciones sospechosas</li>
-                  <li><strong>Certificación SSL:</strong> Comunicación segura en todos los pagos</li>
-                </ul>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">6.2. Información que NO Almacenamos</h3>
-                <ul className="list-disc ml-6">
-                  <li>Números de tarjetas de crédito/débito completos</li>
-                  <li>Códigos de seguridad (CVV)</li>
-                  <li>Datos bancarios completos</li>
-                  <li>PINs o contraseñas bancarias</li>
-                </ul>
-              </section>
-
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Compartir Información</h2>
-                
-                <h3 className="text-xl font-semibold mt-6 mb-3">7.1. Con Otros Usuarios</h3>
-                <p>Compartimos información limitada para facilitar las conexiones:</p>
-                <ul className="list-disc ml-6 mt-2">
-                  <li>Nombre y foto de perfil</li>
-                  <li>Información profesional básica</li>
-                  <li>Calificaciones y reseñas</li>
-                  <li>Ubicación aproximada (si está habilitada)</li>
-                </ul>
-
-                <div className="bg-yellow-50 p-4 rounded-lg mt-4">
-                  <p className="text-yellow-800">
-                    <strong>Control de Privacidad:</strong> Puedes configurar qué información 
-                    quieres compartir, especialmente tu número de teléfono.
-                  </p>
-                </div>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">7.2. Con Terceros</h3>
-                <ul className="list-disc ml-6">
-                  <li><strong>Proveedores de servicios:</strong> Hosting, análisis, soporte</li>
-                  <li><strong>Procesadores de pago:</strong> MercadoPago para transacciones</li>
-                  <li><strong>Autoridades:</strong> Solo cuando sea legalmente requerido</li>
-                </ul>
-              </section>
-
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Tus Derechos</h2>
-                
-                <h3 className="text-xl font-semibold mt-6 mb-3">8.1. Derechos Fundamentales</h3>
-                <ul className="list-disc ml-6">
-                  <li><strong>Acceso:</strong> Solicitar copia de tus datos</li>
-                  <li><strong>Rectificación:</strong> Corregir datos inexactos</li>
-                  <li><strong>Eliminación:</strong> Solicitar borrado de tus datos</li>
-                  <li><strong>Portabilidad:</strong> Recibir tus datos en formato portable</li>
-                  <li><strong>Oposición:</strong> Oponerte a ciertos tratamientos</li>
-                  <li><strong>Limitación:</strong> Restringir el procesamiento</li>
-                </ul>
-
-                <h3 className="text-xl font-semibold mt-6 mb-3">8.2. Cómo Ejercer tus Derechos</h3>
-                <p>Para ejercer cualquier derecho, contáctanos a:</p>
-                <ul className="list-disc ml-6 mt-2">
-                  <li>Email: privacy@fixia.com.ar</li>
-                  <li>Desde tu perfil en la aplicación</li>
-                  <li>Teléfono: [Número de contacto]</li>
-                </ul>
-              </section>
-
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Retención de Datos</h2>
-                <ul className="list-disc ml-6">
-                  <li><strong>Datos de cuenta:</strong> Mientras mantengas tu cuenta activa</li>
-                  <li><strong>Datos de transacciones:</strong> 10 años (requisitos legales)</li>
-                  <li><strong>Datos de verificación:</strong> 5 años tras la eliminación de cuenta</li>
-                  <li><strong>Comunicaciones:</strong> 2 años para soporte y mejoras</li>
-                </ul>
-              </section>
-
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">10. Transferencias Internacionales</h2>
-                <p>
-                  Algunos de nuestros proveedores pueden estar ubicados fuera de Argentina. 
-                  En estos casos, garantizamos protecciones adecuadas mediante:
-                </p>
-                <ul className="list-disc ml-6 mt-2">
-                  <li>Contratos de transferencia estándar</li>
-                  <li>Certificaciones de adequacy</li>
-                  <li>Salvaguardas adicionales de seguridad</li>
-                </ul>
-              </section>
-
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">11. Menores de Edad</h2>
-                <div className="bg-red-50 p-4 rounded-lg">
-                  <p className="text-red-800">
-                    <strong>Importante:</strong> Fixia.com.ar está destinado a usuarios mayores de 18 años. 
-                    No recopilamos intencionalmente datos de menores de edad.
-                  </p>
-                </div>
-              </section>
-
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">12. Cookies y Tecnologías Similares</h2>
-                <p>Utilizamos cookies para:</p>
-                <ul className="list-disc ml-6 mt-2">
-                  <li>Mantener tu sesión activa</li>
-                  <li>Recordar tus preferencias</li>
-                  <li>Analizar el uso de la plataforma</li>
-                  <li>Mejorar la experiencia del usuario</li>
-                </ul>
-                <p className="mt-4">
-                  Puedes configurar tu navegador para rechazar cookies, aunque esto puede 
-                  afectar la funcionalidad de la plataforma.
-                </p>
-              </section>
-
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">13. Cambios en esta Política</h2>
-                <p>
-                  Podemos actualizar esta política ocasionalmente. Te notificaremos cambios 
-                  significativos por email o mediante notificaciones en la plataforma.
-                </p>
-              </section>
-
-              <section className="mb-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">14. Contacto</h2>
-                <p>Para consultas sobre privacidad o protección de datos:</p>
-                <div className="bg-gray-50 p-4 rounded-lg mt-4">
-                  <p><strong>Email:</strong> privacy@fixia.com.ar</p>
-                  <p><strong>Teléfono:</strong> [Número de contacto]</p>
-                  <p><strong>Dirección:</strong> [Dirección postal en Chubut]</p>
-                </div>
-              </section>
-            </div>
-
-            <div className="mt-8 pt-8 border-t border-gray-200">
-              <p className="text-sm text-gray-600">
-                Esta política de privacidad es efectiva desde la fecha indicada arriba.
-              </p>
+              </motion.div>
             </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <Footer />
       </div>
     </>
   );
 };
+
+// Header component - Reuse from main page
+function Header() {
+  const { user, isAuthenticated } = useAuth();
+  
+  return (
+    <header className="relative z-50 glass-medium border-b border-white/10">
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-3">
+            <div className="relative">
+              <div className="h-10 w-10 liquid-gradient rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-lg">F</span>
+              </div>
+              <div className="absolute -inset-1 liquid-gradient rounded-xl blur opacity-20 animate-pulse-slow"></div>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-semibold tracking-tight text-white">Fixia</span>
+              <span className="text-xs text-white/60 -mt-1">Conecta. Confía. Resuelve.</span>
+            </div>
+          </Link>
+
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link href="/explorador/buscar-servicio" className="text-foreground/80 hover:text-foreground transition-colors">
+              Buscar Servicios
+            </Link>
+            <Link href="/auth/registro?type=provider" className="text-foreground/80 hover:text-foreground transition-colors">
+              Ofrecer Servicios
+            </Link>
+            <Link href="/como-funciona" className="text-foreground/80 hover:text-foreground transition-colors">
+              Cómo Funciona
+            </Link>
+          </nav>
+
+          {/* Actions */}
+          <div className="flex items-center space-x-4">
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-3">
+                <span className="text-white/80">Hola, {user?.first_name}</span>
+                <Link href={user?.user_type === 'provider' ? '/as/dashboard' : '/explorador/dashboard'}>
+                  <Button className="liquid-gradient">Dashboard</Button>
+                </Link>
+              </div>
+            ) : (
+              <>
+                <Link href="/auth/login">
+                  <Button variant="outline" className="glass border-white/20 text-white hover:bg-white/10">
+                    Iniciar Sesión
+                  </Button>
+                </Link>
+                <Link href="/auth/registro">
+                  <Button className="liquid-gradient">
+                    Registrarse
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+// Footer component - Reuse from main page
+function Footer() {
+  return (
+    <footer className="relative py-16 border-t border-white/10 z-10">
+      <div className="container mx-auto px-6">
+        <div className="grid md:grid-cols-4 gap-8 mb-12">
+          <div className="col-span-2 md:col-span-1">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="relative">
+                <div className="h-12 w-12 liquid-gradient rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-white font-bold text-xl">F</span>
+                </div>
+                <div className="absolute -inset-1 liquid-gradient rounded-xl blur opacity-20 animate-pulse-slow"></div>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-3xl font-bold text-white">Fixia</span>
+                <span className="text-sm text-white/60 -mt-1">Conecta. Confía. Resuelve.</span>
+              </div>
+            </div>
+            <p className="text-white/80 mb-6 leading-relaxed max-w-md">
+              Marketplace de microservicios diseñado para conectar profesionales 
+              altamente calificados con usuarios que necesitan soluciones efectivas.
+            </p>
+            <div className="text-white/60 text-sm">
+              © 2025 Fixia. Todos los derechos reservados.
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-white font-semibold mb-4">Plataforma</h3>
+            <div className="space-y-3">
+              <Link href="/explorador/buscar-servicio" className="block text-white/80 hover:text-white transition-colors">
+                Buscar Servicios
+              </Link>
+              <Link href="/como-funciona" className="block text-white/80 hover:text-white transition-colors">
+                Cómo Funciona
+              </Link>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-white font-semibold mb-4">Empresa</h3>
+            <div className="space-y-3">
+              <Link href="/company/about" className="block text-white/80 hover:text-white transition-colors">
+                Acerca de Nosotros
+              </Link>
+              <Link href="/company/contact" className="block text-white/80 hover:text-white transition-colors">
+                Contacto
+              </Link>
+              <Link href="/company/security" className="block text-white/80 hover:text-white transition-colors">
+                Seguridad
+              </Link>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-white font-semibold mb-4">Legal</h3>
+            <div className="space-y-3">
+              <Link href="/legal/terms" className="block text-white/80 hover:text-white transition-colors">
+                Términos y Condiciones
+              </Link>
+              <Link href="/legal/privacy" className="block text-white/80 hover:text-white transition-colors">
+                Política de Privacidad
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
 
 export default PrivacyPage;
