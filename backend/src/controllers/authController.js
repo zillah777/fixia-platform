@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { query } = require('../config/database');
 const { validateEmail, validatePassword } = require('../utils/validation');
 const EmailService = require('../services/emailService');
-const { transformUserForFrontend } = require('../utils/userTypeTransformer');
+const { transformUserForFrontend, transformUserForDatabase } = require('../utils/userTypeTransformer');
 
 // Helper function to sanitize user data
 const sanitizeUser = (user) => {
@@ -58,8 +58,8 @@ exports.register = async (req, res) => {
       });
     }
 
-    // Transform customer to client for database compatibility
-    const dbUserType = user_type === 'customer' ? 'client' : user_type;
+    // Use the proper transformer for user_type
+    const dbUserType = transformUserForDatabase({ user_type }).user_type;
     
     // Hash password
     const password_hash = await hashPassword(password);
@@ -76,10 +76,8 @@ exports.register = async (req, res) => {
 
     const user = result.rows[0];
     
-    // Transform back to customer for frontend
-    if (user.user_type === 'client') {
-      user.user_type = 'customer';
-    }
+    // Use proper transformer for frontend compatibility
+    user.user_type = transformUserForFrontend({ user_type: user.user_type }).user_type;
 
     // Generate token
     const token = generateToken({ 
@@ -210,10 +208,7 @@ exports.login = async (req, res) => {
 
     const sanitizedUser = sanitizeUser(user);
     
-    // Transform client to customer for frontend compatibility
-    if (sanitizedUser.user_type === 'client') {
-      sanitizedUser.user_type = 'customer';
-    }
+    // User type transformation is already handled by transformUserForFrontend in sanitizeUser function
 
     const userWithStats = {
       ...sanitizedUser,
