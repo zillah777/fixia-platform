@@ -26,6 +26,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
 import { categoriesService } from '@/services/categories';
 import { ExplorerBrowseParams } from '@/types/explorer';
+import { Button, Card, CardContent } from '@/components/ui';
 
 // Localidades de Chubut
 const CHUBUT_LOCALITIES = [
@@ -250,7 +251,7 @@ const NavegarProfesionalesPage: NextPage = () => {
   }
 
   return (
-    <>
+    <React.Fragment>
       <Head>
         <title>Explorar AS | FIXIA</title>
         <meta name="description" content="Descubre los mejores AS certificados de Chubut - Sistema Liquid Glass" />
@@ -431,44 +432,6 @@ const NavegarProfesionalesPage: NextPage = () => {
                       ×
                     </button>
                   </div>
-                
-                {/* Filters Header with Liquid Glass */}
-                <div className="flex items-center justify-between mb-8 pb-6" style={{
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-                }}>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{
-                      background: 'rgba(139, 92, 246, 0.2)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(139, 92, 246, 0.3)'
-                    }}>
-                      <Settings className="w-6 h-6 text-purple-300" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-white mb-1" style={{
-                        textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
-                      }}>
-                        Filtros Avanzados
-                      </h2>
-                      <p className="text-white/70 font-medium">
-                        Personaliza tu búsqueda de AS profesionales
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <button
-                    onClick={() => setShowFilters(false)}
-                    className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-105"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      backdropFilter: 'blur(8px)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      color: 'white'
-                    }}
-                  >
-                    <span className="text-xl font-bold">×</span>
-                  </button>
-                </div>
 
               {/* Filters Grid with Liquid Glass */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -851,214 +814,261 @@ const NavegarProfesionalesPage: NextPage = () => {
                               <span className="text-sm font-bold text-white truncate">
                                 {professional.work_localities}
                             </span>
-                            <div className="w-1.5 h-1.5 bg-trust-500 rounded-full animate-pulse"></div>
+                            <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></div>
                           </div>
-                          <span className="text-xs text-trust-700 font-semibold uppercase tracking-wide">
+                          <span className="text-xs text-purple-300 font-semibold uppercase tracking-wide">
                             Disponible en Tu Zona
                           </span>
                         </div>
                       </div>
                     )}
 
-                    {/* Premium Pricing Display */}
-                    {professional.base_price && (
-                      <div className="group/indicator flex items-center space-x-3 p-3 bg-gradient-to-r from-success-50/80 to-trust-50/80 rounded-2xl border border-success-200/50 hover:border-success-300 transition-all duration-300">
-                        <div className="w-10 h-10 bg-gradient-to-br from-success-500 via-success-600 to-trust-500 rounded-2xl flex items-center justify-center shadow-lg group-hover/indicator:scale-110 transition-transform duration-300">
-                          <DollarSign className="h-5 w-5 text-white drop-shadow-sm" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-baseline space-x-2">
-                            <span className="text-base font-black text-success-800 tracking-tight">
-                              ${professional.base_price.toLocaleString()}
-                            </span>
-                            <span className="text-xs text-secondary-600 font-medium">desde</span>
+                      {/* Pricing Display with Liquid Glass */}
+                      {professional.base_price && (
+                        <div className="flex items-center gap-3 p-3 rounded-2xl transition-all duration-300 hover:scale-[1.02]" style={{
+                          background: 'rgba(34, 197, 94, 0.1)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1px solid rgba(34, 197, 94, 0.3)'
+                        }}>
+                          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{
+                            background: 'rgba(34, 197, 94, 0.3)',
+                            backdropFilter: 'blur(8px)'
+                          }}>
+                            <DollarSign className="w-4 h-4 text-green-300" />
                           </div>
-                          <span className="text-xs text-success-700 font-semibold uppercase tracking-wide">
-                            Precios Transparentes
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-bold text-white">
+                                ${professional.base_price.toLocaleString()}
+                              </span>
+                              <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            </div>
+                            <span className="text-xs text-green-300 font-medium">
+                              Precio Base
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Portfolio Display with Liquid Glass */}
+                      {professional.portfolio_count > 0 && (
+                        <div className="flex items-center gap-3 p-3 rounded-2xl transition-all duration-300 hover:scale-[1.02]" style={{
+                          background: 'rgba(236, 72, 153, 0.1)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1px solid rgba(236, 72, 153, 0.3)'
+                        }}>
+                          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{
+                            background: 'rgba(236, 72, 153, 0.3)',
+                            backdropFilter: 'blur(8px)'
+                          }}>
+                            <Camera className="w-4 h-4 text-pink-300" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-bold text-white">
+                                {professional.portfolio_count} trabajos
+                              </span>
+                              <div className="w-1 h-1 bg-pink-400 rounded-full"></div>
+                            </div>
+                            <span className="text-xs text-pink-300 font-medium">
+                              Portfolio Verificado
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* About Me Preview with Liquid Glass */}
+                      {professional.about_me && (
+                        <div className="p-3 rounded-2xl transition-all duration-300 hover:scale-[1.02]" style={{
+                          background: 'rgba(59, 130, 246, 0.08)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1px solid rgba(59, 130, 246, 0.2)'
+                        }}>
+                          <div className="flex items-start gap-3">
+                            <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0" style={{
+                              background: 'rgba(59, 130, 246, 0.2)',
+                              backdropFilter: 'blur(8px)'
+                            }}>
+                              <span className="text-blue-300 text-xs font-bold">"</span>
+                            </div>
+                            <p className="text-sm text-white/80 line-clamp-3 font-medium leading-relaxed italic">
+                              {professional.about_me}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                  </div>
+
+                    {/* Action Section with Liquid Glass */}
+                    <div className="mt-6 pt-4" style={{
+                      borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}>
+                      <div className="grid grid-cols-2 gap-3 mb-4">
+                        <Link href={`/explorador/profesional/${professional.id}`}>
+                          <button className="w-full group relative overflow-hidden px-4 py-2 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2" style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            backdropFilter: 'blur(12px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            color: 'white'
+                          }}>
+                            <Eye className="w-4 h-4" />
+                            <span className="text-sm font-bold">Ver Perfil</span>
+                          </button>
+                        </Link>
+                        
+                        <Link href={`/explorador/chat/new?as_id=${professional.id}`}>
+                          <button className="w-full group relative overflow-hidden px-4 py-2 rounded-xl font-semibold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2" style={{
+                            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(139, 92, 246, 0.8) 100%)',
+                            backdropFilter: 'blur(12px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            boxShadow: '0 8px 32px rgba(59, 130, 246, 0.3)',
+                            color: 'white'
+                          }}>
+                            <MessageSquare className="w-4 h-4" />
+                            <span className="text-sm font-bold">Chatear</span>
+                          </button>
+                        </Link>
+                      </div>
+
+                      {/* Trust Indicators with Liquid Glass */}
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300 hover:scale-105" style={{
+                          background: 'rgba(34, 197, 94, 0.1)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1px solid rgba(34, 197, 94, 0.3)'
+                        }}>
+                          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{
+                            background: 'rgba(34, 197, 94, 0.3)'
+                          }}>
+                            <Shield className="w-3 h-3 text-green-300" />
+                          </div>
+                          <span className="text-xs font-bold text-green-300 text-center">
+                            Verificado
+                          </span>
+                        </div>
+                        
+                        <div className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300 hover:scale-105" style={{
+                          background: 'rgba(59, 130, 246, 0.1)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1px solid rgba(59, 130, 246, 0.3)'
+                        }}>
+                          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{
+                            background: 'rgba(59, 130, 246, 0.3)'
+                          }}>
+                            <Clock className="w-3 h-3 text-blue-300" />
+                          </div>
+                          <span className="text-xs font-bold text-blue-300 text-center">
+                            Rápido
+                          </span>
+                        </div>
+                        
+                        <div className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300 hover:scale-105" style={{
+                          background: 'rgba(236, 72, 153, 0.1)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1px solid rgba(236, 72, 153, 0.3)'
+                        }}>
+                          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{
+                            background: 'rgba(236, 72, 153, 0.3)'
+                          }}>
+                            <Heart className="w-3 h-3 text-pink-300" />
+                          </div>
+                          <span className="text-xs font-bold text-pink-300 text-center">
+                            Confiable
                           </span>
                         </div>
                       </div>
-                    )}
-
-                    {/* Premium Portfolio Display */}
-                    {professional.portfolio_count > 0 && (
-                      <div className="group/indicator flex items-center space-x-3 p-3 bg-gradient-to-r from-accent-50/80 to-trust-50/80 rounded-2xl border border-accent-200/50 hover:border-accent-300 transition-all duration-300">
-                        <div className="w-10 h-10 bg-gradient-to-br from-accent-500 via-accent-600 to-trust-500 rounded-2xl flex items-center justify-center shadow-lg group-hover/indicator:scale-110 transition-transform duration-300">
-                          <Camera className="h-5 w-5 text-white drop-shadow-sm" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-baseline space-x-2">
-                            <span className="text-base font-black text-secondary-900 tracking-tight">
-                              {professional.portfolio_count} trabajos
-                            </span>
-                            <div className="w-1.5 h-1.5 bg-accent-500 rounded-full"></div>
-                          </div>
-                          <span className="text-xs text-accent-700 font-semibold uppercase tracking-wide">
-                            Portafolio Verificado
-                          </span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Premium About Me Preview */}
-                    {professional.about_me && (
-                      <div className="relative group/about p-4 bg-gradient-to-br from-secondary-50/90 via-white to-primary-50/30 rounded-2xl border border-secondary-200/70 hover:border-primary-300/50 transition-all duration-300 overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary-500 via-trust-500 to-accent-500 opacity-0 group-hover/about:opacity-100 transition-opacity duration-300"></div>
-                        <div className="flex items-start space-x-3">
-                          <div className="w-8 h-8 bg-gradient-to-br from-secondary-400 to-secondary-500 rounded-xl flex items-center justify-center shadow-md flex-shrink-0">
-                            <span className="text-white text-xs font-bold">"</span>
-                          </div>
-                          <p className="text-sm text-secondary-700 line-clamp-3 font-medium leading-relaxed italic group-hover/about:text-secondary-800 transition-colors duration-300">
-                            {professional.about_me}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Premium Action Section */}
-                  <div className="mt-8 pt-6 border-t border-gradient-to-r from-transparent via-secondary-200 to-transparent relative">
-                    {/* Subtle border enhancement */}
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-primary-500 to-trust-500 rounded-full"></div>
-                    
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                      <Link href={`/explorador/profesional/${professional.id}`}>
-                        <Button
-                          className="w-full group relative overflow-hidden h-10 px-4 glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                        >
-                          <span className="relative z-10 font-bold tracking-tight">Ver Perfil</span>
-                          <Eye className="h-4 w-4 ml-2 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
-                          <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-trust-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </Button>
-                      </Link>
-                      
-                      <Link href={`/explorador/chat/new?as_id=${professional.id}`}>
-                        <Button
-                          className="w-full group relative overflow-hidden h-10 px-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                        >
-                          <span className="relative z-10 font-bold tracking-tight">Chatear</span>
-                          <MessageSquare className="h-4 w-4 ml-2 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-300" />
-                          <div className="absolute inset-0 bg-gradient-to-r from-primary-600/10 to-success-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </Button>
-                      </Link>
                     </div>
-                    
-                    {/* Premium Trust Indicators Grid */}
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="group/trust flex flex-col items-center space-y-2 p-3 bg-gradient-to-br from-success-50/80 to-success-100/60 rounded-2xl border border-success-200/50 hover:border-success-300 transition-all duration-300">
-                        <div className="w-8 h-8 bg-gradient-to-br from-success-500 to-success-600 rounded-xl flex items-center justify-center shadow-lg group-hover/trust:scale-110 transition-transform duration-300">
-                          <Shield className="h-4 w-4 text-white drop-shadow-sm" />
-                        </div>
-                        <span className="text-xs font-bold text-success-700 uppercase tracking-wide text-center leading-tight">
-                          Verificado
-                        </span>
-                      </div>
-                      
-                      <div className="group/trust flex flex-col items-center space-y-2 p-3 bg-gradient-to-br from-primary-50/80 to-primary-100/60 rounded-2xl border border-primary-200/50 hover:border-primary-300 transition-all duration-300">
-                        <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg group-hover/trust:scale-110 transition-transform duration-300">
-                          <Clock className="h-4 w-4 text-white drop-shadow-sm" />
-                        </div>
-                        <span className="text-xs font-bold text-primary-700 uppercase tracking-wide text-center leading-tight">
-                          Responde<br />2h
-                        </span>
-                      </div>
-                      
-                      <div className="group/trust flex flex-col items-center space-y-2 p-3 bg-gradient-to-br from-accent-50/80 to-accent-100/60 rounded-2xl border border-accent-200/50 hover:border-accent-300 transition-all duration-300">
-                        <div className="w-8 h-8 bg-gradient-to-br from-accent-500 to-accent-600 rounded-xl flex items-center justify-center shadow-lg group-hover/trust:scale-110 transition-transform duration-300">
-                          <Heart className="h-4 w-4 text-white drop-shadow-sm" />
-                        </div>
-                        <span className="text-xs font-bold text-accent-700 uppercase tracking-wide text-center leading-tight">
-                          Confiable
-                        </span>
-                      </div>
-                    </div>
-                    
-                    {/* Subtle Quality Indicator */}
-                    <div className="mt-4 flex items-center justify-center">
-                      <div className="flex items-center space-x-2 bg-gradient-to-r from-secondary-100/80 to-primary-100/80 px-4 py-2 rounded-full border border-secondary-200/50">
-                        <div className="w-2 h-2 bg-gradient-to-r from-success-500 to-accent-500 rounded-full animate-pulse"></div>
-                        <span className="text-xs font-semibold text-secondary-700 uppercase tracking-wide">
-                          AS de Calidad
-                        </span>
-                        <div className="w-2 h-2 bg-gradient-to-r from-primary-500 to-trust-500 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               ))}
           </div>
 
-          {/* Premium Loading State */}
+          {/* Loading State with Liquid Glass */}
           {loadingProfessionals && (
             <div className="text-center py-20">
-              <Card className="max-w-md mx-auto bg-white shadow-xl">
-                <CardContent className="flex flex-col items-center space-y-6 p-8">
-                  {/* Advanced Loading Animation */}
+              <div className="max-w-md mx-auto p-8 rounded-3xl" style={{
+                background: 'rgba(30, 41, 59, 0.4)',
+                backdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 32px 64px rgba(0, 0, 0, 0.3)'
+              }}>
+                <div className="flex flex-col items-center gap-6">
                   <div className="relative">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-primary-500 via-trust-500 to-accent-500 animate-spin"></div>
-                    <div className="absolute inset-2 w-12 h-12 rounded-full bg-white"></div>
-                    <div className="absolute inset-4 w-8 h-8 rounded-full bg-gradient-to-r from-accent-500 via-primary-500 to-trust-500 animate-pulse"></div>
+                    <div className="w-16 h-16 rounded-full border-4 border-blue-400 border-t-transparent animate-spin"></div>
+                    <div className="absolute inset-2 w-12 h-12 rounded-full" style={{
+                      background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2))',
+                      backdropFilter: 'blur(8px)'
+                    }}></div>
                   </div>
                   
                   <div className="text-center space-y-2">
-                    <h3 className="text-xl font-black text-secondary-900 tracking-tight">
+                    <h3 className="text-xl font-bold text-white">
                       Cargando AS de Calidad
                     </h3>
-                    <p className="text-secondary-600 font-medium">
+                    <p className="text-white/70 font-medium">
                       Buscando los mejores profesionales para ti
                     </p>
                     
-                    {/* Loading dots animation */}
-                    <div className="flex items-center justify-center space-x-2 mt-4">
-                      <div className="w-2 h-2 bg-primary-500 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-trust-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-accent-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="flex items-center justify-center gap-2 mt-4">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {/* Premium Load More Button */}
-          {!loadingProfessionals && hasMore && professionals.length > 0 && (
-            <div className="text-center mt-16">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary-500 via-trust-500 to-accent-500 rounded-2xl opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-500"></div>
-                <Button
-                  onClick={() => loadProfessionals()}
-                  className="relative px-12 py-4 h-11 font-black tracking-tight group glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
-                >
-                  <span className="relative z-10">Descubrir Más AS</span>
-                  <Rocket className="h-5 w-5 ml-2 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-accent-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
-                </Button>
+                </div>
               </div>
             </div>
           )}
 
-          {/* Premium No More Results */}
+          {/* Load More Button with Liquid Glass */}
+          {!loadingProfessionals && hasMore && professionals.length > 0 && (
+            <div className="text-center mt-16">
+              <button
+                onClick={() => loadProfessionals()}
+                className="group px-12 py-4 rounded-2xl font-bold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-3 mx-auto"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(139, 92, 246, 0.8) 100%)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  boxShadow: '0 16px 32px rgba(59, 130, 246, 0.3)',
+                  color: 'white'
+                }}
+              >
+                <span>Descubrir Más AS</span>
+                <Rocket className="w-5 h-5 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
+              </button>
+            </div>
+          )}
+
+          {/* No More Results with Liquid Glass */}
           {!loadingProfessionals && !hasMore && professionals.length > 0 && (
             <div className="text-center mt-16">
-              <Card className="max-w-lg mx-auto relative overflow-hidden bg-white shadow-xl">
-                {/* Celebration background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-success-50/80 via-white to-accent-50/80"></div>
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-success-500 via-accent-500 to-primary-500"></div>
+              <div className="max-w-lg mx-auto relative overflow-hidden rounded-3xl" style={{
+                background: 'rgba(30, 41, 59, 0.4)',
+                backdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 32px 64px rgba(0, 0, 0, 0.3)'
+              }}>
+                <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl" style={{
+                  background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.8), rgba(59, 130, 246, 0.8), rgba(236, 72, 153, 0.8))'
+                }}></div>
                 
-                <CardContent className="relative z-10 flex items-center space-x-6 p-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-success-500 via-success-600 to-accent-500 rounded-3xl flex items-center justify-center shadow-xl">
-                    <span className="text-2xl text-white drop-shadow-sm">✓</span>
+                <div className="relative z-10 flex items-center gap-6 p-6">
+                  <div className="w-16 h-16 rounded-3xl flex items-center justify-center" style={{
+                    background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(59, 130, 246, 0.8))',
+                    boxShadow: '0 8px 16px rgba(34, 197, 94, 0.3)'
+                  }}>
+                    <span className="text-2xl text-white">✓</span>
                   </div>
                   <div className="flex-1 text-left">
-                    <h3 className="text-lg font-black text-secondary-900 tracking-tight mb-1">
+                    <h3 className="text-lg font-bold text-white mb-2">
                       ¡Misión Cumplida! 🎉
                     </h3>
-                    <p className="text-secondary-700 font-medium leading-relaxed">
+                    <p className="text-white/80 font-medium leading-relaxed">
                       Has visto todos los AS disponibles. Prueba ajustando los filtros para descubrir más opciones.
                     </p>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
           )}
 
@@ -1076,62 +1086,91 @@ const NavegarProfesionalesPage: NextPage = () => {
                 }}></div>
                 
                 <div className="relative z-10 space-y-8 p-8">
-                  {/* Enhanced illustration */}
+                  {/* Illustration with Liquid Glass */}
                   <div className="relative">
-                    <div className="w-24 h-24 bg-gradient-to-br from-secondary-400 via-secondary-500 to-trust-500 rounded-3xl flex items-center justify-center mx-auto shadow-xl ring-8 ring-secondary-100/50">
-                      <span className="text-4xl text-white drop-shadow-lg">🔍</span>
+                    <div className="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto" style={{
+                      background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(139, 92, 246, 0.8))',
+                      boxShadow: '0 16px 32px rgba(59, 130, 246, 0.3)'
+                    }}>
+                      <span className="text-4xl text-white">🔍</span>
                     </div>
                     
-                    {/* Floating search elements */}
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-accent-400 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg animate-bounce">
+                    {/* Floating elements */}
+                    <div className="absolute -top-2 -right-2 w-8 h-8 rounded-2xl flex items-center justify-center animate-bounce" style={{
+                      background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.8), rgba(168, 85, 247, 0.8))',
+                      boxShadow: '0 8px 16px rgba(236, 72, 153, 0.3)'
+                    }}>
                       <span className="text-white">★</span>
                     </div>
-                    <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-gradient-to-br from-primary-400 to-primary-500 rounded-xl flex items-center justify-center shadow-lg animate-bounce" style={{ animationDelay: '0.5s' }}>
+                    <div className="absolute -bottom-2 -left-2 w-6 h-6 rounded-xl flex items-center justify-center animate-bounce" style={{
+                      animationDelay: '0.5s',
+                      background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(59, 130, 246, 0.8))',
+                      boxShadow: '0 6px 12px rgba(34, 197, 94, 0.3)'
+                    }}>
                       <Heart className="h-3 w-3 text-white" />
                     </div>
                   </div>
                   
                   <div className="text-center space-y-4">
-                    <h3 className="text-2xl font-black text-secondary-900 tracking-tight">
+                    <h3 className="text-2xl font-bold text-white">
                       No Encontramos AS
                     </h3>
                     <div className="space-y-3">
-                      <p className="text-lg text-secondary-700 font-medium leading-relaxed max-w-md mx-auto">
+                      <p className="text-lg text-white/80 font-medium leading-relaxed max-w-md mx-auto">
                         No hay AS disponibles con los filtros actuales.
                       </p>
-                      <p className="text-secondary-600 font-medium">
+                      <p className="text-white/60 font-medium">
                         Intenta ajustar tus criterios de búsqueda para encontrar más opciones.
                       </p>
                     </div>
                   </div>
                   
-                  {/* Enhanced action buttons */}
+                  {/* Action buttons with Liquid Glass */}
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <Button
+                    <button
                       onClick={clearFilters}
-                      className="group px-8 h-11 glass border-white/20 hover:glass-medium text-neutral-600 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                      className="group px-8 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        color: 'white'
+                      }}
                     >
-                      <span className="mr-2 group-hover:rotate-90 transition-transform duration-300">×</span>
-                      <span className="font-bold tracking-tight">Limpiar Filtros</span>
-                    </Button>
+                      <span className="group-hover:rotate-90 transition-transform duration-300">×</span>
+                      <span>Limpiar Filtros</span>
+                    </button>
                     
-                    <Button
+                    <button
                       onClick={() => window.location.reload()}
-                      className="group px-8 h-11 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                      className="group px-8 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(139, 92, 246, 0.8) 100%)',
+                        backdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        boxShadow: '0 8px 32px rgba(59, 130, 246, 0.3)',
+                        color: 'white'
+                      }}
                     >
-                      <span className="font-bold tracking-tight">Recargar Búsqueda</span>
-                      <span className="ml-2 group-hover:rotate-180 transition-transform duration-500">⟳</span>
-                    </Button>
+                      <span>Recargar Búsqueda</span>
+                      <span className="group-hover:rotate-180 transition-transform duration-500">⟳</span>
+                    </button>
                   </div>
                   
-                  {/* Help suggestion */}
-                  <div className="bg-gradient-to-r from-primary-50/80 to-trust-50/80 rounded-2xl p-4 border border-primary-200/50">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-trust-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <span className="text-white text-sm font-bold">💡</span>
+                  {/* Help suggestion with Liquid Glass */}
+                  <div className="rounded-2xl p-4" style={{
+                    background: 'rgba(59, 130, 246, 0.08)',
+                    backdropFilter: 'blur(12px)',
+                    border: '1px solid rgba(59, 130, 246, 0.2)'
+                  }}>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{
+                        background: 'rgba(59, 130, 246, 0.3)'
+                      }}>
+                        <span className="text-blue-300 text-sm font-bold">💡</span>
                       </div>
-                      <p className="text-sm text-secondary-700 font-medium">
-                        <span className="font-bold text-primary-700">Sugerencia:</span> Prueba expandir el rango de ubicación o eliminar algunos filtros específicos.
+                      <p className="text-sm text-white/80 font-medium">
+                        <span className="font-bold text-blue-300">Sugerencia:</span> Prueba expandir el rango de ubicación o eliminar algunos filtros específicos.
                       </p>
                     </div>
                   </div>
@@ -1141,7 +1180,7 @@ const NavegarProfesionalesPage: NextPage = () => {
           )}
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 };
 
