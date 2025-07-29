@@ -130,7 +130,7 @@ const ASChats: NextPage = () => {
       <div 
         className="min-h-screen flex items-center justify-center"
         style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.1) 25%, rgba(236, 72, 153, 0.05) 50%, transparent 100%), linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+          background: 'radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.2) 0%, transparent 50%), linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%)'
         }}
       >
         {/* Floating orbs for loading state */}
@@ -169,9 +169,9 @@ const ASChats: NextPage = () => {
         <motion.div 
           className="text-center"
           style={{
-            background: 'rgba(255, 255, 255, 0.1)',
+            background: 'rgba(30, 41, 59, 0.4)',
             backdropFilter: 'blur(24px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: '24px',
             padding: '48px',
             boxShadow: '0 32px 64px rgba(0, 0, 0, 0.1)'
@@ -203,7 +203,7 @@ const ASChats: NextPage = () => {
       <div 
         className="min-h-screen relative"
         style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.1) 25%, rgba(236, 72, 153, 0.05) 50%, transparent 100%), linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+          background: 'radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.2) 0%, transparent 50%), linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%)'
         }}
       >
         {/* Floating orbs background */}
@@ -242,9 +242,9 @@ const ASChats: NextPage = () => {
         <motion.div 
           className="relative z-10"
           style={{
-            background: 'rgba(255, 255, 255, 0.1)',
+            background: 'rgba(30, 41, 59, 0.4)',
             backdropFilter: 'blur(24px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: '0 0 24px 24px'
           }}
           initial={{ opacity: 0, y: -20 }}
@@ -324,9 +324,9 @@ const ASChats: NextPage = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-3 py-3 text-white placeholder-white/60 rounded-xl transition-all duration-200"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
+                  background: 'rgba(30, 41, 59, 0.4)',
                   backdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)'
+                  border: '1px solid rgba(255, 255, 255, 0.1)'
                 }}
               />
             </div>
