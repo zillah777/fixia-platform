@@ -426,7 +426,7 @@ const ASChats: NextPage = () => {
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* Quick Tips */}
           {chats.length > 0 && (

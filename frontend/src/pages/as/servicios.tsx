@@ -458,31 +458,62 @@ const ASServicios: NextPage = () => {
                 </select>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Services Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            <motion.div 
+              className="p-6"
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '20px',
+                boxShadow: '0 16px 40px rgba(0, 0, 0, 0.1)'
+              }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              transition={{ duration: 0.2 }}
+            >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-medium">Total Servicios</p>
-                  <p className="text-3xl font-bold text-blue-600">{services.length}</p>
+                  <p className="text-white/80 text-sm font-medium">Total Servicios</p>
+                  <p className="text-3xl font-bold text-white">{services.length}</p>
                 </div>
-                <Briefcase className="h-8 w-8 text-blue-600" />
+                <div className="p-2 rounded-xl" style={{ background: 'rgba(59, 130, 246, 0.3)' }}>
+                  <Briefcase className="h-8 w-8 text-white" />
+                </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-white rounded-xl shadow-sm border p-6">
+            <motion.div 
+              className="p-6"
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(24px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '20px',
+                boxShadow: '0 16px 40px rgba(0, 0, 0, 0.1)'
+              }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              transition={{ duration: 0.2 }}
+            >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-medium">Servicios Activos</p>
-                  <p className="text-3xl font-bold text-green-600">
+                  <p className="text-white/80 text-sm font-medium">Servicios Activos</p>
+                  <p className="text-3xl font-bold text-white">
                     {services.filter(s => s.is_active).length}
                   </p>
                 </div>
-                <CheckCircle className="h-8 w-8 text-green-600" />
+                <div className="p-2 rounded-xl" style={{ background: 'rgba(34, 197, 94, 0.3)' }}>
+                  <CheckCircle className="h-8 w-8 text-white" />
+                </div>
               </div>
-            </div>
+            </motion.div>
 
             <motion.div 
               className="p-6"
@@ -508,7 +539,7 @@ const ASServicios: NextPage = () => {
                 </div>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
 
           {/* Services List */}
           <div className="bg-white rounded-xl shadow-sm border">
