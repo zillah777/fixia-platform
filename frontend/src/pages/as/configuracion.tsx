@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   User,
@@ -20,7 +21,9 @@ import {
   DollarSign,
   Star,
   CheckCircle,
-  AlertTriangle
+  AlertTriangle,
+  Settings,
+  Save
 } from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -132,11 +135,68 @@ const ASConfiguracion: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando configuración...</p>
+      <div 
+        className="min-h-screen flex items-center justify-center"
+        style={{
+          background: 'radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.2) 0%, transparent 50%), linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%)'
+        }}
+      >
+        {/* Floating orbs for loading state */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-400/20 rounded-full"
+            style={{ backdropFilter: 'blur(40px)' }}
+            animate={{
+              y: [0, -20, 0],
+              x: [0, 15, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute top-3/4 right-1/3 w-24 h-24 bg-purple-400/20 rounded-full"
+            style={{ backdropFilter: 'blur(40px)' }}
+            animate={{
+              y: [0, 20, 0],
+              x: [0, -10, 0],
+              scale: [1, 0.9, 1],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1
+            }}
+          />
         </div>
+
+        <motion.div 
+          className="text-center"
+          style={{
+            background: 'rgba(30, 41, 59, 0.4)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '24px',
+            padding: '48px',
+            boxShadow: '0 32px 64px rgba(0, 0, 0, 0.1)'
+          }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div 
+            className="animate-spin rounded-full h-12 w-12 border-4 border-white/30 border-t-white mx-auto mb-6"
+            style={{
+              background: 'conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.3))',
+              borderRadius: '50%'
+            }}
+          />
+          <p className="text-white/90 text-lg font-medium">Cargando configuración...</p>
+        </motion.div>
       </div>
     );
   }
@@ -148,64 +208,189 @@ const ASConfiguracion: NextPage = () => {
         <meta name="description" content="Configura tu cuenta y preferencias como AS en Fixia" />
       </Head>
 
-      <div className="min-h-screen bg-gray-50">
+      <div 
+        className="min-h-screen relative"
+        style={{
+          background: 'radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.2) 0%, transparent 50%), linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%)'
+        }}
+      >
+        {/* Floating orbs background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className="absolute top-20 left-10 w-40 h-40 bg-blue-400/10 rounded-full"
+            style={{ backdropFilter: 'blur(60px)' }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, 20, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute top-1/2 right-20 w-32 h-32 bg-purple-400/10 rounded-full"
+            style={{ backdropFilter: 'blur(60px)' }}
+            animate={{
+              y: [0, 25, 0],
+              x: [0, -15, 0],
+              scale: [1, 0.8, 1],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2
+            }}
+          />
+        </div>
+
         {/* Header */}
-        <div className="bg-white shadow-sm border-b">
+        <motion.div 
+          className="relative z-10"
+          style={{
+            background: 'rgba(30, 41, 59, 0.4)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '0 0 24px 24px'
+          }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center py-6">
               <Link href="/as/dashboard">
-                <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeft className="h-6 w-6 text-gray-600" />
-                </button>
+                <motion.button 
+                  className="mr-4 p-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <ArrowLeft className="h-6 w-6" />
+                </motion.button>
               </Link>
               <div className="flex-1">
-                <h1 className="text-2xl font-bold text-gray-900">Configuración</h1>
-                <p className="text-gray-600 mt-1">
-                  Gestiona tu cuenta y preferencias
-                </p>
+                <motion.div className="flex items-center mb-2">
+                  <Settings className="h-8 w-8 text-blue-400 mr-3" />
+                  <h1 className="text-3xl font-bold text-white">
+                    Configuración
+                  </h1>
+                </motion.div>
+                <motion.p 
+                  className="text-white/80 text-lg"
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  Gestiona tu cuenta y preferencias profesionales
+                </motion.p>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl shadow-sm border p-4">
-                <nav className="space-y-1">
-                  {tabs.map((tab) => {
+            <motion.div 
+              className="lg:col-span-1"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div 
+                className="p-6"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(24px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '20px',
+                  boxShadow: '0 16px 40px rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                <nav className="space-y-2">
+                  {tabs.map((tab, index) => {
                     const Icon = tab.icon;
                     return (
-                      <button
+                      <motion.button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                        className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
                           activeTab === tab.id
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                            ? 'text-white'
+                            : 'text-white/70 hover:text-white hover:bg-white/10'
                         }`}
+                        style={activeTab === tab.id ? {
+                          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3))',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          boxShadow: '0 8px 24px rgba(59, 130, 246, 0.2)'
+                        } : {}}
+                        whileHover={{ scale: 1.02, x: 5 }}
+                        whileTap={{ scale: 0.98 }}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.2 + (index * 0.1) }}
                       >
                         <Icon className="h-5 w-5 mr-3" />
                         {tab.label}
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </nav>
               </div>
-            </div>
+            </motion.div>
 
             {/* Content */}
-            <div className="lg:col-span-3">
-              <div className="bg-white rounded-xl shadow-sm border">
+            <motion.div 
+              className="lg:col-span-3"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div 
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(24px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '20px',
+                  boxShadow: '0 16px 40px rgba(0, 0, 0, 0.1)',
+                  overflow: 'hidden'
+                }}
+              >
+                <AnimatePresence mode="wait">
                 {/* Account Tab */}
                 {activeTab === 'account' && (
-                  <div className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-6">Información de Cuenta</h3>
+                  <motion.div 
+                    key="account"
+                    className="p-8"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <h3 className="text-xl font-bold text-white mb-8 flex items-center">
+                      <User className="h-6 w-6 mr-3 text-blue-400" />
+                      Información de Cuenta
+                    </h3>
                     
                     <div className="space-y-6">
-                      <div className="flex items-center">
-                        <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden mr-4">
+                      <motion.div 
+                        className="flex items-center p-6"
+                        style={{
+                          background: 'rgba(30, 41, 59, 0.4)',
+                          backdropFilter: 'blur(16px)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '16px'
+                        }}
+                        whileHover={{ scale: 1.01 }}
+                      >
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden mr-6"
+                             style={{
+                               background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)',
+                               border: '2px solid rgba(255, 255, 255, 0.2)'
+                             }}>
                           {user?.profile_photo_url ? (
                             <img
                               src={user.profile_photo_url}
@@ -213,78 +398,129 @@ const ASConfiguracion: NextPage = () => {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <User className="h-8 w-8 text-gray-400" />
+                            <User className="h-8 w-8 text-white" />
                           )}
                         </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">
+                        <div className="flex-1">
+                          <h4 className="text-xl font-bold text-white mb-1">
                             {user?.first_name} {user?.last_name}
                           </h4>
-                          <p className="text-gray-600">{user?.email}</p>
+                          <p className="text-white/80 mb-3">{user?.email}</p>
                           <Link href="/as/perfil">
-                            <button className="text-blue-600 text-sm hover:text-blue-700 font-medium">
+                            <motion.button 
+                              className="text-blue-400 text-sm hover:text-blue-300 font-medium flex items-center"
+                              whileHover={{ x: 5 }}
+                              transition={{ duration: 0.2 }}
+                            >
                               Editar perfil →
-                            </button>
+                            </motion.button>
                           </Link>
                         </div>
-                      </div>
+                      </motion.div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="border border-gray-200 rounded-lg p-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-gray-700">Estado de Verificación</span>
-                            <CheckCircle className="h-5 w-5 text-green-500" />
+                        <motion.div 
+                          className="p-6"
+                          style={{
+                            background: 'rgba(34, 197, 94, 0.1)',
+                            backdropFilter: 'blur(16px)',
+                            border: '1px solid rgba(34, 197, 94, 0.3)',
+                            borderRadius: '16px'
+                          }}
+                          whileHover={{ scale: 1.02, y: -2 }}
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="font-medium text-white">Estado de Verificación</span>
+                            <CheckCircle className="h-6 w-6 text-green-400" />
                           </div>
-                          <p className="text-sm text-gray-600">Cuenta verificada</p>
-                        </div>
+                          <p className="text-green-200">Cuenta verificada</p>
+                        </motion.div>
 
-                        <div className="border border-gray-200 rounded-lg p-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-gray-700">Tipo de Cuenta</span>
-                            <Star className="h-5 w-5 text-blue-500" />
+                        <motion.div 
+                          className="p-6"
+                          style={{
+                            background: 'rgba(59, 130, 246, 0.1)',
+                            backdropFilter: 'blur(16px)',
+                            border: '1px solid rgba(59, 130, 246, 0.3)',
+                            borderRadius: '16px'
+                          }}
+                          whileHover={{ scale: 1.02, y: -2 }}
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="font-medium text-white">Tipo de Cuenta</span>
+                            <Star className="h-6 w-6 text-blue-400" />
                           </div>
-                          <p className="text-sm text-gray-600">Profesional AS</p>
-                        </div>
+                          <p className="text-blue-200">Profesional AS</p>
+                        </motion.div>
                       </div>
 
-                      <div className="border-t border-gray-200 pt-6">
-                        <h4 className="font-medium text-gray-900 mb-4">Acciones de Cuenta</h4>
-                        <div className="space-y-3">
+                      <div className="pt-6 border-t border-white/10">
+                        <h4 className="font-bold text-white mb-6 flex items-center">
+                          <Settings className="h-5 w-5 mr-2 text-blue-400" />
+                          Acciones de Cuenta
+                        </h4>
+                        <div className="space-y-4">
                           <Link href="/explorador/dashboard">
-                            <button className="w-full md:w-auto flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-                              <User className="h-4 w-4 mr-2" />
+                            <motion.button 
+                              className="w-full md:w-auto flex items-center px-6 py-3 text-white rounded-xl font-medium transition-all duration-200"
+                              style={{
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                backdropFilter: 'blur(16px)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)'
+                              }}
+                              whileHover={{ scale: 1.02, background: 'rgba(255, 255, 255, 0.2)' }}
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              <User className="h-5 w-5 mr-3" />
                               Cambiar a Explorador
-                            </button>
+                            </motion.button>
                           </Link>
                           
-                          <button
+                          <motion.button
                             onClick={() => setShowLogoutModal(true)}
-                            className="w-full md:w-auto flex items-center px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors"
+                            className="w-full md:w-auto flex items-center px-6 py-3 text-white rounded-xl font-medium transition-all duration-200"
+                            style={{
+                              background: 'rgba(239, 68, 68, 0.2)',
+                              backdropFilter: 'blur(16px)',
+                              border: '1px solid rgba(239, 68, 68, 0.3)'
+                            }}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                           >
-                            <LogOut className="h-4 w-4 mr-2" />
+                            <LogOut className="h-5 w-5 mr-3" />
                             Cerrar Sesión
-                          </button>
+                          </motion.button>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
 
                 {/* Notifications Tab */}
                 {activeTab === 'notifications' && (
-                  <div className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-6">Configuración de Notificaciones</h3>
+                  <motion.div 
+                    key="notifications"
+                    className="p-8"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <h3 className="text-xl font-bold text-white mb-8 flex items-center">
+                      <Bell className="h-6 w-6 mr-3 text-blue-400" />
+                      Configuración de Notificaciones
+                    </h3>
                     
                     <div className="space-y-6">
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-4">Métodos de Notificación</h4>
+                        <h4 className="font-bold text-white mb-6">Métodos de Notificación</h4>
                         <div className="space-y-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center">
                               <Mail className="h-5 w-5 text-gray-400 mr-3" />
                               <div>
-                                <span className="text-sm font-medium text-gray-900">Email</span>
-                                <p className="text-xs text-gray-600">Recibir notificaciones por correo electrónico</p>
+                                <span className="text-sm font-medium text-white">Email</span>
+                                <p className="text-xs text-white/70">Recibir notificaciones por correo electrónico</p>
                               </div>
                             </div>
                             <input
@@ -627,54 +863,120 @@ const ASConfiguracion: NextPage = () => {
 
                 {/* Save Button */}
                 {(activeTab === 'notifications' || activeTab === 'privacy' || activeTab === 'service') && (
-                  <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-xl">
+                  <motion.div 
+                    className="px-8 py-6 border-t border-white/10"
+                    style={{
+                      background: 'rgba(15, 23, 42, 0.4)',
+                      backdropFilter: 'blur(8px)'
+                    }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                  >
                     <div className="flex justify-end">
-                      <button
+                      <motion.button
                         onClick={handleSaveSettings}
                         disabled={saving}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="flex items-center px-8 py-3 text-white rounded-xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{
+                          background: saving ? 'rgba(107, 114, 128, 0.4)' : 'linear-gradient(135deg, #3B82F6, #8B5CF6)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          boxShadow: saving ? 'none' : '0 8px 24px rgba(59, 130, 246, 0.3)'
+                        }}
+                        whileHover={!saving ? { scale: 1.02 } : {}}
+                        whileTap={!saving ? { scale: 0.98 } : {}}
                       >
+                        <Save className="h-5 w-5 mr-2" />
                         {saving ? 'Guardando...' : 'Guardar Cambios'}
-                      </button>
+                      </motion.button>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
+              </AnimatePresence>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
 
         {/* Logout Confirmation Modal */}
-        {showLogoutModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl max-w-md w-full p-6">
-              <div className="text-center">
-                <AlertTriangle className="h-16 w-16 text-red-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  ¿Cerrar Sesión?
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  ¿Estás seguro de que quieres cerrar tu sesión? Tendrás que iniciar sesión nuevamente para acceder a tu cuenta.
-                </p>
-                
-                <div className="flex space-x-4">
-                  <button
-                    onClick={() => setShowLogoutModal(false)}
-                    className="flex-1 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors"
+        <AnimatePresence>
+          {showLogoutModal && (
+            <motion.div 
+              className="fixed inset-0 flex items-center justify-center z-50 p-4"
+              style={{
+                background: 'rgba(15, 23, 42, 0.8)',
+                backdropFilter: 'blur(8px)'
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div 
+                className="max-w-md w-full p-8"
+                style={{
+                  background: 'rgba(30, 41, 59, 0.4)',
+                  backdropFilter: 'blur(24px)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '24px',
+                  boxShadow: '0 32px 64px rgba(0, 0, 0, 0.3)'
+                }}
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="text-center">
+                  <motion.div
+                    className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.2)',
+                      border: '2px solid rgba(239, 68, 68, 0.3)'
+                    }}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
                   >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="flex-1 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors"
-                  >
-                    Cerrar Sesión
-                  </button>
+                    <AlertTriangle className="h-10 w-10 text-red-400" />
+                  </motion.div>
+                  <h3 className="text-2xl font-bold text-white mb-4">
+                    ¿Cerrar Sesión?
+                  </h3>
+                  <p className="text-white/80 mb-8 leading-relaxed">
+                    ¿Estás seguro de que quieres cerrar tu sesión? Tendrás que iniciar sesión nuevamente para acceder a tu cuenta.
+                  </p>
+                  
+                  <div className="flex space-x-4">
+                    <motion.button
+                      onClick={() => setShowLogoutModal(false)}
+                      className="flex-1 text-white py-3 px-6 rounded-xl font-medium transition-all duration-200"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)'
+                      }}
+                      whileHover={{ scale: 1.02, background: 'rgba(255, 255, 255, 0.2)' }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Cancelar
+                    </motion.button>
+                    <motion.button
+                      onClick={handleLogout}
+                      className="flex-1 text-white py-3 px-6 rounded-xl font-medium transition-all duration-200"
+                      style={{
+                        background: 'linear-gradient(135deg, #EF4444, #DC2626)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        boxShadow: '0 8px 24px rgba(239, 68, 68, 0.3)'
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Cerrar Sesión
+                    </motion.button>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </>
   );
