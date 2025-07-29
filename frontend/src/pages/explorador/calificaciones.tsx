@@ -728,7 +728,8 @@ const CalificacionesPage: NextPage = () => {
                       </CardContent>
                     </Card>
                   </motion.div>
-              ))}
+                ))}
+              </AnimatePresence>
             </div>
           )}
         </div>
