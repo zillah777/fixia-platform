@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   MessageCircle,
@@ -126,11 +127,68 @@ const ASChats: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando chats...</p>
+      <div 
+        className="min-h-screen flex items-center justify-center"
+        style={{
+          background: 'radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.1) 25%, rgba(236, 72, 153, 0.05) 50%, transparent 100%), linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+        }}
+      >
+        {/* Floating orbs for loading state */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-400/20 rounded-full"
+            style={{ backdropFilter: 'blur(40px)' }}
+            animate={{
+              y: [0, -20, 0],
+              x: [0, 15, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute top-3/4 right-1/3 w-24 h-24 bg-purple-400/20 rounded-full"
+            style={{ backdropFilter: 'blur(40px)' }}
+            animate={{
+              y: [0, 20, 0],
+              x: [0, -10, 0],
+              scale: [1, 0.9, 1],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1
+            }}
+          />
         </div>
+
+        <motion.div 
+          className="text-center"
+          style={{
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '24px',
+            padding: '48px',
+            boxShadow: '0 32px 64px rgba(0, 0, 0, 0.1)'
+          }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div 
+            className="animate-spin rounded-full h-12 w-12 border-4 border-white/30 border-t-white mx-auto mb-6"
+            style={{
+              background: 'conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.3))',
+              borderRadius: '50%'
+            }}
+          />
+          <p className="text-white/90 text-lg font-medium">Cargando chats...</p>
+        </motion.div>
       </div>
     );
   }
@@ -142,55 +200,161 @@ const ASChats: NextPage = () => {
         <meta name="description" content="Gestiona tus conversaciones con clientes como AS en Fixia" />
       </Head>
 
-      <div className="min-h-screen bg-gray-50">
+      <div 
+        className="min-h-screen relative"
+        style={{
+          background: 'radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.1) 25%, rgba(236, 72, 153, 0.05) 50%, transparent 100%), linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+        }}
+      >
+        {/* Floating orbs background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className="absolute top-20 left-10 w-40 h-40 bg-blue-400/10 rounded-full"
+            style={{ backdropFilter: 'blur(60px)' }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, 20, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute top-1/2 right-20 w-32 h-32 bg-purple-400/10 rounded-full"
+            style={{ backdropFilter: 'blur(60px)' }}
+            animate={{
+              y: [0, 25, 0],
+              x: [0, -15, 0],
+              scale: [1, 0.8, 1],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2
+            }}
+          />
+        </div>
         {/* Header */}
-        <div className="bg-white shadow-sm border-b">
+        <motion.div 
+          className="relative z-10"
+          style={{
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '0 0 24px 24px'
+          }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center py-6">
               <Link href="/as/dashboard">
-                <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeft className="h-6 w-6 text-gray-600" />
-                </button>
+                <motion.button 
+                  className="mr-4 p-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <ArrowLeft className="h-6 w-6" />
+                </motion.button>
               </Link>
               <div className="flex-1">
-                <h1 className="text-2xl font-bold text-gray-900">Mensajes</h1>
-                <p className="text-gray-600 mt-1">
+                <motion.h1 
+                  className="text-3xl font-bold text-white mb-1"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                  Mensajes
+                </motion.h1>
+                <motion.p 
+                  className="text-white/80 text-lg flex items-center"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
                   Conversaciones con tus clientes
                   {totalUnread > 0 && (
-                    <span className="ml-2 px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
+                    <motion.span 
+                      className="ml-3 px-3 py-1 text-white text-sm rounded-full font-medium"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.8) 0%, rgba(220, 38, 38, 0.8) 100%)',
+                        backdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        boxShadow: '0 4px 16px rgba(239, 68, 68, 0.3)'
+                      }}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.3, delay: 0.5 }}
+                    >
                       {totalUnread} no leídos
-                    </span>
+                    </motion.span>
                   )}
-                </p>
+                </motion.p>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
           {/* Search */}
-          <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
+          <motion.div 
+            className="p-6 mb-8"
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '20px',
+              boxShadow: '0 16px 40px rgba(0, 0, 0, 0.1)'
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/60" />
               <input
                 type="text"
                 placeholder="Buscar conversaciones..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-10 pr-3 py-3 text-white placeholder-white/60 rounded-xl transition-all duration-200"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)'
+                }}
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Chats List */}
-          <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+          <motion.div 
+            className="overflow-hidden"
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '20px',
+              boxShadow: '0 16px 40px rgba(0, 0, 0, 0.1)'
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
             {filteredChats.length === 0 ? (
               <div className="p-12 text-center">
-                <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <div className="p-4 rounded-xl mb-4 mx-auto w-fit" style={{ background: 'rgba(59, 130, 246, 0.2)' }}>
+                  <MessageCircle className="h-16 w-16 text-white mx-auto" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-2">
                   {searchQuery ? 'No se encontraron conversaciones' : 'No hay conversaciones'}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-white/70 text-lg">
                   {searchQuery 
                     ? 'Intenta con un término de búsqueda diferente.'
                     : 'Cuando recibas solicitudes de servicios, las conversaciones aparecerán aquí.'
