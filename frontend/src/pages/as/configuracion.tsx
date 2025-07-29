@@ -610,7 +610,7 @@ const ASConfiguracion: NextPage = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
 
                 {/* Privacy Tab */}

@@ -837,8 +837,8 @@ const ASServicios: NextPage = () => {
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </>

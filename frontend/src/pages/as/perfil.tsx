@@ -396,7 +396,7 @@ const ASPerfil: NextPage = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Tabs */}
           <div className="mb-8">
