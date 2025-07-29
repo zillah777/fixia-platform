@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   User,
@@ -117,11 +118,68 @@ const ASPerfil: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando perfil...</p>
+      <div 
+        className="min-h-screen flex items-center justify-center"
+        style={{
+          background: 'radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.2) 0%, transparent 50%), linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%)'
+        }}
+      >
+        {/* Floating orbs for loading state */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-400/20 rounded-full"
+            style={{ backdropFilter: 'blur(40px)' }}
+            animate={{
+              y: [0, -20, 0],
+              x: [0, 15, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute top-3/4 right-1/3 w-24 h-24 bg-purple-400/20 rounded-full"
+            style={{ backdropFilter: 'blur(40px)' }}
+            animate={{
+              y: [0, 20, 0],
+              x: [0, -10, 0],
+              scale: [1, 0.9, 1],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1
+            }}
+          />
         </div>
+
+        <motion.div 
+          className="text-center"
+          style={{
+            background: 'rgba(30, 41, 59, 0.4)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '24px',
+            padding: '48px',
+            boxShadow: '0 32px 64px rgba(0, 0, 0, 0.1)'
+          }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div 
+            className="animate-spin rounded-full h-12 w-12 border-4 border-white/30 border-t-white mx-auto mb-6"
+            style={{
+              background: 'conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.3))',
+              borderRadius: '50%'
+            }}
+          />
+          <p className="text-white/90 text-lg font-medium">Cargando perfil...</p>
+        </motion.div>
       </div>
     );
   }
@@ -133,60 +191,188 @@ const ASPerfil: NextPage = () => {
         <meta name="description" content="Gestiona tu perfil profesional como AS en Fixia" />
       </Head>
 
-      <div className="min-h-screen bg-gray-50">
+      <div 
+        className="min-h-screen relative"
+        style={{
+          background: 'radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.3) 0%, transparent 50%), radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.2) 0%, transparent 50%), linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%)'
+        }}
+      >
+        {/* Floating orbs background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className="absolute top-20 left-10 w-40 h-40 bg-blue-400/10 rounded-full"
+            style={{ backdropFilter: 'blur(60px)' }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, 20, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute top-1/2 right-20 w-32 h-32 bg-purple-400/10 rounded-full"
+            style={{ backdropFilter: 'blur(60px)' }}
+            animate={{
+              y: [0, 25, 0],
+              x: [0, -15, 0],
+              scale: [1, 0.8, 1],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2
+            }}
+          />
+          <motion.div
+            className="absolute bottom-32 left-1/4 w-28 h-28 bg-cyan-400/10 rounded-full"
+            style={{ backdropFilter: 'blur(60px)' }}
+            animate={{
+              y: [0, -20, 0],
+              x: [0, 25, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1
+            }}
+          />
+        </div>
         {/* Header */}
-        <div className="bg-white shadow-sm border-b">
+        <motion.div 
+          className="relative z-10"
+          style={{
+            background: 'rgba(30, 41, 59, 0.4)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '0 0 24px 24px'
+          }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center py-6">
               <Link href="/as/dashboard">
-                <button className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <ArrowLeft className="h-6 w-6 text-gray-600" />
-                </button>
+                <motion.button 
+                  className="mr-4 p-3 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <ArrowLeft className="h-6 w-6" />
+                </motion.button>
               </Link>
               <div className="flex-1">
-                <h1 className="text-2xl font-bold text-gray-900">Mi Perfil Profesional</h1>
-                <p className="text-gray-600 mt-1">
+                <motion.h1 
+                  className="text-3xl font-bold text-white mb-1"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                  Mi Perfil Profesional
+                </motion.h1>
+                <motion.p 
+                  className="text-white/80 text-lg"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
                   Gestiona tu información y configuración como AS
-                </p>
+                </motion.p>
               </div>
               
               <div className="flex items-center space-x-4">
                 {!isEditing ? (
-                  <button
+                  <motion.button
                     onClick={() => setIsEditing(true)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-6 py-3 text-white font-medium rounded-xl transition-all duration-200"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(147, 51, 234, 0.8) 100%)',
+                      backdropFilter: 'blur(16px)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      boxShadow: '0 8px 32px rgba(59, 130, 246, 0.3)'
+                    }}
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: '0 12px 40px rgba(59, 130, 246, 0.4)'
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
                   >
                     Editar Perfil
-                  </button>
+                  </motion.button>
                 ) : (
-                  <div className="flex space-x-2">
-                    <button
+                  <motion.div 
+                    className="flex space-x-3"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.button
                       onClick={() => setIsEditing(false)}
-                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="px-4 py-2 text-white/80 rounded-xl transition-all duration-200"
+                      style={{
+                        background: 'rgba(30, 41, 59, 0.4)',
+                        backdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)'
+                      }}
                       disabled={saving}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       Cancelar
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
                       onClick={handleSave}
                       disabled={saving}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="px-4 py-2 text-white font-medium rounded-xl transition-all duration-200"
+                      style={{
+                        background: saving ? 'rgba(59, 130, 246, 0.5)' : 'linear-gradient(135deg, rgba(34, 197, 94, 0.8) 0%, rgba(16, 185, 129, 0.8) 100%)',
+                        backdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        boxShadow: saving ? 'none' : '0 8px 32px rgba(34, 197, 94, 0.3)'
+                      }}
+                      whileHover={!saving ? { 
+                        scale: 1.05,
+                        boxShadow: '0 12px 40px rgba(34, 197, 94, 0.4)'
+                      } : {}}
+                      whileTap={!saving ? { scale: 0.95 } : {}}
                     >
                       {saving ? 'Guardando...' : 'Guardar'}
-                    </button>
-                  </div>
+                    </motion.button>
+                  </motion.div>
                 )}
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
           {/* Profile Completion */}
-          <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
+          <motion.div 
+            className="p-6 mb-8"
+            style={{
+              background: 'rgba(30, 41, 59, 0.4)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '20px',
+              boxShadow: '0 16px 40px rgba(0, 0, 0, 0.1)'
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Completitud del Perfil</h3>
-              <span className="text-2xl font-bold text-blue-600">{completionPercentage}%</span>
+              <h3 className="text-lg font-semibold text-white">Completitud del Perfil</h3>
+              <span className="text-2xl font-bold text-white">{completionPercentage}%</span>
             </div>
             
             <div className="w-full bg-gray-200 rounded-full h-3 mb-4">

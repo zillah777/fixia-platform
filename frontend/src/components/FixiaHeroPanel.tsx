@@ -1,9 +1,10 @@
-import { TrendingUp, Users, Star, Zap, Target, DollarSign, CheckCircle, Clock } from "lucide-react";
+import { TrendingUp, Users, Star, Zap, Target, DollarSign, CheckCircle, Clock, Shield } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
 
 export function FixiaHeroPanel() {
   const { user } = useAuth();
@@ -28,10 +29,20 @@ export function FixiaHeroPanel() {
               Tu tiempo vale. Fixia lo cuida. Aquí está tu resumen de actividad.
             </p>
           </div>
-          <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
-            <Target className="mr-2 h-4 w-4" />
-            Ver Oportunidades
-          </Button>
+          <div className="flex items-center space-x-3">
+            <Link href="/as/oportunidades">
+              <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
+                <Target className="mr-2 h-4 w-4" />
+                Ver Oportunidades
+              </Button>
+            </Link>
+            <Link href="/as/centro-confianza">
+              <Button className="glass-medium hover:glass-strong transition-all duration-300 shadow-lg border border-white/20">
+                <Shield className="mr-2 h-4 w-4" />
+                Centro de Confianza
+              </Button>
+            </Link>
+          </div>
         </div>
       </motion.div>
 

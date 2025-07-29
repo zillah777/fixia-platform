@@ -674,35 +674,66 @@ const ASServicios: NextPage = () => {
         </div>
 
         {/* Create Service Modal */}
-        {showCreateModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-bold text-gray-900">Crear Nuevo Servicio</h3>
-                  <button
-                    onClick={() => setShowCreateModal(false)}
-                    className="text-gray-400 hover:text-gray-600"
-                    disabled={saving}
-                  >
-                    ✕
-                  </button>
+        <AnimatePresence>
+          {showCreateModal && (
+            <motion.div 
+              className="fixed inset-0 flex items-center justify-center z-50 p-4"
+              style={{
+                background: 'rgba(15, 23, 42, 0.8)',
+                backdropFilter: 'blur(8px)'
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div 
+                className="max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                style={{
+                  background: 'rgba(30, 41, 59, 0.4)',
+                  backdropFilter: 'blur(24px)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '20px',
+                  boxShadow: '0 32px 64px rgba(0, 0, 0, 0.3)'
+                }}
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="p-6 border-b border-white/10">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-bold text-white">Crear Nuevo Servicio</h3>
+                    <motion.button
+                      onClick={() => setShowCreateModal(false)}
+                      className="text-white/60 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-all duration-200"
+                      disabled={saving}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      ✕
+                    </motion.button>
+                  </div>
                 </div>
-              </div>
               
-              <div className="p-6 space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Título del Servicio *
-                  </label>
-                  <input
-                    type="text"
-                    value={newService.title}
-                    onChange={(e) => setNewService(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Ej: Reparación de Plomería Residencial"
-                  />
-                </div>
+                <div className="p-6 space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-white/80 mb-2">
+                      Título del Servicio *
+                    </label>
+                    <input
+                      type="text"
+                      value={newService.title}
+                      onChange={(e) => setNewService(prev => ({ ...prev, title: e.target.value }))}
+                      className="w-full px-3 py-3 text-white placeholder-white/60 rounded-xl transition-all duration-200"
+                      style={{
+                        background: 'rgba(30, 41, 59, 0.4)',
+                        backdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)'
+                      }}
+                      placeholder="Ej: Reparación de Plomería Residencial"
+                    />
+                  </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
