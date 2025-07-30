@@ -79,10 +79,6 @@ export function FixiaNavigation() {
                 </Button>
               </Link>
             )}
-            <Button className="hover:glass-medium transition-all duration-300 flex items-center space-x-2">
-              <Shield className="h-4 w-4" />
-              <span>Centro de Confianza</span>
-            </Button>
           </nav>
         </div>
 
