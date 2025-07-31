@@ -725,7 +725,7 @@ const ASServicios: NextPage = () => {
                       type="text"
                       value={newService.title}
                       onChange={(e) => setNewService(prev => ({ ...prev, title: e.target.value }))}
-                      className="w-full px-3 py-3 text-white placeholder-white/60 rounded-xl transition-all duration-200"
+                      className="w-full px-3 py-3 text-gray-900 placeholder-gray-400 rounded-xl transition-all duration-200"
                       style={{
                         background: 'rgba(30, 41, 59, 0.4)',
                         backdropFilter: 'blur(16px)',
@@ -736,27 +736,27 @@ const ASServicios: NextPage = () => {
                   </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-white/80 mb-2">
                     Descripción *
                   </label>
                   <textarea
                     value={newService.description}
                     onChange={(e) => setNewService(prev => ({ ...prev, description: e.target.value }))}
                     rows={4}
-                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Describe detalladamente qué incluye tu servicio..."
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-white/80 mb-2">
                       Categoría *
                     </label>
                     <select
                       value={newService.category}
                       onChange={(e) => setNewService(prev => ({ ...prev, category: e.target.value as ServiceCategory }))}
-                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       {categories.map(category => (
                         <option key={category.value} value={category.value}>
@@ -767,7 +767,7 @@ const ASServicios: NextPage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-white/80 mb-2">
                       Precio ($) *
                     </label>
                     <div className="relative">
@@ -777,14 +777,14 @@ const ASServicios: NextPage = () => {
                         value={newService.price}
                         onChange={(e) => setNewService(prev => ({ ...prev, price: parseInt(e.target.value) || 0 }))}
                         min="0"
-                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full pl-10 pr-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="2500"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-white/80 mb-2">
                       Duración (minutos) *
                     </label>
                     <div className="relative">
@@ -795,14 +795,14 @@ const ASServicios: NextPage = () => {
                         onChange={(e) => setNewService(prev => ({ ...prev, duration_minutes: parseInt(e.target.value) || 60 }))}
                         min="15"
                         step="15"
-                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full pl-10 pr-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="120"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-white/80 mb-2">
                       Ubicación (Opcional)
                     </label>
                     <div className="relative">
@@ -811,7 +811,7 @@ const ASServicios: NextPage = () => {
                         type="text"
                         value={newService.address || ''}
                         onChange={(e) => setNewService(prev => ({ ...prev, address: e.target.value }))}
-                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full pl-10 pr-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Rawson, Chubut"
                       />
                     </div>
