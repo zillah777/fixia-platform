@@ -31,68 +31,7 @@ const ASChats: NextPage = () => {
     }
 
     // TODO: Fetch real chats from API
-    setChats([
-      {
-        id: 1,
-        customer_id: 101,
-        provider_id: user?.id || 1,
-        booking_id: 1,
-        created_at: '2024-01-18T10:30:00Z',
-        updated_at: '2024-01-18T15:45:00Z',
-        other_user_first_name: 'María',
-        other_user_last_name: 'González',
-        other_user_photo: undefined,
-        service_title: 'Reparación de Plomería Residencial',
-        last_message: 'Perfecto, nos vemos mañana entonces. ¡Gracias!',
-        last_message_time: '2024-01-18T15:45:00Z',
-        unread_count: 1
-      },
-      {
-        id: 2,
-        customer_id: 102,
-        provider_id: user?.id || 1,
-        booking_id: 2,
-        created_at: '2024-01-17T16:45:00Z',
-        updated_at: '2024-01-18T08:15:00Z',
-        other_user_first_name: 'Carlos',
-        other_user_last_name: 'Rodríguez',
-        other_user_photo: undefined,
-        service_title: 'Instalación Eléctrica Completa',
-        last_message: '¿Necesitas que tenga algún material preparado?',
-        last_message_time: '2024-01-18T08:15:00Z',
-        unread_count: 0
-      },
-      {
-        id: 3,
-        customer_id: 103,
-        provider_id: user?.id || 1,
-        booking_id: 3,
-        created_at: '2024-01-16T14:20:00Z',
-        updated_at: '2024-01-17T12:30:00Z',
-        other_user_first_name: 'Ana',
-        other_user_last_name: 'López',
-        other_user_photo: undefined,
-        service_title: 'Reparación de Plomería Residencial',
-        last_message: 'Muchas gracias por el excelente trabajo',
-        last_message_time: '2024-01-17T12:30:00Z',
-        unread_count: 0
-      },
-      {
-        id: 4,
-        customer_id: 104,
-        provider_id: user?.id || 1,
-        booking_id: undefined,
-        created_at: '2024-01-15T09:15:00Z',
-        updated_at: '2024-01-15T09:45:00Z',
-        other_user_first_name: 'Roberto',
-        other_user_last_name: 'Martínez',
-        other_user_photo: undefined,
-        service_title: undefined,
-        last_message: 'Hola, ¿tienes disponibilidad para este fin de semana?',
-        last_message_time: '2024-01-15T09:45:00Z',
-        unread_count: 2
-      }
-    ]);
+    setChats([]);
   }, [user, loading]);
 
   const filteredChats = chats.filter(chat => {

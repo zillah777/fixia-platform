@@ -114,9 +114,7 @@ export function FixiaNavigation() {
 
             <Button className="relative hover:glass-medium transition-all duration-300 h-10 w-10">
               <Bell className="h-4 w-4" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 bg-destructive text-xs">
-                3
-              </Badge>
+              {/* Badge will only show when there are real notifications */}
             </Button>
           </div>
 
