@@ -1,4 +1,4 @@
-import { TrendingUp, Users, Star, Zap, Target, DollarSign, CheckCircle, Clock, Shield } from "lucide-react";
+import { TrendingUp, Users, Star, Zap, Target, DollarSign, CheckCircle, Clock, Shield, User } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -20,26 +20,32 @@ export function FixiaHeroPanel() {
         transition={{ duration: 0.6 }}
         className="flex flex-col space-y-3"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
               ¡Hola {userName}! 👋
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-muted-foreground text-base sm:text-lg">
               Tu tiempo vale. Fixia lo cuida. Aquí está tu resumen de actividad.
             </p>
           </div>
-          <div className="flex items-center space-x-3">
-            <Link href="/as/oportunidades">
-              <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+            <Link href="/as/oportunidades" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg text-sm px-3 py-2">
                 <Target className="mr-2 h-4 w-4" />
                 Ver Oportunidades
               </Button>
             </Link>
-            <Link href="/as/centro-confianza">
-              <Button className="glass-medium hover:glass-strong transition-all duration-300 shadow-lg border border-white/20">
+            <Link href="/as/centro-confianza" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto glass-medium hover:glass-strong transition-all duration-300 shadow-lg border border-white/20 text-sm px-3 py-2">
                 <Shield className="mr-2 h-4 w-4" />
                 Centro de Confianza
+              </Button>
+            </Link>
+            <Link href="/as/cambiar-a-explorador" className="w-full sm:w-auto">
+              <Button className="w-full sm:w-auto glass-light hover:glass-medium transition-all duration-300 shadow-lg border border-white/10 text-white/80 hover:text-white text-sm px-3 py-2">
+                <User className="mr-2 h-4 w-4" />
+                Cambiar a Explorador
               </Button>
             </Link>
           </div>
@@ -47,7 +53,7 @@ export function FixiaHeroPanel() {
       </motion.div>
 
       {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {[
           {
             title: "Servicios Completados",
@@ -108,12 +114,12 @@ export function FixiaHeroPanel() {
       </div>
 
       {/* Activity and Achievements */}
-      <div className="grid gap-6 md:grid-cols-12">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-12">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="md:col-span-8"
+          className="lg:col-span-8"
         >
           <Card className="glass border-white/10">
             <CardHeader>
@@ -183,7 +189,7 @@ export function FixiaHeroPanel() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="md:col-span-4"
+          className="lg:col-span-4"
         >
           <Card className="glass border-white/10 h-full">
             <CardHeader>

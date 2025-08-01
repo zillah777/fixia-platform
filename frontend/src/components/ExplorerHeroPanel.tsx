@@ -20,17 +20,17 @@ export function ExplorerHeroPanel() {
         transition={{ duration: 0.6 }}
         className="flex flex-col space-y-3"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
               ¡Hola {userName}! 🔍
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-muted-foreground text-base sm:text-lg">
               Conecta con profesionales verificados. Encuentra la solución perfecta para tu proyecto.
             </p>
           </div>
-          <Link href="/explorador/buscar-servicio">
-            <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
+          <Link href="/explorador/buscar-servicio" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg text-sm px-4 py-2">
               <Search className="mr-2 h-4 w-4" />
               Buscar Servicios
             </Button>
@@ -39,7 +39,7 @@ export function ExplorerHeroPanel() {
       </motion.div>
 
       {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {[
           {
             title: "Solicitudes Activas",
