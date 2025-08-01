@@ -43,32 +43,32 @@ export function ExplorerHeroPanel() {
         {[
           {
             title: "Solicitudes Activas",
-            value: "5",
-            change: "2 nuevas esta semana",
+            value: "0",
+            change: "Crea tu primera solicitud",
             icon: Clock,
             color: "text-blue-400",
             delay: 0.1
           },
           {
             title: "Servicios Completados",
-            value: "23",
-            change: "+3 este mes", 
+            value: "0",
+            change: "Ningún servicio completado aún", 
             icon: CheckCircle,
             color: "text-green-400",
             delay: 0.2
           },
           {
-            title: "Profesionales Favoritos",
-            value: "12",
-            change: "Siempre disponibles",
+            title: "Profesionales Conectados",
+            value: "0",
+            change: "Conecta con profesionales",
             icon: Star,
             color: "text-yellow-400",
             delay: 0.3
           },
           {
-            title: "Promedio de Respuesta",
-            value: "1.2h",
-            change: "Respuestas rápidas",
+            title: "Proyectos Iniciados",
+            value: "0",
+            change: "¡Comienza tu primer proyecto!",
             icon: Zap,
             color: "text-purple-400",
             delay: 0.4
@@ -118,32 +118,22 @@ export function ExplorerHeroPanel() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {[
-                {
-                  time: "Hace 1 hora",
-                  action: "Nueva propuesta recibida",
-                  description: "Desarrollo de aplicación móvil - React Native",
-                  status: "Pendiente revisión",
-                  professional: "Carlos Mendoza",
-                  price: "$2,500"
-                },
-                {
-                  time: "Hace 3 horas", 
-                  action: "Servicio completado",
-                  description: "Diseño de logo y branding corporativo",
-                  status: "Completado",
-                  professional: "Ana García",
-                  price: "$800"
-                },
-                {
-                  time: "Ayer",
-                  action: "Nuevo mensaje",
-                  description: "Consulta sobre desarrollo web",
-                  status: "Respondido",
-                  professional: "Luis Torres",
-                  price: "Consulta gratuita"
-                }
-              ].map((activity, index) => (
+              <div className="text-center py-8">
+                <div className="mx-auto w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
+                  <Clock className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Sin actividad reciente</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Tu actividad con profesionales aparecerá aquí
+                </p>
+                <Link href="/explorador/buscar-servicio">
+                  <Button className="liquid-gradient hover:opacity-90 transition-all duration-300">
+                    Buscar Profesionales
+                  </Button>
+                </Link>
+              </div>
+              {/* Commented out mock data
+              {[].map((activity, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 10 }}
@@ -195,40 +185,22 @@ export function ExplorerHeroPanel() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {[
-                {
-                  name: "María Rodríguez",
-                  specialty: "Diseño UX/UI",
-                  rating: "4.9",
-                  location: "Buenos Aires",
-                  badge: "Recomendado",
-                  color: "bg-green-500/20 text-green-400"
-                },
-                {
-                  name: "Andrés Silva",
-                  specialty: "Desarrollo Full Stack",
-                  rating: "4.8",
-                  location: "Córdoba",
-                  badge: "Popular",
-                  color: "bg-blue-500/20 text-blue-400"
-                },
-                {
-                  name: "Carmen López",
-                  specialty: "Marketing Digital",
-                  rating: "5.0",
-                  location: "Rosario",
-                  badge: "Top Rated",
-                  color: "bg-yellow-500/20 text-yellow-400"
-                },
-                {
-                  name: "Diego Fernández",
-                  specialty: "Fotografía Profesional",
-                  rating: "4.7",
-                  location: "Mendoza",
-                  badge: "Nuevo",
-                  color: "bg-purple-500/20 text-purple-400"
-                }
-              ].map((professional, index) => (
+              <div className="text-center py-8">
+                <div className="mx-auto w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
+                  <Target className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Sin recomendaciones aún</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Explora profesionales y recibirás recomendaciones personalizadas
+                </p>
+                <Link href="/explorador/navegar-profesionales">
+                  <Button className="glass-medium hover:glass-strong transition-all duration-300 border border-white/20">
+                    Explorar Profesionales
+                  </Button>
+                </Link>
+              </div>
+              {/* Commented out mock data
+              {[].map((professional, index) => (
                 <motion.div
                   key={professional.name}
                   initial={{ opacity: 0, y: 10 }}

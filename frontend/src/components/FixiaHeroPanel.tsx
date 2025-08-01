@@ -57,32 +57,32 @@ export function FixiaHeroPanel() {
         {[
           {
             title: "Servicios Completados",
-            value: "127",
-            change: "+23% este mes",
+            value: "0",
+            change: "Completa tu primer servicio",
             icon: CheckCircle,
             color: "text-green-400",
             delay: 0.1
           },
           {
             title: "Ingresos Totales",
-            value: "$33,640",
-            change: "+38% este mes", 
+            value: "$0",
+            change: "Comienza a generar ingresos", 
             icon: DollarSign,
             color: "text-primary",
             delay: 0.2
           },
           {
             title: "Rating Promedio",
-            value: "4.9",
-            change: "Excelente reputación",
+            value: "0.0",
+            change: "Construye tu reputación",
             icon: Star,
             color: "text-yellow-400",
             delay: 0.3
           },
           {
-            title: "Tiempo de Respuesta",
-            value: "2.3h",
-            change: "30% más rápido",
+            title: "Servicios Ofrecidos",
+            value: "0",
+            change: "Crea tu primer servicio",
             icon: Clock,
             color: "text-blue-400",
             delay: 0.4
@@ -132,29 +132,22 @@ export function FixiaHeroPanel() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {[
-                {
-                  time: "Hace 2 horas",
-                  action: "Servicio completado",
-                  description: "Desarrollo de landing page para StartupTech",
-                  status: "Completado",
-                  amount: "$850"
-                },
-                {
-                  time: "Hace 5 horas", 
-                  action: "Nueva solicitud",
-                  description: "App móvil para tienda de ropa",
-                  status: "En revisión",
-                  amount: "$1,200"
-                },
-                {
-                  time: "Ayer",
-                  action: "Pago recibido",
-                  description: "Sistema de gestión de inventario",
-                  status: "Pagado",
-                  amount: "$2,100"
-                }
-              ].map((activity, index) => (
+              <div className="text-center py-8">
+                <div className="mx-auto w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
+                  <TrendingUp className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Sin actividad reciente</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Tu actividad aparecerá aquí cuando comiences a ofrecer servicios
+                </p>
+                <Link href="/as/servicios">
+                  <Button className="liquid-gradient hover:opacity-90 transition-all duration-300">
+                    Crear Mi Primer Servicio
+                  </Button>
+                </Link>
+              </div>
+              {/* Commented out mock data
+              {[].map((activity, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 10 }}
@@ -202,32 +195,22 @@ export function FixiaHeroPanel() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {[
-                {
-                  title: "🎯 Meta Alcanzada",
-                  description: "100 servicios completados",
-                  badge: "Nuevo",
-                  color: "bg-green-500/20 text-green-400"
-                },
-                {
-                  title: "⭐ Súper Profesional",
-                  description: "Rating 4.9+ por 3 meses",
-                  badge: "Logro",
-                  color: "bg-yellow-500/20 text-yellow-400"
-                },
-                {
-                  title: "🚀 Crecimiento Rápido",
-                  description: "+200% en ingresos",
-                  badge: "Tendencia",
-                  color: "bg-primary/20 text-primary"
-                },
-                {
-                  title: "💎 Top Vendedor",
-                  description: "En categoría Desarrollo",
-                  badge: "Élite",
-                  color: "bg-purple-500/20 text-purple-400"
-                }
-              ].map((achievement, index) => (
+              <div className="text-center py-8">
+                <div className="mx-auto w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
+                  <Zap className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Sin logros aún</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Completa servicios y gana reputación para desbloquear logros
+                </p>
+                <Link href="/as/oportunidades">
+                  <Button className="glass-medium hover:glass-strong transition-all duration-300 border border-white/20">
+                    Explorar Oportunidades
+                  </Button>
+                </Link>
+              </div>
+              {/* Commented out mock data
+              {[].map((achievement, index) => (
                 <motion.div
                   key={achievement.title}
                   initial={{ opacity: 0, y: 10 }}
