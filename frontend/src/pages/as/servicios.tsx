@@ -68,112 +68,76 @@ const ASServicios: NextPage = () => {
       setShowCreateModal(true);
     }
 
-    // TODO: Fetch real services from API
-    setServices([
-      {
-        id: 1,
-        provider_id: user?.id || 1,
-        title: 'Reparación de Plomería Residencial',
-        description: 'Reparación de cañerías, grifos, inodoros y sistemas de agua. Incluye diagnóstico y mano de obra.',
-        category: 'plomeria',
-        price: 2500,
-        duration_minutes: 120,
-        address: 'Rawson, Chubut',
-        is_active: true,
-        created_at: '2024-01-15T10:00:00Z',
-        updated_at: '2024-01-15T10:00:00Z',
-        first_name: user?.first_name || '',
-        last_name: user?.last_name || '',
-        profile_photo_url: user?.profile_photo_url,
-        is_verified: true,
-        average_rating: 4.8,
-        total_reviews: 12,
-        views_count: 45,
-        images: []
-      },
-      {
-        id: 2,
-        provider_id: user?.id || 1,
-        title: 'Instalación Eléctrica Completa',
-        description: 'Instalación de sistemas eléctricos para hogares y oficinas. Incluye cableado, tomas y tableros.',
-        category: 'electricidad',
-        price: 3800,
-        duration_minutes: 180,
-        address: 'Trelew, Chubut',
-        is_active: true,
-        created_at: '2024-01-10T14:00:00Z',
-        updated_at: '2024-01-10T14:00:00Z',
-        first_name: user?.first_name || '',
-        last_name: user?.last_name || '',
-        profile_photo_url: user?.profile_photo_url,
-        is_verified: true,
-        average_rating: 4.9,
-        total_reviews: 8,
-        views_count: 32,
-        images: []
-      },
-      {
-        id: 3,
-        provider_id: user?.id || 1,
-        title: 'Limpieza Profunda de Hogar',
-        description: 'Servicio completo de limpieza para casas y departamentos. Incluye todos los ambientes.',
-        category: 'limpieza',
-        price: 1800,
-        duration_minutes: 240,
-        address: 'Puerto Madryn, Chubut',
-        is_active: false,
-        created_at: '2024-01-05T09:00:00Z',
-        updated_at: '2024-01-05T09:00:00Z',
-        first_name: user?.first_name || '',
-        last_name: user?.last_name || '',
-        profile_photo_url: user?.profile_photo_url,
-        is_verified: true,
-        average_rating: 4.6,
-        total_reviews: 15,
-        views_count: 67,
-        images: []
+    // Fetch real services from API
+    const fetchServices = async () => {
+      try {
+        const response = await fetch(`/api/services/provider/${user?.id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setServices(data.data || []);
+        } else {
+          console.error('Error fetching services:', response.statusText);
+          setServices([]);
+        }
+      } catch (error) {
+        console.error('Error fetching services:', error);
+        setServices([]);
       }
-    ]);
+    };
+
+    if (user?.id) {
+      fetchServices();
+    }
   }, [user, loading, action]);
 
   const handleCreateService = async () => {
     setSaving(true);
     try {
-      // TODO: Implement API call to create service
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const createdService: Service = {
-        id: Date.now(),
-        provider_id: user?.id || 1,
-        ...newService,
-        is_active: true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        first_name: user?.first_name || '',
-        last_name: user?.last_name || '',
-        profile_photo_url: user?.profile_photo_url,
-        is_verified: true,
-        average_rating: 0,
-        total_reviews: 0,
-        views_count: 2,
-        images: []
-      };
-      
-      setServices(prev => [createdService, ...prev]);
-      setShowCreateModal(false);
-      setNewService({
-        title: '',
-        description: '',
-        category: 'otros',
-        price: 0,
-        duration_minutes: 60,
-        address: '',
-        latitude: undefined,
-        longitude: undefined
+      const response = await fetch('/api/services', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newService)
       });
       
-      alert('Servicio creado exitosamente');
+      if (response.ok) {
+        const data = await response.json();
+        const createdService = data.data;
+        
+        // Add user data for display
+        createdService.first_name = user?.first_name || '';
+        createdService.last_name = user?.last_name || '';
+        createdService.profile_photo_url = user?.profile_photo_url;
+        createdService.is_verified = user?.is_verified || false;
+        
+        setServices(prev => [createdService, ...prev]);
+        setShowCreateModal(false);
+        setNewService({
+          title: '',
+          description: '',
+          category: 'otros',
+          price: 0,
+          duration_minutes: 60,
+          address: '',
+          latitude: undefined,
+          longitude: undefined
+        });
+        
+        alert('Servicio creado exitosamente');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Error al crear el servicio');
+      }
     } catch (error) {
+      console.error('Error creating service:', error);
       alert('Error al crear el servicio');
     } finally {
       setSaving(false);
@@ -182,13 +146,30 @@ const ASServicios: NextPage = () => {
 
   const handleToggleActive = async (serviceId: number) => {
     try {
-      // TODO: Implement API call
-      setServices(prev => prev.map(service => 
-        service.id === serviceId 
-          ? { ...service, is_active: !service.is_active }
-          : service
-      ));
+      const service = services.find(s => s.id === serviceId);
+      if (!service) return;
+
+      const response = await fetch(`/api/services/${serviceId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ is_active: !service.is_active })
+      });
+
+      if (response.ok) {
+        setServices(prev => prev.map(service => 
+          service.id === serviceId 
+            ? { ...service, is_active: !service.is_active }
+            : service
+        ));
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Error al actualizar el servicio');
+      }
     } catch (error) {
+      console.error('Error toggling service status:', error);
       alert('Error al actualizar el servicio');
     }
   };
@@ -197,10 +178,23 @@ const ASServicios: NextPage = () => {
     if (!confirm('¿Estás seguro de que quieres eliminar este servicio?')) return;
     
     try {
-      // TODO: Implement API call
-      setServices(prev => prev.filter(service => service.id !== serviceId));
-      alert('Servicio eliminado exitosamente');
+      const response = await fetch(`/api/services/${serviceId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        setServices(prev => prev.filter(service => service.id !== serviceId));
+        alert('Servicio eliminado exitosamente');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Error al eliminar el servicio');
+      }
     } catch (error) {
+      console.error('Error deleting service:', error);
       alert('Error al eliminar el servicio');
     }
   };

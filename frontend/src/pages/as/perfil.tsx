@@ -72,27 +72,87 @@ const ASPerfil: NextPage = () => {
       return;
     }
 
+    const fetchProfileData = async () => {
+      if (user?.id) {
+        try {
+          const response = await fetch('/api/users/profile', {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const userData = data.data;
+            
+            setProfileData(prev => ({
+              ...prev,
+              first_name: userData.first_name || '',
+              last_name: userData.last_name || '',
+              email: userData.email || '',
+              phone: userData.phone || '',
+              address: userData.address || '',
+              city: userData.city || '',
+              about_me: userData.about_me || '',
+              profession: userData.profession || '',
+              years_experience: userData.years_experience || 0,
+              specialization: userData.specialization || '',
+              license_number: userData.license_number || '',
+              has_mobility: userData.has_mobility || false,
+              profile_photo_url: userData.profile_photo_url || userData.profile_image,
+              verification_status: userData.verification_status || 'pending',
+              profile_completion_percentage: userData.profile_completion_percentage || 0
+            }));
+          }
+        } catch (error) {
+          console.error('Error fetching profile data:', error);
+          // Fallback to user context data
+          setProfileData(prev => ({
+            ...prev,
+            first_name: user.first_name || '',
+            last_name: user.last_name || '',
+            email: user.email || '',
+            phone: user.phone || '',
+            address: user.address || '',
+            profile_photo_url: user.profile_photo_url
+          }));
+        }
+      }
+    };
+
     if (user) {
-      setProfileData(prev => ({
-        ...prev,
-        first_name: user.first_name || '',
-        last_name: user.last_name || '',
-        email: user.email || '',
-        phone: user.phone || '',
-        address: user.address || '',
-        profile_photo_url: user.profile_photo_url
-      }));
+      fetchProfileData();
     }
   }, [user, loading]);
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      // TODO: Implement API call to save profile
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setIsEditing(false);
-      alert('Perfil actualizado exitosamente');
+      const response = await fetch('/api/users/profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(profileData)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsEditing(false);
+        alert('Perfil actualizado exitosamente');
+        
+        // Update profile data with response
+        if (data.data) {
+          setProfileData(prev => ({ ...prev, ...data.data }));
+        }
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Error al guardar el perfil');
+      }
     } catch (error) {
+      console.error('Error saving profile:', error);
       alert('Error al guardar el perfil');
     } finally {
       setSaving(false);
