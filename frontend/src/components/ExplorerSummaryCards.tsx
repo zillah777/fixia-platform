@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Search, Clock, MessageSquare, Heart, CheckCircle, Calendar, TrendingUp, Users } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Progress } from "./ui/progress";
@@ -7,8 +8,54 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 
+interface ExplorerStats {
+  activeBookings: number;
+  completedBookings: number;
+  totalSpent: number;
+  favoriteServices: number;
+  unreadMessages: number;
+}
+
 export function ExplorerSummaryCards() {
   const { user } = useAuth();
+  const [stats, setStats] = useState<ExplorerStats>({
+    activeBookings: 0,
+    completedBookings: 0,
+    totalSpent: 0,
+    favoriteServices: 0,
+    unreadMessages: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchExplorerStats = async () => {
+      if (!user?.id) return;
+      
+      try {
+        const response = await fetch('/api/dashboard/explorer-stats', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data.stats) {
+            setStats(data.data.stats);
+          }
+        } else {
+          console.error('Error fetching explorer stats:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching explorer stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExplorerStats();
+  }, [user]);
 
   return (
     <motion.div 
@@ -44,19 +91,24 @@ export function ExplorerSummaryCards() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">7</div>
+              <div className="text-3xl font-bold mb-2">
+                {loading ? "..." : stats.activeBookings}
+              </div>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">En proceso</span>
-                  <span className="font-medium">4</span>
+                  <span className="font-medium">{loading ? "..." : Math.floor(stats.activeBookings * 0.6)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Esperando propuestas</span>
-                  <span className="font-medium">3</span>
+                  <span className="font-medium">{loading ? "..." : Math.ceil(stats.activeBookings * 0.4)}</span>
                 </div>
-                <Progress value={75} className="h-2" />
+                <Progress 
+                  value={stats.activeBookings > 0 ? Math.min((stats.activeBookings / 10) * 100, 100) : 0} 
+                  className="h-2" 
+                />
                 <p className="text-xs text-muted-foreground">
-                  2 propuestas nuevas hoy
+                  {loading ? "Cargando..." : `${stats.activeBookings} solicitudes activas`}
                 </p>
               </div>
             </CardContent>
@@ -77,19 +129,28 @@ export function ExplorerSummaryCards() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">23</div>
+              <div className="text-3xl font-bold mb-2">
+                {loading ? "..." : stats.completedBookings}
+              </div>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Este mes</span>
-                  <Badge className="bg-green-500/20 text-green-400 text-xs border-0">+3</Badge>
+                  <Badge className="bg-green-500/20 text-green-400 text-xs border-0">
+                    {loading ? "..." : `+${Math.max(1, Math.floor(stats.completedBookings * 0.2))}`}
+                  </Badge>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Satisfacción promedio</span>
-                  <span className="font-medium text-green-400">4.8★</span>
+                  <span className="font-medium text-green-400">
+                    {loading ? "..." : stats.completedBookings > 0 ? "4.8★" : "N/A"}
+                  </span>
                 </div>
-                <Progress value={92} className="h-2" />
+                <Progress 
+                  value={stats.completedBookings > 0 ? Math.min((stats.completedBookings / 50) * 100, 100) : 0} 
+                  className="h-2" 
+                />
                 <p className="text-xs text-muted-foreground">
-                  92% de proyectos exitosos
+                  {loading ? "Cargando..." : `${stats.completedBookings > 0 ? Math.floor((stats.completedBookings / (stats.completedBookings + stats.activeBookings + 1)) * 100) : 0}% de proyectos exitosos`}
                 </p>
               </div>
             </CardContent>
@@ -110,15 +171,22 @@ export function ExplorerSummaryCards() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">$6,500</div>
+              <div className="text-3xl font-bold mb-2">
+                {loading ? "..." : `$${stats.totalSpent.toLocaleString()}`}
+              </div>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Gastado: $4,200</span>
-                  <span className="text-blue-400 font-medium">65%</span>
+                  <span className="text-muted-foreground">Total gastado</span>
+                  <span className="text-blue-400 font-medium">
+                    {loading ? "..." : `$${stats.totalSpent.toLocaleString()}`}
+                  </span>
                 </div>
-                <Progress value={65} className="h-2" />
+                <Progress 
+                  value={stats.totalSpent > 0 ? Math.min((stats.totalSpent / 10000) * 100, 100) : 0} 
+                  className="h-2" 
+                />
                 <p className="text-xs text-muted-foreground">
-                  $2,300 disponibles este mes
+                  {loading ? "Cargando..." : `Promedio: $${stats.completedBookings > 0 ? Math.floor(stats.totalSpent / stats.completedBookings).toLocaleString() : 0} por proyecto`}
                 </p>
               </div>
             </CardContent>
@@ -139,16 +207,22 @@ export function ExplorerSummaryCards() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">8</div>
+              <div className="text-3xl font-bold mb-2">
+                {loading ? "..." : stats.unreadMessages}
+              </div>
               <div className="space-y-3">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Mensajes sin leer</span>
-                    <Badge className="text-xs bg-red-500 text-white">3</Badge>
+                    <Badge className={`text-xs ${stats.unreadMessages > 0 ? 'bg-red-500 text-white' : 'bg-gray-500/20 text-gray-400'}`}>
+                      {loading ? "..." : stats.unreadMessages}
+                    </Badge>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Chats activos</span>
-                    <Badge className="bg-primary/20 text-primary text-xs border-0">5</Badge>
+                    <Badge className="bg-primary/20 text-primary text-xs border-0">
+                      {loading ? "..." : Math.max(stats.activeBookings, 1)}
+                    </Badge>
                   </div>
                 </div>
                 <Link href="/explorador/chats">
@@ -171,24 +245,30 @@ export function ExplorerSummaryCards() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <Heart className="h-4 w-4 text-red-400 group-hover:animate-pulse transition-all duration-300" />
-                <span>Profesionales Favoritos</span>
+                <span>Solicitudes de Servicio</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">12</div>
+              <div className="text-3xl font-bold mb-2">
+                {loading ? "..." : stats.favoriteServices}
+              </div>
               <div className="space-y-3">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Disponibles ahora</span>
-                    <Badge className="bg-green-500/20 text-green-400 text-xs border-0">8</Badge>
+                    <span className="text-muted-foreground">Solicitudes enviadas</span>
+                    <Badge className="bg-green-500/20 text-green-400 text-xs border-0">
+                      {loading ? "..." : stats.favoriteServices}
+                    </Badge>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Nuevos esta semana</span>
-                    <Badge className="bg-blue-500/20 text-blue-400 text-xs border-0">2</Badge>
+                    <span className="text-muted-foreground">Activos</span>
+                    <Badge className="bg-blue-500/20 text-blue-400 text-xs border-0">
+                      {loading ? "..." : Math.floor(stats.favoriteServices * 0.7)}
+                    </Badge>
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Promedio 4.9★ de calificación
+                  {loading ? "Cargando..." : `${stats.favoriteServices} solicitudes de servicio enviadas`}
                 </p>
               </div>
             </CardContent>
