@@ -116,7 +116,7 @@ const ASServicios: NextPage = () => {
         createdService.first_name = user?.first_name || '';
         createdService.last_name = user?.last_name || '';
         createdService.profile_photo_url = user?.profile_photo_url;
-        createdService.is_verified = user?.is_verified || false;
+        createdService.is_verified = user?.verification_status === 'verified' || false;
         
         setServices(prev => [createdService, ...prev]);
         setShowCreateModal(false);
