@@ -8,6 +8,8 @@
  * - Trending content and recommendations
  */
 
+import { PaginationInfo } from './index';
+
 export interface MarketplaceProfessional {
   id: number;
   first_name: string;

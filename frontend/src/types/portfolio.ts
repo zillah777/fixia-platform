@@ -8,6 +8,8 @@
  * - Privacy and visibility controls
  */
 
+import { PaginationInfo } from './index';
+
 export interface PortfolioImage {
   id: number;
   user_id: number;
@@ -111,14 +113,7 @@ export interface PortfolioResponse {
   cached?: boolean;
 }
 
-export interface PaginationInfo {
-  current_page: number;
-  total_pages: number;
-  total_items: number;
-  items_per_page: number;
-  has_next: boolean;
-  has_prev: boolean;
-}
+// PaginationInfo is imported from './index'
 
 // Analytics Types
 export interface PortfolioViewTracking {

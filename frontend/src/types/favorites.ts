@@ -8,6 +8,8 @@
  * - Different favorite types (professionals, services, portfolio)
  */
 
+import { PaginationInfo } from './index';
+
 export interface ExplorerFavorite {
   id: number;
   explorer_id: number;
