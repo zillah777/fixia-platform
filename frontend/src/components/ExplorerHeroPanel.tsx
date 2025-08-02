@@ -132,8 +132,8 @@ export function ExplorerHeroPanel() {
                   </Button>
                 </Link>
               </div>
-              {/* Commented out mock data
-              {[].map((activity, index) => (
+              {/* Commented out mock data */}
+              {/* {[].map((activity, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 10 }}
@@ -163,7 +163,7 @@ export function ExplorerHeroPanel() {
                     <div className="font-bold text-primary">{activity.price}</div>
                   </div>
                 </motion.div>
-              ))}
+              ))} */}
             </CardContent>
           </Card>
         </motion.div>
@@ -199,8 +199,8 @@ export function ExplorerHeroPanel() {
                   </Button>
                 </Link>
               </div>
-              {/* Commented out mock data
-              {[].map((professional, index) => (
+              {/* Commented out mock data */}
+              {/* {[].map((professional, index) => (
                 <motion.div
                   key={professional.name}
                   initial={{ opacity: 0, y: 10 }}
@@ -234,7 +234,7 @@ export function ExplorerHeroPanel() {
                     </div>
                   </div>
                 </motion.div>
-              ))}
+              ))} */}
               
               <div className="pt-4 border-t border-white/10">
                 <Link href="/explorador/navegar-profesionales">

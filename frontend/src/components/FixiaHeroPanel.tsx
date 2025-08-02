@@ -146,8 +146,8 @@ export function FixiaHeroPanel() {
                   </Button>
                 </Link>
               </div>
-              {/* Commented out mock data
-              {[].map((activity, index) => (
+              {/* Commented out mock data */}
+              {/* {[].map((activity, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 10 }}
@@ -173,7 +173,7 @@ export function FixiaHeroPanel() {
                     <div className="font-bold text-primary">{activity.amount}</div>
                   </div>
                 </motion.div>
-              ))}
+              ))} */}
             </CardContent>
           </Card>
         </motion.div>
@@ -209,8 +209,8 @@ export function FixiaHeroPanel() {
                   </Button>
                 </Link>
               </div>
-              {/* Commented out mock data
-              {[].map((achievement, index) => (
+              {/* Commented out mock data */}
+              {/* {[].map((achievement, index) => (
                 <motion.div
                   key={achievement.title}
                   initial={{ opacity: 0, y: 10 }}
@@ -228,7 +228,7 @@ export function FixiaHeroPanel() {
                     <p className="text-xs text-muted-foreground">{achievement.description}</p>
                   </div>
                 </motion.div>
-              ))}
+              ))} */}
               
               <div className="pt-4 border-t border-white/10">
                 <div className="text-center space-y-2">

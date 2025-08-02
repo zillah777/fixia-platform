@@ -54,7 +54,14 @@ const routeConfig = [
   { path: '/api/promotional-subscriptions', module: './routes/promotional-subscriptions', middleware: [authMiddleware] },
   { path: '/api/mutual-confirmation', module: './routes/mutual-confirmation', middleware: [authMiddleware] },
   { path: '/api/role-switching', module: './routes/role-switching', middleware: [authMiddleware] },
-  { path: '/api/verification', module: './routes/verification', middleware: [authMiddleware] }
+  { path: '/api/verification', module: './routes/verification', middleware: [authMiddleware] },
+  
+  // New Marketplace & Portfolio System APIs
+  { path: '/api/portfolio', module: './routes/portfolio', middleware: [authMiddleware] },
+  { path: '/api/marketplace', module: './routes/marketplace', public: true },
+  { path: '/api/favorites', module: './routes/favorites', middleware: [authMiddleware] },
+  { path: '/api/analytics', module: './routes/analytics' }, // Some endpoints are public, some protected
+  { path: '/api/featured', module: './routes/featured', middleware: [authMiddleware] }
 ];
 
 /**
