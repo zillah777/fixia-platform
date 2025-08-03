@@ -186,14 +186,6 @@ const Login: NextPage = () => {
                     )}
                   </Button>
 
-                  {/* Demo Credentials */}
-                  <div className="glass-medium rounded-lg p-4 space-y-2">
-                    <p className="text-xs text-muted-foreground font-medium">Credenciales de demostración:</p>
-                    <div className="text-xs text-muted-foreground space-y-1">
-                      <p>Email: demo@fixia.com</p>
-                      <p>Contraseña: cualquier_texto</p>
-                    </div>
-                  </div>
                 </form>
               </CardContent>
             </Card>

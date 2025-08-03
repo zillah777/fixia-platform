@@ -16,86 +16,86 @@ import { PromotionBanner } from '@/components/PromotionBanner';
 const featuredProfessionals = [
   {
     id: "prof_1",
-    name: "Ana Martínez",
-    specialty: "Desarrollo Web Full Stack",
-    rating: 5.0,
-    reviews: 234,
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=120&h=120&fit=crop&crop=face",
-    price: "Desde $50/hora",
-    badge: "Top Rated",
-    skills: ["React", "Node.js", "TypeScript"],
-    completedProjects: 187
+    name: "Roberto Sánchez",
+    specialty: "Plomería y Gasista",
+    rating: 4.9,
+    reviews: 89,
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face",
+    price: "Desde $8,000/trabajo",
+    badge: "Verificado",
+    skills: ["Instalaciones", "Reparaciones", "Emergencias"],
+    completedProjects: 127
   },
   {
     id: "prof_2", 
-    name: "Carlos Ruiz",
-    specialty: "Diseño UI/UX",
-    rating: 4.9,
-    reviews: 189,
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face",
-    price: "Desde $40/hora",
-    badge: "Pro",
-    skills: ["Figma", "Adobe XD", "Sketch"],
-    completedProjects: 156
+    name: "Carmen López",
+    specialty: "Limpieza del Hogar",
+    rating: 5.0,
+    reviews: 156,
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop&crop=face",
+    price: "Desde $5,000/día",
+    badge: "Top Rated",
+    skills: ["Casa completa", "Oficinas", "Post-obra"],
+    completedProjects: 203
   },
   {
     id: "prof_3",
-    name: "María González",
-    specialty: "Marketing Digital",
+    name: "Jorge Martín",
+    specialty: "Electricista Matriculado",
     rating: 4.8,
-    reviews: 167,
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop&crop=face",
-    price: "Desde $35/hora",
-    badge: "Especialista",
-    skills: ["SEO", "Google Ads", "Analytics"],
-    completedProjects: 143
+    reviews: 92,
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face",
+    price: "Desde $6,500/trabajo",
+    badge: "Profesional",
+    skills: ["Instalaciones", "Tableros", "Emergencias 24h"],
+    completedProjects: 78
   }
 ];
 
 
 const serviceCategories = [
   {
-    id: "desarrollo-web",
-    name: "Desarrollo Web",
+    id: "plomeria-gasista",
+    name: "Plomería y Gasista",
     badge: "Popular",
-    icon: "💻",
-    description: "Aplicaciones y sitios web profesionales",
-    services: "2,330+ servicios"
+    icon: "🔧",
+    description: "Instalaciones, reparaciones y emergencias",
+    services: "350+ profesionales"
   },
   {
-    id: "diseño-grafico", 
-    name: "Diseño Gráfico",
-    icon: "🎨",
-    description: "Identidad visual y diseño creativo",
-    services: "1,890+ servicios"
+    id: "electricista", 
+    name: "Electricista",
+    icon: "⚡",
+    description: "Instalaciones eléctricas y reparaciones",
+    services: "280+ profesionales"
   },
   {
-    id: "apps-moviles",
-    name: "Apps Móviles", 
-    icon: "📱",
-    description: "Desarrollo iOS y Android nativo",
-    services: "1,230+ servicios"
+    id: "limpieza-hogar",
+    name: "Limpieza del Hogar", 
+    icon: "🧹",
+    description: "Limpieza doméstica y de oficinas",
+    services: "420+ profesionales"
   },
   {
-    id: "marketing-digital",
-    name: "Marketing Digital",
-    icon: "📊", 
-    description: "SEO, SEM y estrategias de crecimiento",
-    services: "900+ servicios"
+    id: "albanil",
+    name: "Albañilería",
+    icon: "🧱", 
+    description: "Construcción y reparaciones menores",
+    services: "180+ profesionales"
   },
   {
-    id: "redaccion",
-    name: "Redacción",
-    icon: "✍️",
-    description: "Contenido y copywriting profesional", 
-    services: "756+ servicios"
+    id: "mecanico",
+    name: "Mecánico",
+    icon: "🔩",
+    description: "Reparación y mantenimiento automotriz", 
+    services: "95+ profesionales"
   },
   {
-    id: "video-animacion",
-    name: "Video & Animación",
-    icon: "🎬",
-    description: "Producción audiovisual y motion graphics",
-    services: "654+ servicios"
+    id: "ninera",
+    name: "Niñera/Cuidado",
+    icon: "👶",
+    description: "Cuidado de niños y personas mayores",
+    services: "120+ profesionales"
   }
 ];
 
@@ -293,7 +293,7 @@ function HeroSection() {
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-12 mb-12 text-white/60 text-sm">
             <div className="flex items-center">
               <Check className="h-4 w-4 text-green-400 mr-2" />
-              Más de 50,000 profesionales
+              Más de 1,200 profesionales
             </div>
             <div className="flex items-center">
               <Check className="h-4 w-4 text-green-400 mr-2" />
@@ -313,13 +313,13 @@ function HeroSection() {
 function StatsSection() {
   const stats = [
     {
-      value: "50K+",
+      value: "1,200+",
       label: "Profesionales",
       color: "text-blue-400"
     },
     {
-      value: "98%",
-      label: "Satisfacción",
+      value: "4.8★",
+      label: "Calificación",
       color: "text-blue-400"
     },
     {
@@ -328,8 +328,8 @@ function StatsSection() {
       color: "text-blue-400"
     },
     {
-      value: "100K+",
-      label: "Proyectos",
+      value: "2,500+",
+      label: "Trabajos",
       color: "text-blue-400"
     }
   ];
