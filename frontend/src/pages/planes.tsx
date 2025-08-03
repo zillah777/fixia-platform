@@ -123,24 +123,24 @@ const plans: Plan[] = [
 
 const testimonials = [
   {
-    name: 'María González',
-    role: 'Diseñadora Gráfica',
+    name: 'Roberto Sánchez',
+    role: 'Plomero en Comodoro Rivadavia',
     rating: 5,
-    text: 'Con el Plan Profesional aumenté mis ingresos un 300% en 3 meses. La visibilidad es increíble.',
+    text: 'Empecé hace 6 meses con el plan básico. La plataforma me ayudó a conseguir mis primeros clientes digitales.',
     avatar: '/api/placeholder/64/64'
   },
   {
-    name: 'Carlos Rodríguez',
-    role: 'Plomero',
+    name: 'Carmen López',
+    role: 'Servicio de Limpieza',
     rating: 5,
-    text: 'El Plan Plus me dio acceso a clientes premium. Ahora trabajo solo en proyectos de alta gama.',
+    text: 'Los clientes pueden encontrarme fácil y las reseñas me ayudan a ganar más trabajos cada semana.',
     avatar: '/api/placeholder/64/64'
   },
   {
-    name: 'Ana Martínez',
-    role: 'Profesora de Idiomas',
-    rating: 5,
-    text: 'La promoción de 2 meses gratis me convenció. Ahora soy TOP 3 en mi categoría.',
+    name: 'Jorge Martín',
+    role: 'Electricista Matriculado',
+    rating: 4,
+    text: 'Me registré hace poco pero ya tengo varios presupuestos. El sistema es fácil de usar.',
     avatar: '/api/placeholder/64/64'
   }
 ];
@@ -441,7 +441,7 @@ export default function PlanesPage() {
               Lo que dicen nuestros profesionales
             </h2>
             <p className="text-xl text-muted-foreground">
-              Más de 1,000 profesionales confían en Fixia para hacer crecer su negocio
+              Profesionales reales de Chubut que ya están usando Fixia
             </p>
           </div>
 
@@ -482,9 +482,9 @@ export default function PlanesPage() {
             className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
           >
             {[
-              { number: '1,000+', label: 'Profesionales activos' },
-              { number: '95%', label: 'Tasa de satisfacción' },
-              { number: '3x', label: 'Aumento promedio de ingresos' },
+              { number: '200+', label: 'Profesionales registrados' },
+              { number: '4.8⭐', label: 'Calificación promedio' },
+              { number: '150+', label: 'Trabajos completados' },
               { number: '24/7', label: 'Soporte disponible' }
             ].map((stat, index) => (
               <div key={index} className="text-center glass-light rounded-lg p-4">
