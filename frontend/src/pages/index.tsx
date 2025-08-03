@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from '@/contexts/AuthContext';
+import { PromotionBanner } from '@/components/PromotionBanner';
 
 const featuredProfessionals = [
   {
@@ -137,6 +138,13 @@ const HomePage: NextPage = () => {
 
         {/* Hero Section */}
         <HeroSection />
+
+        {/* Promotion Banner */}
+        <section className="py-16 relative">
+          <div className="container mx-auto px-6">
+            <PromotionBanner variant="hero" />
+          </div>
+        </section>
 
         {/* Stats Section */}
         <StatsSection />

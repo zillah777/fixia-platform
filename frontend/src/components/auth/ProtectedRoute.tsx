@@ -54,10 +54,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Show loading while checking authentication
   if (loading || isCheckingAuth) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white text-lg">Verificando autenticación...</p>
+          <div className="relative mb-8">
+            <div className="h-16 w-16 liquid-gradient rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+              <span className="text-white font-bold text-2xl">F</span>
+            </div>
+            <div className="absolute -inset-2 liquid-gradient rounded-2xl blur opacity-30 animate-pulse"></div>
+          </div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground text-lg">Verificando autenticación...</p>
         </div>
       </div>
     );

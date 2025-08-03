@@ -1,13 +1,15 @@
 import type { AppProps } from 'next/app';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { PromotionProvider } from '@/contexts/PromotionContext';
 import { Toaster } from 'react-hot-toast';
 import '@/styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-background text-foreground">
-        <Component {...pageProps} />
+      <PromotionProvider>
+        <div className="min-h-screen bg-background text-foreground">
+          <Component {...pageProps} />
         
         {/* Toast notifications with Fixia styling */}
         <Toaster
@@ -44,7 +46,8 @@ export default function App({ Component, pageProps }: AppProps) {
             },
           }}
         />
-      </div>
+        </div>
+      </PromotionProvider>
     </AuthProvider>
   );
 }

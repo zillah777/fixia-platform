@@ -129,29 +129,61 @@ export function FixiaSummaryCards() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <TrendingUp className="h-4 w-4 text-green-400 group-hover:scale-110 transition-transform duration-300" />
-                <span>Ingresos Totales</span>
+                <span>Ingresos Reales</span>
               </CardTitle>
+              {stats && stats.total_earnings > 0 && (
+                <Badge className="bg-green-500/20 text-green-400 text-xs border-0">
+                  {stats.completed_bookings > 10 ? "Top Performer" : "En Crecimiento"}
+                </Badge>
+              )}
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">
-                {loading ? "..." : `$${(stats?.total_earnings || 0).toLocaleString()}`}
+              <div className="text-3xl font-bold mb-2 flex items-center space-x-2">
+                <span>
+                  {loading ? "..." : `$${(stats?.total_earnings || 0).toLocaleString('es-AR')} ARS`}
+                </span>
               </div>
               <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Servicios completados</span>
-                  <span className="text-green-400 font-medium">
-                    {loading ? "..." : (stats?.completed_bookings || 0)}
-                  </span>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Servicios completados</span>
+                    <span className="text-green-400 font-medium">
+                      {loading ? "..." : (stats?.completed_bookings || 0)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Comisión plataforma</span>
+                    <span className="text-yellow-400 font-medium">
+                      {loading ? "..." : user?.subscription_plan === 'plus' ? "0%" : 
+                       user?.subscription_plan === 'professional' ? "5%" : "10%"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Ingresos netos este mes</span>
+                    <span className="text-green-400 font-medium">
+                      {loading ? "..." : 
+                       stats?.monthly_net_earnings ? `$${stats.monthly_net_earnings.toLocaleString('es-AR')} ARS` : 
+                       "$0 ARS"}
+                    </span>
+                  </div>
                 </div>
                 <Progress 
-                  value={stats && stats.total_earnings > 0 ? Math.min((stats.total_earnings / 10000) * 100, 100) : 0} 
+                  value={stats && stats.total_earnings > 0 ? Math.min((stats.total_earnings / 50000) * 100, 100) : 0} 
                   className="h-2" 
                 />
                 <p className="text-xs text-muted-foreground">
                   {loading ? "Cargando..." : 
-                   stats?.total_earnings === 0 ? "Completa servicios para generar ingresos" :
-                   stats && stats.completed_bookings > 0 ? `Promedio: $${Math.round(stats.total_earnings / stats.completed_bookings).toLocaleString()} por servicio` : "Sin datos disponibles"}
+                   stats?.total_earnings === 0 ? "Completa tu primer servicio para generar ingresos" :
+                   stats && stats.completed_bookings > 0 ? `Promedio: $${Math.round(stats.total_earnings / stats.completed_bookings).toLocaleString('es-AR')} ARS por servicio` : 
+                   "Conecta con clientes para generar ingresos"}
                 </p>
+                {user?.subscription_plan === 'basic' && stats && stats.total_earnings > 0 && (
+                  <div className="mt-3 p-2 bg-primary/10 rounded-lg">
+                    <p className="text-xs text-primary">
+                      💡 Con Plan Profesional ahorrarías ${Math.round((stats.total_earnings * 0.05)).toLocaleString('es-AR')} ARS en comisiones
+                    </p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

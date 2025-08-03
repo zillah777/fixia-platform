@@ -5,11 +5,16 @@ import { Button } from "./ui/button";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import { PromotionBanner } from "./PromotionBanner";
 
 export function FixiaHeroPanel() {
   const { user } = useAuth();
   
   const userName = user?.first_name || 'Usuario';
+  
+  // Mock check for promotion eligibility - in production this would come from API
+  const isPromotionActive = true; // For demonstration
+  const promotionEndDate = new Date('2025-10-03'); // Mock expiry date
 
   return (
     <div className="space-y-8">
@@ -51,6 +56,17 @@ export function FixiaHeroPanel() {
           </div>
         </div>
       </motion.div>
+
+      {/* Promotion Status Banner */}
+      {isPromotionActive && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <PromotionBanner variant="dashboard" />
+        </motion.div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">

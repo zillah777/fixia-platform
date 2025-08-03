@@ -6,6 +6,7 @@ export interface DashboardStats {
   pending_requests: number;
   completed_bookings: number;
   total_earnings: number;
+  monthly_net_earnings?: number;
   average_rating: number;
   total_reviews: number;
   profile_completion: number;

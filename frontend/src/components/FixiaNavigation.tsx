@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Plus, Bell, User, Briefcase, Shield, Menu, LogOut, Store, Images, Home, X } from "lucide-react";
+import { Search, Plus, Bell, User, Briefcase, Shield, Menu, LogOut, Store, Images, Home, X, Crown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
+import { SimpleTooltip } from "./OnboardingHelper";
 
 export function FixiaNavigation() {
   const { user, logout } = useAuth();
@@ -63,43 +64,62 @@ export function FixiaNavigation() {
           
           <nav className="hidden lg:flex items-center space-x-1">
             <Link href={user?.user_type === 'provider' ? '/as/dashboard' : '/explorador/dashboard'}>
-              <Button className="glass-medium hover:glass-strong transition-all duration-300">
-                <Home className="mr-2 h-4 w-4" />
-                Inicio
-              </Button>
+              <SimpleTooltip content={user?.user_type === 'provider' ? "Tu panel principal con resumen de trabajos y solicitudes" : "Tu panel principal para buscar profesionales"}>
+                <Button className="glass-medium hover:glass-strong transition-all duration-300">
+                  <Home className="mr-2 h-4 w-4" />
+                  Inicio
+                </Button>
+              </SimpleTooltip>
             </Link>
             {user?.user_type === 'customer' && (
               <>
                 <Link href="/explorador/marketplace">
-                  <Button className="hover:glass-medium transition-all duration-300">
-                    <Store className="mr-2 h-4 w-4" />
-                    Marketplace
-                  </Button>
+                  <SimpleTooltip content="Ve todos los profesionales disponibles en tu zona">
+                    <Button className="hover:glass-medium transition-all duration-300">
+                      <Store className="mr-2 h-4 w-4" />
+                      Buscar Profesionales
+                    </Button>
+                  </SimpleTooltip>
                 </Link>
                 <Link href="/explorador/buscar-servicio">
-                  <Button className="hover:glass-medium transition-all duration-300">
-                    <Search className="mr-2 h-4 w-4" />
-                    Buscar Servicios
-                  </Button>
+                  <SimpleTooltip content="Busca un tipo de trabajo específico (plomería, electricidad, etc.)">
+                    <Button className="hover:glass-medium transition-all duration-300">
+                      <Search className="mr-2 h-4 w-4" />
+                      Buscar por Servicio
+                    </Button>
+                  </SimpleTooltip>
                 </Link>
               </>
             )}
             {user?.user_type === 'provider' && (
               <>
                 <Link href="/as/servicios">
-                  <Button className="hover:glass-medium transition-all duration-300">
-                    <Briefcase className="mr-2 h-4 w-4" />
-                    Mis Servicios
-                  </Button>
+                  <SimpleTooltip content="Agrega, edita y gestiona los trabajos que ofreces">
+                    <Button className="hover:glass-medium transition-all duration-300">
+                      <Briefcase className="mr-2 h-4 w-4" />
+                      Mis Trabajos
+                    </Button>
+                  </SimpleTooltip>
                 </Link>
                 <Link href="/as/portafolio">
-                  <Button className="hover:glass-medium transition-all duration-300">
-                    <Images className="mr-2 h-4 w-4" />
-                    Mi Portafolio
-                  </Button>
+                  <SimpleTooltip content="Sube fotos de trabajos que hayas hecho para mostrar tu calidad">
+                    <Button className="hover:glass-medium transition-all duration-300">
+                      <Images className="mr-2 h-4 w-4" />
+                      Mis Fotos
+                    </Button>
+                  </SimpleTooltip>
                 </Link>
               </>
             )}
+            <Link href="/planes">
+              <Button className="hover:glass-medium transition-all duration-300 relative" title="Mejora tu cuenta para más beneficios">
+                <Crown className="mr-2 h-4 w-4" />
+                Mejorar Cuenta
+                <Badge className="ml-2 bg-primary/20 text-primary text-xs border-0 animate-pulse">
+                  Nuevo
+                </Badge>
+              </Button>
+            </Link>
           </nav>
         </div>
 
@@ -126,17 +146,17 @@ export function FixiaNavigation() {
           <div className="flex items-center space-x-2">
             {user?.user_type === 'customer' && (
               <Link href="/explorador/marketplace">
-                <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg h-9 px-3">
+                <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg h-9 px-3" title="Ve todos los profesionales disponibles">
                   <Store className="mr-2 h-4 w-4" />
-                  Explorar Marketplace
+                  Ver Profesionales
                 </Button>
               </Link>
             )}
             {user?.user_type === 'provider' && (
               <Link href="/as/portafolio">
-                <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg h-9 px-3">
+                <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg h-9 px-3" title="Agrega fotos de tus trabajos">
                   <Images className="mr-2 h-4 w-4" />
-                  Gestionar Portafolio
+                  Agregar Fotos
                 </Button>
               </Link>
             )}
@@ -168,7 +188,7 @@ export function FixiaNavigation() {
                     <div>
                       <p className="font-medium">{user?.first_name} {user?.last_name}</p>
                       <p className="text-sm text-muted-foreground">
-                        {user?.user_type === 'provider' ? 'Profesional' : 'Explorador'}
+                        {user?.user_type === 'provider' ? 'Profesional' : 'Cliente'}
                       </p>
                       {user?.user_type === 'provider' && (
                         <div className="flex items-center space-x-1 mt-1">
@@ -191,7 +211,7 @@ export function FixiaNavigation() {
                 <Link href="/explorador/marketplace">
                   <DropdownMenuItem className="hover:glass-medium">
                     <Store className="mr-3 h-4 w-4" />
-                    Marketplace
+                    Buscar Profesionales
                   </DropdownMenuItem>
                 </Link>
               )}
@@ -200,17 +220,26 @@ export function FixiaNavigation() {
                   <Link href="/as/servicios">
                     <DropdownMenuItem className="hover:glass-medium">
                       <Briefcase className="mr-3 h-4 w-4" />
-                      Mis Servicios
+                      Mis Trabajos
                     </DropdownMenuItem>
                   </Link>
                   <Link href="/as/portafolio">
                     <DropdownMenuItem className="hover:glass-medium">
                       <Images className="mr-3 h-4 w-4" />
-                      Mi Portafolio
+                      Mis Fotos
                     </DropdownMenuItem>
                   </Link>
                 </>
               )}
+              <Link href="/planes">
+                <DropdownMenuItem className="hover:glass-medium">
+                  <Crown className="mr-3 h-4 w-4" />
+                  Planes Premium
+                  <Badge className="ml-auto bg-primary/20 text-primary text-xs border-0">
+                    Nuevo
+                  </Badge>
+                </DropdownMenuItem>
+              </Link>
               <Link href={user?.user_type === 'provider' ? '/as/configuracion' : '/explorador/cambiar-password'}>
                 <DropdownMenuItem className="hover:glass-medium">
                   <Shield className="mr-3 h-4 w-4" />
@@ -290,7 +319,7 @@ export function FixiaNavigation() {
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Store className="mr-3 h-4 w-4" />
-                        Marketplace
+                        Buscar Profesionales
                         <Badge className="ml-auto bg-primary/20 text-primary text-xs border-0">
                           Nuevo
                         </Badge>
@@ -302,7 +331,7 @@ export function FixiaNavigation() {
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Search className="mr-3 h-4 w-4" />
-                        Buscar Servicios
+                        Buscar por Servicio
                       </Button>
                     </Link>
                   </>
@@ -316,7 +345,7 @@ export function FixiaNavigation() {
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Briefcase className="mr-3 h-4 w-4" />
-                        Mis Servicios
+                        Mis Trabajos
                       </Button>
                     </Link>
                     <Link href="/as/portafolio">
@@ -325,7 +354,7 @@ export function FixiaNavigation() {
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Images className="mr-3 h-4 w-4" />
-                        Mi Portafolio
+                        Mis Fotos
                         <Badge className="ml-auto bg-primary/20 text-primary text-xs border-0">
                           Nuevo
                         </Badge>
@@ -333,6 +362,19 @@ export function FixiaNavigation() {
                     </Link>
                   </>
                 )}
+
+                <Link href="/planes">
+                  <Button 
+                    className="w-full justify-start hover:glass-medium transition-all duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Crown className="mr-3 h-4 w-4" />
+                    Planes Premium
+                    <Badge className="ml-auto bg-primary/20 text-primary text-xs border-0 animate-pulse">
+                      Nuevo
+                    </Badge>
+                  </Button>
+                </Link>
 
                 {/* Separator */}
                 <div className="border-t border-white/10 my-4"></div>
@@ -381,7 +423,7 @@ export function FixiaNavigation() {
                   <div className="flex-1">
                     <p className="font-medium text-sm">{user?.first_name} {user?.last_name}</p>
                     <p className="text-xs text-muted-foreground">
-                      {user?.user_type === 'provider' ? 'Profesional' : 'Explorador'}
+                      {user?.user_type === 'provider' ? 'Profesional' : 'Cliente'}
                     </p>
                     {user?.user_type === 'provider' && (
                       <div className="flex items-center space-x-1 mt-1">

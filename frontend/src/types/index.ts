@@ -23,6 +23,7 @@ export interface User {
   last_login?: string; // TIMESTAMP
   created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   updated_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  subscription_plan?: 'basic' | 'professional' | 'plus'; // Subscription plan
 }
 
 // Auth Types

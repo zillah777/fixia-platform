@@ -10,6 +10,7 @@ import { FixiaNavigation } from '@/components/FixiaNavigation';
 import { FixiaHeroPanel } from '@/components/FixiaHeroPanel';
 import { FixiaSummaryCards } from '@/components/FixiaSummaryCards';
 import { FixiaServicesTable } from '@/components/FixiaServicesTable';
+import { OnboardingHelper } from '@/components/OnboardingHelper';
 
 const ASDashboard: NextPage = () => {
   const { user, loading: authLoading } = useAuth();
@@ -88,6 +89,13 @@ const ASDashboard: NextPage = () => {
 
         {/* Navigation */}
         <FixiaNavigation />
+        
+        {/* Onboarding Helper */}
+        <OnboardingHelper 
+          userType="provider" 
+          triggerText="¿Necesitas ayuda?"
+          steps={[]}
+        />
         
         {/* Main Content */}
         <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8 sm:space-y-12 relative">

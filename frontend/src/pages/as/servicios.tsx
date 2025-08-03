@@ -131,7 +131,7 @@ const ASServicios: NextPage = () => {
           longitude: undefined
         });
         
-        alert('Servicio creado exitosamente');
+        alert('¡Perfecto! Tu trabajo ya está publicado y los clientes pueden verlo.');
       } else {
         const errorData = await response.json();
         alert(errorData.message || 'Error al crear el servicio');
@@ -175,7 +175,7 @@ const ASServicios: NextPage = () => {
   };
 
   const handleDeleteService = async (serviceId: number) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar este servicio?')) return;
+    if (!confirm('¿Estás seguro de que quieres borrar este trabajo? No podrás recuperarlo.')) return;
     
     try {
       const response = await fetch(`/api/services/${serviceId}`, {
@@ -188,7 +188,7 @@ const ASServicios: NextPage = () => {
 
       if (response.ok) {
         setServices(prev => prev.filter(service => service.id !== serviceId));
-        alert('Servicio eliminado exitosamente');
+        alert('¡Trabajo borrado correctamente!');
       } else {
         const errorData = await response.json();
         alert(errorData.message || 'Error al eliminar el servicio');
@@ -370,7 +370,7 @@ const ASServicios: NextPage = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
                   >
-                    Mis Servicios
+                    Mis Trabajos
                   </motion.h1>
                   <motion.p 
                     className="text-white/80 text-lg"
@@ -378,7 +378,7 @@ const ASServicios: NextPage = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                   >
-                    Gestiona los servicios que ofreces como AS
+                    Aquí puedes ver y agregar los trabajos que sabes hacer
                   </motion.p>
                 </div>
               </div>
@@ -402,7 +402,7 @@ const ASServicios: NextPage = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <Plus className="h-5 w-5 mr-2" />
-                Nuevo Servicio
+                Agregar Trabajo
               </motion.button>
             </div>
           </div>
@@ -429,7 +429,7 @@ const ASServicios: NextPage = () => {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Buscar servicios..."
+                    placeholder="Buscar en tus trabajos..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -475,7 +475,7 @@ const ASServicios: NextPage = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-white/80 text-sm font-medium">Total Servicios</p>
+                  <p className="text-white/80 text-sm font-medium">Total de Trabajos</p>
                   <p className="text-3xl font-bold text-white">{services.length}</p>
                 </div>
                 <div className="p-2 rounded-xl" style={{ background: 'rgba(59, 130, 246, 0.3)' }}>
@@ -498,7 +498,7 @@ const ASServicios: NextPage = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-white/80 text-sm font-medium">Servicios Activos</p>
+                  <p className="text-white/80 text-sm font-medium">Trabajos Disponibles</p>
                   <p className="text-3xl font-bold text-white">
                     {services.filter(s => s.is_active).length}
                   </p>
@@ -523,7 +523,7 @@ const ASServicios: NextPage = () => {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-white/80 text-sm font-medium">Servicios Pausados</p>
+                  <p className="text-white/80 text-sm font-medium">Trabajos Pausados</p>
                   <p className="text-3xl font-bold text-white">
                     {services.filter(s => !s.is_active).length}
                   </p>
@@ -539,7 +539,7 @@ const ASServicios: NextPage = () => {
           <div className="bg-white rounded-xl shadow-sm border">
             <div className="p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">
-                Lista de Servicios ({filteredServices.length})
+                Todos tus Trabajos ({filteredServices.length})
               </h3>
             </div>
             
@@ -548,12 +548,12 @@ const ASServicios: NextPage = () => {
                 <div className="p-12 text-center">
                   <Briefcase className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    No hay servicios
+                    No tienes trabajos aún
                   </h3>
                   <p className="text-gray-600 mb-4">
                     {searchQuery || filterCategory !== 'all' 
-                      ? 'No se encontraron servicios con los filtros aplicados.'
-                      : 'Aún no has creado ningún servicio. ¡Crea tu primer servicio para empezar!'
+                      ? 'No encontramos trabajos con esa búsqueda. Prueba con otras palabras.'
+                      : '¡No te preocupes! Agregar tu primer trabajo es muy fácil. Así los clientes sabrán qué sabes hacer.'
                     }
                   </p>
                   {(!searchQuery && filterCategory === 'all') && (
@@ -561,7 +561,7 @@ const ASServicios: NextPage = () => {
                       onClick={() => setShowCreateModal(true)}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
-                      Crear Primer Servicio
+                      ¡Agregar mi Primer Trabajo!
                     </button>
                   )}
                 </div>
@@ -582,7 +582,7 @@ const ASServicios: NextPage = () => {
                                 ? 'bg-green-100 text-green-800' 
                                 : 'bg-gray-100 text-gray-800'
                             }`}>
-                              {service.is_active ? 'Activo' : 'Pausado'}
+                              {service.is_active ? 'Disponible' : 'No disponible'}
                             </span>
                             <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium ml-2">
                               {categoryInfo?.icon} {categoryInfo?.label}
@@ -621,7 +621,7 @@ const ASServicios: NextPage = () => {
                           <button
                             onClick={() => {/* TODO: View service */}}
                             className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            title="Ver servicio"
+                            title="Ver este trabajo"
                           >
                             <Eye className="h-5 w-5" />
                           </button>
@@ -629,7 +629,7 @@ const ASServicios: NextPage = () => {
                           <button
                             onClick={() => setEditingService(service)}
                             className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                            title="Editar servicio"
+                            title="Cambiar este trabajo"
                           >
                             <Pencil className="h-5 w-5" />
                           </button>
@@ -641,7 +641,7 @@ const ASServicios: NextPage = () => {
                                 ? 'text-gray-400 hover:text-orange-600 hover:bg-orange-50'
                                 : 'text-gray-400 hover:text-green-600 hover:bg-green-50'
                             }`}
-                            title={service.is_active ? 'Pausar servicio' : 'Activar servicio'}
+                            title={service.is_active ? 'Marcar como no disponible' : 'Marcar como disponible'}
                           >
                             {service.is_active ? (
                               <XCircle className="h-5 w-5" />
@@ -653,7 +653,7 @@ const ASServicios: NextPage = () => {
                           <button
                             onClick={() => handleDeleteService(service.id)}
                             className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                            title="Eliminar servicio"
+                            title="Borrar este trabajo"
                           >
                             <Trash className="h-5 w-5" />
                           </button>
@@ -697,7 +697,7 @@ const ASServicios: NextPage = () => {
               >
                 <div className="p-6 border-b border-white/10">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold text-white">Crear Nuevo Servicio</h3>
+                    <h3 className="text-xl font-bold text-white">¡Agregar un Nuevo Trabajo que Haces!</h3>
                     <motion.button
                       onClick={() => setShowCreateModal(false)}
                       className="text-white/60 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-all duration-200"
@@ -713,7 +713,7 @@ const ASServicios: NextPage = () => {
                 <div className="p-6 space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-white/80 mb-2">
-                      Título del Servicio *
+                      ¿Qué trabajo realizas? (ejemplo: "Arreglo cañerías") *
                     </label>
                     <input
                       type="text"
@@ -725,27 +725,27 @@ const ASServicios: NextPage = () => {
                         backdropFilter: 'blur(16px)',
                         border: '1px solid rgba(255, 255, 255, 0.1)'
                       }}
-                      placeholder="Ej: Reparación de Plomería Residencial"
+                      placeholder="Escribe qué sabes hacer (ej: Arreglo cañerías que gotean)"
                     />
                   </div>
 
                 <div>
                   <label className="block text-sm font-medium text-white/80 mb-2">
-                    Descripción *
+                    Cuenta con más detalle qué incluye tu trabajo *
                   </label>
                   <textarea
                     value={newService.description}
                     onChange={(e) => setNewService(prev => ({ ...prev, description: e.target.value }))}
                     rows={4}
                     className="w-full px-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Describe detalladamente qué incluye tu servicio..."
+                    placeholder="Ejemplo: Reviso la cañería, cambio las piezas rotas, dejo todo funcionando y limpio el lugar..."
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-white/80 mb-2">
-                      Categoría *
+                      ¿A qué tipo de trabajo pertenece? *
                     </label>
                     <select
                       value={newService.category}
@@ -762,7 +762,7 @@ const ASServicios: NextPage = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-white/80 mb-2">
-                      Precio ($) *
+                      ¿Cuánto cobras por este trabajo? (en pesos) *
                     </label>
                     <div className="relative">
                       <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -772,14 +772,14 @@ const ASServicios: NextPage = () => {
                         onChange={(e) => setNewService(prev => ({ ...prev, price: parseInt(e.target.value) || 0 }))}
                         min="0"
                         className="w-full pl-10 pr-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="2500"
+                        placeholder="3000 (ejemplo)"
                       />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-white/80 mb-2">
-                      Duración (minutos) *
+                      ¿Cuánto tiempo te toma hacerlo? *
                     </label>
                     <div className="relative">
                       <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -790,14 +790,14 @@ const ASServicios: NextPage = () => {
                         min="15"
                         step="15"
                         className="w-full pl-10 pr-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="120"
+                        placeholder="120 (2 horas)"
                       />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-white/80 mb-2">
-                      Ubicación (Opcional)
+                      ¿En qué zona trabajas? (opcional)
                     </label>
                     <div className="relative">
                       <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -806,7 +806,7 @@ const ASServicios: NextPage = () => {
                         value={newService.address || ''}
                         onChange={(e) => setNewService(prev => ({ ...prev, address: e.target.value }))}
                         className="w-full pl-10 pr-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Rawson, Chubut"
+                        placeholder="Rawson, Puerto Madryn, Trelew..."
                       />
                     </div>
                   </div>
@@ -827,7 +827,7 @@ const ASServicios: NextPage = () => {
                     disabled={saving || !newService.title || !newService.description}
                     className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
-                    {saving ? 'Creando...' : 'Crear Servicio'}
+                    {saving ? 'Guardando tu trabajo...' : '¡Listo! Agregar este Trabajo'}
                   </button>
                 </div>
               </div>
