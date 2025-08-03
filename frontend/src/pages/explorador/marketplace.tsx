@@ -115,8 +115,8 @@ export default function MarketplacePage() {
     try {
       setLoading(true);
       
-      // Mock data - replace with real API calls
-      const mockCategories: Category[] = [
+      // Mock data removed for production launch
+      /* const mockCategories: Category[] = [
         { id: 1, name: 'Plomería', icon: '🔧', service_count: 45 },
         { id: 2, name: 'Electricidad', icon: '⚡', service_count: 32 },
         { id: 3, name: 'Construcción', icon: '🏗️', service_count: 28 },
@@ -254,10 +254,11 @@ export default function MarketplacePage() {
           completion_rate: 95,
           badges: ['Verificado', 'Especialista']
         }
-      ];
+      ]; */
 
-      setCategories(mockCategories);
-      setProfessionals(mockProfessionals);
+      // For production launch - show empty states
+      setCategories([]);
+      setProfessionals([]);
     } catch (error) {
       console.error('Error loading marketplace data:', error);
     } finally {

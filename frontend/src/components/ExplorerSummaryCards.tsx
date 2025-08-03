@@ -275,7 +275,7 @@ export function ExplorerSummaryCards() {
           </Card>
         </motion.div>
 
-        {/* Próximas Reuniones */}
+        {/* Explorar Marketplace */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -284,26 +284,28 @@ export function ExplorerSummaryCards() {
           <Card className="glass hover:glass-medium transition-all duration-300 border-white/10 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-yellow-400 group-hover:rotate-12 transition-transform duration-300" />
-                <span>Próximas Reuniones</span>
+                <Search className="h-4 w-4 text-purple-400 group-hover:rotate-12 transition-transform duration-300" />
+                <span>Explorar Servicios</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">3</div>
+              <div className="text-3xl font-bold mb-2">0</div>
               <div className="space-y-3">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Esta semana</span>
-                    <Badge className="bg-yellow-500/20 text-yellow-400 text-xs border-0">2</Badge>
+                    <span className="text-muted-foreground">Búsquedas realizadas</span>
+                    <Badge className="bg-gray-500/20 text-gray-400 text-xs border-0">0</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Próxima semana</span>
-                    <Badge className="bg-purple-500/20 text-purple-400 text-xs border-0">1</Badge>
+                    <span className="text-muted-foreground">Profesionales vistos</span>
+                    <Badge className="bg-gray-500/20 text-gray-400 text-xs border-0">0</Badge>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Reunión importante mañana 2:00 PM
-                </p>
+                <Link href="/explorador/marketplace" className="block">
+                  <Button className="w-full text-xs glass-medium hover:glass-strong transition-all duration-300 h-8">
+                    Explorar Marketplace
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>

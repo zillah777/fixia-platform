@@ -6,9 +6,11 @@ import { Button } from "./ui/button";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import { useASDashboardData } from "@/hooks/useDashboardData";
 
 export function FixiaSummaryCards() {
   const { user } = useAuth();
+  const { stats, loading, error } = useASDashboardData();
 
   return (
     <motion.div 
@@ -44,19 +46,28 @@ export function FixiaSummaryCards() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">8</div>
+              <div className="text-3xl font-bold mb-2">
+                {loading ? "..." : (stats?.active_services || 0)}
+              </div>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">En progreso</span>
-                  <span className="font-medium">5</span>
+                  <span className="text-muted-foreground">Total servicios</span>
+                  <span className="font-medium">
+                    {loading ? "..." : (stats?.total_services || 0)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Pendientes inicio</span>
-                  <span className="font-medium">3</span>
+                  <span className="text-muted-foreground">Solicitudes pendientes</span>
+                  <span className="font-medium">
+                    {loading ? "..." : (stats?.pending_requests || 0)}
+                  </span>
                 </div>
-                <Progress value={62} className="h-2" />
+                <Progress 
+                  value={stats && stats.total_services > 0 ? (stats.active_services / stats.total_services) * 100 : 0} 
+                  className="h-2" 
+                />
                 <p className="text-xs text-muted-foreground">
-                  2 entregas esta semana
+                  {loading ? "Cargando..." : stats?.active_services === 0 ? "Crea tu primer servicio" : `${stats?.active_services} servicios activos`}
                 </p>
               </div>
             </CardContent>
@@ -78,26 +89,37 @@ export function FixiaSummaryCards() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold mb-2 flex items-center space-x-2">
-                <span>4.9</span>
+                <span>{loading ? "..." : (stats?.average_rating || 0).toFixed(1)}</span>
                 <div className="flex text-yellow-400">
-                  ★★★★★
+                  {stats && stats.average_rating > 0 ? "★★★★★" : "☆☆☆☆☆"}
                 </div>
               </div>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">127 reseñas totales</span>
-                  <Badge className="bg-green-500/20 text-green-400 text-xs border-0">+12 nuevas</Badge>
+                  <span className="text-muted-foreground">
+                    {loading ? "..." : `${stats?.total_reviews || 0} reseñas totales`}
+                  </span>
+                  {stats && stats.total_reviews > 0 ? (
+                    <Badge className="bg-green-500/20 text-green-400 text-xs border-0">Verificado</Badge>
+                  ) : (
+                    <Badge className="bg-gray-500/20 text-gray-400 text-xs border-0">Sin reseñas</Badge>
+                  )}
                 </div>
-                <Progress value={98} className="h-2" />
+                <Progress 
+                  value={stats && stats.average_rating > 0 ? (stats.average_rating / 5) * 100 : 0} 
+                  className="h-2" 
+                />
                 <p className="text-xs text-muted-foreground">
-                  98% de satisfacción del cliente
+                  {loading ? "Cargando..." : 
+                   stats?.total_reviews === 0 ? "Completa servicios para recibir reseñas" :
+                   `${Math.round((stats?.average_rating || 0) / 5 * 100)}% de satisfacción del cliente`}
                 </p>
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* Ingresos del Mes */}
+        {/* Ingresos Totales */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -107,26 +129,35 @@ export function FixiaSummaryCards() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <TrendingUp className="h-4 w-4 text-green-400 group-hover:scale-110 transition-transform duration-300" />
-                <span>Ingresos del Mes</span>
+                <span>Ingresos Totales</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">$8,940</div>
+              <div className="text-3xl font-bold mb-2">
+                {loading ? "..." : `$${(stats?.total_earnings || 0).toLocaleString()}`}
+              </div>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Meta: $10,000</span>
-                  <span className="text-green-400 font-medium">89%</span>
+                  <span className="text-muted-foreground">Servicios completados</span>
+                  <span className="text-green-400 font-medium">
+                    {loading ? "..." : (stats?.completed_bookings || 0)}
+                  </span>
                 </div>
-                <Progress value={89} className="h-2" />
+                <Progress 
+                  value={stats && stats.total_earnings > 0 ? Math.min((stats.total_earnings / 10000) * 100, 100) : 0} 
+                  className="h-2" 
+                />
                 <p className="text-xs text-muted-foreground">
-                  $1,060 para alcanzar la meta
+                  {loading ? "Cargando..." : 
+                   stats?.total_earnings === 0 ? "Completa servicios para generar ingresos" :
+                   stats && stats.completed_bookings > 0 ? `Promedio: $${Math.round(stats.total_earnings / stats.completed_bookings).toLocaleString()} por servicio` : "Sin datos disponibles"}
                 </p>
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* Mensajes Pendientes */}
+        {/* Mensajes y Comunicación */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -136,25 +167,27 @@ export function FixiaSummaryCards() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <MessageSquare className="h-4 w-4 text-primary group-hover:animate-bounce transition-all duration-300" />
-                <span>Mensajes</span>
+                <span>Comunicación</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">12</div>
+              <div className="text-3xl font-bold mb-2">
+                {loading ? "..." : "0"}
+              </div>
               <div className="space-y-3">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Sin leer</span>
-                    <Badge className="text-xs bg-red-500 text-white">7</Badge>
+                    <span className="text-muted-foreground">Mensajes sin leer</span>
+                    <Badge className="text-xs bg-gray-500/20 text-gray-400 border-0">0</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Consultas nuevas</span>
-                    <Badge className="bg-primary/20 text-primary text-xs border-0">5</Badge>
+                    <span className="text-muted-foreground">Chats activos</span>
+                    <Badge className="bg-gray-500/20 text-gray-400 text-xs border-0">0</Badge>
                   </div>
                 </div>
                 <Link href={user?.user_type === 'provider' ? '/as/chats' : '/explorador/chats'}>
                   <Button className="w-full glass-medium hover:glass-strong transition-all duration-300 h-9 px-3">
-                    Revisar Mensajes
+                    Ver Mensajes
                   </Button>
                 </Link>
               </div>
@@ -162,7 +195,7 @@ export function FixiaSummaryCards() {
           </Card>
         </motion.div>
 
-        {/* Próximas Entregas */}
+        {/* Progreso del Perfil */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -171,32 +204,38 @@ export function FixiaSummaryCards() {
           <Card className="glass hover:glass-medium transition-all duration-300 border-white/10 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-yellow-400 group-hover:rotate-12 transition-transform duration-300" />
-                <span>Próximas Entregas</span>
+                <Users className="h-4 w-4 text-blue-400 group-hover:rotate-12 transition-transform duration-300" />
+                <span>Perfil</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold mb-2">4</div>
+              <div className="text-3xl font-bold mb-2">
+                {loading ? "..." : `${stats?.profile_completion || 0}%`}
+              </div>
               <div className="space-y-3">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Esta semana</span>
-                    <Badge className="text-xs bg-red-500 text-white">2</Badge>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Próxima semana</span>
-                    <Badge className="bg-yellow-500/20 text-yellow-400 text-xs border-0">2</Badge>
+                    <span className="text-muted-foreground">Completado</span>
+                    <Badge className={`text-xs border-0 ${(stats?.profile_completion || 0) >= 80 ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                      {loading ? "..." : (stats?.profile_completion || 0) >= 80 ? "Completo" : "En progreso"}
+                    </Badge>
                   </div>
                 </div>
+                <Progress 
+                  value={stats?.profile_completion || 0} 
+                  className="h-2" 
+                />
                 <p className="text-xs text-muted-foreground">
-                  1 entrega crítica mañana
+                  {loading ? "Cargando..." : 
+                   (stats?.profile_completion || 0) < 80 ? "Completa tu perfil para más oportunidades" :
+                   "Perfil completado correctamente"}
                 </p>
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
-        {/* Nivel de Confianza */}
+        {/* Centro de Confianza */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -205,30 +244,32 @@ export function FixiaSummaryCards() {
           <Card className="glass hover:glass-medium transition-all duration-300 border-white/10 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
-                <Shield className="h-4 w-4 text-green-400 group-hover:animate-pulse transition-all duration-300" />
-                <span>Nivel de Confianza</span>
+                <Shield className="h-4 w-4 text-blue-400 group-hover:animate-pulse transition-all duration-300" />
+                <span>Verificación</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold mb-2 flex items-center space-x-2">
-                <span>95%</span>
-                <Badge className="bg-green-500/20 text-green-400 text-xs border-0">Verificado</Badge>
+                <span>0%</span>
+                <Badge className="bg-gray-500/20 text-gray-400 text-xs border-0">Pendiente</Badge>
               </div>
               <div className="space-y-3">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Identidad verificada</span>
-                    <span className="text-green-400">✓</span>
+                    <span className="text-muted-foreground">Identidad</span>
+                    <span className="text-gray-400">○</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Métodos de pago</span>
-                    <span className="text-green-400">✓</span>
+                    <span className="text-gray-400">○</span>
                   </div>
                 </div>
-                <Progress value={95} className="h-2" />
-                <p className="text-xs text-muted-foreground">
-                  Profesional de élite verificado
-                </p>
+                <Progress value={0} className="h-2" />
+                <Link href="/as/centro-confianza" className="block">
+                  <Button className="w-full text-xs glass-medium hover:glass-strong transition-all duration-300 h-8">
+                    Completar Verificación
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>

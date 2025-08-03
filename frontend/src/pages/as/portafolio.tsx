@@ -113,8 +113,9 @@ export default function PortafolioPage() {
         }
       ];
 
-      setCategories(mockCategories);
-      setPortfolioImages(mockImages);
+      // For production launch - show empty states
+      setCategories([]);
+      setPortfolioImages([]);
     } catch (error) {
       console.error('Error loading portfolio:', error);
     } finally {
@@ -160,21 +161,9 @@ export default function PortafolioPage() {
       //   body: formData
       // });
 
-      // Mock success
-      const mockNewImage: PortfolioImage = {
-        id: Date.now(),
-        image_url: URL.createObjectURL(newImage.file),
-        title: newImage.title,
-        description: newImage.description,
-        category: newImage.category,
-        is_featured: false,
-        is_profile_featured: false,
-        upload_date: new Date().toISOString().split('T')[0],
-        views: 0,
-        likes: 0
-      };
-
-      setPortfolioImages(prev => [mockNewImage, ...prev]);
+      // TODO: Implement real upload to API
+      console.log('Portfolio upload would be processed here');
+      // For production launch, disable mock data
       setShowUploadDialog(false);
       setNewImage({ title: '', description: '', category: '', file: null });
       

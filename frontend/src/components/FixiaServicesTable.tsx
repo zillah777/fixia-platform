@@ -9,62 +9,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 
-const mockServices = [
-  {
-    id: "FX001",
-    title: "Desarrollo de E-commerce completo",
-    client: {
-      name: "María González",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=32&h=32&fit=crop&crop=face",
-      initials: "MG",
-      rating: 4.8
-    },
-    status: "En Progreso",
-    priority: "Alta",
-    category: "Desarrollo Web",
-    deadline: "2025-02-15",
-    budget: "$3,500",
-    progress: 75,
-    messages: 3,
-    deliveries: "2/4"
-  },
-  {
-    id: "FX002", 
-    title: "Diseño de identidad corporativa",
-    client: {
-      name: "Carlos Ruiz",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face",
-      initials: "CR",
-      rating: 5.0
-    },
-    status: "Esperando Revisión",
-    priority: "Media",
-    category: "Diseño Gráfico",
-    deadline: "2025-01-30",
-    budget: "$1,200",
-    progress: 90,
-    messages: 1,
-    deliveries: "3/3"
-  },
-  {
-    id: "FX003",
-    title: "Consultoría en Marketing Digital",
-    client: {
-      name: "Ana Torres",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face",
-      initials: "AT",
-      rating: 4.9
-    },
-    status: "Completado",
-    priority: "Baja",
-    category: "Marketing",
-    deadline: "2025-01-20",
-    budget: "$800",
-    progress: 100,
-    messages: 0,
-    deliveries: "2/2"
-  }
-];
+// Services will be fetched from API - no mock data for production
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -127,118 +72,40 @@ export function FixiaServicesTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockServices.map((service, index) => (
-                  <motion.tr
-                    key={service.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 1.6 + (index * 0.1) }}
-                    className="border-b border-white/10 hover:bg-white/5 transition-colors"
-                  >
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium">{service.title}</div>
-                        <div className="text-xs text-muted-foreground">{service.category}</div>
-                        <div className="text-xs text-muted-foreground">ID: {service.id}</div>
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-12">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 1.6 }}
+                      className="space-y-4"
+                    >
+                      <div className="mx-auto w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-6">
+                        <Clock className="h-8 w-8 text-muted-foreground" />
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={service.client.avatar} alt={service.client.name} />
-                          <AvatarFallback className="text-xs">{service.client.initials}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium text-sm">{service.client.name}</div>
-                          <div className="flex items-center space-x-1">
-                            <Star className="h-3 w-3 text-yellow-400 fill-current" />
-                            <span className="text-xs text-muted-foreground">{service.client.rating}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(service.status)}>
-                        {service.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getPriorityColor(service.priority)}>
-                        {service.priority}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{service.deadline}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <DollarSign className="h-4 w-4 text-green-400" />
-                        <span className="font-medium">{service.budget}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-xs">
-                          <span>{service.progress}%</span>
-                          <span className="text-muted-foreground">{service.deliveries}</span>
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-1.5">
-                          <div 
-                            className="bg-primary h-1.5 rounded-full transition-all duration-500" 
-                            style={{ width: `${service.progress}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        {service.messages > 0 && (
-                          <Button className="h-8 w-8 p-0 hover:glass-medium">
-                            <MessageSquare className="h-4 w-4" />
-                            <span className="sr-only">Mensajes</span>
-                          </Button>
-                        )}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button className="h-8 w-8 p-0 hover:glass-medium">
-                              <span className="sr-only">Abrir menú</span>
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="glass border-white/20">
-                            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                            <DropdownMenuItem className="hover:glass-medium">
-                              <Eye className="mr-2 h-4 w-4" />
-                              Ver detalles
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="hover:glass-medium">
-                              <MessageSquare className="mr-2 h-4 w-4" />
-                              Contactar cliente
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator className="bg-white/10" />
-                            <DropdownMenuItem className="hover:glass-medium">
-                              Marcar como completado
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </TableCell>
-                  </motion.tr>
-                ))}
+                      <h3 className="text-lg font-semibold mb-2">Sin servicios activos</h3>
+                      <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">
+                        Cuando tengas servicios activos, aparecerán aquí. Comienza creando tu primer servicio.
+                      </p>
+                      <Link href="/as/servicios">
+                        <Button className="liquid-gradient hover:opacity-90 transition-all duration-300">
+                          Crear Mi Primer Servicio
+                        </Button>
+                      </Link>
+                    </motion.div>
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </div>
           
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
             <div className="text-sm text-muted-foreground">
-              Mostrando 3 de 8 servicios activos
+              Tus servicios activos aparecerán aquí
             </div>
-            <Link href={user?.user_type === 'provider' ? '/as/servicios' : '/explorador/mis-solicitudes'}>
+            <Link href="/as/servicios">
               <Button className="glass border-white/20 hover:glass-medium">
-                Ver todos los servicios
+                Gestionar Servicios
               </Button>
             </Link>
           </div>
