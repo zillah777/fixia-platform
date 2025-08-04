@@ -52,9 +52,9 @@ const ComoFunciona: NextPage = () => {
     },
     {
       number: 4,
-      title: "Disfruta el Resultado",
-      description: "Recibe tu servicio completado, califica la experiencia y realiza el pago seguro.",
-      icon: <CheckCircle className="h-8 w-8" />,
+      title: "Evalúa la Experiencia",
+      description: "Recibe tu servicio completado, califica al profesional y contribuye a la comunidad de confianza.",
+      icon: <Star className="h-8 w-8" />,
       color: "emerald"
     }
   ];
@@ -83,9 +83,9 @@ const ComoFunciona: NextPage = () => {
     },
     {
       number: 4,
-      title: "Entrega y Cobra",
-      description: "Completa el trabajo, recibe reseñas positivas y obtén pagos seguros directamente.",
-      icon: <CreditCard className="h-8 w-8" />,
+      title: "Construye Reputación",
+      description: "Completa el trabajo, recibe reseñas positivas y construye tu reputación profesional verificada.",
+      icon: <Award className="h-8 w-8" />,
       color: "emerald"
     }
   ];
@@ -98,9 +98,9 @@ const ComoFunciona: NextPage = () => {
       color: "blue"
     },
     {
-      title: "Pagos Seguros",
-      description: "Sistema de pagos protegido con MercadoPago. Tu dinero está seguro hasta completar el servicio.",
-      icon: <CreditCard className="h-6 w-6" />,
+      title: "Comunicación Directa",
+      description: "Chat integrado que conecta profesionales y clientes para coordinar detalles y acuerdos transparentes.",
+      icon: <MessageSquare className="h-6 w-6" />,
       color: "green"
     },
     {
@@ -110,8 +110,8 @@ const ComoFunciona: NextPage = () => {
       color: "purple"
     },
     {
-      title: "Calidad Garantizada",
-      description: "Sistema de reseñas y calificaciones que asegura la excelencia en cada servicio.",
+      title: "Red de Confianza",
+      description: "Sistema de reseñas bidireccional que construye una comunidad basada en confianza mutua y transparencia.",
       icon: <Star className="h-6 w-6" />,
       color: "yellow"
     }
