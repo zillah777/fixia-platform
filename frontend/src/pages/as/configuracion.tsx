@@ -533,78 +533,78 @@ const ASConfiguracion: NextPage = () => {
 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                              <Smartphone className="h-5 w-5 text-gray-400 mr-3" />
+                              <Smartphone className="h-5 w-5 text-white/70 mr-3" />
                               <div>
-                                <span className="text-sm font-medium text-gray-900">Push</span>
-                                <p className="text-xs text-gray-600">Notificaciones en el navegador y app móvil</p>
+                                <span className="text-sm font-medium text-white">Push</span>
+                                <p className="text-xs text-white/70">Notificaciones en el navegador y app móvil</p>
                               </div>
                             </div>
                             <input
                               type="checkbox"
                               checked={notifications.push_notifications}
                               onChange={(e) => setNotifications(prev => ({ ...prev, push_notifications: e.target.checked }))}
-                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              className="h-4 w-4 text-blue-600 border-white/30 rounded focus:ring-blue-500"
                             />
                           </div>
 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                              <Smartphone className="h-5 w-5 text-gray-400 mr-3" />
+                              <Smartphone className="h-5 w-5 text-white/70 mr-3" />
                               <div>
-                                <span className="text-sm font-medium text-gray-900">SMS</span>
-                                <p className="text-xs text-gray-600">Mensajes de texto a tu teléfono</p>
+                                <span className="text-sm font-medium text-white">SMS</span>
+                                <p className="text-xs text-white/70">Mensajes de texto a tu teléfono</p>
                               </div>
                             </div>
                             <input
                               type="checkbox"
                               checked={notifications.sms_notifications}
                               onChange={(e) => setNotifications(prev => ({ ...prev, sms_notifications: e.target.checked }))}
-                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              className="h-4 w-4 text-blue-600 border-white/30 rounded focus:ring-blue-500"
                             />
                           </div>
                         </div>
                       </div>
 
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-4">Tipos de Notificaciones</h4>
+                        <h4 className="font-bold text-white mb-6">Tipos de Notificaciones</h4>
                         <div className="space-y-4">
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-900">Nuevas solicitudes de servicios</span>
+                            <span className="text-sm font-medium text-white">Nuevas solicitudes de servicios</span>
                             <input
                               type="checkbox"
                               checked={notifications.booking_updates}
                               onChange={(e) => setNotifications(prev => ({ ...prev, booking_updates: e.target.checked }))}
-                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              className="h-4 w-4 text-blue-600 border-white/30 rounded focus:ring-blue-500"
                             />
                           </div>
 
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-900">Actualizaciones de pagos</span>
+                            <span className="text-sm font-medium text-white">Actualizaciones de pagos</span>
                             <input
                               type="checkbox"
                               checked={notifications.payment_updates}
                               onChange={(e) => setNotifications(prev => ({ ...prev, payment_updates: e.target.checked }))}
-                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              className="h-4 w-4 text-blue-600 border-white/30 rounded focus:ring-blue-500"
                             />
                           </div>
 
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-900">Nuevos mensajes de chat</span>
+                            <span className="text-sm font-medium text-white">Nuevos mensajes de chat</span>
                             <input
                               type="checkbox"
                               checked={notifications.chat_messages}
                               onChange={(e) => setNotifications(prev => ({ ...prev, chat_messages: e.target.checked }))}
-                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              className="h-4 w-4 text-blue-600 border-white/30 rounded focus:ring-blue-500"
                             />
                           </div>
 
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-900">Emails promocionales</span>
+                            <span className="text-sm font-medium text-white">Emails promocionales</span>
                             <input
                               type="checkbox"
                               checked={notifications.marketing_emails}
                               onChange={(e) => setNotifications(prev => ({ ...prev, marketing_emails: e.target.checked }))}
-                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              className="h-4 w-4 text-blue-600 border-white/30 rounded focus:ring-blue-500"
                             />
                           </div>
                         </div>
@@ -615,18 +615,33 @@ const ASConfiguracion: NextPage = () => {
 
                 {/* Privacy Tab */}
                 {activeTab === 'privacy' && (
-                  <div className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-6">Configuración de Privacidad</h3>
+                  <motion.div 
+                    key="privacy"
+                    className="p-8"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <h3 className="text-xl font-bold text-white mb-8 flex items-center">
+                      <ShieldCheck className="h-6 w-6 mr-3 text-blue-400" />
+                      Configuración de Privacidad
+                    </h3>
                     
                     <div className="space-y-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-white mb-2">
                           Visibilidad del Perfil
                         </label>
                         <select
                           value={privacy.profile_visibility}
                           onChange={(e) => setPrivacy(prev => ({ ...prev, profile_visibility: e.target.value as any }))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-full px-4 py-3 text-white rounded-xl transition-all duration-200"
+                          style={{
+                            background: 'rgba(30, 41, 59, 0.4)',
+                            backdropFilter: 'blur(16px)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)'
+                          }}
                         >
                           <option value="public">Público - Visible para todos</option>
                           <option value="clients_only">Solo Clientes - Visible para clientes confirmados</option>
@@ -635,68 +650,78 @@ const ASConfiguracion: NextPage = () => {
                       </div>
 
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-4">Información Visible</h4>
+                        <h4 className="font-bold text-white mb-6">Información Visible</h4>
                         <div className="space-y-4">
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-900">Mostrar número de teléfono</span>
+                            <span className="text-sm font-medium text-white">Mostrar número de teléfono</span>
                             <input
                               type="checkbox"
                               checked={privacy.show_phone}
                               onChange={(e) => setPrivacy(prev => ({ ...prev, show_phone: e.target.checked }))}
-                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              className="h-4 w-4 text-blue-600 border-white/30 rounded focus:ring-blue-500"
                             />
                           </div>
 
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-900">Mostrar dirección completa</span>
+                            <span className="text-sm font-medium text-white">Mostrar dirección completa</span>
                             <input
                               type="checkbox"
                               checked={privacy.show_address}
                               onChange={(e) => setPrivacy(prev => ({ ...prev, show_address: e.target.checked }))}
-                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              className="h-4 w-4 text-blue-600 border-white/30 rounded focus:ring-blue-500"
                             />
                           </div>
 
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-900">Mostrar última conexión</span>
+                            <span className="text-sm font-medium text-white">Mostrar última conexión</span>
                             <input
                               type="checkbox"
                               checked={privacy.show_last_active}
                               onChange={(e) => setPrivacy(prev => ({ ...prev, show_last_active: e.target.checked }))}
-                              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              className="h-4 w-4 text-blue-600 border-white/30 rounded focus:ring-blue-500"
                             />
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
 
                 {/* Service Tab */}
                 {activeTab === 'service' && (
-                  <div className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-6">Configuración de Servicios</h3>
+                  <motion.div 
+                    key="service"
+                    className="p-8"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <h3 className="text-xl font-bold text-white mb-8 flex items-center">
+                      <DollarSign className="h-6 w-6 mr-3 text-blue-400" />
+                      Configuración de Servicios
+                    </h3>
                     
                     <div className="space-y-6">
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-4">Automatización</h4>
+                        <h4 className="font-bold text-white mb-6">Automatización</h4>
                         <div className="flex items-center justify-between">
                           <div>
-                            <span className="text-sm font-medium text-gray-900">Auto-aceptar solicitudes</span>
-                            <p className="text-xs text-gray-600">Acepta automáticamente nuevas solicitudes de servicios</p>
+                            <span className="text-sm font-medium text-white">Auto-aceptar solicitudes</span>
+                            <p className="text-xs text-white/70">Acepta automáticamente nuevas solicitudes de servicios</p>
                           </div>
                           <input
                             type="checkbox"
                             checked={serviceSettings.auto_accept_bookings}
                             onChange={(e) => setServiceSettings(prev => ({ ...prev, auto_accept_bookings: e.target.checked }))}
-                            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                            className="h-4 w-4 text-blue-600 border-white/30 rounded focus:ring-blue-500"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-white mb-2">
                             Días de anticipación máxima
                           </label>
                           <input
@@ -705,12 +730,17 @@ const ASConfiguracion: NextPage = () => {
                             onChange={(e) => setServiceSettings(prev => ({ ...prev, advance_booking_days: parseInt(e.target.value) || 7 }))}
                             min="1"
                             max="30"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-4 py-3 text-white rounded-xl transition-all duration-200"
+                            style={{
+                              background: 'rgba(30, 41, 59, 0.4)',
+                              backdropFilter: 'blur(16px)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-white mb-2">
                             Radio de servicio (km)
                           </label>
                           <input
@@ -719,12 +749,17 @@ const ASConfiguracion: NextPage = () => {
                             onChange={(e) => setServiceSettings(prev => ({ ...prev, service_radius_km: parseInt(e.target.value) || 10 }))}
                             min="1"
                             max="50"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-4 py-3 text-white rounded-xl transition-all duration-200"
+                            style={{
+                              background: 'rgba(30, 41, 59, 0.4)',
+                              backdropFilter: 'blur(16px)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-white mb-2">
                             Precio mínimo de servicio ($)
                           </label>
                           <input
@@ -733,41 +768,56 @@ const ASConfiguracion: NextPage = () => {
                             onChange={(e) => setServiceSettings(prev => ({ ...prev, minimum_service_price: parseInt(e.target.value) || 1000 }))}
                             min="500"
                             step="100"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-4 py-3 text-white rounded-xl transition-all duration-200"
+                            style={{
+                              background: 'rgba(30, 41, 59, 0.4)',
+                              backdropFilter: 'blur(16px)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)'
+                            }}
                           />
                         </div>
                       </div>
 
                       <div>
-                        <h4 className="font-medium text-gray-900 mb-4">Horarios de Trabajo</h4>
+                        <h4 className="font-bold text-white mb-6">Horarios de Trabajo</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                               Hora de inicio
                             </label>
                             <input
                               type="time"
                               value={serviceSettings.working_hours_start}
                               onChange={(e) => setServiceSettings(prev => ({ ...prev, working_hours_start: e.target.value }))}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-4 py-3 text-white rounded-xl transition-all duration-200"
+                              style={{
+                                background: 'rgba(30, 41, 59, 0.4)',
+                                backdropFilter: 'blur(16px)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                              }}
                             />
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-white mb-2">
                               Hora de fin
                             </label>
                             <input
                               type="time"
                               value={serviceSettings.working_hours_end}
                               onChange={(e) => setServiceSettings(prev => ({ ...prev, working_hours_end: e.target.value }))}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full px-4 py-3 text-white rounded-xl transition-all duration-200"
+                              style={{
+                                background: 'rgba(30, 41, 59, 0.4)',
+                                backdropFilter: 'blur(16px)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                              }}
                             />
                           </div>
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-white mb-2">
                             Días de trabajo
                           </label>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">

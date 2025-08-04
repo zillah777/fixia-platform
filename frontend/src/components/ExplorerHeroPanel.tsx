@@ -21,25 +21,27 @@ export function ExplorerHeroPanel() {
         className="flex flex-col space-y-3"
       >
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-          <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
+          <div className="flex-1 max-w-none lg:max-w-2xl">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent leading-tight">
               ¡Hola {userName}! 🔍
             </h1>
-            <p className="text-muted-foreground text-base sm:text-lg">
+            <p className="text-muted-foreground text-sm sm:text-base lg:text-lg mt-2">
               Conecta con profesionales verificados. Encuentra la solución perfecta para tu proyecto.
             </p>
           </div>
-          <Link href="/explorador/buscar-servicio" className="w-full sm:w-auto">
-            <Button className="w-full sm:w-auto liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg text-sm px-4 py-2">
-              <Search className="mr-2 h-4 w-4" />
-              Buscar Servicios
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2 sm:gap-3 lg:gap-2 xl:gap-3 w-full sm:w-auto lg:w-full xl:w-auto lg:max-w-xs xl:max-w-none">
+            <Link href="/explorador/marketplace" className="flex-1 sm:flex-initial">
+              <Button className="w-full liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg text-sm px-4 py-2.5">
+                <Search className="mr-2 h-4 w-4" />
+                Encontrar Profesional
+              </Button>
+            </Link>
+          </div>
         </div>
       </motion.div>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {[
           {
             title: "Solicitudes Activas",
@@ -100,12 +102,12 @@ export function ExplorerHeroPanel() {
       </div>
 
       {/* Activity and Discovery */}
-      <div className="grid gap-6 md:grid-cols-12">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-12">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="md:col-span-8"
+          className="lg:col-span-8"
         >
           <Card className="glass border-white/10">
             <CardHeader>
@@ -126,9 +128,10 @@ export function ExplorerHeroPanel() {
                 <p className="text-muted-foreground text-sm mb-4">
                   Tu actividad con profesionales aparecerá aquí
                 </p>
-                <Link href="/explorador/buscar-servicio">
+                <Link href="/explorador/marketplace">
                   <Button className="liquid-gradient hover:opacity-90 transition-all duration-300">
-                    Buscar Profesionales
+                    <Search className="mr-2 h-4 w-4" />
+                    Encontrar Profesional
                   </Button>
                 </Link>
               </div>
@@ -172,7 +175,7 @@ export function ExplorerHeroPanel() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="md:col-span-4"
+          className="lg:col-span-4"
         >
           <Card className="glass border-white/10 h-full">
             <CardHeader>
@@ -193,9 +196,10 @@ export function ExplorerHeroPanel() {
                 <p className="text-muted-foreground text-sm mb-4">
                   Explora profesionales y recibirás recomendaciones personalizadas
                 </p>
-                <Link href="/explorador/navegar-profesionales">
+                <Link href="/explorador/marketplace">
                   <Button className="glass-medium hover:glass-strong transition-all duration-300 border border-white/20">
-                    Explorar Profesionales
+                    <Users className="mr-2 h-4 w-4" />
+                    Ver Profesionales
                   </Button>
                 </Link>
               </div>
@@ -236,13 +240,6 @@ export function ExplorerHeroPanel() {
                 </motion.div>
               ))} */}
               
-              <div className="pt-4 border-t border-white/10">
-                <Link href="/explorador/navegar-profesionales">
-                  <Button className="w-full glass border-white/20 hover:glass-medium">
-                    Ver más profesionales
-                  </Button>
-                </Link>
-              </div>
             </CardContent>
           </Card>
         </motion.div>

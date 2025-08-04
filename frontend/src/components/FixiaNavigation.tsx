@@ -33,7 +33,7 @@ export function FixiaNavigation() {
       animate={{ y: 0 }}
       className="sticky top-0 z-50 w-full glass border-b border-white/10"
     >
-      <div className="container mx-auto flex h-20 items-center justify-between px-6">
+      <div className="container mx-auto flex h-16 sm:h-20 items-center justify-between px-4 sm:px-6">
         {/* Logo and Navigation Links */}
         <div className="flex items-center space-x-8">
           <motion.div 
@@ -74,18 +74,10 @@ export function FixiaNavigation() {
             {user?.user_type === 'customer' && (
               <>
                 <Link href="/explorador/marketplace">
-                  <SimpleTooltip content="Ve todos los profesionales disponibles en tu zona">
-                    <Button className="hover:glass-medium transition-all duration-300">
-                      <Store className="mr-2 h-4 w-4" />
-                      Buscar Profesionales
-                    </Button>
-                  </SimpleTooltip>
-                </Link>
-                <Link href="/explorador/buscar-servicio">
-                  <SimpleTooltip content="Busca un tipo de trabajo específico (plomería, electricidad, etc.)">
+                  <SimpleTooltip content="Encuentra profesionales verificados para tu proyecto">
                     <Button className="hover:glass-medium transition-all duration-300">
                       <Search className="mr-2 h-4 w-4" />
-                      Buscar por Servicio
+                      Encontrar Profesional
                     </Button>
                   </SimpleTooltip>
                 </Link>
@@ -126,11 +118,11 @@ export function FixiaNavigation() {
         {/* Search, Actions, and User Menu */}
         <div className="flex items-center space-x-4">
           {/* Search */}
-          <div className="relative hidden md:block">
+          <div className="relative hidden lg:block">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder={user?.user_type === 'customer' ? "Buscar en marketplace..." : "Buscar profesionales o servicios..."}
-              className="w-80 pl-12 glass border-white/20 focus:border-primary/50 focus:ring-primary/30 transition-all duration-300"
+              className="w-64 xl:w-80 pl-12 glass border-white/20 focus:border-primary/50 focus:ring-primary/30 transition-all duration-300"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && user?.user_type === 'customer') {
                   const searchTerm = (e.target as HTMLInputElement).value;
@@ -143,25 +135,9 @@ export function FixiaNavigation() {
           </div>
 
           {/* Quick Actions */}
-          <div className="flex items-center space-x-2">
-            {user?.user_type === 'customer' && (
-              <Link href="/explorador/marketplace">
-                <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg h-9 px-3" title="Ve todos los profesionales disponibles">
-                  <Store className="mr-2 h-4 w-4" />
-                  Ver Profesionales
-                </Button>
-              </Link>
-            )}
-            {user?.user_type === 'provider' && (
-              <Link href="/as/portafolio">
-                <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg h-9 px-3" title="Agrega fotos de tus trabajos">
-                  <Images className="mr-2 h-4 w-4" />
-                  Agregar Fotos
-                </Button>
-              </Link>
-            )}
+          <div className="flex items-center space-x-1 sm:space-x-2">
 
-            <Button className="relative hover:glass-medium transition-all duration-300 h-10 w-10">
+            <Button className="relative hover:glass-medium transition-all duration-300 h-9 w-9 sm:h-10 sm:w-10">
               <Bell className="h-4 w-4" />
               {/* Badge will only show when there are real notifications */}
             </Button>
@@ -170,10 +146,10 @@ export function FixiaNavigation() {
           {/* User Avatar Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="relative h-10 w-10 rounded-full hover:glass-medium transition-all duration-300">
-                <Avatar className="h-10 w-10 ring-2 ring-primary/20">
+              <Button className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full hover:glass-medium transition-all duration-300">
+                <Avatar className="h-9 w-9 sm:h-10 sm:w-10 ring-2 ring-primary/20">
                   <AvatarImage src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined} alt="Usuario" />
-                  <AvatarFallback className="glass">{getInitials()}</AvatarFallback>
+                  <AvatarFallback className="glass text-xs sm:text-sm">{getInitials()}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -210,8 +186,8 @@ export function FixiaNavigation() {
               {user?.user_type === 'customer' && (
                 <Link href="/explorador/marketplace">
                   <DropdownMenuItem className="hover:glass-medium">
-                    <Store className="mr-3 h-4 w-4" />
-                    Buscar Profesionales
+                    <Search className="mr-3 h-4 w-4" />
+                    Encontrar Profesional
                   </DropdownMenuItem>
                 </Link>
               )}
@@ -260,7 +236,7 @@ export function FixiaNavigation() {
           {/* Mobile Menu Button */}
           <Button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden hover:glass-medium h-10 w-10"
+            className="lg:hidden hover:glass-medium h-9 w-9 sm:h-10 sm:w-10"
           >
             {isMobileMenuOpen ? (
               <X className="h-5 w-5" />
@@ -280,7 +256,7 @@ export function FixiaNavigation() {
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden glass border-t border-white/10"
           >
-            <div className="container mx-auto px-6 py-4">
+            <div className="container mx-auto px-4 sm:px-6 py-4">
               {/* Mobile Search */}
               <div className="relative mb-4">
                 <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -318,20 +294,8 @@ export function FixiaNavigation() {
                         className="w-full justify-start hover:glass-medium transition-all duration-300"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        <Store className="mr-3 h-4 w-4" />
-                        Buscar Profesionales
-                        <Badge className="ml-auto bg-primary/20 text-primary text-xs border-0">
-                          Nuevo
-                        </Badge>
-                      </Button>
-                    </Link>
-                    <Link href="/explorador/buscar-servicio">
-                      <Button 
-                        className="w-full justify-start hover:glass-medium transition-all duration-300"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
                         <Search className="mr-3 h-4 w-4" />
-                        Buscar por Servicio
+                        Encontrar Profesional
                       </Button>
                     </Link>
                   </>
