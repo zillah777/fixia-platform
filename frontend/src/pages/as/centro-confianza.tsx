@@ -97,97 +97,51 @@ const ASCentroConfianza: NextPage = () => {
     try {
       setLoadingData(true);
       
-      // Mock data - in real implementation, fetch from API
-      const mockTrustMetrics: TrustMetrics = {
-        overall_score: 92,
-        profile_completion: 85,
-        verification_level: 'verified',
-        total_reviews: 47,
-        average_rating: 4.7,
-        response_time_hours: 2.3,
-        completion_rate: 96,
-        repeat_customer_rate: 73
-      };
-
-      const mockReviews: Review[] = [
-        {
-          id: 1,
-          explorer_name: 'María González',
-          rating: 5,
-          comment: 'Excelente trabajo en la reparación del grifo. Muy profesional y puntual. Lo recomiendo completamente.',
-          service_title: 'Reparación de Plomería Residencial',
-          created_at: '2024-01-15T14:30:00Z'
-        },
-        {
-          id: 2,
-          explorer_name: 'Carlos Martínez',
-          rating: 5,
-          comment: 'Instaló los tomacorrientes perfectamente. Trabajo limpio y explicó todo el proceso claramente.',
-          service_title: 'Instalación Eléctrica',
-          created_at: '2024-01-12T10:15:00Z',
-          response: 'Muchas gracias Carlos! Fue un placer trabajar en su oficina.'
-        },
-        {
-          id: 3,
-          explorer_name: 'Ana López',
-          rating: 4,
-          comment: 'Buen servicio, aunque llegó 15 minutos tarde. Pero el trabajo final fue satisfactorio.',
-          service_title: 'Reparación de Plomería',
-          created_at: '2024-01-08T16:45:00Z'
+      // Fetch real data from API
+      const response = await fetch('/api/dashboard/trust-metrics', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-      ];
+      });
 
-      const mockBadges: Badge[] = [
-        {
-          id: 'fast_responder',
-          name: 'Respuesta Rápida',
-          description: 'Responde a mensajes en menos de 2 horas',
-          icon: '⚡',
-          earned: true,
-          earned_date: '2024-01-10',
-          requirement: 'Tiempo promedio de respuesta menor a 2 horas'
-        },
-        {
-          id: 'quality_service',
-          name: 'Servicio de Calidad',
-          description: 'Mantiene un rating promedio superior a 4.5',
-          icon: '⭐',
-          earned: true,
-          earned_date: '2024-01-05',
-          requirement: 'Rating promedio ≥ 4.5 estrellas'
-        },
-        {
-          id: 'reliable_professional',
-          name: 'Profesional Confiable',
-          description: 'Completa más del 95% de los servicios',
-          icon: '🛡️',
-          earned: true,
-          earned_date: '2023-12-20',
-          requirement: 'Tasa de finalización ≥ 95%'
-        },
-        {
-          id: 'customer_favorite',
-          name: 'Favorito de Clientes',
-          description: 'Más del 70% de clientes repiten',
-          icon: '💎',
-          earned: true,
-          earned_date: '2024-01-12',
-          requirement: 'Tasa de clientes repetidos ≥ 70%'
-        },
-        {
-          id: 'master_craftsman',
-          name: 'Maestro Artesano',
-          description: 'Completa 100 servicios exitosamente',
-          icon: '🏆',
-          earned: false,
-          progress: 47,
-          requirement: 'Completar 100 servicios con rating ≥ 4.0'
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setTrustMetrics(data.data.trustMetrics || {
+            overall_score: 0,
+            profile_completion: 50,
+            verification_level: 'basic',
+            total_reviews: 0,
+            average_rating: 0,
+            response_time_hours: 0,
+            completion_rate: 0,
+            repeat_customer_rate: 0
+          });
+          setReviews(data.data.reviews || []);
+          setBadges(data.data.badges || []);
+        } else {
+          throw new Error(data.error || 'Error al cargar datos');
         }
-      ];
-
-      setTrustMetrics(mockTrustMetrics);
-      setReviews(mockReviews);
-      setBadges(mockBadges);
+      } else {
+        throw new Error('Error de conexión con el servidor');
+      }
+    } catch (error) {
+      console.error('Error loading trust data:', error);
+      // Set empty state data instead of mock data
+      setTrustMetrics({
+        overall_score: 0,
+        profile_completion: 50,
+        verification_level: 'basic',
+        total_reviews: 0,
+        average_rating: 0,
+        response_time_hours: 0,
+        completion_rate: 0,
+        repeat_customer_rate: 0
+      });
+      setReviews([]);
+      setBadges([]);
       
     } catch (error) {
       console.error('Error loading trust data:', error);
@@ -650,10 +604,9 @@ const ASCentroConfianza: NextPage = () => {
                     transition={{ duration: 0.3 }}
                   >
                     <div className="space-y-6">
-                      {reviews.map((review, index) => (
-                        <motion.div
-                          key={review.id}
-                          className="p-6"
+                      {reviews.length === 0 ? (
+                        <motion.div 
+                          className="text-center py-12"
                           style={{
                             background: 'rgba(30, 41, 59, 0.4)',
                             backdropFilter: 'blur(16px)',
@@ -662,8 +615,32 @@ const ASCentroConfianza: NextPage = () => {
                           }}
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.1 }}
                         >
+                          <div className="p-4 rounded-xl mb-4 mx-auto w-fit" style={{ background: 'rgba(59, 130, 246, 0.2)' }}>
+                            <Star className="h-16 w-16 text-white mx-auto" />
+                          </div>
+                          <h3 className="text-xl font-semibold text-white mb-2">
+                            Aún no tienes reseñas
+                          </h3>
+                          <p className="text-white/70 text-lg">
+                            Completa servicios para que los clientes puedan dejarte reseñas y mejorar tu reputación.
+                          </p>
+                        </motion.div>
+                      ) : (
+                        reviews.map((review, index) => (
+                          <motion.div
+                            key={review.id}
+                            className="p-6"
+                            style={{
+                              background: 'rgba(30, 41, 59, 0.4)',
+                              backdropFilter: 'blur(16px)',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              borderRadius: '16px'
+                            }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.1 }}
+                          >
                           <div className="flex items-start space-x-4">
                             <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
                               <User className="h-6 w-6 text-white" />
@@ -707,7 +684,8 @@ const ASCentroConfianza: NextPage = () => {
                             </div>
                           </div>
                         </motion.div>
-                      ))}
+                        ))
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -722,7 +700,30 @@ const ASCentroConfianza: NextPage = () => {
                     transition={{ duration: 0.3 }}
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {badges.map((badge, index) => (
+                      {badges.length === 0 ? (
+                        <motion.div 
+                          className="col-span-full text-center py-12"
+                          style={{
+                            background: 'rgba(30, 41, 59, 0.4)',
+                            backdropFilter: 'blur(16px)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '16px'
+                          }}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                        >
+                          <div className="p-4 rounded-xl mb-4 mx-auto w-fit" style={{ background: 'rgba(168, 85, 247, 0.2)' }}>
+                            <Award className="h-16 w-16 text-white mx-auto" />
+                          </div>
+                          <h3 className="text-xl font-semibold text-white mb-2">
+                            Logros disponibles próximamente
+                          </h3>
+                          <p className="text-white/70 text-lg">
+                            Completa servicios y mejora tu perfil para desbloquear logros especiales.
+                          </p>
+                        </motion.div>
+                      ) : (
+                        badges.map((badge, index) => (
                         <motion.div
                           key={badge.id}
                           className={`p-6 text-center ${badge.earned ? 'opacity-100' : 'opacity-60'}`}
@@ -767,7 +768,8 @@ const ASCentroConfianza: NextPage = () => {
                             </div>
                           )}
                         </motion.div>
-                      ))}
+                        ))
+                      )}
                     </div>
                   </motion.div>
                 )}

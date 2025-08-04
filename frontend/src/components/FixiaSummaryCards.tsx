@@ -153,9 +153,8 @@ export function FixiaSummaryCards() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Comisión plataforma</span>
-                    <span className="text-yellow-400 font-medium">
-                      {loading ? "..." : user?.subscription_plan === 'plus' ? "0%" : 
-                       user?.subscription_plan === 'professional' ? "5%" : "10%"}
+                    <span className="text-green-400 font-medium">
+                      {loading ? "..." : "0%"}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
@@ -177,10 +176,10 @@ export function FixiaSummaryCards() {
                    stats && stats.completed_bookings > 0 ? `Promedio: $${Math.round(stats.total_earnings / stats.completed_bookings).toLocaleString('es-AR')} ARS por servicio` : 
                    "Conecta con clientes para generar ingresos"}
                 </p>
-                {user?.subscription_plan === 'basic' && stats && stats.total_earnings > 0 && (
-                  <div className="mt-3 p-2 bg-primary/10 rounded-lg">
-                    <p className="text-xs text-primary">
-                      💡 Con Plan Profesional ahorrarías ${Math.round((stats.total_earnings * 0.05)).toLocaleString('es-AR')} ARS en comisiones
+                {stats && stats.total_earnings === 0 && (
+                  <div className="mt-3 p-2 bg-blue-500/10 rounded-lg">
+                    <p className="text-xs text-blue-400">
+                      🎆 Sin comisiones: El 100% de tus ingresos son para ti
                     </p>
                   </div>
                 )}
@@ -277,29 +276,35 @@ export function FixiaSummaryCards() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <Shield className="h-4 w-4 text-blue-400 group-hover:animate-pulse transition-all duration-300" />
-                <span>Verificación</span>
+                <span>Confianza</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold mb-2 flex items-center space-x-2">
-                <span>0%</span>
-                <Badge className="bg-gray-500/20 text-gray-400 text-xs border-0">Pendiente</Badge>
+                <span>{loading ? "..." : (stats?.total_reviews || 0) > 0 ? "85%" : "0%"}</span>
+                <Badge className={`text-xs border-0 ${(stats?.total_reviews || 0) > 0 ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'}`}>
+                  {loading ? "..." : (stats?.total_reviews || 0) > 0 ? "Activo" : "Nuevo"}
+                </Badge>
               </div>
               <div className="space-y-3">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Identidad</span>
-                    <span className="text-gray-400">○</span>
+                    <span className="text-muted-foreground">Nivel de confianza</span>
+                    <span className={`${(stats?.total_reviews || 0) > 0 ? 'text-green-400' : 'text-gray-400'}`}>
+                      {loading ? "..." : (stats?.total_reviews || 0) > 0 ? "●" : "○"}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Métodos de pago</span>
-                    <span className="text-gray-400">○</span>
+                    <span className="text-muted-foreground">Perfil completo</span>
+                    <span className={`${(stats?.profile_completion || 0) >= 80 ? 'text-green-400' : 'text-gray-400'}`}>
+                      {loading ? "..." : (stats?.profile_completion || 0) >= 80 ? "●" : "○"}
+                    </span>
                   </div>
                 </div>
-                <Progress value={0} className="h-2" />
+                <Progress value={(stats?.total_reviews || 0) > 0 ? 85 : 0} className="h-2" />
                 <Link href="/as/centro-confianza" className="block">
                   <Button className="w-full text-xs glass-medium hover:glass-strong transition-all duration-300 h-8">
-                    Completar Verificación
+                    Ver Centro de Confianza
                   </Button>
                 </Link>
               </div>

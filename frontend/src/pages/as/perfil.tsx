@@ -65,6 +65,7 @@ const ASPerfil: NextPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'info' | 'professional' | 'verification'>('info');
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   useEffect(() => {
     if (!loading && user?.user_type !== 'provider') {
@@ -156,6 +157,53 @@ const ASPerfil: NextPage = () => {
       alert('Error al guardar el perfil');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type and size
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor selecciona una imagen válida');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      alert('La imagen debe ser menor a 5MB');
+      return;
+    }
+
+    setUploadingPhoto(true);
+    try {
+      const formData = new FormData();
+      formData.append('photo', file);
+
+      const response = await fetch('/api/users/upload-photo', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProfileData(prev => ({ 
+          ...prev, 
+          profile_photo_url: data.data.photoUrl 
+        }));
+        alert('Foto de perfil actualizada exitosamente');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Error al subir la foto');
+      }
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      alert('Error al subir la foto');
+    } finally {
+      setUploadingPhoto(false);
     }
   };
 
@@ -516,9 +564,20 @@ const ASPerfil: NextPage = () => {
                     )}
                   </div>
                   {isEditing && (
-                    <button className="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors">
-                      <Camera className="h-4 w-4" />
-                    </button>
+                    <label className="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-colors cursor-pointer">
+                      {uploadingPhoto ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                      ) : (
+                        <Camera className="h-4 w-4" />
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                        disabled={uploadingPhoto}
+                      />
+                    </label>
                   )}
                 </div>
                 <div className="ml-6">

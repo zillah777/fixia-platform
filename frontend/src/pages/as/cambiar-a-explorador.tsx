@@ -30,12 +30,15 @@ const ASCambiarAExplorador: NextPage = () => {
       setSwitching(true);
       setError('');
 
-      const response = await fetch('/api/role-switching/switch-to-explorer', {
+      const response = await fetch('/api/role-switching/switch-to-client', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        },
+        body: JSON.stringify({
+          switch_reason: 'Usuario desea cambiar de AS a Explorador desde la interfaz'
+        })
       });
 
       const data = await response.json();

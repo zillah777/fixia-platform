@@ -93,90 +93,29 @@ const ASOpportunities: NextPage = () => {
     try {
       setLoadingOpportunities(true);
       
-      // Mock data - in real implementation, fetch from API
-      const mockOpportunities: ServiceOpportunity[] = [
-        {
-          id: 1,
-          title: 'Reparación urgente de grifo en cocina',
-          description: 'Necesito reparar un grifo que está goteando constantemente en la cocina. El problema comenzó ayer por la noche.',
-          category_name: 'Plomería',
-          category_icon: '🔧',
-          locality: 'Puerto Madryn',
-          urgency: 'high',
-          budget_min: 3500,
-          budget_max: 7000,
-          preferred_date: '2024-01-20',
-          created_at: '2024-01-18T14:30:00Z',
-          expires_at: '2024-01-25T14:30:00Z',
-          views_count: 12,
-          interested_as_count: 3,
-          explorer_name: 'María González',
-          explorer_rating: 4.8,
-          distance_km: 2.1,
-          compatibility_score: 95
-        },
-        {
-          id: 2,
-          title: 'Instalación de tomacorrientes en oficina',
-          description: 'Necesito instalar 4 tomacorrientes nuevos en mi oficina para mejorar la distribución eléctrica.',
-          category_name: 'Electricidad',
-          category_icon: '⚡',
-          locality: 'Trelew',
-          urgency: 'medium',
-          budget_min: 8000,
-          budget_max: 15000,
-          preferred_date: '2024-01-22',
-          created_at: '2024-01-18T09:15:00Z',
-          expires_at: '2024-01-30T09:15:00Z',
-          views_count: 8,
-          interested_as_count: 1,
-          explorer_name: 'Carlos Martínez',
-          explorer_rating: 4.5,
-          distance_km: 15.3,
-          compatibility_score: 88
-        },
-        {
-          id: 3,
-          title: 'Construcción de estanterías a medida',
-          description: 'Busco un carpintero para construir estanterías empotradas en el living. Tengo las medidas exactas.',
-          category_name: 'Carpintería',
-          category_icon: '🔨',
-          locality: 'Puerto Madryn',
-          urgency: 'low',
-          budget_min: 25000,
-          budget_max: 45000,
-          preferred_date: '2024-01-28',
-          created_at: '2024-01-17T16:45:00Z',
-          expires_at: '2024-02-05T16:45:00Z',
-          views_count: 24,
-          interested_as_count: 7,
-          explorer_name: 'Ana Rodríguez',
-          explorer_rating: 4.9,
-          distance_km: 0.8,
-          compatibility_score: 92
-        },
-        {
-          id: 4,
-          title: 'Emergencia: Pérdida de agua en baño',
-          description: 'URGENTE: Tengo una pérdida grande de agua en el baño que está inundando el piso. Necesito ayuda inmediata.',
-          category_name: 'Plomería',
-          category_icon: '🔧',
-          locality: 'Puerto Madryn',
-          urgency: 'emergency',
-          budget_min: 5000,
-          budget_max: 12000,
-          created_at: '2024-01-18T18:20:00Z',
-          expires_at: '2024-01-19T18:20:00Z',
-          views_count: 45,
-          interested_as_count: 12,
-          explorer_name: 'Roberto Silva',
-          explorer_rating: 4.2,
-          distance_km: 3.7,
-          compatibility_score: 98
+      // Fetch real opportunities from API
+      const response = await fetch('/api/opportunities/available', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-      ];
+      });
 
-      setOpportunities(mockOpportunities);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setOpportunities(data.data.opportunities || []);
+        } else {
+          throw new Error(data.error || 'Error al cargar oportunidades');
+        }
+      } else {
+        throw new Error('Error de conexión con el servidor');
+      }
+    } catch (error) {
+      console.error('Error loading opportunities:', error);
+      // Set empty array instead of mock data
+      setOpportunities([]);
     } catch (error) {
       console.error('Error loading opportunities:', error);
     } finally {

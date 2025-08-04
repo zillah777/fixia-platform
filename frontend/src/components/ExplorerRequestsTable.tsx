@@ -1,4 +1,4 @@
-import { MoreHorizontal, Eye, MessageSquare, Calendar, Clock, Star, DollarSign, User } from "lucide-react";
+import { MoreHorizontal, Eye, MessageSquare, Calendar, Clock, Star, DollarSign, User, Search, Users } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
@@ -9,7 +9,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 
-const mockRequests = [
+// Real requests will be fetched from API
+const mockRequests: never[] = [
   {
     id: "REQ001",
     title: "Desarrollo de aplicación móvil",
@@ -115,8 +116,33 @@ export function ExplorerRequestsTable() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
+          {mockRequests.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="mx-auto w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mb-6">
+                <User className="h-10 w-10 text-muted-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">No tienes solicitudes aún</h3>
+              <p className="text-muted-foreground text-base mb-6 max-w-md mx-auto">
+                Crea tu primera solicitud de servicio para conectar con profesionales verificados.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link href="/explorador/buscar-servicio">
+                  <Button className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
+                    <Search className="mr-2 h-4 w-4" />
+                    Buscar Servicios
+                  </Button>
+                </Link>
+                <Link href="/explorador/navegar-profesionales">
+                  <Button className="glass border-white/20 hover:glass-medium transition-all duration-300">
+                    <Users className="mr-2 h-4 w-4" />
+                    Ver Profesionales
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Proyecto</TableHead>
@@ -130,7 +156,8 @@ export function ExplorerRequestsTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockRequests.map((request, index) => (
+                {/* Requests table content will be populated with real data */}
+                {mockRequests.length > 0 && mockRequests.map((request, index) => (
                   <motion.tr
                     key={request.id}
                     initial={{ opacity: 0, y: 10 }}
@@ -251,19 +278,20 @@ export function ExplorerRequestsTable() {
                   </motion.tr>
                 ))}
               </TableBody>
-            </Table>
-          </div>
-          
-          <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
-            <div className="text-sm text-muted-foreground">
-              Mostrando 3 de 7 solicitudes activas
+              </Table>
             </div>
-            <Link href="/explorador/mis-solicitudes">
-              <Button className="glass border-white/20 hover:glass-medium">
-                Ver todas las solicitudes
-              </Button>
-            </Link>
-          </div>
+            
+            <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
+              <div className="text-sm text-muted-foreground">
+                {mockRequests.length === 0 ? "Sin solicitudes activas" : `Mostrando ${mockRequests.length} solicitudes`}
+              </div>
+              <Link href="/explorador/mis-solicitudes">
+                <Button className="glass border-white/20 hover:glass-medium">
+                  Ver todas las solicitudes
+                </Button>
+              </Link>
+            </div>
+          )}
         </CardContent>
       </Card>
     </motion.div>
