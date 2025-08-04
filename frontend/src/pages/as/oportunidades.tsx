@@ -116,8 +116,6 @@ const ASOpportunities: NextPage = () => {
       console.error('Error loading opportunities:', error);
       // Set empty array instead of mock data
       setOpportunities([]);
-    } catch (error) {
-      console.error('Error loading opportunities:', error);
     } finally {
       setLoadingOpportunities(false);
     }

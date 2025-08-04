@@ -142,9 +142,6 @@ const ASCentroConfianza: NextPage = () => {
       });
       setReviews([]);
       setBadges([]);
-      
-    } catch (error) {
-      console.error('Error loading trust data:', error);
     } finally {
       setLoadingData(false);
     }
