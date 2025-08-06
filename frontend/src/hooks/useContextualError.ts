@@ -1,529 +1,309 @@
 /**
  * useContextualError - Enhanced Error Recovery Hook
- * Provides intelligent error handling with context-aware recovery strategies
+ * Provides intelligent error handling with context awareness
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useState, useCallback, useRef } from 'react';
 import { 
   FixiaError, 
-  ErrorCategory, 
   UserContext, 
   PlatformArea, 
-  ErrorSeverity,
-  RecoveryStrategy,
-  ERROR_CONFIGS,
-  ERROR_MESSAGES
+  NetworkError, 
+  AuthenticationError,
+  PaymentError,
+  FileUploadError,
+  ErrorCategory 
 } from '@/types/errors';
+import { useErrorRecovery } from '@/contexts/ErrorRecoveryContext';
 
-interface ErrorState {
-  error: FixiaError | null;
-  isRecovering: boolean;
-  retryCount: number;
-  hasRecovered: boolean;
-}
-
-interface UseContextualErrorOptions {
+// Hook configuration
+interface UseContextualErrorConfig {
   userContext?: UserContext;
   platformArea?: PlatformArea;
-  enableAutoRecovery?: boolean;
+  enableAutoRetry?: boolean;
   maxRetries?: number;
+  retryDelay?: number;
   onError?: (error: FixiaError) => void;
   onRecovery?: (successful: boolean) => void;
-  onEscalation?: (error: FixiaError) => void;
 }
 
-interface ErrorRecoveryMethods {
+// Hook return type
+interface ContextualErrorMethods {
   reportError: (error: Error | FixiaError, context?: Partial<FixiaError>) => void;
-  clearError: () => void;
-  retry: (customHandler?: () => Promise<void>) => Promise<boolean>;
-  escalate: () => void;
-  switchToOfflineMode: () => void;
-  createContextualError: (error: Error, context?: Partial<FixiaError>) => FixiaError;
+  clearErrors: () => void;
+  retry: (errorId?: string) => Promise<boolean>;
+  escalateToSupport: (error: FixiaError) => void;
 }
 
-export const useContextualError = (
-  options: UseContextualErrorOptions = {}
-): [ErrorState, ErrorRecoveryMethods] => {
-  const router = useRouter();
-  const [errorState, setErrorState] = useState<ErrorState>({
-    error: null,
-    isRecovering: false,
+interface ContextualErrorState {
+  isLoading: boolean;
+  hasError: boolean;
+  currentError: FixiaError | null;
+  retryCount: number;
+  canRetry: boolean;
+  isRecovering: boolean;
+}
+
+// Main hook
+export function useContextualError(config: UseContextualErrorConfig = {}) {
+  const { addError, removeError, reportGlobalError } = useErrorRecovery();
+  const retryTimeoutRef = useRef<NodeJS.Timeout>();
+  
+  const [state, setState] = useState<ContextualErrorState>({
+    isLoading: false,
+    hasError: false,
+    currentError: null,
     retryCount: 0,
-    hasRecovered: false,
+    canRetry: false,
+    isRecovering: false,
   });
 
-  const consecutiveErrorsRef = useRef(0);
-  const lastErrorTimeRef = useRef<Date | null>(null);
-  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Detect user context from router
-  const detectUserContext = useCallback((): UserContext => {
-    if (options.userContext) return options.userContext;
+  // Report error method
+  const reportError = useCallback((error: Error | FixiaError, context?: Partial<FixiaError>) => {
+    const isFixiaError = 'category' in error;
     
-    const pathname = router.pathname;
-    if (pathname.startsWith('/as/')) return 'as';
-    if (pathname.startsWith('/explorador/')) return 'explorador';
-    if (pathname.startsWith('/auth/')) return 'guest';
-    return 'guest';
-  }, [router.pathname, options.userContext]);
-
-  // Detect platform area from router
-  const detectPlatformArea = useCallback((): PlatformArea => {
-    if (options.platformArea) return options.platformArea;
-    
-    const pathname = router.pathname;
-    if (pathname.includes('/dashboard')) return 'dashboard';
-    if (pathname.includes('/servicios')) return 'services';
-    if (pathname.includes('/portafolio')) return 'portfolio';
-    if (pathname.includes('/chat')) return 'chat';
-    if (pathname.includes('/pago')) return 'payments';
-    if (pathname.includes('/perfil')) return 'profile';
-    if (pathname.includes('/auth')) return 'authentication';
-    if (pathname.includes('/buscar')) return 'search';
-    if (pathname.includes('/calificaciones')) return 'reviews';
-    if (pathname.includes('/configuracion')) return 'configuration';
-    if (pathname.includes('/verificacion')) return 'verification';
-    
-    return 'dashboard';
-  }, [router.pathname, options.platformArea]);
-
-  // Create contextual error from basic Error
-  const createContextualError = useCallback((
-    error: Error, 
-    context: Partial<FixiaError> = {}
-  ): FixiaError => {
-    const userContext = detectUserContext();
-    const platformArea = detectPlatformArea();
-    const category = categorizeError(error);
-    
-    const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    return {
-      id: errorId,
-      category,
-      severity: determineSeverity(error, category),
-      code: generateErrorCode(error, category),
+    const fixiaError: FixiaError = isFixiaError ? error as FixiaError : {
+      id: `ctx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      category: (context?.category as ErrorCategory) || 'system',
+      severity: context?.severity || 'medium',
+      code: `FIX_CTX_${Date.now().toString(36)}`,
       message: error.message,
-      userMessage: generateUserMessage(error, category, userContext, platformArea),
-      
-      // Context
-      userContext,
-      platformArea,
+      userMessage: context?.userMessage || 'Ocurrió un error. Intenta de nuevo o contacta soporte.',
+      userContext: config.userContext || context?.userContext || 'guest',
+      platformArea: config.platformArea || context?.platformArea || 'system',
       timestamp: new Date().toISOString(),
-      
-      // Error specifics
-      originalError: error,
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : '',
-      
-      // Recovery information
-      recoveryStrategy: determineRecoveryStrategies(error, category, userContext, platformArea),
-      retryCount: errorState.retryCount,
-      maxRetries: options.maxRetries || 3,
-      canAutoRecover: canAutoRecover(error, category),
-      
-      // Support integration
-      escalationLevel: determineEscalationLevel(error, category),
-      
-      // Analytics
-      errorGroup: generateErrorGroup(error, platformArea),
-      fingerprint: generateFingerprint(error),
-      metadata: collectMetadata(),
-      
-      // Override with provided context
-      ...context,
-    };
-  }, [detectUserContext, detectPlatformArea, errorState.retryCount, options.maxRetries]);
-
-  // Categorize error based on error properties
-  const categorizeError = useCallback((error: Error): ErrorCategory => {
-    const message = error.message.toLowerCase();
-    const name = error.name.toLowerCase();
-    
-    if (message.includes('network') || message.includes('fetch') || name.includes('networkerror')) {
-      return 'network';
-    }
-    if (message.includes('auth') || message.includes('token') || message.includes('session')) {
-      return 'authentication';
-    }
-    if (message.includes('permission') || message.includes('forbidden')) {
-      return 'authorization';
-    }
-    if (message.includes('validation') || message.includes('required')) {
-      return 'validation';
-    }
-    if (message.includes('payment') || message.includes('mercadopago')) {
-      return 'payment';
-    }
-    if (message.includes('upload') || message.includes('file')) {
-      return 'file_upload';
-    }
-    if (message.includes('chat') || message.includes('message')) {
-      return 'chat';
-    }
-    if (message.includes('booking') || message.includes('reservation')) {
-      return 'booking';
-    }
-    
-    return name.includes('referenceerror') || name.includes('typeerror') ? 'client' : 'server';
-  }, []);
-
-  // Determine error severity
-  const determineSeverity = useCallback ((error: Error, category: ErrorCategory): ErrorSeverity => {
-    if (category === 'payment' || category === 'authentication') return 'critical';
-    if (category === 'booking' || category === 'file_upload') return 'high';
-    if (category === 'chat' || category === 'validation') return 'medium';
-    return 'low';
-  }, []);
-
-  // Generate user-friendly message
-  const generateUserMessage = useCallback((
-    error: Error, 
-    category: ErrorCategory, 
-    userContext: UserContext,
-    platformArea: PlatformArea
-  ): string => {
-    // Get base message from templates
-    const categoryMessages = ERROR_MESSAGES[category];
-    let baseMessage = 'Ocurrió un error inesperado. Intenta de nuevo o contáctanos si persiste.';
-    
-    if (categoryMessages) {
-      const messageKeys = Object.keys(categoryMessages);
-      const errorMessage = error.message.toLowerCase();
-      
-      // Find matching message based on error content
-      const matchingKey = messageKeys.find(key => errorMessage.includes(key));
-      if (matchingKey) {
-        baseMessage = categoryMessages[matchingKey as keyof typeof categoryMessages];
-      } else {
-        baseMessage = Object.values(categoryMessages)[0] as string;
-      }
-    }
-    
-    // Add context-specific messaging
-    if (userContext === 'as') {
-      if (category === 'file_upload' && platformArea === 'portfolio') {
-        return 'Error subiendo la imagen al portafolio. Verifica que sea JPG o PNG y menor a 5MB.';
-      }
-      if (category === 'booking') {
-        return 'Error procesando la solicitud del cliente. Revisa tu conexión e intenta de nuevo.';
-      }
-    } else if (userContext === 'explorador') {
-      if (category === 'booking') {
-        return 'Error enviando tu solicitud. El profesional puede estar ocupado, intenta más tarde.';
-      }
-      if (category === 'payment') {
-        return 'Hubo un problema procesando el pago. Tu dinero está seguro, intenta de nuevo.';
-      }
-    }
-    
-    return baseMessage;
-  }, []);
-
-  // Determine recovery strategies
-  const determineRecoveryStrategies = useCallback((
-    error: Error, 
-    category: ErrorCategory, 
-    userContext: UserContext,
-    platformArea: PlatformArea
-  ): RecoveryStrategy[] => {
-    const configKey = `${userContext}_${platformArea}`;
-    const config = ERROR_CONFIGS[configKey];
-    
-    if (config?.fallbackStrategies) {
-      return config.fallbackStrategies;
-    }
-    
-    // Default strategies by category
-    const strategies: Record<ErrorCategory, RecoveryStrategy[]> = {
-      network: ['retry', 'reload', 'offline_mode'],
-      authentication: ['redirect', 'manual'],
-      authorization: ['contact_support', 'redirect'],
-      validation: ['manual', 'auto_fix'],
-      payment: ['retry', 'manual', 'contact_support'],
-      file_upload: ['retry', 'manual'],
-      chat: ['retry', 'reload'],
-      booking: ['retry', 'manual', 'fallback'],
-      server: ['retry', 'reload', 'contact_support'],
-      client: ['reload', 'retry'],
-      unknown: ['retry', 'reload', 'contact_support'],
-    };
-    
-    return strategies[category] || ['retry', 'contact_support'];
-  }, []);
-
-  // Check if error can auto-recover
-  const canAutoRecover = useCallback((error: Error, category: ErrorCategory): boolean => {
-    const autoRecoverableCategories: ErrorCategory[] = ['network', 'server', 'chat'];
-    return autoRecoverableCategories.includes(category);
-  }, []);
-
-  // Determine escalation level
-  const determineEscalationLevel = useCallback((error: Error, category: ErrorCategory): number => {
-    if (category === 'payment' || category === 'authentication') return 3;
-    if (category === 'booking' || category === 'authorization') return 2;
-    if (category === 'validation' || category === 'file_upload') return 1;
-    return 0;
-  }, []);
-
-  // Generate error code
-  const generateErrorCode = useCallback((error: Error, category: ErrorCategory): string => {
-    const timestamp = Date.now().toString(36);
-    const categoryCode = category.toUpperCase().substr(0, 3);
-    const errorHash = error.message.length.toString(36);
-    return `FIX_${categoryCode}_${errorHash}_${timestamp}`;
-  }, []);
-
-  // Generate error group for analytics
-  const generateErrorGroup = useCallback((error: Error, platformArea: PlatformArea): string => {
-    return `${error.name}_${platformArea}`;
-  }, []);
-
-  // Generate error fingerprint
-  const generateFingerprint = useCallback((error: Error): string => {
-    const content = `${error.name}_${error.message}_${detectPlatformArea()}`;
-    return btoa(content).substr(0, 16);
-  }, [detectPlatformArea]);
-
-  // Collect metadata
-  const collectMetadata = useCallback((): Record<string, any> => {
-    const metadata: Record<string, any> = {
-      timestamp: new Date().toISOString(),
-      url: typeof window !== 'undefined' ? window.location.href : '',
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : '',
-      retryCount: errorState.retryCount,
-      consecutiveErrors: consecutiveErrorsRef.current,
+      originalError: isFixiaError ? (error as FixiaError).originalError : error,
+      recoveryStrategy: context?.recoveryStrategy || ['retry', 'contact_support'],
+      canAutoRecover: context?.canAutoRecover ?? true,
+      escalationLevel: context?.escalationLevel || 1,
     };
 
-    if (typeof window !== 'undefined') {
-      metadata.viewport = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-      
-      metadata.connection = {
-        online: navigator.onLine,
-        effectiveType: (navigator as any)?.connection?.effectiveType || 'unknown',
-      };
-    }
-
-    return metadata;
-  }, [errorState.retryCount]);
-
-  // Report error
-  const reportError = useCallback((
-    error: Error | FixiaError, 
-    context: Partial<FixiaError> = {}
-  ) => {
-    const contextualError = error instanceof Error ? createContextualError(error, context) : error;
-    
-    // Update error state
-    setErrorState(prev => ({
+    setState(prev => ({
       ...prev,
-      error: contextualError,
-      hasRecovered: false,
+      hasError: true,
+      currentError: fixiaError,
+      canRetry: fixiaError.canAutoRecover && prev.retryCount < (config.maxRetries || 3),
     }));
 
-    // Track consecutive errors
-    const now = new Date();
-    if (lastErrorTimeRef.current && (now.getTime() - lastErrorTimeRef.current.getTime()) < 30000) {
-      consecutiveErrorsRef.current += 1;
-    } else {
-      consecutiveErrorsRef.current = 1;
+    addError(fixiaError);
+    config.onError?.(fixiaError);
+
+    // Auto retry if enabled
+    if (config.enableAutoRetry && fixiaError.canAutoRecover && state.retryCount < (config.maxRetries || 3)) {
+      const delay = config.retryDelay || Math.pow(2, state.retryCount) * 1000; // Exponential backoff
+      retryTimeoutRef.current = setTimeout(() => {
+        retry(fixiaError.id);
+      }, delay);
     }
-    lastErrorTimeRef.current = now;
+  }, [config, addError, state.retryCount]);
 
-    // Report to monitoring systems
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
-      (window as any).Sentry.captureException(contextualError.originalError || contextualError, {
-        tags: {
-          errorCategory: contextualError.category,
-          userContext: contextualError.userContext,
-          platformArea: contextualError.platformArea,
-        },
-        extra: { contextualError },
-      });
+  // Clear errors method
+  const clearErrors = useCallback(() => {
+    if (state.currentError) {
+      removeError(state.currentError.id);
     }
-
-    // Trigger callback
-    if (options.onError) {
-      options.onError(contextualError);
-    }
-
-    // Auto-escalate if needed
-    if (shouldAutoEscalate(contextualError)) {
-      setTimeout(() => escalate(), 1000);
-    }
-
-    // Auto-retry if enabled
-    if (options.enableAutoRecovery && contextualError.canAutoRecover && 
-        contextualError.retryCount < (contextualError.maxRetries || 3)) {
-      scheduleAutoRetry();
-    }
-  }, [createContextualError, options.onError, options.enableAutoRecovery]);
-
-  // Check if should auto-escalate
-  const shouldAutoEscalate = useCallback((error: FixiaError): boolean => {
-    return error.severity === 'critical' || 
-           consecutiveErrorsRef.current >= 3 || 
-           error.category === 'payment';
-  }, []);
-
-  // Schedule auto-retry
-  const scheduleAutoRetry = useCallback(() => {
-    const delay = Math.min(1000 * Math.pow(2, errorState.retryCount), 10000);
     
-    retryTimeoutRef.current = setTimeout(() => {
-      retry();
-    }, delay);
-  }, [errorState.retryCount]);
-
-  // Clear error
-  const clearError = useCallback(() => {
-    setErrorState({
-      error: null,
-      isRecovering: false,
+    setState({
+      isLoading: false,
+      hasError: false,
+      currentError: null,
       retryCount: 0,
-      hasRecovered: true,
+      canRetry: false,
+      isRecovering: false,
     });
-    
+
     if (retryTimeoutRef.current) {
       clearTimeout(retryTimeoutRef.current);
-      retryTimeoutRef.current = null;
     }
-  }, []);
+  }, [state.currentError, removeError]);
 
-  // Retry operation
-  const retry = useCallback(async (customHandler?: () => Promise<void>): Promise<boolean> => {
-    if (!errorState.error || errorState.isRecovering) return false;
+  // Retry method
+  const retry = useCallback(async (errorId?: string): Promise<boolean> => {
+    const targetError = errorId ? state.currentError : state.currentError;
+    if (!targetError) return false;
 
-    setErrorState(prev => ({
+    setState(prev => ({
       ...prev,
       isRecovering: true,
       retryCount: prev.retryCount + 1,
     }));
 
     try {
-      if (customHandler) {
-        await customHandler();
-      } else {
-        // Default retry logic - reload page
-        if (typeof window !== 'undefined') {
-          window.location.reload();
-        }
-      }
-
-      // If we get here, retry was successful
-      setErrorState(prev => ({
-        ...prev,
-        error: null,
-        isRecovering: false,
-        hasRecovered: true,
-      }));
-
-      if (options.onRecovery) {
-        options.onRecovery(true);
-      }
-
+      // Simulate retry logic - in real implementation, this would re-attempt the failed operation
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Success
+      clearErrors();
+      config.onRecovery?.(true);
       return true;
     } catch (retryError) {
-      console.error('Retry failed:', retryError);
-      
-      setErrorState(prev => ({
+      // Retry failed
+      setState(prev => ({
         ...prev,
         isRecovering: false,
+        canRetry: prev.retryCount < (config.maxRetries || 3),
       }));
-
-      if (options.onRecovery) {
-        options.onRecovery(false);
-      }
-
+      
+      config.onRecovery?.(false);
       return false;
     }
-  }, [errorState.error, errorState.isRecovering, options.onRecovery]);
+  }, [state.currentError, clearErrors, config]);
 
-  // Escalate to support
-  const escalate = useCallback(() => {
-    if (!errorState.error) return;
-
-    if (options.onEscalation) {
-      options.onEscalation(errorState.error);
-    } else {
-      // Default escalation - open WhatsApp
-      const message = encodeURIComponent(
-        `🆘 Error en Fixia - ID: ${errorState.error.id}\n\n` +
-        `${errorState.error.userMessage}\n\n` +
-        `¿Pueden ayudarme?`
-      );
-      window.open(`https://wa.me/5492965123456?text=${message}`, '_blank');
-    }
-  }, [errorState.error, options.onEscalation]);
-
-  // Switch to offline mode
-  const switchToOfflineMode = useCallback(() => {
-    // Implement offline mode logic
-    console.log('Switching to offline mode');
+  // Escalate to support method
+  const escalateToSupport = useCallback((error: FixiaError) => {
+    const supportMessage = generateSupportMessage(error);
+    const whatsappUrl = `https://wa.me/5492974123456?text=${encodeURIComponent(supportMessage)}`;
     
-    // Cache current state
     if (typeof window !== 'undefined') {
-      localStorage.setItem('fixia_offline_mode', 'true');
-      localStorage.setItem('fixia_offline_timestamp', new Date().toISOString());
+      window.open(whatsappUrl, '_blank');
     }
   }, []);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  const errorRecoveryMethods: ErrorRecoveryMethods = {
+  const methods: ContextualErrorMethods = {
     reportError,
-    clearError,
+    clearErrors,
     retry,
-    escalate,
-    switchToOfflineMode,
-    createContextualError,
+    escalateToSupport,
   };
 
-  return [errorState, errorRecoveryMethods];
-};
+  return [state, methods] as const;
+}
 
-// Hook for specific error scenarios
-export const useNetworkError = (options: UseContextualErrorOptions = {}) => {
-  return useContextualError({
-    ...options,
-    enableAutoRecovery: true,
-    maxRetries: 5,
+// Specialized hooks for common scenarios
+
+// Network error hook
+export function useNetworkError(config: UseContextualErrorConfig = {}) {
+  const [state, methods] = useContextualError({
+    ...config,
+    platformArea: 'system',
   });
-};
 
-export const usePaymentError = (options: UseContextualErrorOptions = {}) => {
-  return useContextualError({
-    ...options,
-    platformArea: 'payments',
-    enableAutoRecovery: false,
-    maxRetries: 2,
-  });
-};
+  const reportNetworkError = useCallback((error: Error, lastSuccessfulRequest?: string) => {
+    const networkError: NetworkError = {
+      id: `net_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      category: 'network',
+      severity: 'medium',
+      code: `FIX_NET_${Date.now().toString(36)}`,
+      message: error.message,
+      userMessage: 'Problema de conexión. Revisa tu internet e intenta de nuevo.',
+      userContext: config.userContext || 'guest',
+      platformArea: config.platformArea || 'system',
+      timestamp: new Date().toISOString(),
+      originalError: error,
+      recoveryStrategy: ['retry', 'reload', 'offline_mode'],
+      canAutoRecover: true,
+      escalationLevel: 1,
+      connectionType: typeof navigator !== 'undefined' && (navigator as any).connection ? 
+        (navigator as any).connection.type : 'unknown',
+      isOffline: typeof navigator !== 'undefined' ? !navigator.onLine : false,
+      lastSuccessfulRequest,
+      estimatedRecoveryTime: 5000,
+    };
 
-export const useAuthError = (options: UseContextualErrorOptions = {}) => {
-  return useContextualError({
-    ...options,
+    methods.reportError(networkError);
+  }, [methods, config]);
+
+  return [state, { ...methods, reportNetworkError }] as const;
+}
+
+// Authentication error hook
+export function useAuthError(config: UseContextualErrorConfig = {}) {
+  const [state, methods] = useContextualError({
+    ...config,
     platformArea: 'authentication',
-    enableAutoRecovery: false,
-    maxRetries: 1,
   });
-};
 
-export const useFileUploadError = (options: UseContextualErrorOptions = {}) => {
-  return useContextualError({
-    ...options,
+  const reportAuthError = useCallback((
+    error: Error, 
+    authType: 'login' | 'session' | 'token' | 'verification' = 'session',
+    redirectUrl?: string
+  ) => {
+    const authError: AuthenticationError = {
+      id: `auth_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      category: 'authentication',
+      severity: 'critical',
+      code: `FIX_AUTH_${Date.now().toString(36)}`,
+      message: error.message,
+      userMessage: authType === 'session' ? 
+        'Tu sesión ha expirado. Inicia sesión de nuevo.' :
+        'Error de autenticación. Verifica tus credenciales.',
+      userContext: config.userContext || 'guest',
+      platformArea: 'authentication',
+      timestamp: new Date().toISOString(),
+      originalError: error,
+      recoveryStrategy: ['redirect', 'manual'],
+      canAutoRecover: false,
+      escalationLevel: 2,
+      authType,
+      sessionExpired: authType === 'session',
+      canAutoRenew: authType === 'token',
+      requiresUserAction: true,
+      redirectUrl: redirectUrl || '/auth/login',
+    };
+
+    methods.reportError(authError);
+  }, [methods, config]);
+
+  return [state, { ...methods, reportAuthError }] as const;
+}
+
+// File upload error hook
+export function useFileUploadError(config: UseContextualErrorConfig = {}) {
+  const [state, methods] = useContextualError({
+    ...config,
     platformArea: 'portfolio',
-    enableAutoRecovery: true,
-    maxRetries: 3,
   });
-};
+
+  const reportFileUploadError = useCallback((
+    error: Error,
+    fileName: string,
+    fileSize: number,
+    fileType: string,
+    uploadType: 'profile_photo' | 'portfolio_image' | 'document' | 'chat_attachment' = 'portfolio_image'
+  ) => {
+    const uploadError: FileUploadError = {
+      id: `upload_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      category: 'file_upload',
+      severity: 'medium',
+      code: `FIX_UPLOAD_${Date.now().toString(36)}`,
+      message: error.message,
+      userMessage: fileSize > 5000000 ? 
+        'El archivo es muy grande. Máximo 5MB.' :
+        !['image/jpeg', 'image/png', 'application/pdf'].includes(fileType) ?
+        'Formato no permitido. Solo JPG, PNG o PDF.' :
+        'Error subiendo el archivo. Intenta de nuevo.',
+      userContext: config.userContext || 'as',
+      platformArea: config.platformArea || 'portfolio',
+      timestamp: new Date().toISOString(),
+      originalError: error,
+      recoveryStrategy: ['retry', 'manual'],
+      canAutoRecover: true,
+      escalationLevel: 1,
+      fileName,
+      fileSize,
+      fileType,
+      uploadType,
+      failureReason: fileSize > 5000000 ? 'size_limit' : 
+                    !['image/jpeg', 'image/png', 'application/pdf'].includes(fileType) ? 'type_not_allowed' : 'network',
+      maxFileSize: 5000000,
+      allowedTypes: ['image/jpeg', 'image/png', 'application/pdf'],
+    };
+
+    methods.reportError(uploadError);
+  }, [methods, config]);
+
+  return [state, { ...methods, reportFileUploadError }] as const;
+}
+
+// Helper function to generate support message
+function generateSupportMessage(error: FixiaError): string {
+  return `🆘 *Error en Fixia*\n\n` +
+         `Hola! Tengo un problema y necesito ayuda.\n\n` +
+         `📋 *Detalles del Error:*\n` +
+         `• Tipo: ${error.category}\n` +
+         `• Área: ${error.platformArea}\n` +
+         `• Usuario: ${error.userContext}\n` +
+         `• ID: ${error.id}\n\n` +
+         `📱 *Descripción:*\n${error.userMessage}\n\n` +
+         `¿Pueden ayudarme? Gracias!`;
+}

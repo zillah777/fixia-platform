@@ -163,6 +163,18 @@ export function getTabletOptimizedGlassClasses(
 }
 
 /**
+ * Performance metrics interface for tablet glass effects
+ */
+interface TabletPerformanceMetrics {
+  fps: number;
+  batteryLevel: number;
+  thermalState: string;
+  memoryUsage: number;
+  shouldOptimize: boolean;
+  recommendations: string[];
+}
+
+/**
  * Performance monitoring for tablet glass effects
  */
 export class TabletGlassPerformanceMonitor {
@@ -173,15 +185,6 @@ export class TabletGlassPerformanceMonitor {
   private thermalState = 'normal';
   private memoryUsage = 0;
   private callbacks: Array<(metrics: TabletPerformanceMetrics) => void> = [];
-
-  interface TabletPerformanceMetrics {
-    fps: number;
-    batteryLevel: number;
-    thermalState: string;
-    memoryUsage: number;
-    shouldOptimize: boolean;
-    recommendations: string[];
-  }
 
   constructor() {
     this.initBatteryMonitoring();

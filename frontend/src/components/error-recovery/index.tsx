@@ -4,9 +4,10 @@
  */
 
 import React from 'react';
+import { FixiaErrorBoundary } from './FixiaErrorBoundary';
 
 // Core Error Boundary and Recovery Components
-export { FixiaErrorBoundary, withErrorBoundary } from './FixiaErrorBoundary';
+export { FixiaErrorBoundary } from './FixiaErrorBoundary';
 export { FixiaErrorRecovery } from './FixiaErrorRecovery';
 
 // Specialized Error Handlers
@@ -50,7 +51,7 @@ export const ErrorRecoveryUtils = {
    * Create a network error from a fetch failure
    */
   createNetworkError: (error: Error, lastSuccessfulRequest?: string): NetworkError => ({
-    id: `net_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    id: `net_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
     category: 'network',
     severity: 'medium',
     code: `FIX_NET_${Date.now().toString(36)}`,
@@ -77,7 +78,7 @@ export const ErrorRecoveryUtils = {
    * Create an authentication error for session expiration
    */
   createSessionExpiredError: (redirectUrl?: string): AuthenticationError => ({
-    id: `auth_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    id: `auth_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
     category: 'authentication',
     severity: 'critical',
     code: `FIX_AUTH_${Date.now().toString(36)}`,
@@ -108,7 +109,7 @@ export const ErrorRecoveryUtils = {
     paymentMethod: string = 'mercadopago',
     mercadopagoErrorCode?: string
   ): PaymentError => ({
-    id: `pay_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    id: `pay_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
     category: 'payment',
     severity: 'critical',
     code: `FIX_PAY_${Date.now().toString(36)}`,
@@ -142,7 +143,7 @@ export const ErrorRecoveryUtils = {
     fileType: string,
     uploadType: 'profile_photo' | 'portfolio_image' | 'document' | 'chat_attachment' = 'portfolio_image'
   ): FileUploadError => ({
-    id: `upload_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    id: `upload_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
     category: 'file_upload',
     severity: 'medium',
     code: `FIX_UPLOAD_${Date.now().toString(36)}`,
