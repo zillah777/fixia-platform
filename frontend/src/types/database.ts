@@ -557,6 +557,55 @@ export interface FormValidation {
   [key: string]: ValidationRule;
 }
 
+// Accessibility types
+export interface AriaAttributes {
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+  'aria-describedby'?: string;
+  'aria-expanded'?: boolean;
+  'aria-hidden'?: boolean;
+  'aria-live'?: 'polite' | 'assertive' | 'off';
+  'aria-busy'?: boolean;
+  'aria-controls'?: string;
+  'aria-current'?: 'page' | 'step' | 'location' | 'date' | 'time' | boolean;
+  'aria-disabled'?: boolean;
+  'aria-invalid'?: boolean | 'grammar' | 'spelling';
+  'aria-required'?: boolean;
+  'aria-selected'?: boolean;
+  'aria-checked'?: boolean | 'mixed';
+  'aria-pressed'?: boolean | 'mixed';
+  'aria-orientation'?: 'horizontal' | 'vertical';
+  'aria-valuemin'?: number;
+  'aria-valuemax'?: number;
+  'aria-valuenow'?: number;
+  'aria-valuetext'?: string;
+  'aria-haspopup'?: boolean | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
+  'aria-modal'?: boolean;
+  'aria-multiselectable'?: boolean;
+  'aria-readonly'?: boolean;
+  role?: string;
+}
+
+export interface AccessibilityPreferences {
+  reducedMotion: boolean;
+  highContrast: boolean;
+  largeText: boolean;
+  screenReader: boolean;
+}
+
+export interface KeyboardNavigationConfig {
+  trapFocus?: boolean;
+  autoFocus?: boolean;
+  restoreFocus?: boolean;
+  enableEscape?: boolean;
+}
+
+export interface ScreenReaderAnnouncement {
+  message: string;
+  priority: 'polite' | 'assertive';
+  delay?: number;
+}
+
 // Update legacy types to match database
 export type ServiceCategory = string; // Now dynamic from categories table
 export type BookingStatus = string; // Now flexible status from database

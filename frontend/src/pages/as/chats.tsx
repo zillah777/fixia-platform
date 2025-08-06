@@ -11,7 +11,10 @@ import {
   Search,
   Clock,
   Check,
-  CheckCircle
+  CheckCircle,
+  AlertCircle,
+  UserCheck,
+  UserX
 } from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -30,9 +33,79 @@ const ASChats: NextPage = () => {
       return;
     }
 
-    // TODO: Fetch real chats from API
-    setChats([]);
+    // Fetch real chats from API
+    fetchChats();
   }, [user, loading]);
+
+  const fetchChats = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('/api/chats', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setChats(data.data?.chats || []);
+      } else {
+        console.error('Failed to fetch chats');
+        setChats([]);
+      }
+    } catch (error) {
+      console.error('Error fetching chats:', error);
+      setChats([]);
+    }
+  };
+
+  const handleAcceptChat = async (chatId: number) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`/api/chats/${chatId}/accept`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        // Refresh chats to show updated status
+        fetchChats();
+      } else {
+        alert('Error al aceptar la conversación');
+      }
+    } catch (error) {
+      console.error('Error accepting chat:', error);
+      alert('Error al aceptar la conversación');
+    }
+  };
+
+  const handleRejectChat = async (chatId: number, reason?: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`/api/chats/${chatId}/reject`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ reason })
+      });
+
+      if (response.ok) {
+        // Refresh chats to show updated status
+        fetchChats();
+      } else {
+        alert('Error al rechazar la conversación');
+      }
+    } catch (error) {
+      console.error('Error rejecting chat:', error);
+      alert('Error al rechazar la conversación');
+    }
+  };
 
   const filteredChats = chats.filter(chat => {
     const fullName = `${chat.other_user_first_name} ${chat.other_user_last_name}`.toLowerCase();
@@ -301,67 +374,149 @@ const ASChats: NextPage = () => {
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-white/10">
                 {filteredChats.map((chat) => (
-                  <Link key={chat.id} href={`/as/chat/${chat.id}`}>
-                    <div className="p-6 hover:bg-gray-50 transition-colors cursor-pointer">
-                      <div className="flex items-start">
-                        {/* Profile Picture */}
-                        <div className="relative flex-shrink-0 mr-4">
-                          <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-                            {chat.other_user_photo ? (
-                              <img
-                                src={chat.other_user_photo}
-                                alt="Cliente"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <User className="h-6 w-6 text-gray-400" />
-                            )}
-                          </div>
-                          {chat.unread_count > 0 && (
-                            <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                              {chat.unread_count > 9 ? '9+' : chat.unread_count}
-                            </div>
+                  <motion.div
+                    key={chat.id}
+                    className="p-6 transition-all duration-200"
+                    style={{
+                      background: chat.status === 'pending' 
+                        ? 'rgba(59, 130, 246, 0.1)' 
+                        : chat.status === 'rejected' 
+                          ? 'rgba(239, 68, 68, 0.1)'
+                          : 'rgba(255, 255, 255, 0.05)'
+                    }}
+                    whileHover={{ scale: 1.01, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+                  >
+                    <div className="flex items-start">
+                      {/* Profile Picture */}
+                      <div className="relative flex-shrink-0 mr-4">
+                        <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden"
+                             style={{
+                               background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)',
+                               border: '2px solid rgba(255, 255, 255, 0.2)'
+                             }}>
+                          {chat.other_user_photo ? (
+                            <img
+                              src={chat.other_user_photo}
+                              alt="Cliente"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <User className="h-6 w-6 text-white" />
                           )}
                         </div>
+                        {/* Status indicator */}
+                        {chat.status === 'pending' && (
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 text-white text-xs rounded-full flex items-center justify-center">
+                            <AlertCircle className="h-3 w-3" />
+                          </div>
+                        )}
+                        {chat.status === 'rejected' && (
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                            <UserX className="h-3 w-3" />
+                          </div>
+                        )}
+                        {chat.unread_count > 0 && chat.status === 'active' && (
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs rounded-full flex items-center justify-center">
+                            {chat.unread_count > 9 ? '9+' : chat.unread_count}
+                          </div>
+                        )}
+                      </div>
 
-                        {/* Chat Content */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between mb-1">
-                            <h3 className={`text-sm font-medium truncate ${
-                              chat.unread_count > 0 ? 'text-gray-900' : 'text-gray-700'
-                            }`}>
-                              {chat.other_user_first_name} {chat.other_user_last_name}
-                            </h3>
-                            <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                      {/* Chat Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-sm font-medium text-white truncate">
+                            {chat.other_user_first_name} {chat.other_user_last_name}
+                          </h3>
+                          <div className="flex items-center space-x-2 ml-2 flex-shrink-0">
+                            {/* Status badge */}
+                            {chat.status === 'pending' && (
+                              <span className="px-2 py-1 text-xs rounded-full font-medium text-yellow-200 bg-yellow-500/20 border border-yellow-500/30">
+                                Pendiente
+                              </span>
+                            )}
+                            {chat.status === 'rejected' && (
+                              <span className="px-2 py-1 text-xs rounded-full font-medium text-red-200 bg-red-500/20 border border-red-500/30">
+                                Rechazada
+                              </span>
+                            )}
+                            {chat.status === 'active' && (
+                              <span className="px-2 py-1 text-xs rounded-full font-medium text-green-200 bg-green-500/20 border border-green-500/30">
+                                Activa
+                              </span>
+                            )}
+                            <span className="text-xs text-white/60">
                               {chat.last_message_time && formatTime(chat.last_message_time)}
                             </span>
                           </div>
-                          
-                          {chat.service_title && (
-                            <p className="text-xs text-blue-600 mb-1 truncate">
-                              {chat.service_title}
-                            </p>
-                          )}
-                          
-                          <div className="flex items-center">
-                            <p className={`text-sm truncate flex-1 ${
-                              chat.unread_count > 0 ? 'text-gray-900 font-medium' : 'text-gray-600'
-                            }`}>
-                              {chat.last_message}
-                            </p>
-                            
-                            {chat.unread_count === 0 && (
-                              <div className="ml-2 text-gray-400">
-                                <CheckCircle className="h-4 w-4" />
-                              </div>
-                            )}
-                          </div>
                         </div>
+                        
+                        {chat.service_title && (
+                          <p className="text-xs text-blue-300 mb-2 truncate">
+                            📋 {chat.service_title}
+                          </p>
+                        )}
+                        
+                        <div className="flex items-center mb-3">
+                          <p className="text-sm text-white/80 truncate flex-1">
+                            {chat.last_message || (chat.status === 'pending' ? 'Solicitud de conversación pendiente' : 'Sin mensajes')}
+                          </p>
+                        </div>
+
+                        {/* Action buttons for pending chats */}
+                        {chat.status === 'pending' && (
+                          <div className="flex items-center space-x-2 mt-3">
+                            <motion.button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleAcceptChat(chat.id);
+                              }}
+                              className="flex items-center px-3 py-2 text-sm font-medium text-white rounded-lg transition-all duration-200"
+                              style={{
+                                background: 'linear-gradient(135deg, #10B981, #059669)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)'
+                              }}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <UserCheck className="h-4 w-4 mr-2" />
+                              Aceptar
+                            </motion.button>
+                            <motion.button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleRejectChat(chat.id);
+                              }}
+                              className="flex items-center px-3 py-2 text-sm font-medium text-white/80 rounded-lg transition-all duration-200"
+                              style={{
+                                background: 'rgba(239, 68, 68, 0.2)',
+                                border: '1px solid rgba(239, 68, 68, 0.3)'
+                              }}
+                              whileHover={{ scale: 1.05, background: 'rgba(239, 68, 68, 0.3)' }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <UserX className="h-4 w-4 mr-2" />
+                              Rechazar
+                            </motion.button>
+                          </div>
+                        )}
+
+                        {/* Chat link for active conversations only */}
+                        {chat.status === 'active' && (
+                          <Link href={`/as/chat/${chat.id}`}>
+                            <motion.div 
+                              className="mt-3 text-blue-300 text-sm hover:text-blue-200 cursor-pointer flex items-center"
+                              whileHover={{ x: 5 }}
+                            >
+                              💬 Abrir conversación →
+                            </motion.div>
+                          </Link>
+                        )}
                       </div>
                     </div>
-                  </Link>
+                  </motion.div>
                 ))}
               </div>
             )}

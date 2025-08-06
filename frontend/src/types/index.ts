@@ -387,6 +387,7 @@ export interface Chat {
   customer_id: number;
   provider_id: number;
   booking_id?: number;
+  status: 'pending' | 'active' | 'rejected';
   created_at: string;
   updated_at: string;
   other_user_first_name: string;
@@ -396,6 +397,7 @@ export interface Chat {
   last_message?: string;
   last_message_time?: string;
   unread_count: number;
+  requires_acceptance?: boolean;
 }
 
 export interface Message {

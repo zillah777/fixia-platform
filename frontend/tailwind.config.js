@@ -16,6 +16,36 @@ module.exports = {
         '2xl': '1400px',
       },
     },
+    screens: {
+      'xs': '475px',
+      'sm': '640px',
+      'md': '768px',
+      'tablet-portrait': '768px',
+      'tablet-landscape': '1024px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+      
+      // Tablet-specific breakpoints
+      'tablet': {'min': '768px', 'max': '1279px'},
+      'tablet-sm': {'min': '768px', 'max': '1023px'},
+      'tablet-lg': {'min': '1024px', 'max': '1279px'},
+      
+      // Orientation-based breakpoints for tablets
+      'tablet-portrait-only': {'min': '768px', 'max': '1023px'},
+      'tablet-landscape-only': {'min': '1024px', 'max': '1279px'},
+      
+      // Device-specific combinations
+      'mobile-tablet': {'max': '1279px'},
+      'tablet-desktop': {'min': '768px'},
+      
+      // High DPI tablet detection
+      'tablet-retina': {
+        'min': '768px', 
+        'max': '1279px',
+        'resolution': '2dppx'
+      },
+    },
     extend: {
       colors: {
         // Base colors
@@ -220,26 +250,122 @@ module.exports = {
     require('tailwindcss-animate'),
     function({ addUtilities }) {
       const newUtilities = {
+        // Standard glass effects
         '.glass': {
           background: 'rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(20px)',
           '-webkit-backdrop-filter': 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
         },
         '.glass-medium': {
           background: 'rgba(255, 255, 255, 0.15)',
           backdropFilter: 'blur(24px)',
           '-webkit-backdrop-filter': 'blur(24px)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
         },
         '.glass-strong': {
           background: 'rgba(255, 255, 255, 0.2)',
           backdropFilter: 'blur(32px)',
           '-webkit-backdrop-filter': 'blur(32px)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
         },
+        
+        // Mobile-optimized variants
+        '.glass-minimal': {
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(8px)',
+          '-webkit-backdrop-filter': 'blur(8px)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
+        },
+        '.glass-enhanced': {
+          backdropFilter: 'saturate(180%) blur(32px)',
+          '-webkit-backdrop-filter': 'saturate(180%) blur(32px)',
+        },
+        
+        // Performance optimizations
+        '.glass-accelerated': {
+          transform: 'translate3d(0, 0, 0)',
+          backfaceVisibility: 'hidden',
+          perspective: '1000px',
+        },
+        '.glass-battery-optimized': {
+          backdropFilter: 'blur(12px)',
+          '-webkit-backdrop-filter': 'blur(12px)',
+          transition: 'none',
+        },
+        
+        // Fallback for unsupported devices
+        '.glass-fallback': {
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'none',
+          '-webkit-backdrop-filter': 'none',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+        },
+        
+        // Brand gradient
         '.liquid-gradient': {
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        },
+        
+        // Tablet-optimized glass effects
+        '.glass-tablet': {
+          background: 'rgba(255, 255, 255, 0.12)',
+          backdropFilter: 'blur(28px)',
+          '-webkit-backdrop-filter': 'blur(28px)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
+        },
+        '.glass-tablet-strong': {
+          background: 'rgba(255, 255, 255, 0.18)',
+          backdropFilter: 'blur(36px)',
+          '-webkit-backdrop-filter': 'blur(36px)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
+        },
+        '.glass-tablet-sidebar': {
+          background: 'rgba(255, 255, 255, 0.08)',
+          backdropFilter: 'saturate(150%) blur(20px)',
+          '-webkit-backdrop-filter': 'saturate(150%) blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
+        },
+        
+        // Touch target optimizations
+        '.tablet-touch-target': {
+          minHeight: '48px',
+          minWidth: '48px',
+        },
+        '.tablet-touch-large': {
+          minHeight: '56px',
+          minWidth: '56px',
+        },
+        
+        // Tablet-specific animations
+        '.tablet-slide-enter': {
+          transform: 'translateX(-100%)',
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        '.tablet-slide-enter-active': {
+          transform: 'translateX(0)',
+        },
+        '.tablet-fade-scale': {
+          transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        '.tablet-fade-scale:hover': {
+          transform: 'scale(1.02)',
+          filter: 'brightness(1.05)',
         },
       }
       addUtilities(newUtilities)

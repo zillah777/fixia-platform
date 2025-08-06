@@ -24,10 +24,37 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'fonts.gstatic.com',
+      },
+      // Unsplash for demo images
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      // AWS S3 for user uploads
+      {
+        protocol: 'https',
+        hostname: '*.amazonaws.com',
+      },
+      // Cloudinary for image optimization
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      // Common Argentine image hosting services
+      {
+        protocol: 'https',
+        hostname: '*.mercadolibre.com',
       }
     ],
+    // Optimize for Argentine mobile-first approach
     formats: ['image/webp', 'image/avif'],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 3600, // 1 hour cache for better performance
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Device sizes optimized for Argentine market
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   // Headers for CORS and security
   async headers() {

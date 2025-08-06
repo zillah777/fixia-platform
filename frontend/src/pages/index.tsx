@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { FixiaAvatar } from "@/components/ui/fixia-avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from '@/contexts/AuthContext';
 import { PromotionBanner } from '@/components/PromotionBanner';
@@ -638,10 +639,15 @@ function FeaturedProfessionals() {
               <Card className="glass hover:glass-medium transition-all duration-300 border-white/10 group">
                 <CardHeader className="text-center">
                   <div className="relative mx-auto mb-4">
-                    <Avatar className="h-20 w-20 ring-4 ring-primary/20 ring-offset-4 ring-offset-background">
-                      <AvatarImage src={professional.image} alt={professional.name} />
-                      <AvatarFallback>{professional.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
+                    <FixiaAvatar
+                      src={professional.image}
+                      alt={professional.name}
+                      fallbackText={professional.name}
+                      size="xl"
+                      variant="professional"
+                      priority={false}
+                      className="h-20 w-20 ring-4 ring-primary/20 ring-offset-4 ring-offset-background"
+                    />
                     <Badge className="absolute -top-2 -right-2 bg-green-500/20 text-green-400 border-green-500/30 text-xs">
                       {professional.badge}
                     </Badge>

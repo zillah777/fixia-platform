@@ -36,87 +36,45 @@ const ASChatDetail: NextPage = () => {
     }
 
     if (chatId) {
-      // TODO: Fetch real chat and messages from API
-      setChat({
-        id: parseInt(chatId as string),
-        customer_id: 101,
-        provider_id: user?.id || 1,
-        booking_id: 1,
-        created_at: '2024-01-18T10:30:00Z',
-        updated_at: '2024-01-18T15:45:00Z',
-        other_user_first_name: 'María',
-        other_user_last_name: 'González',
-        other_user_photo: undefined,
-        service_title: 'Reparación de Plomería Residencial',
-        last_message: 'Perfecto, nos vemos mañana entonces',
-        last_message_time: '2024-01-18T15:45:00Z',
-        unread_count: 0
-      });
-
-      setMessages([
-        {
-          id: 1,
-          chat_id: parseInt(chatId as string),
-          sender_id: 101,
-          content: 'Hola! Vi que aceptaste mi solicitud de reparación de plomería. ¿Podrías confirmarme el horario?',
-          message_type: 'text',
-          is_read: true,
-          created_at: '2024-01-18T10:35:00Z',
-          sender_first_name: 'María',
-          sender_last_name: 'González',
-          sender_photo: undefined
-        },
-        {
-          id: 2,
-          chat_id: parseInt(chatId as string),
-          sender_id: user?.id || 1,
-          content: 'Hola María! Sí, confirmo para mañana a las 14:00. ¿La dirección es Av. San Martín 456?',
-          message_type: 'text',
-          is_read: true,
-          created_at: '2024-01-18T11:20:00Z',
-          sender_first_name: user?.first_name || '',
-          sender_last_name: user?.last_name || '',
-          sender_photo: user?.profile_photo_url
-        },
-        {
-          id: 3,
-          chat_id: parseInt(chatId as string),
-          sender_id: 101,
-          content: 'Exacto, esa es la dirección. ¿Necesitas que tenga algo preparado antes de que llegues?',
-          message_type: 'text',
-          is_read: true,
-          created_at: '2024-01-18T11:25:00Z',
-          sender_first_name: 'María',
-          sender_last_name: 'González',
-          sender_photo: undefined
-        },
-        {
-          id: 4,
-          chat_id: parseInt(chatId as string),
-          sender_id: user?.id || 1,
-          content: 'Solo asegúrate de tener acceso libre al baño donde está la filtración. Llevo todas mis herramientas.',
-          message_type: 'text',
-          is_read: true,
-          created_at: '2024-01-18T11:30:00Z',
-          sender_first_name: user?.first_name || '',
-          sender_last_name: user?.last_name || '',
-          sender_photo: user?.profile_photo_url
-        },
-        {
-          id: 5,
-          chat_id: parseInt(chatId as string),
-          sender_id: 101,
-          content: 'Perfecto, nos vemos mañana entonces. ¡Gracias!',
-          message_type: 'text',
-          is_read: false,
-          created_at: '2024-01-18T15:45:00Z',
-          sender_first_name: 'María',
-          sender_last_name: 'González',
-          sender_photo: undefined
-        }
-      ]);
+      // Fetch real chat and messages from API
+      fetchChatData(chatId as string);
     }
   }, [user, loading, chatId]);
+
+  const fetchChatData = async (chatId: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      // Fetch chat details
+      const chatResponse = await fetch(`/api/chats/${chatId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (chatResponse.ok) {
+        const chatData = await chatResponse.json();
+        setChat(chatData.data);
+      }
+
+      // Fetch messages
+      const messagesResponse = await fetch(`/api/chats/${chatId}/messages`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (messagesResponse.ok) {
+        const messagesData = await messagesResponse.json();
+        setMessages(messagesData.data?.messages || []);
+      }
+
+    } catch (error) {
+      console.error('Error fetching chat data:', error);
+    }
+  };
 
   useEffect(() => {
     scrollToBottom();
@@ -128,30 +86,45 @@ const ASChatDetail: NextPage = () => {
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || sending) return;
+    if (!newMessage.trim() || sending || !chat) return;
+
+    // Check if chat is active
+    if (chat.status !== 'active') {
+      alert('Esta conversación aún no ha sido aceptada o está inactiva');
+      return;
+    }
 
     setSending(true);
-    try {
-      const message: Message = {
-        id: Date.now(),
-        chat_id: parseInt(chatId as string),
-        sender_id: user?.id || 1,
-        content: newMessage,
-        message_type: 'text',
-        is_read: false,
-        created_at: new Date().toISOString(),
-        sender_first_name: user?.first_name || '',
-        sender_last_name: user?.last_name || '',
-        sender_photo: user?.profile_photo_url
-      };
+    const messageContent = newMessage.trim();
+    setNewMessage(''); // Clear immediately for better UX
 
-      setMessages(prev => [...prev, message]);
-      setNewMessage('');
-      
-      // TODO: Send message via API
-      await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`/api/chats/${chatId}/messages`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          content: messageContent,
+          message_type: 'text'
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const newMessageData: Message = data.data;
+        setMessages(prev => [...prev, newMessageData]);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || 'Error al enviar mensaje');
+        setNewMessage(messageContent); // Restore message on error
+      }
     } catch (error) {
+      console.error('Error sending message:', error);
       alert('Error al enviar mensaje');
+      setNewMessage(messageContent); // Restore message on error
     } finally {
       setSending(false);
     }

@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
+import { FixiaServiceImage, FixiaAvatar } from '@/components/ui';
 
 interface Professional {
   id: number;
@@ -403,72 +404,32 @@ export default function MarketplacePage() {
         className="group"
       >
         <Card className="glass border-white/10 hover:glass-medium transition-all duration-300 overflow-hidden">
-          {/* Featured Image */}
-          <div className="relative aspect-[4/3] overflow-hidden">
-            <img
-              src={professional.featured_image || '/images/placeholder-service.jpg'}
-              alt={professional.specialty}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-            
-            {/* Favorite & Wishlist Buttons */}
-            <div className="absolute top-3 right-3 flex space-x-1">
-              <Button
-                onClick={() => toggleFavorite(professional.id)}
-                className={`w-8 h-8 rounded-full glass transition-all duration-300 ${
-                  isFavorite ? 'text-red-400 hover:text-red-300' : 'text-white/70 hover:text-white'
-                }`}
-                title={isFavorite ? 'Remover de favoritos' : 'Agregar a favoritos'}
-              >
-                <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
-              </Button>
-              
-              {!isFavorite && (
-                <Button
-                  onClick={() => toggleFavorite(professional.id, true)}
-                  className="w-8 h-8 rounded-full glass text-white/70 hover:text-white transition-all duration-300"
-                  title="Agregar a lista de deseos con categoría"
-                >
-                  <BookmarkPlus className="h-3 w-3" />
-                </Button>
-              )}
-            </div>
-
-            {/* Availability Badge */}
-            <div className="absolute top-3 left-3">
-              <Badge className={`text-xs ${availabilityBadge.color} border-0`}>
-                {availabilityBadge.text}
-              </Badge>
-            </div>
-
-            {/* Portfolio Images Indicator */}
-            {professional.portfolio_images.length > 1 && (
-              <div className="absolute bottom-3 right-3">
-                <Badge className="bg-black/50 text-white text-xs">
-                  +{professional.portfolio_images.length - 1} fotos
-                </Badge>
-              </div>
-            )}
-
-            {/* Featured Professional Banner */}
-            {professional.is_featured && (
-              <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm border-b border-yellow-400/30">
-                <div className="flex items-center justify-center space-x-1 py-1 px-3">
-                  <Star className="h-3 w-3 text-yellow-400 fill-current" />
-                  <span className="text-xs font-medium text-yellow-400">Profesional Destacado</span>
-                </div>
-              </div>
-            )}
-
+          {/* Featured Service Image */}
+          <FixiaServiceImage
+            src={professional.featured_image || '/images/placeholder-service.jpg'}
+            alt={`Servicio de ${professional.specialty} - ${professional.first_name} ${professional.last_name}`}
+            variant="card"
+            isFeatured={professional.is_featured}
+            isFavorite={isFavorite}
+            rating={professional.rating}
+            portfolioCount={professional.portfolio_images.length}
+            isAvailable={professional.availability === 'available'}
+            availabilityText={availabilityBadge.text}
+            onFavoriteClick={() => toggleFavorite(professional.id)}
+            onBookmarkClick={() => toggleFavorite(professional.id, true)}
+            priority={false}
+            quality={85}
+            containerClassName="aspect-[4/3]"
+          >
             {/* Premium Badge */}
             {professional.is_premium && (
-              <div className="absolute top-3 left-3">
+              <div className="absolute top-3 left-3 z-10">
                 <Badge className="bg-gradient-to-r from-purple-400/20 to-pink-400/20 text-purple-300 text-xs border border-purple-400/30">
                   Premium
                 </Badge>
               </div>
             )}
-          </div>
+          </FixiaServiceImage>
 
           <CardContent className="p-4">
             {/* Header */}

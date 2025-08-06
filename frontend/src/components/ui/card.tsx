@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { useCardGlass } from "@/hooks/useAdaptiveGlass"
 
 const Card = React.forwardRef<
   HTMLDivElement,

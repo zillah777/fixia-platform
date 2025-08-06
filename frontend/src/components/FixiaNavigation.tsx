@@ -3,6 +3,7 @@ import { Search, Plus, Bell, User, Briefcase, Shield, Menu, LogOut, Store, Image
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { FixiaAvatar } from "./ui/fixia-avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Badge } from "./ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -147,20 +148,29 @@ export function FixiaNavigation() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full hover:glass-medium transition-all duration-300">
-                <Avatar className="h-9 w-9 sm:h-10 sm:w-10 ring-2 ring-primary/20">
-                  <AvatarImage src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined} alt="Usuario" />
-                  <AvatarFallback className="glass text-xs sm:text-sm">{getInitials()}</AvatarFallback>
-                </Avatar>
+                <FixiaAvatar
+                  src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined}
+                  alt="Usuario"
+                  fallbackText={getInitials()}
+                  size="md"
+                  variant={user?.user_type === 'provider' ? 'professional' : 'client'}
+                  priority={true}
+                  className="h-9 w-9 sm:h-10 sm:w-10"
+                />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-64 glass border-white/20" align="end">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center space-x-3">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined} alt="Usuario" />
-                      <AvatarFallback>{getInitials()}</AvatarFallback>
-                    </Avatar>
+                    <FixiaAvatar
+                      src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined}
+                      alt="Usuario"
+                      fallbackText={getInitials()}
+                      size="lg"
+                      variant={user?.user_type === 'provider' ? 'professional' : 'client'}
+                      priority={true}
+                    />
                     <div>
                       <p className="font-medium">{user?.first_name} {user?.last_name}</p>
                       <p className="text-sm text-muted-foreground">
@@ -380,10 +390,14 @@ export function FixiaNavigation() {
               {/* User Info Card */}
               <div className="mt-4 pt-4 border-t border-white/10">
                 <div className="flex items-center space-x-3 glass-light rounded-lg p-3">
-                  <Avatar className="h-10 w-10 ring-2 ring-primary/20">
-                    <AvatarImage src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined} alt="Usuario" />
-                    <AvatarFallback className="glass">{getInitials()}</AvatarFallback>
-                  </Avatar>
+                  <FixiaAvatar
+                    src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined}
+                    alt="Usuario"
+                    fallbackText={getInitials()}
+                    size="md"
+                    variant={user?.user_type === 'provider' ? 'professional' : 'client'}
+                    priority={true}
+                  />
                   <div className="flex-1">
                     <p className="font-medium text-sm">{user?.first_name} {user?.last_name}</p>
                     <p className="text-xs text-muted-foreground">

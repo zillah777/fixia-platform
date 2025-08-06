@@ -3,6 +3,8 @@
  * Provides easy access to all error recovery components, hooks, and types
  */
 
+import React from 'react';
+
 // Core Error Boundary and Recovery Components
 export { FixiaErrorBoundary, withErrorBoundary } from './FixiaErrorBoundary';
 export { FixiaErrorRecovery } from './FixiaErrorRecovery';

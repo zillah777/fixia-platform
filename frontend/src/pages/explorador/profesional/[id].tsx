@@ -23,6 +23,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { explorerService } from '@/services/explorer';
 import { ASProfileForExplorer, ExplorerASReview } from '@/types/explorer';
+import { FixiaAvatar, FixiaServiceImage } from '@/components/ui';
 
 const ProfesionalDetailPage: NextPage = () => {
   const { user, loading } = useAuth();
@@ -169,19 +170,15 @@ const ProfesionalDetailPage: NextPage = () => {
                 {/* Profile Header */}
                 <div className="p-8 border-b">
                   <div className="flex items-start space-x-6">
-                    <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-                      {profile.basic_info.profile_image ? (
-                        <img 
-                          src={profile.basic_info.profile_image} 
-                          alt={`${profile.basic_info.first_name} ${profile.basic_info.last_name}`}
-                          className="w-24 h-24 rounded-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-gray-600 font-medium text-2xl">
-                          {profile.basic_info.first_name[0]}{profile.basic_info.last_name[0]}
-                        </span>
-                      )}
-                    </div>
+                    <FixiaAvatar
+                      src={profile.basic_info.profile_image}
+                      alt={`${profile.basic_info.first_name} ${profile.basic_info.last_name}`}
+                      fallbackText={`${profile.basic_info.first_name} ${profile.basic_info.last_name}`}
+                      size="2xl"
+                      variant="professional"
+                      priority={true}
+                      className="w-24 h-24"
+                    />
                     
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
@@ -338,13 +335,15 @@ const ProfesionalDetailPage: NextPage = () => {
                           {profile.portfolio.map((item) => (
                             <div key={item.id} className="border rounded-lg overflow-hidden">
                               {item.image_url && (
-                                <div className="aspect-video bg-gray-200">
-                                  <img 
-                                    src={item.image_url} 
-                                    alt={item.title}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
+                                <FixiaServiceImage
+                                  src={item.image_url}
+                                  alt={item.title}
+                                  variant="portfolio"
+                                  isFeatured={item.is_featured}
+                                  showOverlay={true}
+                                  containerClassName="aspect-video"
+                                  quality={90}
+                                />
                               )}
                               <div className="p-4">
                                 <div className="flex items-start justify-between mb-2">

@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { PromotionProvider } from '@/contexts/PromotionContext';
+import { GlassOptimizationProvider } from '@/contexts/GlassOptimizationContext';
 import { Toaster } from 'react-hot-toast';
 import '@/styles/globals.css';
 
@@ -8,11 +9,12 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <PromotionProvider>
-        <div className="min-h-screen bg-background text-foreground">
-          <Component {...pageProps} />
-        
-        {/* Toast notifications with Fixia styling */}
-        <Toaster
+        <GlassOptimizationProvider>
+          <div className="min-h-screen bg-background text-foreground">
+            <Component {...pageProps} />
+          
+          {/* Toast notifications with Fixia styling */}
+          <Toaster
           position="top-right"
           toastOptions={{
             duration: 4000,
@@ -45,8 +47,9 @@ export default function App({ Component, pageProps }: AppProps) {
               },
             },
           }}
-        />
-        </div>
+          />
+          </div>
+        </GlassOptimizationProvider>
       </PromotionProvider>
     </AuthProvider>
   );

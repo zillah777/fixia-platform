@@ -27,6 +27,48 @@ export {
   TableHeader,
   TableRow
 } from './table';
+export { IOSBottomNavigation } from './ios-bottom-navigation';
+
+// Skeleton components
+export {
+  Skeleton,
+  TextSkeleton,
+  CircleSkeleton,
+  CardSkeleton,
+  type SkeletonProps,
+  type TextSkeletonProps,
+  type CircleSkeletonProps,
+  type CardSkeletonProps
+} from './skeleton';
+
+// Optimized Image components
+export {
+  FixiaImage,
+  type FixiaImageProps
+} from './fixia-image';
+
+export {
+  FixiaAvatar,
+  type FixiaAvatarProps
+} from './fixia-avatar';
+
+export {
+  FixiaServiceImage,
+  type FixiaServiceImageProps
+} from './fixia-service-image';
+
+export {
+  FixiaCategoryIcon,
+  type FixiaCategoryIconProps
+} from './fixia-category-icon';
+
+export {
+  FixiaOptimizedLogo,
+  FixiaNavLogo,
+  FixiaFooterLogo,
+  FixiaFaviconLogo,
+  type FixiaLogoProps
+} from './fixia-logo';
 
 // Legacy component aliases for backward compatibility
 export { Button as CorporateButton } from './button';

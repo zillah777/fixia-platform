@@ -848,7 +848,7 @@ const ASConfiguracion: NextPage = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
 
                 {/* Help Tab */}
