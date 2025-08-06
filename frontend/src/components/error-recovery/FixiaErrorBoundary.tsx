@@ -16,7 +16,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { FixiaError, UserContext, PlatformArea, ErrorCategory } from '@/types/errors';
+import { FixiaError, UserContext, PlatformArea, ErrorCategory, RecoveryStrategy } from '@/types/errors';
 import { FixiaErrorRecovery } from './FixiaErrorRecovery';
 
 interface ErrorBoundaryState {
@@ -121,7 +121,6 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
       // Context
       userContext,
       platformArea,
-      userId: this.props.userId,
       sessionId: this.getSessionId(),
       timestamp: new Date().toISOString(),
       
@@ -131,7 +130,7 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
       
       // Recovery information
       recoveryStrategy: this.determineRecoveryStrategies(error, category),
-      retryCount: this.state.retryCount,
+      retryCount: this.state.retryCount || 0,
       maxRetries: this.props.maxAutoRetries || 3,
       canAutoRecover: this.canAutoRecover(error, category),
       
@@ -261,7 +260,7 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
   }
 
   private generateUserMessage(error: Error, category: ErrorCategory, userContext: UserContext): string {
-    const contextMessages = {
+    const contextMessages: Record<ErrorCategory, string> = {
       network: 'No hay conexión a internet. Revisa tu WiFi o datos móviles e intenta de nuevo.',
       authentication: 'Hubo un problema con tu sesión. Necesitas iniciar sesión de nuevo.',
       authorization: 'No tienes permisos para hacer esta acción. Si es un error, contáctanos.',
@@ -270,6 +269,8 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
       file_upload: 'Error subiendo el archivo. Verifica que sea del formato correcto e intenta de nuevo.',
       chat: 'Problema enviando el mensaje. Verifica tu conexión e intenta de nuevo.',
       booking: 'Error procesando tu solicitud. Puede que el horario ya no esté disponible.',
+      subscription: 'Problema con tu suscripción. Verifica tu plan o contáctanos para ayudarte.',
+      system: 'Error del sistema. Nuestro equipo técnico ya está trabajando para solucionarlo.',
       server: 'Algo salió mal en nuestros servidores. Ya estamos trabajando para solucionarlo.',
       client: 'Hubo un problema técnico. Recarga la página e intenta de nuevo.',
       unknown: 'Ocurrió un error inesperado. Intenta de nuevo o contáctanos si persiste.',
@@ -293,22 +294,24 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
     return baseMessage;
   }
 
-  private determineRecoveryStrategies(error: Error, category: ErrorCategory): string[] {
-    const strategies: Record<ErrorCategory, string[]> = {
-      network: ['retry', 'reload', 'offline_mode'],
-      authentication: ['redirect', 'manual'],
-      authorization: ['contact_support', 'redirect'],
-      validation: ['manual', 'auto_fix'],
-      payment: ['retry', 'manual', 'contact_support'],
-      file_upload: ['retry', 'manual'],
-      chat: ['retry', 'reload'],
-      booking: ['retry', 'manual', 'fallback'],
-      server: ['retry', 'reload', 'contact_support'],
-      client: ['reload', 'retry'],
-      unknown: ['retry', 'reload', 'contact_support'],
+  private determineRecoveryStrategies(error: Error, category: ErrorCategory): RecoveryStrategy[] {
+    const strategies: Record<ErrorCategory, RecoveryStrategy[]> = {
+      network: ['retry', 'reload', 'offline_mode'] as RecoveryStrategy[],
+      authentication: ['redirect', 'manual'] as RecoveryStrategy[],
+      authorization: ['contact_support', 'redirect'] as RecoveryStrategy[],
+      validation: ['manual', 'retry'] as RecoveryStrategy[],
+      payment: ['retry', 'manual', 'contact_support'] as RecoveryStrategy[],
+      file_upload: ['retry', 'manual'] as RecoveryStrategy[],
+      chat: ['retry', 'reload'] as RecoveryStrategy[],
+      booking: ['retry', 'manual', 'reload'] as RecoveryStrategy[],
+      server: ['retry', 'reload', 'contact_support'] as RecoveryStrategy[],
+      client: ['reload', 'retry'] as RecoveryStrategy[],
+      system: ['retry', 'reload', 'contact_support'] as RecoveryStrategy[],
+      subscription: ['retry', 'contact_support'] as RecoveryStrategy[],
+      unknown: ['retry', 'reload', 'contact_support'] as RecoveryStrategy[],
     };
     
-    return strategies[category] || ['retry', 'contact_support'];
+    return strategies[category] || (['retry', 'contact_support'] as RecoveryStrategy[]);
   }
 
   private canAutoRecover(error: Error, category: ErrorCategory): boolean {
@@ -321,7 +324,7 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
 
   private shouldAttemptAutoRecovery(error: FixiaError): boolean {
     return error.canAutoRecover && 
-           error.retryCount < (error.maxRetries || 3) &&
+           (error.retryCount || 0) < (error.maxRetries || 3) &&
            error.severity !== 'critical';
   }
 
