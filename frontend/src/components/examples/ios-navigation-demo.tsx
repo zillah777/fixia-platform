@@ -134,7 +134,7 @@ export const IOSNavigationDemo: React.FC = () => {
           </CardHeader>
           <CardContent className="text-white/80">
             <div className="bg-black/20 rounded-lg p-4 font-mono text-sm">
-              <div className="text-green-400 mb-2">// En cualquier layout:</div>
+              <div className="text-green-400 mb-2">{/* En cualquier layout: */}</div>
               <div className="text-blue-300">
                 {`<MarketplaceLayout showBottomNav={true}>`}
                 <br />
@@ -143,7 +143,7 @@ export const IOSNavigationDemo: React.FC = () => {
                 {`</MarketplaceLayout>`}
               </div>
               <br />
-              <div className="text-green-400 mb-2">// O importar directamente:</div>
+              <div className="text-green-400 mb-2">{/* O importar directamente: */}</div>
               <div className="text-blue-300">
                 {`import { IOSBottomNavigation } from '@/components/ui';`}
                 <br />
