@@ -17,6 +17,9 @@ interface ErrorRecoveryState {
   lastErrorTime: Date | null;
   isOnline: boolean;
   frustrationLevel: number; // 0-10 scale
+  connectionStatus: 'online' | 'slow' | 'unstable' | 'offline' | 'connected' | 'disconnected' | 'reconnecting';
+  errorRate: number;
+  offlineMode: boolean;
 }
 
 // Actions
@@ -40,7 +43,10 @@ interface ErrorRecoveryContextType {
   reportGlobalError: (error: Error, context?: Partial<FixiaError>) => void;
   getErrorRate: () => number;
   getFrustrationLevel: () => number;
+  getUserFrustrationLevel: () => number; // Add missing method
+  getRecommendedActions: (error: FixiaError) => string[]; // Add missing method
   shouldEscalateToSupport: () => boolean;
+  escalate: (error: FixiaError) => void; // Add missing method
 }
 
 // Initial state
@@ -54,6 +60,9 @@ const initialState: ErrorRecoveryState = {
   lastErrorTime: null,
   isOnline: typeof window !== 'undefined' ? navigator.onLine : true,
   frustrationLevel: 0,
+  connectionStatus: 'online',
+  errorRate: 0,
+  offlineMode: false,
 };
 
 // Reducer
@@ -268,6 +277,52 @@ export function ErrorRecoveryProvider({
     };
   }, [enableGlobalErrorUI, reportGlobalError]);
 
+  // Get user frustration level (alias for getFrustrationLevel)
+  const getUserFrustrationLevel = useCallback(() => {
+    return state.frustrationLevel * 10; // Convert 0-10 scale to percentage
+  }, [state.frustrationLevel]);
+
+  // Get recommended actions
+  const getRecommendedActions = useCallback((error: FixiaError): string[] => {
+    const actions: string[] = [];
+    if (error.recoveryStrategy.includes('retry')) {
+      actions.push('Intentar nuevamente la operación');
+    }
+    if (error.recoveryStrategy.includes('reload')) {
+      actions.push('Recargar la página');
+    }
+    if (error.recoveryStrategy.includes('redirect')) {
+      actions.push('Navegar a una página segura');
+    }
+    if (error.recoveryStrategy.includes('contact_support')) {
+      actions.push('Contactar al equipo de soporte');
+    }
+    if (error.recoveryStrategy.includes('offline_mode')) {
+      actions.push('Usar modo sin conexión');
+    }
+    return actions;
+  }, []);
+
+  // Escalate method
+  const escalate = useCallback((error: FixiaError) => {
+    // Generate support message
+    const supportMessage = `🆘 *Error en Fixia*\n\n` +
+                          `Hola! Tengo un problema y necesito ayuda.\n\n` +
+                          `📋 *Detalles del Error:*\n` +
+                          `• Tipo: ${error.category}\n` +
+                          `• Área: ${error.platformArea}\n` +
+                          `• Usuario: ${error.userContext}\n` +
+                          `• ID: ${error.id}\n\n` +
+                          `📱 *Descripción:*\n${error.userMessage}\n\n` +
+                          `¿Pueden ayudarme? Gracias!`;
+    
+    const whatsappUrl = `https://wa.me/5492965123456?text=${encodeURIComponent(supportMessage)}`;
+    
+    if (typeof window !== 'undefined') {
+      window.open(whatsappUrl, '_blank');
+    }
+  }, []);
+
   const contextValue: ErrorRecoveryContextType = {
     state,
     addError,
@@ -276,7 +331,10 @@ export function ErrorRecoveryProvider({
     reportGlobalError,
     getErrorRate,
     getFrustrationLevel,
+    getUserFrustrationLevel,
+    getRecommendedActions,
     shouldEscalateToSupport,
+    escalate,
   };
 
   return (

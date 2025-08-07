@@ -1,7 +1,33 @@
-// Updated types that align with database structure
-// These types use the exact field names and constraints from PostgreSQL
+/**
+ * COMPREHENSIVE FRONTEND TYPE DEFINITIONS - ALIGNED WITH BACKEND
+ * These types ensure consistency between frontend/backend and database operations
+ * All types are synchronized with backend/src/types/index.js
+ */
 
-// User Types - Aligned with users table
+// =====================================
+// USER TYPES - CENTRALIZED DEFINITIONS  
+// =====================================
+
+/**
+ * User Type Mapping - Single Source of Truth
+ * Frontend uses 'customer', Database uses 'client'
+ * This mapping ensures consistency across all operations
+ */
+export const USER_TYPES = {
+  FRONTEND: {
+    CUSTOMER: 'customer' as const,
+    PROVIDER: 'provider' as const, 
+    AS: 'provider' as const, // Alias for AS (service providers)
+    ADMIN: 'admin' as const
+  },
+  DATABASE: {
+    CLIENT: 'client' as const,
+    PROVIDER: 'provider' as const,
+    ADMIN: 'admin' as const
+  }
+};
+
+// Main User interface for frontend
 export interface User {
   id: number;
   first_name: string; // VARCHAR(100) NOT NULL
@@ -116,6 +142,21 @@ export interface ServiceImage {
   created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 }
 
+// =====================================
+// BOOKING STATUS TYPES
+// =====================================
+
+export const BOOKING_STATUS = {
+  PENDING: 'pending' as const,
+  CONFIRMED: 'confirmed' as const,
+  IN_PROGRESS: 'in_progress' as const,
+  COMPLETED: 'completed' as const,
+  CANCELLED: 'cancelled' as const,
+  REJECTED: 'rejected' as const
+};
+
+export type BookingStatus = typeof BOOKING_STATUS[keyof typeof BOOKING_STATUS];
+
 // Booking Types - Aligned with bookings table  
 export interface Booking {
   id: number;
@@ -127,14 +168,14 @@ export interface Booking {
   scheduled_date?: string; // Backwards compatibility
   booking_time?: string; // TIME NOT NULL (was scheduled_time)
   scheduled_time?: string; // Backwards compatibility
-  status: string; // VARCHAR(20) DEFAULT 'pending'
+  status: BookingStatus; // Standardized booking status
   total_amount?: number; // DECIMAL(10,2)
   currency?: string; // VARCHAR(3) DEFAULT 'ARS'
   notes?: string; // TEXT
   created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   updated_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   // Additional fields for compatibility
-  payment_status?: string;
+  payment_status?: PaymentStatus;
   service_title?: string;
   service_description?: string;
   category?: string;
@@ -193,6 +234,20 @@ export interface CreateReviewData {
   is_public?: boolean; // Optional, defaults to true
 }
 
+// =====================================
+// MESSAGE TYPES - STANDARDIZED
+// =====================================
+
+export const MESSAGE_TYPES = {
+  TEXT: 'text' as const,
+  IMAGE: 'image' as const, 
+  DOCUMENT: 'document' as const,
+  FILE: 'file' as const,
+  SYSTEM: 'system' as const
+};
+
+export type MessageType = typeof MESSAGE_TYPES[keyof typeof MESSAGE_TYPES];
+
 // Chat Types - Aligned with chat_messages and chat_rooms tables
 export interface ChatRoom {
   id: string; // VARCHAR(100) PRIMARY KEY
@@ -205,7 +260,7 @@ export interface ChatMessage {
   chat_room_id: string; // VARCHAR(100) REFERENCES chat_rooms(id)
   sender_id: number; // INTEGER REFERENCES users(id)
   message: string; // TEXT NOT NULL
-  message_type: string; // VARCHAR(20) DEFAULT 'text'
+  message_type: MessageType; // Standardized message types
   attachment_url?: string; // TEXT
   is_read: boolean; // BOOLEAN DEFAULT false
   created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -214,9 +269,27 @@ export interface ChatMessage {
 export interface SendMessageData {
   chat_room_id: string; // Required
   message: string; // Required
-  message_type?: string; // Optional, defaults to 'text'
+  message_type?: MessageType; // Optional, defaults to 'text'
   attachment_url?: string; // Optional
 }
+
+// =====================================
+// NOTIFICATION TYPES
+// =====================================
+
+export const NOTIFICATION_TYPES = {
+  INFO: 'info' as const,
+  SUCCESS: 'success' as const,
+  WARNING: 'warning' as const, 
+  ERROR: 'error' as const,
+  BOOKING: 'booking' as const,
+  PAYMENT: 'payment' as const,
+  MESSAGE: 'message' as const,
+  REVIEW: 'review' as const,
+  SYSTEM: 'system' as const
+};
+
+export type NotificationType = typeof NOTIFICATION_TYPES[keyof typeof NOTIFICATION_TYPES];
 
 // Notification Types - Aligned with notifications table
 export interface Notification {
@@ -224,11 +297,26 @@ export interface Notification {
   user_id: number; // INTEGER REFERENCES users(id)
   title: string; // VARCHAR(200) NOT NULL
   message: string; // TEXT NOT NULL
-  type: string; // VARCHAR(50) DEFAULT 'info'
+  type: NotificationType; // Standardized notification types
   is_read: boolean; // BOOLEAN DEFAULT false
   action_url?: string; // TEXT
   created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 }
+
+// =====================================
+// PAYMENT STATUS TYPES
+// =====================================
+
+export const PAYMENT_STATUS = {
+  PENDING: 'pending' as const,
+  PROCESSING: 'processing' as const,
+  COMPLETED: 'completed' as const,
+  FAILED: 'failed' as const,
+  REFUNDED: 'refunded' as const,
+  CANCELLED: 'cancelled' as const
+};
+
+export type PaymentStatus = typeof PAYMENT_STATUS[keyof typeof PAYMENT_STATUS];
 
 // Payment Types - Aligned with payments table
 export interface Payment {
@@ -237,7 +325,7 @@ export interface Payment {
   amount: number; // DECIMAL(10,2) NOT NULL
   currency: string; // VARCHAR(3) DEFAULT 'ARS'
   payment_method?: string; // VARCHAR(50)
-  payment_status: string; // VARCHAR(20) DEFAULT 'pending'
+  payment_status: PaymentStatus; // Standardized payment status
   transaction_id?: string; // VARCHAR(100)
   processed_at?: string; // TIMESTAMP
   created_at: string; // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -300,17 +388,26 @@ export const ValidationRules = {
   }
 };
 
-// API Response Types
-export interface ApiResponse<T = any> {
-  success: boolean;
-  message: string;
-  data: T;
+// API Response Types with strict security
+export interface ApiResponse<T = unknown> {
+  readonly success: boolean;
+  readonly message: string;
+  readonly data: T;
+  readonly timestamp?: string;
+  readonly requestId?: string;
 }
 
 export interface ApiError {
-  success: false;
-  error: string;
-  details?: any;
+  readonly success: false;
+  readonly error: string;
+  readonly code?: string;
+  readonly timestamp?: string;
+  readonly requestId?: string;
+  readonly details?: {
+    readonly field?: string;
+    readonly violatedConstraint?: string;
+    readonly [key: string]: unknown;
+  };
 }
 
 export interface PaginationInfo {
@@ -329,11 +426,168 @@ export interface PaginatedResponse<T> {
   };
 }
 
-// Legacy compatibility types (deprecated, use updated types above)
+// =====================================
+// TYPE TRANSFORMATION UTILITIES
+// =====================================
+
+/**
+ * Transform user type from frontend to database format
+ * Used when sending data to backend API
+ */
+export function transformUserTypeToDatabase(userType: string): string {
+  const mapping: { [key: string]: string } = {
+    'customer': 'client',
+    'provider': 'provider',
+    'admin': 'admin',
+    'AS': 'provider'
+  };
+  return mapping[userType] || userType;
+}
+
+/**
+ * Transform user type from database to frontend format
+ * Used when receiving data from backend API
+ */
+export function transformUserTypeToFrontend(userType: string): string {
+  const mapping: { [key: string]: string } = {
+    'client': 'customer',
+    'provider': 'provider',
+    'admin': 'admin'
+  };
+  return mapping[userType] || userType;
+}
+
+/**
+ * Transform user object for API requests
+ */
+export function transformUserForApi(user: Partial<User>): any {
+  const transformed = { ...user };
+  if (user.user_type) {
+    transformed.user_type = transformUserTypeToDatabase(user.user_type);
+  }
+  // Map frontend profile_photo_url to backend profile_image
+  if (user.profile_photo_url && !transformed.profile_image) {
+    transformed.profile_image = user.profile_photo_url;
+  }
+  return transformed;
+}
+
+/**
+ * Transform user object from API responses
+ */
+export function transformUserFromApi(user: any): User {
+  const transformed = { ...user };
+  if (user.user_type) {
+    transformed.user_type = transformUserTypeToFrontend(user.user_type);
+  }
+  // Map backend profile_image to frontend profile_photo_url
+  if (user.profile_image && !transformed.profile_photo_url) {
+    transformed.profile_photo_url = user.profile_image;
+  }
+  return transformed;
+}
+
+/**
+ * Transform booking field names for API compatibility
+ */
+export function transformBookingForApi(booking: Partial<Booking>): any {
+  const transformed = { ...booking };
+  
+  // Map frontend customer_id to backend client_id
+  if (booking.customer_id) {
+    transformed.client_id = booking.customer_id;
+    delete transformed.customer_id;
+  }
+  
+  // Map frontend scheduled_* to backend booking_*
+  if (booking.scheduled_date) {
+    transformed.booking_date = booking.scheduled_date;
+    delete transformed.scheduled_date;
+  }
+  
+  if (booking.scheduled_time) {
+    transformed.booking_time = booking.scheduled_time;
+    delete transformed.scheduled_time;
+  }
+  
+  return transformed;
+}
+
+/**
+ * Transform booking from API responses
+ */
+export function transformBookingFromApi(booking: any): Booking {
+  const transformed = { ...booking };
+  
+  // Map backend client_id to frontend customer_id
+  if (booking.client_id) {
+    transformed.customer_id = booking.client_id;
+  }
+  
+  // Add backward compatibility fields
+  if (booking.booking_date) {
+    transformed.scheduled_date = booking.booking_date;
+  }
+  
+  if (booking.booking_time) {
+    transformed.scheduled_time = booking.booking_time;
+  }
+  
+  return transformed;
+}
+
+/**
+ * Transform service field names for API compatibility
+ */
+export function transformServiceForApi(service: Partial<Service>): any {
+  const transformed = { ...service };
+  
+  // Map frontend provider_id to backend user_id
+  if (service.provider_id) {
+    transformed.user_id = service.provider_id;
+    delete transformed.provider_id;
+  }
+  
+  // Map frontend address to backend location
+  if (service.address) {
+    transformed.location = service.address;
+    delete transformed.address;
+  }
+  
+  // Convert duration_minutes to duration_hours if needed
+  if (service.duration_minutes && !transformed.duration_hours) {
+    transformed.duration_hours = Math.ceil(service.duration_minutes / 60);
+    delete transformed.duration_minutes;
+  }
+  
+  return transformed;
+}
+
+/**
+ * Transform service from API responses
+ */
+export function transformServiceFromApi(service: any): Service {
+  const transformed = { ...service };
+  
+  // Map backend user_id to frontend provider_id
+  if (service.user_id) {
+    transformed.provider_id = service.user_id;
+  }
+  
+  // Add backward compatibility fields
+  if (service.location) {
+    transformed.address = service.location;
+  }
+  
+  if (service.duration_hours) {
+    transformed.duration_minutes = service.duration_hours * 60;
+  }
+  
+  return transformed;
+}
+
+// Legacy compatibility types (deprecated, use standardized types above)
 export type ServiceCategory = string; // Now dynamic from categories table
-export type BookingStatus = string; // Now flexible from database
-export type PaymentStatus = string; // Now flexible from database  
-export type NotificationType = string; // Now flexible from database
 
 // Extended types for complex operations
 export interface ServiceWithDetails extends Service {
@@ -405,7 +659,7 @@ export interface Message {
   chat_id: number;
   sender_id: number;
   content: string;
-  message_type: 'text' | 'image';
+  message_type: MessageType; // Using standardized message types
   is_read: boolean;
   created_at: string;
   sender_first_name: string;

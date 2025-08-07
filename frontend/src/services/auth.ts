@@ -1,16 +1,43 @@
 import api from './api';
 import { AuthUser, LoginCredentials, RegisterData, User, ApiResponse } from '@/types';
+import { 
+  RawBackendUser, 
+  isValidUser, 
+  sanitizeTextInput,
+  SecureProfileUpdateData,
+  SECURITY_CONFIG 
+} from '@/types/security';
 
-// User type transformation for frontend
-const transformUserForFrontend = (user: any): User => {
-  if (!user) return user;
-  
-  const transformed = { ...user };
-  
-  // Transform 'client' to 'customer' for frontend compatibility
-  if (transformed.user_type === 'client') {
-    transformed.user_type = 'customer';
+// User type transformation for frontend with strict validation
+const transformUserForFrontend = (user: RawBackendUser): User => {
+  if (!user || !isValidUser(user)) {
+    throw new Error('Invalid user data received from backend');
   }
+  
+  // Create transformed user with sanitized data
+  const transformed: User = {
+    id: user.id,
+    first_name: sanitizeTextInput(user.first_name),
+    last_name: sanitizeTextInput(user.last_name),
+    email: user.email.toLowerCase().trim(),
+    phone: user.phone || undefined,
+    user_type: user.user_type === 'client' ? 'customer' : user.user_type as 'provider' | 'admin',
+    profile_image: user.profile_image || undefined,
+    profile_photo_url: user.profile_image || undefined, // Backwards compatibility
+    date_of_birth: user.date_of_birth || undefined,
+    gender: user.gender || undefined,
+    locality: user.locality ? sanitizeTextInput(user.locality) : undefined,
+    address: user.address ? sanitizeTextInput(user.address) : undefined,
+    bio: user.bio ? sanitizeTextInput(user.bio) : undefined,
+    verification_status: user.verification_status,
+    email_verified: user.email_verified,
+    email_verified_at: user.email_verified_at || undefined,
+    is_active: user.is_active,
+    last_login: user.last_login || undefined,
+    created_at: user.created_at,
+    updated_at: user.updated_at,
+    subscription_plan: user.subscription_plan || undefined,
+  };
   
   return transformed;
 };
@@ -74,39 +101,67 @@ export const authService = {
     return { user: transformedUser, token };
   },
 
-  // Register
-  async register(data: RegisterData): Promise<any> {
-    const response = await api.post<ApiResponse<any>>('/api/auth/register', data);
+  // Register with secure type validation
+  async register(data: RegisterData): Promise<{
+    user?: User;
+    token?: string;
+    requiresVerification?: boolean;
+    emailVerificationRequired?: boolean;
+    message?: string;
+  }> {
+    interface RegisterResponse {
+      user?: RawBackendUser;
+      token?: string;
+      requiresVerification?: boolean;
+      emailVerificationRequired?: boolean;
+      message?: string;
+    }
+    
+    const response = await api.post<ApiResponse<RegisterResponse>>('/api/auth/register', data);
     const responseData = response.data.data;
     
     // Check if email verification is required
     if (responseData.requiresVerification || responseData.emailVerificationRequired) {
       // Don't store token or user for unverified accounts
-      return responseData;
+      return {
+        requiresVerification: responseData.requiresVerification,
+        emailVerificationRequired: responseData.emailVerificationRequired,
+        message: responseData.message
+      };
     }
     
     // Normal registration flow (if verification not required)
-    const { user, token } = responseData;
-    if (token) {
-      // Transform user for frontend consistency
-      const transformedUser = transformUserForFrontend(user);
+    if (responseData.user && responseData.token) {
+      // Validate and transform user for frontend consistency
+      const transformedUser = transformUserForFrontend(responseData.user);
       
-      safeLocalStorage.setItem('token', token);
+      // Validate token format (basic check)
+      if (typeof responseData.token !== 'string' || responseData.token.length < 20) {
+        throw new Error('Invalid token format received');
+      }
+      
+      safeLocalStorage.setItem('token', responseData.token);
       safeLocalStorage.setItem('user', JSON.stringify(transformedUser));
       safeLocalStorage.setItem('loginTime', new Date().toISOString());
       
       // Also store token in cookie for middleware access
       if (typeof document !== 'undefined') {
-        document.cookie = `auth-token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
+        document.cookie = `auth-token=${responseData.token}; path=/; max-age=${SECURITY_CONFIG.TOKEN.MAX_AGE_DAYS * 24 * 60 * 60}; secure; samesite=strict`;
       }
+      
+      return {
+        user: transformedUser,
+        token: responseData.token,
+        message: responseData.message
+      };
     }
     
     return responseData;
   },
 
-  // Get current user
+  // Get current user with validation
   async getCurrentUser(): Promise<User> {
-    const response = await api.get<ApiResponse<User>>('/api/auth/me');
+    const response = await api.get<ApiResponse<RawBackendUser>>('/api/auth/me');
     return transformUserForFrontend(response.data.data);
   },
 
@@ -211,18 +266,27 @@ export const authService = {
         return true;
       }
       return false;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Session validation failed:', error);
       
-      // Only logout for auth-related errors, not network/server errors
-      if (error.response?.status === 401) {
-        const errorMessage = error.response?.data?.error || '';
-        if (errorMessage.includes('Token expirado') || 
-            errorMessage.includes('Token inválido') || 
-            errorMessage.includes('Token revocado') ||
-            errorMessage.includes('Usuario no encontrado') ||
-            errorMessage.includes('Cuenta desactivada')) {
-          this.logout();
+      // Type-safe error handling
+      if (error && typeof error === 'object' && 'response' in error) {
+        const httpError = error as { response: { status: number; data?: { error?: string } } };
+        
+        // Only logout for auth-related errors, not network/server errors
+        if (httpError.response?.status === 401) {
+          const errorMessage = httpError.response?.data?.error || '';
+          const authErrorPatterns = [
+            'Token expirado',
+            'Token inválido', 
+            'Token revocado',
+            'Usuario no encontrado',
+            'Cuenta desactivada'
+          ];
+          
+          if (authErrorPatterns.some(pattern => errorMessage.includes(pattern))) {
+            this.logout();
+          }
         }
       }
       
@@ -230,19 +294,70 @@ export const authService = {
     }
   },
 
-  // Update profile
-  async updateProfile(profileData: any): Promise<User> {
-    const response = await api.put<ApiResponse<User>>('/api/users/profile', profileData);
-    const updatedUser = response.data.data;
+  // Update profile with secure validation
+  async updateProfile(profileData: SecureProfileUpdateData): Promise<User> {
+    // Validate profile data before sending
+    const sanitizedData: SecureProfileUpdateData = {};
+    
+    if (profileData.first_name !== undefined) {
+      sanitizedData.first_name = sanitizeTextInput(profileData.first_name);
+      if (sanitizedData.first_name.length < 2 || sanitizedData.first_name.length > 100) {
+        throw new Error('First name must be between 2 and 100 characters');
+      }
+    }
+    
+    if (profileData.last_name !== undefined) {
+      sanitizedData.last_name = sanitizeTextInput(profileData.last_name);
+      if (sanitizedData.last_name.length < 2 || sanitizedData.last_name.length > 100) {
+        throw new Error('Last name must be between 2 and 100 characters');
+      }
+    }
+    
+    if (profileData.phone !== undefined) {
+      sanitizedData.phone = profileData.phone.replace(/\D/g, ''); // Only digits
+      if (sanitizedData.phone.length > 20) {
+        throw new Error('Phone number too long');
+      }
+    }
+    
+    if (profileData.locality !== undefined) {
+      sanitizedData.locality = sanitizeTextInput(profileData.locality);
+    }
+    
+    if (profileData.address !== undefined) {
+      sanitizedData.address = sanitizeTextInput(profileData.address);
+    }
+    
+    if (profileData.bio !== undefined) {
+      sanitizedData.bio = sanitizeTextInput(profileData.bio);
+      if (sanitizedData.bio.length > 1000) {
+        throw new Error('Bio must be less than 1000 characters');
+      }
+    }
+    
+    if (profileData.gender !== undefined) {
+      sanitizedData.gender = profileData.gender;
+    }
+    
+    if (profileData.date_of_birth !== undefined) {
+      // Basic date format validation
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(profileData.date_of_birth)) {
+        throw new Error('Invalid date format. Use YYYY-MM-DD');
+      }
+      sanitizedData.date_of_birth = profileData.date_of_birth;
+    }
+    
+    const response = await api.put<ApiResponse<RawBackendUser>>('/api/users/profile', sanitizedData);
+    const transformedUser = transformUserForFrontend(response.data.data);
     
     // Preserve profile photo if not included in response
     const currentUser = this.getStoredUser();
-    if (currentUser?.profile_photo_url && !updatedUser.profile_photo_url) {
-      updatedUser.profile_photo_url = currentUser.profile_photo_url;
+    if (currentUser?.profile_photo_url && !transformedUser.profile_photo_url) {
+      transformedUser.profile_photo_url = currentUser.profile_photo_url;
     }
     
-    this.updateStoredUser(updatedUser);
-    return updatedUser;
+    this.updateStoredUser(transformedUser);
+    return transformedUser;
   },
 
   // Upload profile photo

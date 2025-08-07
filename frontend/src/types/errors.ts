@@ -48,13 +48,14 @@ export type RecoveryStrategy =
   | 'contact_support'
   | 'offline_mode';
 
-// Base error interface
-export interface FixiaError {
+// Base error interface - extends Error for proper error inheritance
+export interface FixiaError extends Error {
   id: string;
   category: ErrorCategory;
   severity: ErrorSeverity;
   code: string;
-  message: string;
+  message: string; // Inherited from Error
+  name: string; // Inherited from Error - required for Error compatibility
   userMessage: string;
   
   userContext: UserContext;
@@ -70,6 +71,13 @@ export interface FixiaError {
   retryCount?: number;
   maxRetries?: number;
   technicalDetails?: string;
+  
+  // Additional properties for enhanced error handling
+  sessionId?: string;
+  userAgent?: string;
+  errorGroup?: string;
+  fingerprint?: string;
+  metadata?: Record<string, any>;
 }
 
 // Specialized error types
@@ -118,7 +126,7 @@ export interface ChatError extends FixiaError {
   category: 'chat';
   chatRoomId: string;
   messageType: 'text' | 'attachment' | 'system';
-  connectionStatus: 'connected' | 'disconnected' | 'reconnecting';
+  connectionStatus: 'online' | 'slow' | 'unstable' | 'offline' | 'connected' | 'disconnected' | 'reconnecting';
   lastMessageSent?: string;
 }
 

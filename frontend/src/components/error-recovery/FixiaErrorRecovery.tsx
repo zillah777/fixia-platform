@@ -59,7 +59,7 @@ interface FixiaErrorRecoveryProps {
     label: string;
     icon: React.ReactNode;
     handler: () => void | Promise<void>;
-    variant?: 'primary' | 'secondary' | 'outline' | 'destructive';
+    variant?: 'default' | 'secondary' | 'outline' | 'destructive';
   }>;
 }
 
@@ -83,7 +83,7 @@ export const FixiaErrorRecovery: React.FC<FixiaErrorRecoveryProps> = ({
 
   // Auto-retry logic for network errors
   useEffect(() => {
-    if (error.category === 'network' && error.canAutoRecover && retryAttempts < 3) {
+    if (error.category === 'network' && error.canAutoRecover && retryAttempts < (error.maxRetries || 3)) {
       const delay = Math.min(1000 * Math.pow(2, retryAttempts), 8000);
       setAutoRetryCountdown(Math.ceil(delay / 1000));
       
@@ -123,7 +123,7 @@ export const FixiaErrorRecovery: React.FC<FixiaErrorRecoveryProps> = ({
     
     switch (error.category) {
       case 'network':
-        return navigator.onLine ? <Wifi {...iconProps} /> : <WifiOff {...iconProps} />;
+        return typeof navigator !== 'undefined' && navigator.onLine ? <Wifi {...iconProps} /> : <WifiOff {...iconProps} />;
       case 'authentication':
         return <Shield {...iconProps} />;
       case 'payment':
@@ -180,7 +180,7 @@ export const FixiaErrorRecovery: React.FC<FixiaErrorRecoveryProps> = ({
       label: string;
       icon: React.ReactNode;
       handler: () => void;
-      variant: 'primary' | 'secondary' | 'outline' | 'destructive';
+      variant: 'default' | 'secondary' | 'outline' | 'destructive';
       description?: string;
     }> = [];
 
@@ -191,7 +191,7 @@ export const FixiaErrorRecovery: React.FC<FixiaErrorRecoveryProps> = ({
         label: autoRetryCountdown > 0 ? `Reintentando en ${autoRetryCountdown}s` : 'Intentar de nuevo',
         icon: isRecovering ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />,
         handler: handleRetry,
-        variant: 'primary',
+        variant: 'default',
         description: 'Volver a intentar la acción que falló',
       });
     }
@@ -412,7 +412,7 @@ export const FixiaErrorRecovery: React.FC<FixiaErrorRecoveryProps> = ({
               variant={action.variant}
               disabled={isRecovering || autoRetryCountdown > 0}
               className={`w-full h-12 text-base font-medium transition-all duration-200 ${
-                action.variant === 'primary' ? colors.button : ''
+                action.variant === 'default' ? colors.button : ''
               }`}
             >
               {action.icon}

@@ -333,7 +333,7 @@ export const FixiaSupportIntegration: React.FC<SupportIntegrationProps> = ({
       context.push('Soy un cliente buscando servicios');
     }
     
-    if (error.platformArea === 'payment') {
+    if (error.platformArea === 'payments') {
       context.push('Estaba intentando realizar un pago');
     } else if (error.platformArea === 'chat') {
       context.push('Estaba usando el sistema de mensajería');

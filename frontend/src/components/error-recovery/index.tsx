@@ -5,6 +5,15 @@
 
 import React from 'react';
 import { FixiaErrorBoundary } from './FixiaErrorBoundary';
+import type { 
+  FixiaError, 
+  NetworkError, 
+  AuthenticationError, 
+  PaymentError, 
+  FileUploadError,
+  UserContext,
+  PlatformArea
+} from '../../types/errors';
 
 // Core Error Boundary and Recovery Components
 export { FixiaErrorBoundary } from './FixiaErrorBoundary';
@@ -19,8 +28,7 @@ export { FixiaPaymentError } from './FixiaPaymentError';
 export { FixiaSupportIntegration } from './FixiaSupportIntegration';
 
 // Context Provider and Hooks
-export { ErrorRecoveryProvider, useErrorRecovery } from '../contexts/ErrorRecoveryContext';
-export { useContextualError } from '../hooks/useContextualError';
+export { ErrorRecoveryProvider, useErrorRecovery } from '../../contexts/ErrorRecoveryContext';
 
 // Types
 export type {
@@ -40,7 +48,7 @@ export type {
   RecoveryAction,
   SupportEscalation,
   ErrorRecoveryConfig,
-} from '../types/errors';
+} from '../../types/errors';
 
 // Common Error Scenarios (from existing SimpleErrorHandler)
 export { SimpleError, CommonErrors, useSimpleErrorHandler } from '../SimpleErrorHandler';

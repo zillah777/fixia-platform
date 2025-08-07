@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
 import { authService } from '@/services/auth';
 import { User, LoginCredentials, RegisterData } from '@/types';
+import { SecureProfileUpdateData } from '@/types/security';
 
 interface AuthContextType {
   user: User | null;
@@ -11,7 +12,7 @@ interface AuthContextType {
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
   updateUser: (user: User) => void;
-  updateProfile: (profileData: Partial<User>) => Promise<void>;
+  updateProfile: (profileData: SecureProfileUpdateData) => Promise<void>;
   uploadProfilePhoto: (file: File) => Promise<string>;
   removeProfilePhoto: () => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
@@ -119,8 +120,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           router.push('/explorador/dashboard');
         }
       }, 300);
-    } catch (error: any) {
-      const message = error.response?.data?.error || 'Error al iniciar sesión';
+    } catch (error: unknown) {
+      const message = (error && typeof error === 'object' && 'response' in error && 
+        error.response && typeof error.response === 'object' && 'data' in error.response &&
+        error.response.data && typeof error.response.data === 'object' && 'error' in error.response.data &&
+        typeof error.response.data.error === 'string') ? error.response.data.error : 'Error al iniciar sesión';
       toast.error(message);
       throw error;
     } finally {
@@ -150,8 +154,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           router.push('/explorador/dashboard');
         }
       }
-    } catch (error: any) {
-      const message = error.response?.data?.error || 'Error al crear cuenta';
+    } catch (error: unknown) {
+      const message = (error && typeof error === 'object' && 'response' in error && 
+        error.response && typeof error.response === 'object' && 'data' in error.response &&
+        error.response.data && typeof error.response.data === 'object' && 'error' in error.response.data &&
+        typeof error.response.data.error === 'string') ? error.response.data.error : 'Error al crear cuenta';
       toast.error(message);
       throw error;
     } finally {
@@ -168,7 +175,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     authService.updateStoredUser(updatedUser);
   };
 
-  const updateProfile = async (profileData: any) => {
+  const updateProfile = async (profileData: SecureProfileUpdateData) => {
     try {
       const updatedUser = await authService.updateProfile(profileData);
       
@@ -180,8 +187,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       setUser(finalUser);
       toast.success('Perfil actualizado exitosamente');
-    } catch (error: any) {
-      const message = error.response?.data?.error || 'Error al actualizar el perfil';
+    } catch (error: unknown) {
+      const message = (error && typeof error === 'object' && 'response' in error && 
+        error.response && typeof error.response === 'object' && 'data' in error.response &&
+        error.response.data && typeof error.response.data === 'object' && 'error' in error.response.data &&
+        typeof error.response.data.error === 'string') ? error.response.data.error : 'Error al actualizar el perfil';
       toast.error(message);
       throw error;
     }
@@ -203,9 +213,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       toast.success('Foto de perfil actualizada exitosamente');
       return result.profile_photo_url;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Upload photo error in context:', error);
-      const message = error.response?.data?.error || 'Error al subir la foto';
+      const message = (error && typeof error === 'object' && 'response' in error && 
+        error.response && typeof error.response === 'object' && 'data' in error.response &&
+        error.response.data && typeof error.response.data === 'object' && 'error' in error.response.data &&
+        typeof error.response.data.error === 'string') ? error.response.data.error : 'Error al subir la foto';
       toast.error(message);
       throw error;
     }
@@ -223,8 +236,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
       
       toast.success('Foto de perfil eliminada exitosamente');
-    } catch (error: any) {
-      const message = error.response?.data?.error || 'Error al eliminar la foto';
+    } catch (error: unknown) {
+      const message = (error && typeof error === 'object' && 'response' in error && 
+        error.response && typeof error.response === 'object' && 'data' in error.response &&
+        error.response.data && typeof error.response.data === 'object' && 'error' in error.response.data &&
+        typeof error.response.data.error === 'string') ? error.response.data.error : 'Error al eliminar la foto';
       toast.error(message);
       throw error;
     }
@@ -234,8 +250,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       await authService.changePassword(currentPassword, newPassword);
       toast.success('Contraseña cambiada exitosamente');
-    } catch (error: any) {
-      const message = error.response?.data?.error || 'Error al cambiar la contraseña';
+    } catch (error: unknown) {
+      const message = (error && typeof error === 'object' && 'response' in error && 
+        error.response && typeof error.response === 'object' && 'data' in error.response &&
+        error.response.data && typeof error.response.data === 'object' && 'error' in error.response.data &&
+        typeof error.response.data.error === 'string') ? error.response.data.error : 'Error al cambiar la contraseña';
       toast.error(message);
       throw error;
     }

@@ -1,32 +1,42 @@
-// Database-aligned validation utilities
-// These validators match the exact constraints from PostgreSQL
+// Database-aligned validation utilities with enterprise security
+// These validators match the exact constraints from PostgreSQL with XSS/injection prevention
+import { 
+  SecureValidationRule, 
+  SecureValidationResult, 
+  sanitizeHtml, 
+  sanitizeSqlInput,
+  sanitizeTextInput 
+} from '@/types/security';
 
 export interface ValidationError {
-  field: string;
-  message: string;
-  code: string;
+  readonly field: string;
+  readonly message: string;
+  readonly code: string;
+  readonly severity: 'error' | 'warning';
 }
 
 export interface ValidationResult {
-  isValid: boolean;
-  errors: ValidationError[];
+  readonly isValid: boolean;
+  readonly errors: readonly ValidationError[];
+  readonly sanitizedData?: Record<string, unknown>;
 }
 
 /**
- * Validates a field against database constraints
+ * Validates a field against database constraints with security checks
  */
 export function validateField(
   fieldName: string, 
-  value: any, 
-  rules: any
+  value: unknown, 
+  rules: SecureValidationRule
 ): ValidationError | null {
   
   // Check required
   if (rules.required && (value === undefined || value === null || value === '')) {
     return {
       field: fieldName,
-      message: `${fieldName} es requerido`,
-      code: 'REQUIRED'
+      message: `${sanitizeTextInput(fieldName)} es requerido`,
+      code: 'REQUIRED',
+      severity: 'error'
     };
   }
 
@@ -35,21 +45,33 @@ export function validateField(
     return null;
   }
 
-  // Check string length constraints
+  // Check string length constraints with security validation
   if (typeof value === 'string') {
+    // Security check: Detect potential injection attempts
+    if (value.includes('<script') || value.includes('javascript:') || value.includes('on')) {
+      return {
+        field: fieldName,
+        message: `${sanitizeTextInput(fieldName)} contiene caracteres no válidos`,
+        code: 'SECURITY_VIOLATION',
+        severity: 'error'
+      };
+    }
+    
     if (rules.minLength && value.length < rules.minLength) {
       return {
         field: fieldName,
-        message: `${fieldName} debe tener al menos ${rules.minLength} caracteres`,
-        code: 'MIN_LENGTH'
+        message: `${sanitizeTextInput(fieldName)} debe tener al menos ${rules.minLength} caracteres`,
+        code: 'MIN_LENGTH',
+        severity: 'error'
       };
     }
 
     if (rules.maxLength && value.length > rules.maxLength) {
       return {
         field: fieldName,
-        message: `${fieldName} no puede exceder ${rules.maxLength} caracteres`,
-        code: 'MAX_LENGTH'
+        message: `${sanitizeTextInput(fieldName)} no puede exceder ${rules.maxLength} caracteres`,
+        code: 'MAX_LENGTH',
+        severity: 'error'
       };
     }
 
@@ -58,38 +80,51 @@ export function validateField(
       return {
         field: fieldName,
         message: getPatternErrorMessage(fieldName, rules.pattern),
-        code: 'INVALID_FORMAT'
+        code: 'INVALID_FORMAT',
+        severity: 'error'
       };
     }
   }
 
-  // Check numeric constraints
+  // Check numeric constraints with bounds checking
   if (typeof value === 'number') {
+    // Security check: Prevent extremely large numbers (potential DoS)
+    if (value > Number.MAX_SAFE_INTEGER || value < Number.MIN_SAFE_INTEGER) {
+      return {
+        field: fieldName,
+        message: `${sanitizeTextInput(fieldName)} está fuera del rango permitido`,
+        code: 'VALUE_OUT_OF_BOUNDS',
+        severity: 'error'
+      };
+    }
+    
     if (rules.min !== undefined && value < rules.min) {
       return {
         field: fieldName,
-        message: `${fieldName} debe ser mayor o igual a ${rules.min}`,
-        code: 'MIN_VALUE'
+        message: `${sanitizeTextInput(fieldName)} debe ser mayor o igual a ${rules.min}`,
+        code: 'MIN_VALUE',
+        severity: 'error'
       };
     }
 
     if (rules.max !== undefined && value > rules.max) {
       return {
         field: fieldName,
-        message: `${fieldName} debe ser menor o igual a ${rules.max}`,
-        code: 'MAX_VALUE'
+        message: `${sanitizeTextInput(fieldName)} debe ser menor o igual a ${rules.max}`,
+        code: 'MAX_VALUE',
+        severity: 'error'
       };
     }
   }
 
-  // Custom validation
-  if (rules.custom && typeof rules.custom === 'function') {
-    const customError = rules.custom(value);
-    if (customError) {
+  // Allowed values check (enum validation)
+  if (rules.allowedValues && Array.isArray(rules.allowedValues)) {
+    if (!rules.allowedValues.includes(value as string)) {
       return {
         field: fieldName,
-        message: customError,
-        code: 'CUSTOM_VALIDATION'
+        message: `${sanitizeTextInput(fieldName)} debe ser uno de los valores permitidos`,
+        code: 'INVALID_ENUM_VALUE',
+        severity: 'error'
       };
     }
   }
@@ -98,72 +133,172 @@ export function validateField(
 }
 
 /**
- * Validates an entire object against database rules
+ * Validates an entire object against database rules with data sanitization
  */
 export function validateObject(
-  data: Record<string, any>, 
-  ruleset: Record<string, any>
+  data: Record<string, unknown>, 
+  ruleset: Record<string, SecureValidationRule>
 ): ValidationResult {
   const errors: ValidationError[] = [];
+  const sanitizedData: Record<string, unknown> = {};
 
+  // Validate each field
   for (const [fieldName, rules] of Object.entries(ruleset)) {
     const value = data[fieldName];
     const error = validateField(fieldName, value, rules);
+    
     if (error) {
       errors.push(error);
+    }
+    
+    // Sanitize the value regardless of validation result
+    if (typeof value === 'string' && value.length > 0) {
+      let sanitizedValue = value;
+      
+      if (rules.sanitize !== false) {
+        sanitizedValue = sanitizeTextInput(value);
+      }
+      
+      if (rules.stripHtml) {
+        sanitizedValue = sanitizeHtml(sanitizedValue);
+      }
+      
+      sanitizedData[fieldName] = sanitizedValue;
+    } else {
+      sanitizedData[fieldName] = value;
     }
   }
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors: Object.freeze(errors),
+    sanitizedData: Object.freeze(sanitizedData)
   };
 }
 
 /**
- * Validates user registration data
+ * Validates user registration data with security constraints
  */
-export function validateUserRegistration(userData: any): ValidationResult {
-  const userRules = {
-    first_name: { required: true, maxLength: 50 },
-    last_name: { required: true, maxLength: 50 },
-    email: { required: true, maxLength: 100, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
-    password: { required: true, minLength: 6 }
+export function validateUserRegistration(userData: Record<string, unknown>): ValidationResult {
+  const userRules: Record<string, SecureValidationRule> = {
+    first_name: { 
+      required: true, 
+      maxLength: 100, 
+      minLength: 2,
+      sanitize: true,
+      stripHtml: true 
+    },
+    last_name: { 
+      required: true, 
+      maxLength: 100, 
+      minLength: 2,
+      sanitize: true,
+      stripHtml: true 
+    },
+    email: { 
+      required: true, 
+      maxLength: 255, 
+      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      sanitize: true 
+    },
+    password: { 
+      required: true, 
+      minLength: 8, 
+      maxLength: 128 
+    },
+    user_type: {
+      required: true,
+      allowedValues: ['customer', 'provider']
+    }
   };
   return validateObject(userData, userRules);
 }
 
 /**
- * Validates service creation data
+ * Validates service creation data with security constraints
  */
-export function validateServiceCreation(serviceData: any): ValidationResult {
-  const serviceRules = {
-    title: { required: true, maxLength: 200 },
-    description: { required: true, maxLength: 2000 },
-    price: { required: true, min: 0 },
-    category_id: { required: true }
+export function validateServiceCreation(serviceData: Record<string, unknown>): ValidationResult {
+  const serviceRules: Record<string, SecureValidationRule> = {
+    title: { 
+      required: true, 
+      maxLength: 200, 
+      minLength: 5,
+      sanitize: true,
+      stripHtml: true 
+    },
+    description: { 
+      required: true, 
+      maxLength: 2000, 
+      minLength: 20,
+      sanitize: true,
+      stripHtml: true 
+    },
+    price: { 
+      required: false, 
+      min: 0, 
+      max: 999999.99 
+    },
+    category_id: { 
+      required: false 
+    },
+    location: {
+      maxLength: 200,
+      sanitize: true,
+      stripHtml: true
+    }
   };
   return validateObject(serviceData, serviceRules);
 }
 
 /**
- * Validates booking creation data
+ * Validates booking creation data with security constraints
  */
-export function validateBookingCreation(bookingData: any): ValidationResult {
-  const bookingRules = {
-    service_id: { required: true },
-    message: { maxLength: 1000 }
+export function validateBookingCreation(bookingData: Record<string, unknown>): ValidationResult {
+  const bookingRules: Record<string, SecureValidationRule> = {
+    service_id: { 
+      required: true 
+    },
+    provider_id: {
+      required: true
+    },
+    booking_date: {
+      required: true,
+      pattern: /^\d{4}-\d{2}-\d{2}$/
+    },
+    booking_time: {
+      required: true,
+      pattern: /^\d{2}:\d{2}$/
+    },
+    notes: { 
+      maxLength: 1000,
+      sanitize: true,
+      stripHtml: true 
+    }
   };
   return validateObject(bookingData, bookingRules);
 }
 
 /**
- * Validates review creation data
+ * Validates review creation data with security constraints
  */
-export function validateReviewCreation(reviewData: any): ValidationResult {
-  const reviewRules = {
-    rating: { required: true, min: 1, max: 5 },
-    comment: { maxLength: 1000 }
+export function validateReviewCreation(reviewData: Record<string, unknown>): ValidationResult {
+  const reviewRules: Record<string, SecureValidationRule> = {
+    booking_id: {
+      required: true
+    },
+    reviewed_id: {
+      required: true
+    },
+    rating: { 
+      required: true, 
+      min: 1, 
+      max: 5 
+    },
+    comment: { 
+      maxLength: 1000,
+      sanitize: true,
+      stripHtml: true 
+    }
   };
   return validateObject(reviewData, reviewRules);
 }
