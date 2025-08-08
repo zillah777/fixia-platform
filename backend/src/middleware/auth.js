@@ -3,8 +3,23 @@ const { query } = require('../config/database');
 const crypto = require('crypto');
 const { logger } = require('../utils/smartLogger');
 
-// Import blacklist functions from auth controller
-const { isTokenBlacklisted, blacklistToken } = require('../controllers/authController');
+// In-memory blacklist for revoked tokens (in production, use Redis or database)
+const tokenBlacklist = new Set();
+
+// Helper function to add token to blacklist
+const blacklistToken = (token) => {
+  tokenBlacklist.add(token);
+  // Optional: Set timeout to remove token after expiration
+  // This helps prevent memory leaks
+  setTimeout(() => {
+    tokenBlacklist.delete(token);
+  }, 7 * 24 * 60 * 60 * 1000); // 7 days
+};
+
+// Helper function to check if token is blacklisted
+const isTokenBlacklisted = (token) => {
+  return tokenBlacklist.has(token);
+};
 
 // Security constants
 const JWT_CONFIG = {
