@@ -18,6 +18,7 @@ const { authMiddleware } = require('./src/middleware/auth');
 const { requestLogger, rateLimitLogger, errorLogger, securityLogger } = require('./src/middleware/logging');
 const { securityHeaders, validateBodySize, validateContentType } = require('./src/middleware/security');
 const { warmCache } = require('./src/middleware/cache');
+const { headMethodHandler } = require('./src/middleware/headMethodHandler');
 const assetOptimization = require('./src/middleware/assetOptimization');
 const { testRedisConnection, disconnectRedis } = require('./src/config/redis');
 const jobQueue = require('./src/services/jobQueue');
@@ -79,6 +80,9 @@ app.use(rateLimitLogger);
 
 // Cache warming middleware
 app.use(warmCache());
+
+// HEAD method handler for CORS preflight (before rate limiting)
+app.use(headMethodHandler());
 
 // Middleware to inject Socket.IO
 app.use((req, res, next) => {
@@ -176,7 +180,7 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma,Expires,X-Custom-Header');
   res.header('Access-Control-Max-Age', '86400');
   
-  // Handle preflight
+  // Handle preflight OPTIONS requests
   if (req.method === 'OPTIONS') {
     console.log('✅ CORS: Handling OPTIONS preflight');
     return res.status(200).end();

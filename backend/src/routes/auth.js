@@ -15,6 +15,12 @@ router.use(transformResponseData);
 /**
  * @swagger
  * /api/auth/register:
+ *   head:
+ *     summary: Check availability of register endpoint (CORS preflight)
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Endpoint available
  *   post:
  *     summary: Register a new user
  *     tags: [Authentication]
@@ -87,11 +93,22 @@ router.use(transformResponseData);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
+// Add HEAD support for CORS preflight
+router.head('/register', (req, res) => {
+  res.status(200).end();
+});
+
 router.post('/register', authController.register);
 
 /**
  * @swagger
  * /api/auth/login:
+ *   head:
+ *     summary: Check availability of login endpoint (CORS preflight)
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Endpoint available
  *   post:
  *     summary: Login user
  *     tags: [Authentication]
@@ -144,6 +161,11 @@ router.post('/register', authController.register);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
+// Add HEAD support for CORS preflight
+router.head('/login', (req, res) => {
+  res.status(200).end();
+});
+
 router.post('/login', authController.login);
 
 /**
