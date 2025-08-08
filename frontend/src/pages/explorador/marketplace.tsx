@@ -25,7 +25,7 @@ interface Professional {
   description: string;
   rating: number;
   review_count: number;
-  starting_price: number;
+  starting_price?: number;
   price_type: 'hour' | 'project';
   featured_image?: string;
   portfolio_images: PortfolioImage[];
@@ -93,7 +93,7 @@ export default function MarketplacePage() {
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const [selectedLocality, setSelectedLocality] = useState<string>('all');
   const [availabilityFilter, setAvailabilityFilter] = useState<string>('all');
   const [showFilters, setShowFilters] = useState(false);
@@ -340,7 +340,9 @@ export default function MarketplacePage() {
         .includes(searchQuery.toLowerCase());
     
     const matchesCategory = selectedCategory === 'all' || prof.specialty.toLowerCase().includes(selectedCategory.toLowerCase());
-    const matchesPrice = prof.starting_price >= priceRange[0] && prof.starting_price <= priceRange[1];
+    const matchesPrice = prof.starting_price != null ? 
+      prof.starting_price >= priceRange[0] && prof.starting_price <= priceRange[1] : 
+      priceRange[0] === 0;
     const matchesLocality = selectedLocality === 'all' || prof.locality === selectedLocality;
     const matchesAvailability = availabilityFilter === 'all' || prof.availability === availabilityFilter;
     
@@ -364,8 +366,14 @@ export default function MarketplacePage() {
       case 'rating':
         return b.rating - a.rating;
       case 'price_low':
+        if (a.starting_price == null && b.starting_price == null) return 0;
+        if (a.starting_price == null) return 1; // Move undefined prices to end
+        if (b.starting_price == null) return -1;
         return a.starting_price - b.starting_price;
       case 'price_high':
+        if (a.starting_price == null && b.starting_price == null) return 0;
+        if (a.starting_price == null) return 1; // Move undefined prices to end
+        if (b.starting_price == null) return -1;
         return b.starting_price - a.starting_price;
       case 'newest':
         return new Date(b.recent_activity || '').getTime() - new Date(a.recent_activity || '').getTime();
@@ -522,11 +530,16 @@ export default function MarketplacePage() {
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-lg font-bold text-primary">
-                  ${professional.starting_price.toLocaleString()}
+                  {professional.starting_price != null ? 
+                    `$${professional.starting_price.toLocaleString()}` : 
+                    'Consultar precio'
+                  }
                 </span>
-                <span className="text-sm text-muted-foreground ml-1">
-                  /{professional.price_type === 'hour' ? 'hora' : 'proyecto'}
-                </span>
+                {professional.starting_price != null && (
+                  <span className="text-sm text-muted-foreground ml-1">
+                    /{professional.price_type === 'hour' ? 'hora' : 'proyecto'}
+                  </span>
+                )}
               </div>
               
               <div className="flex items-center space-x-2">
@@ -657,7 +670,7 @@ export default function MarketplacePage() {
                     </label>
                     <Slider
                       value={priceRange}
-                      onValueChange={setPriceRange}
+                      onValueChange={(value) => setPriceRange([value[0] ?? 0, value[1] ?? 10000])}
                       max={10000}
                       min={0}
                       step={100}
@@ -704,7 +717,7 @@ export default function MarketplacePage() {
                     </label>
                     <Slider
                       value={[ratingFilter]}
-                      onValueChange={(value) => setRatingFilter(value[0])}
+                      onValueChange={(value) => setRatingFilter(value[0] ?? 0)}
                       max={5}
                       min={0}
                       step={0.5}
@@ -913,7 +926,7 @@ export default function MarketplacePage() {
               </Label>
               <Slider
                 value={[wishlistForm.priority]}
-                onValueChange={(value) => setWishlistForm(prev => ({ ...prev, priority: value[0] }))}
+                onValueChange={(value) => setWishlistForm(prev => ({ ...prev, priority: value[0] ?? 1 }))}
                 max={5}
                 min={1}
                 step={1}
