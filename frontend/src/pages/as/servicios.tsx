@@ -53,9 +53,7 @@ const ASServicios: NextPage = () => {
     category: 'otros',
     price: 0,
     duration_minutes: 60,
-    address: '',
-    latitude: undefined,
-    longitude: undefined
+    address: ''
   });
 
   useEffect(() => {
@@ -126,9 +124,7 @@ const ASServicios: NextPage = () => {
           category: 'otros',
           price: 0,
           duration_minutes: 60,
-          address: '',
-          latitude: undefined,
-          longitude: undefined
+          address: ''
         });
         
         alert('¡Perfecto! Tu trabajo ya está publicado y los clientes pueden verlo.');
