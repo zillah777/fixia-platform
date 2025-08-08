@@ -345,11 +345,45 @@ export function ErrorRecoveryProvider({
   );
 }
 
-// Hook
+// Hook with SSR safety
 export function useErrorRecovery() {
   const context = useContext(ErrorRecoveryContext);
+  
+  // During SSR or when provider is not available, return safe defaults
   if (context === undefined) {
-    throw new Error('useErrorRecovery must be used within an ErrorRecoveryProvider');
+    // Only throw error in client-side development mode
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+      console.warn('useErrorRecovery used without ErrorRecoveryProvider. Using fallback defaults.');
+    }
+    
+    // Return safe default values for SSR
+    return {
+      state: {
+        errors: [],
+        isGlobalErrorUIVisible: false,
+        currentError: null,
+        errorHistory: [],
+        retryCount: 0,
+        consecutiveErrors: 0,
+        lastErrorTime: null,
+        isOnline: true,
+        frustrationLevel: 0,
+        connectionStatus: 'online' as const,
+        errorRate: 0,
+        offlineMode: false,
+      },
+      addError: () => {},
+      removeError: () => {},
+      clearErrors: () => {},
+      reportGlobalError: () => {},
+      getErrorRate: () => 0,
+      getFrustrationLevel: () => 0,
+      getUserFrustrationLevel: () => 0,
+      getRecommendedActions: () => [],
+      shouldEscalateToSupport: () => false,
+      escalate: () => {},
+    };
   }
+  
   return context;
 }
