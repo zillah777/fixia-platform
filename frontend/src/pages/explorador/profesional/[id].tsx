@@ -171,7 +171,7 @@ const ProfesionalDetailPage: NextPage = () => {
                 <div className="p-8 border-b">
                   <div className="flex items-start space-x-6">
                     <FixiaAvatar
-                      src={profile.basic_info.profile_image}
+                      {...(profile.basic_info.profile_image && { src: profile.basic_info.profile_image })}
                       alt={`${profile.basic_info.first_name} ${profile.basic_info.last_name}`}
                       fallbackText={`${profile.basic_info.first_name} ${profile.basic_info.last_name}`}
                       size="2xl"

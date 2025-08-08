@@ -434,14 +434,14 @@ export interface PaginatedResponse<T> {
  * Transform user type from frontend to database format
  * Used when sending data to backend API
  */
-export function transformUserTypeToDatabase(userType: string): string {
-  const mapping: { [key: string]: string } = {
+export function transformUserTypeToDatabase(userType: string): 'client' | 'provider' | 'admin' {
+  const mapping: { [key: string]: 'client' | 'provider' | 'admin' } = {
     'customer': 'client',
     'provider': 'provider',
     'admin': 'admin',
     'AS': 'provider'
   };
-  return mapping[userType] || userType;
+  return mapping[userType] || 'client';
 }
 
 /**
@@ -463,7 +463,7 @@ export function transformUserTypeToFrontend(userType: string): string {
 export function transformUserForApi(user: Partial<User>): any {
   const transformed = { ...user };
   if (user.user_type) {
-    transformed.user_type = transformUserTypeToDatabase(user.user_type);
+    transformed.user_type = transformUserTypeToDatabase(user.user_type) as any;
   }
   // Map frontend profile_photo_url to backend profile_image
   if (user.profile_photo_url && !transformed.profile_image) {

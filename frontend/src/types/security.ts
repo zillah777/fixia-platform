@@ -313,7 +313,7 @@ export function sanitizeHtml(input: string): string {
  */
 export function sanitizeSqlInput(input: string): string {
   return input
-    .replace(/['";\\--]/g, '')
+    .replace(/['";\\-]/g, '')
     .replace(/(\b(union|select|insert|update|delete|drop|create|alter)\b)/gi, '');
 }
 

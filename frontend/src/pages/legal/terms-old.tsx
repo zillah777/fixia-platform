@@ -26,6 +26,11 @@ interface TermsSection {
   content: React.ReactNode;
 }
 
+// Icon wrapper to fix exactOptionalPropertyTypes issues
+const IconWrapper = (Component: any) => 
+  ({ className }: { className?: string }) => 
+    <Component className={className || undefined} />;
+
 // Components
 const LoadingState: React.FC = () => (
   <div className="min-h-screen relative overflow-hidden">
@@ -155,7 +160,7 @@ const TermsPage: NextPage = () => {
     {
       id: 'definiciones',
       title: 'Definiciones y Naturaleza del Servicio',
-      icon: FileText,
+      icon: IconWrapper(FileText),
       content: (
         <div className="space-y-4">
           <HighlightBox type="info" title="FIXIA.COM.AR es una plataforma digital de intermediación que funciona como:">
@@ -179,7 +184,7 @@ const TermsPage: NextPage = () => {
     {
       id: 'responsabilidades',
       title: 'Exención de Responsabilidades',
-      icon: AlertTriangle,
+      icon: IconWrapper(AlertTriangle),
       content: (
         <div className="space-y-6">
           <HighlightBox type="danger" title="IMPORTANTE: Limitaciones de Responsabilidad">
@@ -236,7 +241,7 @@ const TermsPage: NextPage = () => {
     {
       id: 'comisiones',
       title: 'Ausencia de Comisiones',
-      icon: CheckCircle,
+      icon: IconWrapper(CheckCircle),
       content: (
         <HighlightBox type="success">
           <p>
@@ -249,7 +254,7 @@ const TermsPage: NextPage = () => {
     {
       id: 'obligaciones-as',
       title: 'Obligaciones de los Usuarios AS (Profesionales)',
-      icon: Users,
+      icon: IconWrapper(Users),
       content: (
         <div className="space-y-6">
           <div className="space-y-4">
@@ -288,7 +293,7 @@ const TermsPage: NextPage = () => {
     {
       id: 'badges',
       title: 'Sistema de Badges y Reputación',
-      icon: Star,
+      icon: IconWrapper(Star),
       content: (
         <div className="space-y-4">
           <p className="text-white/80">
@@ -313,7 +318,7 @@ const TermsPage: NextPage = () => {
     {
       id: 'prohibiciones',
       title: 'Prohibiciones',
-      icon: XCircle,
+      icon: IconWrapper(XCircle),
       content: (
         <div className="space-y-4">
           <p className="text-white/80">Está estrictamente prohibido:</p>
@@ -332,7 +337,7 @@ const TermsPage: NextPage = () => {
     {
       id: 'modificaciones',
       title: 'Modificaciones y Vigencia',
-      icon: Scale,
+      icon: IconWrapper(Scale),
       content: (
         <div className="space-y-4">
           <p className="text-white/80">

@@ -260,7 +260,7 @@ export default function PlanesPage() {
     
     if (isExpanding) {
       announce({
-        message: `Respuesta expandida: ${faqs[index].answer}`,
+        message: `Respuesta expandida: ${faqs[index]?.answer || 'No disponible'}`,
         priority: 'polite',
         delay: 300
       });
@@ -431,7 +431,7 @@ export default function PlanesPage() {
               >
                 {plans.map((plan) => {
                   const roi = calculateROI(plan);
-                  const basicROI = calculateROI(plans[0]);
+                  const basicROI = plans[0] ? calculateROI(plans[0]) : 0;
                   const improvementPercentage = plan.id !== 'basic' 
                     ? Math.round(((roi - basicROI) / basicROI) * 100)
                     : 0;

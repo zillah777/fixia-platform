@@ -376,7 +376,15 @@ export function sanitizeString(input: string, maxLength?: number): string {
  */
 export function formatDateForDatabase(date: Date | string): string {
   const d = new Date(date);
-  return d.toISOString().split('T')[0];
+  if (isNaN(d.getTime())) {
+    throw new Error('Invalid date provided');
+  }
+  const isoString = d.toISOString();
+  const datePart = isoString.split('T')[0];
+  if (!datePart) {
+    throw new Error('Failed to format date');
+  }
+  return datePart;
 }
 
 /**
@@ -398,7 +406,7 @@ export function formatValidationErrors(errors: ValidationError[]): string {
   if (errors.length === 0) return '';
   
   if (errors.length === 1) {
-    return errors[0].message;
+    return errors[0]?.message || 'Error de validación desconocido';
   }
   
   return `Se encontraron ${errors.length} errores:\n` + 

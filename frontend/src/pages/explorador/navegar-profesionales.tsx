@@ -373,7 +373,6 @@ const NavegarProfesionalesPage: NextPage = () => {
   const [hasMore, setHasMore] = useState(true);
   
   const [filters, setFilters] = useState<FilterState>({
-    category_id: undefined,
     locality: '',
     min_rating: 0,
     subscription_type: '',
@@ -427,7 +426,7 @@ const NavegarProfesionalesPage: NextPage = () => {
       
       const searchFilters = {
         ...filters,
-        offset: reset ? 0 : filters.offset
+        offset: reset ? 0 : (filters.offset || 0)
       };
 
       const response = await explorerService.browseAS(searchFilters);
@@ -473,7 +472,6 @@ const NavegarProfesionalesPage: NextPage = () => {
 
   const clearFilters = useCallback(() => {
     setFilters({
-      category_id: undefined,
       locality: '',
       min_rating: 0,
       subscription_type: '',
@@ -611,7 +609,14 @@ const NavegarProfesionalesPage: NextPage = () => {
                       <label className="block text-sm font-medium text-white/80 mb-2">Categoría</label>
                       <select
                         value={filters.category_id || ''}
-                        onChange={(e) => handleFilterChange({ category_id: e.target.value ? Number(e.target.value) : undefined })}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            handleFilterChange({ category_id: Number(e.target.value) });
+                          } else {
+                            const { category_id, ...newFilters } = filters;
+                            setFilters({ ...newFilters, offset: 0 });
+                          }
+                        }}
                         className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-lg focus:border-white/40 transition-colors"
                         style={{ backdropFilter: 'blur(8px)' }}
                       >

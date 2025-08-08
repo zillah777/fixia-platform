@@ -419,7 +419,7 @@ export function useTabletCapabilities() {
     isTablet: capabilities?.isTabletDevice || false,
     orientation: capabilities?.orientation || 'portrait',
     touchTargetSize: getTouchTargetSize(capabilities?.deviceType || 'desktop'),
-    shouldUseTabletNav: shouldUseTabletNavigation(capabilities),
+    shouldUseTabletNav: shouldUseTabletNavigation(capabilities || undefined),
   };
 }
 

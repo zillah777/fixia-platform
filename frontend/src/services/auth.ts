@@ -20,23 +20,23 @@ const transformUserForFrontend = (user: RawBackendUser): User => {
     first_name: sanitizeTextInput(user.first_name),
     last_name: sanitizeTextInput(user.last_name),
     email: user.email.toLowerCase().trim(),
-    phone: user.phone || undefined,
+    ...(user.phone && { phone: user.phone }),
     user_type: user.user_type === 'client' ? 'customer' : user.user_type as 'provider' | 'admin',
-    profile_image: user.profile_image || undefined,
-    profile_photo_url: user.profile_image || undefined, // Backwards compatibility
-    date_of_birth: user.date_of_birth || undefined,
-    gender: user.gender || undefined,
-    locality: user.locality ? sanitizeTextInput(user.locality) : undefined,
-    address: user.address ? sanitizeTextInput(user.address) : undefined,
-    bio: user.bio ? sanitizeTextInput(user.bio) : undefined,
+    ...(user.profile_image && { profile_image: user.profile_image }),
+    ...(user.profile_image && { profile_photo_url: user.profile_image }), // Backwards compatibility
+    ...(user.date_of_birth && { date_of_birth: user.date_of_birth }),
+    ...(user.gender && { gender: user.gender }),
+    ...(user.locality && { locality: sanitizeTextInput(user.locality) }),
+    ...(user.address && { address: sanitizeTextInput(user.address) }),
+    ...(user.bio && { bio: sanitizeTextInput(user.bio) }),
     verification_status: user.verification_status,
     email_verified: user.email_verified,
-    email_verified_at: user.email_verified_at || undefined,
+    ...(user.email_verified_at && { email_verified_at: user.email_verified_at }),
     is_active: user.is_active,
-    last_login: user.last_login || undefined,
+    ...(user.last_login && { last_login: user.last_login }),
     created_at: user.created_at,
     updated_at: user.updated_at,
-    subscription_plan: user.subscription_plan || undefined,
+    ...(user.subscription_plan && { subscription_plan: user.subscription_plan }),
   };
   
   return transformed;
@@ -82,7 +82,7 @@ const safeLocalStorage = {
 export const authService = {
   // Login
   async login(credentials: LoginCredentials): Promise<AuthUser> {
-    const response = await api.post<ApiResponse<AuthUser>>('/api/auth/login', credentials);
+    const response = await api.post<ApiResponse<{ user: RawBackendUser; token: string }>>('/api/auth/login', credentials);
     const { user, token } = response.data.data;
     
     // Transform user for frontend consistency
@@ -124,9 +124,9 @@ export const authService = {
     if (responseData.requiresVerification || responseData.emailVerificationRequired) {
       // Don't store token or user for unverified accounts
       return {
-        requiresVerification: responseData.requiresVerification,
-        emailVerificationRequired: responseData.emailVerificationRequired,
-        message: responseData.message
+        requiresVerification: responseData.requiresVerification ?? false,
+        emailVerificationRequired: responseData.emailVerificationRequired ?? false,
+        ...(responseData.message && { message: responseData.message })
       };
     }
     
@@ -152,11 +152,18 @@ export const authService = {
       return {
         user: transformedUser,
         token: responseData.token,
-        message: responseData.message
+        ...(responseData.message && { message: responseData.message })
       };
     }
     
-    return responseData;
+    // Transform any remaining user data
+    return {
+      ...(responseData.user && { user: transformUserForFrontend(responseData.user) }),
+      ...(responseData.token && { token: responseData.token }),
+      ...(responseData.requiresVerification !== undefined && { requiresVerification: responseData.requiresVerification }),
+      ...(responseData.emailVerificationRequired !== undefined && { emailVerificationRequired: responseData.emailVerificationRequired }),
+      ...(responseData.message && { message: responseData.message })
+    };
   },
 
   // Get current user with validation
