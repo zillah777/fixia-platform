@@ -116,7 +116,7 @@ const ASPerfil: NextPage = () => {
             email: user.email || '',
             phone: user.phone || '',
             address: user.address || '',
-            profile_photo_url: user.profile_photo_url
+            ...(user.profile_photo_url && { profile_photo_url: user.profile_photo_url })
           }));
         }
       }
