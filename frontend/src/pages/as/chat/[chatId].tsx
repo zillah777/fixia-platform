@@ -239,8 +239,9 @@ const ASChatDetail: NextPage = () => {
               <div className="flex-1 overflow-y-auto py-6 space-y-4">
                 {messages.map((message, index) => {
                   const isOwn = message.sender_id === user?.id;
+                  const previousMessage = messages[index - 1];
                   const showDate = index === 0 || 
-                    (messages[index - 1]?.created_at && formatDate(messages[index - 1].created_at) !== formatDate(message.created_at));
+                    (previousMessage?.created_at && formatDate(previousMessage.created_at) !== formatDate(message.created_at));
                   
                   return (
                     <div key={message.id}>
