@@ -48,7 +48,7 @@ const ASCalificaciones: NextPage = () => {
         updated_at: '2024-01-17T14:30:00Z',
         customer_first_name: 'María',
         customer_last_name: 'González',
-        customer_photo: undefined,
+        // customer_photo omitted - optional property with exactOptionalPropertyTypes
         service_title: 'Reparación de Plomería Residencial'
       },
       {
@@ -63,7 +63,7 @@ const ASCalificaciones: NextPage = () => {
         updated_at: '2024-01-15T16:45:00Z',
         customer_first_name: 'Carlos',
         customer_last_name: 'Rodríguez',
-        customer_photo: undefined,
+        // customer_photo omitted - optional property with exactOptionalPropertyTypes
         service_title: 'Instalación Eléctrica Completa'
       },
       {
@@ -78,7 +78,7 @@ const ASCalificaciones: NextPage = () => {
         updated_at: '2024-01-12T10:20:00Z',
         customer_first_name: 'Ana',
         customer_last_name: 'López',
-        customer_photo: undefined,
+        // customer_photo omitted - optional property with exactOptionalPropertyTypes
         service_title: 'Reparación de Plomería Residencial'
       },
       {
@@ -93,7 +93,7 @@ const ASCalificaciones: NextPage = () => {
         updated_at: '2024-01-10T09:15:00Z',
         customer_first_name: 'Roberto',
         customer_last_name: 'Martínez',
-        customer_photo: undefined,
+        // customer_photo omitted - optional property with exactOptionalPropertyTypes
         service_title: 'Limpieza Profunda de Hogar'
       },
       {
@@ -108,7 +108,7 @@ const ASCalificaciones: NextPage = () => {
         updated_at: '2024-01-08T11:30:00Z',
         customer_first_name: 'Laura',
         customer_last_name: 'Fernández',
-        customer_photo: undefined,
+        // customer_photo omitted - optional property with exactOptionalPropertyTypes
         service_title: 'Reparación de Plomería Residencial'
       },
       {
@@ -123,7 +123,7 @@ const ASCalificaciones: NextPage = () => {
         updated_at: '2024-01-05T15:00:00Z',
         customer_first_name: 'Diego',
         customer_last_name: 'Silva',
-        customer_photo: undefined,
+        // customer_photo omitted - optional property with exactOptionalPropertyTypes
         service_title: 'Instalación Eléctrica Completa'
       },
       {
@@ -138,7 +138,7 @@ const ASCalificaciones: NextPage = () => {
         updated_at: '2024-01-03T13:45:00Z',
         customer_first_name: 'Patricia',
         customer_last_name: 'Morales',
-        customer_photo: undefined,
+        // customer_photo omitted - optional property with exactOptionalPropertyTypes
         service_title: 'Reparación de Plomería Residencial'
       },
       {
@@ -153,7 +153,7 @@ const ASCalificaciones: NextPage = () => {
         updated_at: '2024-01-01T08:30:00Z',
         customer_first_name: 'Andrés',
         customer_last_name: 'Gutiérrez',
-        customer_photo: undefined,
+        // customer_photo omitted - optional property with exactOptionalPropertyTypes
         service_title: 'Instalación Eléctrica Completa'
       }
     ];
