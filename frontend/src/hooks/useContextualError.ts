@@ -69,6 +69,9 @@ export function useContextualError(config: UseContextualErrorConfig = {}) {
   const reportError = useCallback((error: Error | FixiaError, context?: Partial<FixiaError>) => {
     const isFixiaError = 'category' in error;
     
+    // Handle originalError with proper conditional prop spreading for exactOptionalPropertyTypes
+    const originalError = isFixiaError ? (error as FixiaError).originalError : error;
+    
     const fixiaError: FixiaError = isFixiaError ? error as FixiaError : {
       id: `ctx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
       name: 'FixiaError',
@@ -80,10 +83,11 @@ export function useContextualError(config: UseContextualErrorConfig = {}) {
       userContext: config.userContext || context?.userContext || 'guest',
       platformArea: config.platformArea || context?.platformArea || 'system',
       timestamp: new Date().toISOString(),
-      originalError: isFixiaError ? (error as FixiaError).originalError : error,
       recoveryStrategy: context?.recoveryStrategy || ['retry', 'contact_support'],
       canAutoRecover: context?.canAutoRecover ?? true,
       escalationLevel: context?.escalationLevel || 1,
+      // Only include originalError if it exists (conditional prop spreading for exactOptionalPropertyTypes)
+      ...(originalError && { originalError }),
     };
 
     setState(prev => ({
@@ -262,8 +266,9 @@ export function useNetworkError(config: UseContextualErrorConfig = {}) {
       connectionType: typeof navigator !== 'undefined' && (navigator as any).connection ? 
         (navigator as any).connection.type : 'unknown',
       isOffline: typeof navigator !== 'undefined' ? !navigator.onLine : false,
-      lastSuccessfulRequest,
       estimatedRecoveryTime: 5000,
+      // Only include lastSuccessfulRequest if it exists (conditional prop spreading for exactOptionalPropertyTypes)
+      ...(lastSuccessfulRequest && { lastSuccessfulRequest }),
     };
 
     methods.reportError(networkError);
