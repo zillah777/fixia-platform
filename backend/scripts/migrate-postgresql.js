@@ -5,7 +5,7 @@ async function runMigration() {
   
   try {
     // Test connection first
-    const client = await pool.connect();
+    const client = await pool().connect();
     console.log('✅ Connected to PostgreSQL');
     
     // Enable UUID extension
