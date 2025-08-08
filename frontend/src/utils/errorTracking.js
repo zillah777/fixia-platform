@@ -29,7 +29,7 @@ export const ERROR_CATEGORIES = {
  * Capture exception with enhanced context
  */
 export const captureException = (error, context = {}) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env['NODE_ENV'] === 'development') {
     console.error('Error captured:', error, context);
   }
 
@@ -80,7 +80,7 @@ export const captureException = (error, context = {}) => {
  * Capture custom message
  */
 export const captureMessage = (message, level = ERROR_LEVELS.INFO, context = {}) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env['NODE_ENV'] === 'development') {
     console.log('Message captured:', message, context);
   }
 

@@ -3,14 +3,14 @@ import { toast } from 'react-hot-toast';
 import { SECURITY_CONFIG } from '@/types/security';
 
 // Production security: Remove development hosts in production
-const API_URL = process.env.NEXT_PUBLIC_API_URL || (
-  process.env.NODE_ENV === 'production' 
+const API_URL = process.env['NEXT_PUBLIC_API_URL'] || (
+  process.env['NODE_ENV'] === 'production' 
     ? 'https://api.fixia.com.ar' // Production URL only
     : 'http://localhost:5000' // Development fallback
 );
 
 // Debug log to verify environment variable is loaded (only in development)
-if (process.env.NODE_ENV !== 'production') {
+if (process.env['NODE_ENV'] !== 'production') {
   console.log('🔗 API_URL configured as:', API_URL);
 }
 
@@ -37,7 +37,7 @@ api.interceptors.request.use(
           config.headers.Authorization = `Bearer ${token}`;
           
           // Debug log for auth endpoints (only in development)
-          if (process.env.NODE_ENV !== 'production' && 
+          if (process.env['NODE_ENV'] !== 'production' && 
               (config.url?.includes('/dashboard/') || config.url?.includes('/profile'))) {
             console.log('🔐 Auth token added to request:', config.url, token.substring(0, 20) + '...');
           }
@@ -47,7 +47,7 @@ api.interceptors.request.use(
           localStorage.removeItem('user');
           localStorage.removeItem('loginTime');
         }
-      } else if (process.env.NODE_ENV !== 'production' &&
+      } else if (process.env['NODE_ENV'] !== 'production' &&
                  (config.url?.includes('/dashboard/') || config.url?.includes('/profile'))) {
         console.warn('⚠️ No valid auth token found for protected endpoint:', config.url);
       }

@@ -48,7 +48,7 @@ const EditarPerfil: NextPage = () => {
     
     const fullUrl = originalUrl.startsWith('http') 
       ? originalUrl 
-      : `${process.env.NEXT_PUBLIC_API_URL}${originalUrl}`;
+      : `${process.env['NEXT_PUBLIC_API_URL']}${originalUrl}`;
     
     if (useProxy) {
       return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
@@ -122,7 +122,7 @@ const EditarPerfil: NextPage = () => {
       if (user?.profile_photo_url) {
         const originalPhotoUrl = user.profile_photo_url.startsWith('http') 
           ? user.profile_photo_url 
-          : `${process.env.NEXT_PUBLIC_API_URL}${user.profile_photo_url}`;
+          : `${process.env['NEXT_PUBLIC_API_URL']}${user.profile_photo_url}`;
         setPhotoPreview(originalPhotoUrl);
       } else {
         setPhotoPreview(null);

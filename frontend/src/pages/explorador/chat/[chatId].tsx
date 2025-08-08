@@ -63,7 +63,7 @@ const ChatPage: NextPage = () => {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const newSocket = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000', {
+    const newSocket = io(process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:5000', {
       auth: { token }
     });
 

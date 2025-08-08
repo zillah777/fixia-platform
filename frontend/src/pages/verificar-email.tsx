@@ -19,7 +19,7 @@ export default function VerificarEmail() {
 
   const verifyEmail = async (verificationToken: string) => {
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const API_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:5000';
       const response = await fetch(`${API_URL}/api/email-verification/verify`, {
         method: 'POST',
         headers: {
@@ -54,7 +54,7 @@ export default function VerificarEmail() {
       const email = prompt('Ingresa tu email para reenviar la verificación:');
       if (!email) return;
 
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const API_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:5000';
       const response = await fetch(`${API_URL}/api/email-verification/resend`, {
         method: 'POST',
         headers: {

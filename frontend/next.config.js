@@ -128,7 +128,7 @@ const nextConfig = {
     };
     
     // Bundle analyzer in development
-    if (process.env.ANALYZE === 'true') {
+    if (process.env['ANALYZE'] === 'true') {
       const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
       config.plugins.push(
         new BundleAnalyzerPlugin({
@@ -166,12 +166,12 @@ const sentryConfig = {
   tunnelRoute: "/monitoring",
   
   // Only run Sentry build plugin in production
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
-  authToken: process.env.SENTRY_AUTH_TOKEN,
+  org: process.env['SENTRY_ORG'],
+  project: process.env['SENTRY_PROJECT'],
+  authToken: process.env['SENTRY_AUTH_TOKEN'],
 };
 
 // Make sure adding Sentry options is the last code to run before exporting
-module.exports = process.env.NODE_ENV === 'production' && process.env.SENTRY_AUTH_TOKEN
+module.exports = process.env['NODE_ENV'] === 'production' && process.env['SENTRY_AUTH_TOKEN']
   ? withSentryConfig(nextConfig, sentryConfig)
   : nextConfig;

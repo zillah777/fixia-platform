@@ -1,25 +1,25 @@
 import * as Sentry from "@sentry/nextjs";
 
 // Only initialize Sentry if DSN is provided
-if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+if (process.env['NEXT_PUBLIC_SENTRY_DSN']) {
   Sentry.init({
-    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-    environment: process.env.NODE_ENV || 'development',
+    dsn: process.env['NEXT_PUBLIC_SENTRY_DSN'],
+    environment: process.env['NODE_ENV'] || 'development',
   
   // Performance Monitoring
-  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+  tracesSampleRate: process.env['NODE_ENV'] === 'production' ? 0.1 : 1.0,
   
   // Session Replay
-  replaysSessionSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+  replaysSessionSampleRate: process.env['NODE_ENV'] === 'production' ? 0.1 : 1.0,
   replaysOnErrorSampleRate: 1.0,
   
   // Release tracking
-  release: process.env.NEXT_PUBLIC_SENTRY_RELEASE || `fixia-frontend@${process.env.npm_package_version}`,
+  release: process.env['NEXT_PUBLIC_SENTRY_RELEASE'] || `fixia-frontend@${process.env['npm_package_version']}`,
   
   // Filter sensitive data
   beforeSend(event) {
     // Don't send events in development
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env['NODE_ENV'] === 'development') {
       console.log('Sentry event:', event);
       return null;
     }
@@ -35,7 +35,7 @@ if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
   
   // Additional configuration
   maxBreadcrumbs: 50,
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env['NODE_ENV'] === 'development',
   
   // Configure integrations
   integrations: [
@@ -66,7 +66,7 @@ if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
   initialScope: {
     tags: { 
       component: 'frontend',
-      version: process.env.npm_package_version 
+      version: process.env['npm_package_version'] 
     },
   },
   });

@@ -326,7 +326,7 @@ const BuscarServicioPage: NextPage = () => {
         {/* Main Content Container */}
         <div className="max-w-6xl mx-auto px-3 xs:px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* Professional System Status */}
-          {process.env.NODE_ENV === 'development' && (
+          {process.env['NODE_ENV'] === 'development' && (
             <Card className="mb-6 glass border-white/10 shadow-lg">
               <CardContent className="p-4">
                 <div className="flex items-center space-x-3">

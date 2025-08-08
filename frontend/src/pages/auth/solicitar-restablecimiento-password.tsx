@@ -34,7 +34,8 @@ export default function SolicitarRestablecimientoPassword() {
     setStatus('loading');
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      // Usar notación de corchetes para compatibilidad con exactOptionalPropertyTypes
+      const API_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:5000';
       const response = await fetch(`${API_URL}/api/email-verification/forgot-password`, {
         method: 'POST',
         headers: {

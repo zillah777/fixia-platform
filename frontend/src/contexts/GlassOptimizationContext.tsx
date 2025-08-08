@@ -182,7 +182,7 @@ export function GlassPerformanceDebugger() {
   const { currentFPS, isOptimized, capabilities, config } = useGlassOptimization();
   
   // Only show in development
-  if (process.env.NODE_ENV !== 'development') return null;
+  if (process.env['NODE_ENV'] !== 'development') return null;
   
   return (
     <div className="fixed bottom-4 right-4 z-50 p-3 bg-black/80 text-white text-xs rounded-lg font-mono">
