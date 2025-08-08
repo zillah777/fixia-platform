@@ -30,8 +30,8 @@ const Registro: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const type = router.query.type;
-    const promo = router.query.promo;
+    const type = router.query['type'];
+    const promo = router.query['promo'];
     
     if (type === 'provider' || type === 'customer') {
       setFormData(prev => ({ ...prev, user_type: type as 'provider' | 'customer' }));
@@ -41,7 +41,7 @@ const Registro: NextPage = () => {
     if (promo === '200-primeras') {
       setIsPromotionEligible(true);
     }
-  }, [router.query.type, router.query.promo]);
+  }, [router.query['type'], router.query['promo']]);
 
   useEffect(() => {
     if (isAuthenticated && user) {
