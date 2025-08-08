@@ -189,6 +189,7 @@ export function ErrorRecoveryProvider({
   const reportGlobalError = useCallback((error: Error, context?: Partial<FixiaError>) => {
     const fixiaError: FixiaError = {
       id: `global_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      name: `FixiaError`,
       category: (context?.category as ErrorCategory) || 'system',
       severity: context?.severity || 'medium',
       code: `FIX_GLOBAL_${Date.now().toString(36)}`,

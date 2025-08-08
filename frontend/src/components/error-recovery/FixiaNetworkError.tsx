@@ -148,6 +148,9 @@ export const FixiaNetworkError: React.FC<NetworkErrorProps> = ({
       
       return () => clearInterval(countdown);
     }
+    
+    // Explicitly return undefined for the else case to satisfy noImplicitReturns
+    return undefined;
   }, [connectionInfo?.online, retryCount, maxRetries, enableAutoRetry, isRetrying]);
 
   const calculateRetryDelay = (attempt: number): number => {

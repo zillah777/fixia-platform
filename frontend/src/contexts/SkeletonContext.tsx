@@ -36,10 +36,10 @@ interface SkeletonContextType {
   updatePreferences: (updates: Partial<SkeletonState>) => void;
   getOptimizedProps: (overrides?: {
     animation?: SkeletonState['defaultAnimation'];
-    variant?: SkeletonState['defaultVariant'];
+    glassVariant?: SkeletonState['defaultVariant'];
   }) => {
     animation: SkeletonState['defaultAnimation'];
-    variant: SkeletonState['defaultVariant'];
+    glassVariant: SkeletonState['defaultVariant'];
     noAnimation: boolean;
   };
   isReducedMotion: boolean;
@@ -117,7 +117,7 @@ export const SkeletonProvider: React.FC<SkeletonProviderProps> = ({
   const [isLowPerformance, setIsLowPerformance] = React.useState(false);
 
   // Use existing glass optimization context for device detection
-  const { isLowEndDevice } = useOptimizedGlass('light');
+  const { isLowEnd } = useOptimizedGlass('light');
 
   // Detect prefers-reduced-motion
   useEffect(() => {
@@ -139,7 +139,7 @@ export const SkeletonProvider: React.FC<SkeletonProviderProps> = ({
   useEffect(() => {
     const detectPerformance = () => {
       // Use existing device detection from glass context
-      const lowEnd = isLowEndDevice;
+      const lowEnd = isLowEnd;
       
       // Additional performance indicators
       const connectionSpeed = (navigator as any)?.connection?.effectiveType;
@@ -165,7 +165,7 @@ export const SkeletonProvider: React.FC<SkeletonProviderProps> = ({
     };
 
     detectPerformance();
-  }, [isLowEndDevice, isReducedMotion, state.performanceMode]);
+  }, [isLowEnd, isReducedMotion, state.performanceMode]);
 
   // Update preferences function
   const updatePreferences = React.useCallback((updates: Partial<SkeletonState>) => {
@@ -175,10 +175,10 @@ export const SkeletonProvider: React.FC<SkeletonProviderProps> = ({
   // Get optimized props based on current state and overrides
   const getOptimizedProps = React.useCallback((overrides: {
     animation?: SkeletonState['defaultAnimation'];
-    variant?: SkeletonState['defaultVariant'];
+    glassVariant?: SkeletonState['defaultVariant'];
   } = {}) => {
     const animation = overrides.animation || state.defaultAnimation;
-    const variant = overrides.variant || state.defaultVariant;
+    const glassVariant = overrides.glassVariant || state.defaultVariant;
     
     // Apply performance optimizations
     let optimizedAnimation = animation;
@@ -188,7 +188,7 @@ export const SkeletonProvider: React.FC<SkeletonProviderProps> = ({
 
     return {
       animation: optimizedAnimation,
-      variant,
+      glassVariant,
       noAnimation: optimizedAnimation === 'none'
     };
   }, [state, isReducedMotion, isLowPerformance]);
@@ -235,7 +235,7 @@ export const useSkeletonGlass = (
 
   return {
     glassClasses: optimizedClasses,
-    ...skeleton.getOptimizedProps({ variant })
+    ...skeleton.getOptimizedProps({ glassVariant: variant })
   };
 };
 

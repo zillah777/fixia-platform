@@ -53,6 +53,9 @@ export const useAccessibilityPreferences = (): AccessibilityPreferences => {
         highContrastQuery.removeEventListener('change', handleHighContrastChange);
       };
     }
+    
+    // Explicitly return undefined for the else case to satisfy noImplicitReturns
+    return undefined;
   }, []);
 
   return preferences;

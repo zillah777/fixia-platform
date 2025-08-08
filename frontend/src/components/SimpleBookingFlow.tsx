@@ -155,10 +155,10 @@ export function SimpleBookingFlow({
             
             <div className="mt-4">
               <h3 className="text-lg font-medium text-white">
-                {steps[currentStep - 1].title}
+                {steps[currentStep - 1]?.title}
               </h3>
               <p className="text-white/70 text-sm">
-                {steps[currentStep - 1].subtitle}
+                {steps[currentStep - 1]?.subtitle}
               </p>
             </div>
           </CardHeader>

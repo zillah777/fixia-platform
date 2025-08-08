@@ -430,7 +430,7 @@ const SkeletonUsageExamples: React.FC = () => {
     { name: 'Formularios', component: FormExample }
   ];
 
-  const ActiveComponent = examples[activeExample].component;
+  const ActiveComponent = examples[activeExample]?.component || ServiceMarketplaceExample;
 
   return (
     <SkeletonProvider>

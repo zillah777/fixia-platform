@@ -149,7 +149,7 @@ export function FixiaNavigation() {
             <DropdownMenuTrigger asChild>
               <Button className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full hover:glass-medium transition-all duration-300">
                 <FixiaAvatar
-                  src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined}
+                  {...(user?.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` })}
                   alt="Usuario"
                   fallbackText={getInitials()}
                   size="md"
@@ -164,7 +164,7 @@ export function FixiaNavigation() {
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center space-x-3">
                     <FixiaAvatar
-                      src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined}
+                      {...(user?.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` })}
                       alt="Usuario"
                       fallbackText={getInitials()}
                       size="lg"
@@ -391,7 +391,7 @@ export function FixiaNavigation() {
               <div className="mt-4 pt-4 border-t border-white/10">
                 <div className="flex items-center space-x-3 glass-light rounded-lg p-3">
                   <FixiaAvatar
-                    src={user?.profile_image ? `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` : undefined}
+                    {...(user?.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` })}
                     alt="Usuario"
                     fallbackText={getInitials()}
                     size="md"

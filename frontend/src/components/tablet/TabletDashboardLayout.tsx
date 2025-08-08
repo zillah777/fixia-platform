@@ -108,48 +108,55 @@ const DashboardWidgetWrapper: React.FC<DashboardWidgetWrapperProps> = ({
   const gridSpan = getGridSpan();
   const WidgetComponent = widget.component;
 
+  // Conditional props to avoid passing undefined values
+  const motionProps = {
+    ref: dragConstraints,
+    className: cn(
+      'relative group',
+      layout === 'single' && 'col-span-1',
+      layout === 'dual' && gridSpan === 2 && 'col-span-2',
+      layout === 'multi' && `col-span-${gridSpan}`,
+      isExpanded && 'z-10',
+      isDragging && 'z-20'
+    ),
+    layout: true,
+    layoutId: `widget-${widget.id}`,
+    initial: reducedMotion ? {} : { 
+      opacity: 0, 
+      scale: 0.9,
+      y: 20 
+    },
+    animate: reducedMotion ? {} : { 
+      opacity: 1, 
+      scale: 1,
+      y: 0 
+    },
+    exit: reducedMotion ? {} : { 
+      opacity: 0, 
+      scale: 0.9,
+      y: -20 
+    },
+    transition: { 
+      duration: 0.3,
+      delay: index * 0.05 
+    },
+    whileDrag: reducedMotion ? {} : { 
+      scale: 1.02,
+      rotate: 1,
+      zIndex: 30 
+    },
+    ...(widget.resizable && layout !== 'single' && {
+      drag: true,
+      dragConstraints: dragConstraints,
+      dragElastic: 0.1,
+      onDragStart: handleDragStart,
+      onDragEnd: (_: any, info: PanInfo) => handleDragEnd(info)
+    })
+  };
+
   return (
     <motion.div
-      ref={dragConstraints}
-      className={cn(
-        'relative group',
-        layout === 'single' && 'col-span-1',
-        layout === 'dual' && gridSpan === 2 && 'col-span-2',
-        layout === 'multi' && `col-span-${gridSpan}`,
-        isExpanded && 'z-10',
-        isDragging && 'z-20'
-      )}
-      layout
-      layoutId={`widget-${widget.id}`}
-      initial={reducedMotion ? {} : { 
-        opacity: 0, 
-        scale: 0.9,
-        y: 20 
-      }}
-      animate={reducedMotion ? {} : { 
-        opacity: 1, 
-        scale: 1,
-        y: 0 
-      }}
-      exit={reducedMotion ? {} : { 
-        opacity: 0, 
-        scale: 0.9,
-        y: -20 
-      }}
-      transition={{ 
-        duration: 0.3,
-        delay: index * 0.05 
-      }}
-      drag={widget.resizable && layout !== 'single'}
-      dragConstraints={dragConstraints}
-      dragElastic={0.1}
-      onDragStart={handleDragStart}
-      onDragEnd={(_, info) => handleDragEnd(info)}
-      whileDrag={reducedMotion ? {} : { 
-        scale: 1.02,
-        rotate: 1,
-        zIndex: 30 
-      }}
+      {...motionProps}
     >
       <Card 
         className={cn(
@@ -255,7 +262,7 @@ export const TabletDashboardLayout: React.FC<TabletDashboardLayoutProps> = ({
   onLayoutChange,
 }) => {
   const { reducedMotion } = useAccessibilityPreferences();
-  const { glassClasses } = useOptimizedGlass('minimal');
+  const { glassClasses } = useOptimizedGlass('light');
   
   const {
     dashboardLayout,

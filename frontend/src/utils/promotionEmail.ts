@@ -18,7 +18,7 @@ export async function sendPromotionWelcomeEmail({
   promotionEndDate
 }: SendPromotionWelcomeEmailParams) {
   try {
-    const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://fixia.com.ar'}/auth/login`;
+    const loginUrl = `${process.env['NEXT_PUBLIC_APP_URL'] || 'https://fixia.com.ar'}/auth/login`;
     const formattedEndDate = promotionEndDate.toLocaleDateString('es-AR', {
       year: 'numeric',
       month: 'long',

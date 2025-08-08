@@ -83,7 +83,7 @@ export const ErrorRecoveryDemo: React.FC = () => {
   const [generalError, generalMethods] = useContextualError({
     userContext: 'as',
     platformArea: 'dashboard',
-    enableAutoRecovery: true,
+    enableAutoRetry: true,
     onError: (error) => console.log('General error captured:', error),
     onRecovery: (success) => console.log('General recovery:', success)
   });
@@ -281,7 +281,7 @@ export const ErrorRecoveryDemo: React.FC = () => {
     setActiveScenario(scenario.id);
     
     const error = scenario.simulatedError();
-    const contextualError = generalMethods.createContextualError(error, {
+    const contextualError = generalMethods.createContextualError?.(error, {
       category: scenario.category as any,
       severity: scenario.severity,
       userContext: scenario.userContext,
@@ -290,22 +290,28 @@ export const ErrorRecoveryDemo: React.FC = () => {
       ...scenario.customContext
     });
 
+    // If createContextualError is not available, create a basic error object
+    if (!contextualError) {
+      console.error('createContextualError method not available:', error);
+      return;
+    }
+
     // Route to appropriate error handler
     switch (scenario.category) {
       case 'network':
-        networkMethods.reportError(contextualError);
+        networkMethods.reportError?.(contextualError);
         break;
       case 'payment':
-        paymentMethods.reportError(contextualError);
+        paymentMethods.reportError?.(contextualError);
         break;
       case 'authentication':
-        authMethods.reportError(contextualError);
+        authMethods.reportError?.(contextualError);
         break;
       case 'file_upload':
-        fileUploadMethods.reportError(contextualError);
+        fileUploadMethods.reportError?.(contextualError);
         break;
       default:
-        generalMethods.reportError(contextualError);
+        generalMethods.reportError?.(contextualError);
     }
 
     // Update test results
@@ -321,11 +327,11 @@ export const ErrorRecoveryDemo: React.FC = () => {
 
   // Clear all errors
   const clearAllErrors = () => {
-    networkMethods.clearError();
-    paymentMethods.clearError();
-    authMethods.clearError();
-    fileUploadMethods.clearError();
-    generalMethods.clearError();
+    networkMethods.clearError?.();
+    paymentMethods.clearError?.();
+    authMethods.clearError?.();
+    fileUploadMethods.clearError?.();
+    generalMethods.clearError?.();
     setActiveScenario(null);
   };
 
@@ -424,7 +430,7 @@ export const ErrorRecoveryDemo: React.FC = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Tasa de Errores</p>
                   <p className="text-lg font-bold text-orange-400">
-                    {(getErrorRate() * 100).toFixed(1)}%
+                    {((getErrorRate?.() ?? 0) * 100).toFixed(1)}%
                   </p>
                 </div>
                 <AlertTriangle className="h-8 w-8 text-orange-400" />
@@ -438,7 +444,7 @@ export const ErrorRecoveryDemo: React.FC = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Nivel de Frustración</p>
                   <p className="text-lg font-bold text-red-400">
-                    {getUserFrustrationLevel()}%
+                    {getUserFrustrationLevel?.() ?? 0}%
                   </p>
                 </div>
                 <Zap className="h-8 w-8 text-red-400" />
@@ -600,7 +606,7 @@ export const ErrorRecoveryDemo: React.FC = () => {
                 <div>
                   <Label className="text-sm font-medium">Acciones Recomendadas:</Label>
                   <ul className="list-disc list-inside text-sm text-muted-foreground mt-1">
-                    {getRecommendedActions(currentError).map((action, index) => (
+                    {(getRecommendedActions?.(currentError) ?? []).map((action, index) => (
                       <li key={index}>{action}</li>
                     ))}
                   </ul>
@@ -636,26 +642,27 @@ export const ErrorRecoveryDemo: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {errorRecoveryState.errorHistory.slice(-10).reverse().map((entry, index) => (
+                {errorRecoveryState.errorHistory.slice(-10).reverse().map((error, index) => (
                   <div key={index} className="flex items-center justify-between p-3 glass-light rounded-lg">
                     <div className="flex items-center space-x-3">
                       <div className={`w-3 h-3 rounded-full ${
-                        entry.resolved ? 'bg-green-400' : 'bg-red-400'
+                        error.severity === 'critical' ? 'bg-red-400' :
+                        error.severity === 'high' ? 'bg-orange-400' :
+                        error.severity === 'medium' ? 'bg-yellow-400' :
+                        'bg-blue-400'
                       }`} />
                       <div>
-                        <p className="text-sm font-medium">{entry.error.category} - {entry.error.severity}</p>
-                        <p className="text-xs text-muted-foreground">{entry.error.userMessage}</p>
+                        <p className="text-sm font-medium">{error.category} - {error.severity}</p>
+                        <p className="text-xs text-muted-foreground">{error.userMessage}</p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-muted-foreground">
-                        {entry.timestamp.toLocaleTimeString()}
+                        {new Date(error.timestamp).toLocaleTimeString()}
                       </p>
-                      {entry.resolutionMethod && (
-                        <Badge variant="outline" className="text-xs mt-1">
-                          {entry.resolutionMethod}
-                        </Badge>
-                      )}
+                      <Badge variant="outline" className="text-xs mt-1">
+                        {error.category}
+                      </Badge>
                     </div>
                   </div>
                 ))}

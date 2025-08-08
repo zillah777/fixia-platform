@@ -86,12 +86,32 @@ const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(({
     full: 'rounded-full'
   };
 
-  // Combine styles
-  const combinedStyle = {
-    height: typeof height === 'number' ? `${height}px` : height,
-    width: typeof width === 'number' ? `${width}px` : width,
-    ...style
-  };
+  // Combine styles and filter out undefined values for exactOptionalPropertyTypes compatibility
+  const combinedStyle: Record<string, string | number> = {};
+  
+  // Add height if defined
+  if (height !== undefined) {
+    combinedStyle['height'] = typeof height === 'number' ? `${height}px` : height;
+  }
+  
+  // Add width if defined
+  if (width !== undefined) {
+    combinedStyle['width'] = typeof width === 'number' ? `${width}px` : width;
+  }
+  
+  // Add external styles, filtering out undefined values
+  if (style) {
+    Object.entries(style).forEach(([key, value]) => {
+      if (value !== undefined) {
+        combinedStyle[key] = value as string | number;
+      }
+    });
+  }
+
+  // Filter out undefined values from props for exactOptionalPropertyTypes compatibility
+  const filteredProps = Object.fromEntries(
+    Object.entries(props).filter(([, value]) => value !== undefined)
+  );
 
   return (
     <motion.div
@@ -115,7 +135,7 @@ const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(({
       role="status"
       aria-label={loadingText}
       aria-live="polite"
-      {...props}
+      {...filteredProps}
     >
       {/* Shimmer overlay for enhanced effect */}
       {animation === 'shimmer' && !noAnimation && (

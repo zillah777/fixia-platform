@@ -380,9 +380,9 @@ export const TabletAdaptiveHeader: React.FC<TabletAdaptiveHeaderProps> = ({
               >
                 <div className="flex items-center space-x-2">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={user?.avatar_url} alt="Avatar" />
+                    <AvatarImage src={user?.profile_image || user?.profile_photo_url} alt="Avatar" />
                     <AvatarFallback className="bg-primary text-white text-sm">
-                      {user?.full_name?.charAt(0) || 'U'}
+                      {user?.first_name?.charAt(0) || 'U'}
                     </AvatarFallback>
                   </Avatar>
                   {orientation === 'landscape' && (
@@ -396,7 +396,12 @@ export const TabletAdaptiveHeader: React.FC<TabletAdaptiveHeaderProps> = ({
               className="w-56 glass-tablet border-white/20"
             >
               <div className="px-2 py-1.5">
-                <p className="text-sm font-medium text-white">{user?.full_name}</p>
+                <p className="text-sm font-medium text-white">
+                  {user?.first_name && user?.last_name 
+                    ? `${user.first_name} ${user.last_name}` 
+                    : user?.first_name || 'Usuario'
+                  }
+                </p>
                 <p className="text-xs text-white/60">{user?.email}</p>
               </div>
               <DropdownMenuSeparator className="bg-white/20" />

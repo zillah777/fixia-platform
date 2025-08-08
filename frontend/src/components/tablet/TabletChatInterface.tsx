@@ -616,7 +616,7 @@ export const TabletChatInterface: React.FC<TabletChatInterfaceProps> = ({
                         size="sm"
                         className="text-white/60 hover:text-white hover:bg-white/10 p-1"
                       >
-                        <Image size={16} alt="" />
+                        <Image size={16} />
                       </Button>
                       <Button
                         type="button"

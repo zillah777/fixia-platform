@@ -100,6 +100,9 @@ export const FixiaErrorRecovery: React.FC<FixiaErrorRecoveryProps> = ({
       
       return () => clearInterval(countdown);
     }
+    
+    // Explicitly return undefined for the else case to satisfy noImplicitReturns
+    return undefined;
   }, [error, retryAttempts]);
 
   const handleRetry = () => {

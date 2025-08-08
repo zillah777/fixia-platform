@@ -178,7 +178,7 @@ export const CommonErrors = {
   NoInternet: (onRetry?: () => void) => (
     <SimpleError
       type="network"
-      onAction={onRetry}
+      {...(onRetry && { onAction: onRetry })}
     />
   ),
 
@@ -187,7 +187,7 @@ export const CommonErrors = {
     <SimpleError
       type="validation"
       message={message || "Revisa los campos marcados en rojo. Asegúrate de completar toda la información requerida."}
-      onAction={onFix}
+      {...(onFix && { onAction: onFix })}
       actionText="Revisar formulario"
     />
   ),
@@ -197,7 +197,7 @@ export const CommonErrors = {
     <SimpleError
       type="server"
       message="Hubo un problema con nuestros servidores. Por favor intenta de nuevo en unos minutos."
-      onAction={onRetry}
+      {...(onRetry && { onAction: onRetry })}
     />
   ),
 
@@ -206,7 +206,7 @@ export const CommonErrors = {
     <SimpleError
       type="permission"
       message="No tienes los permisos necesarios para esta acción. Si crees que es un error, contáctanos."
-      onAction={onContact}
+      {...(onContact && { onAction: onContact })}
       actionText="Contactar soporte"
     />
   ),
@@ -216,7 +216,7 @@ export const CommonErrors = {
     <SimpleError
       type="notFound"
       message="La página o contenido que buscas no existe o fue eliminado."
-      onAction={onGoHome}
+      {...(onGoHome && { onAction: onGoHome })}
       actionText="Ir al inicio"
     />
   ),
@@ -226,7 +226,7 @@ export const CommonErrors = {
     <SimpleError
       type="success"
       message={message || "¡Excelente! La acción se completó correctamente."}
-      onAction={onContinue}
+      {...(onContinue && { onAction: onContinue })}
       showSupport={false}
     />
   )

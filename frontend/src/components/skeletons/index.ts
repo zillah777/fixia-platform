@@ -66,7 +66,7 @@ export {
 // Utility functions and constants
 export const SKELETON_DEFAULTS = {
   animation: 'shimmer' as const,
-  variant: 'light' as const,
+  glassVariant: 'light' as const,
   loadingTimeout: 10000,
   staggerDelay: 0.1
 };
@@ -144,25 +144,25 @@ export const ResponsiveSkeletonConfig = {
 export const PerformancePresets = {
   highPerformance: {
     animation: 'shimmer' as const,
-    variant: 'medium' as const,
+    glassVariant: 'medium' as const,
     enableStaggered: true,
     loadingTimeout: 15000
   },
   balanced: {
     animation: 'shimmer' as const,
-    variant: 'light' as const,
+    glassVariant: 'light' as const,
     enableStaggered: true,
     loadingTimeout: 10000
   },
   lowPerformance: {
     animation: 'none' as const,
-    variant: 'light' as const,
+    glassVariant: 'light' as const,
     enableStaggered: false,
     loadingTimeout: 5000
   },
   accessibility: {
     animation: 'none' as const,
-    variant: 'light' as const,
+    glassVariant: 'light' as const,
     enableStaggered: false,
     respectReducedMotion: true,
     loadingTimeout: 8000

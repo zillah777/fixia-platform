@@ -79,7 +79,7 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
     // Create contextual error object
@@ -115,6 +115,7 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
       severity: this.determineSeverity(error, category),
       code: this.generateErrorCode(error, category),
       message: error.message,
+      name: error.name,
       userMessage: this.generateUserMessage(error, category, userContext),
       technicalDetails: this.generateTechnicalDetails(error, errorInfo),
       
@@ -445,12 +446,12 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
     };
 
     if (typeof window !== 'undefined') {
-      metadata.viewport = {
+      metadata['viewport'] = {
         width: window.innerWidth,
         height: window.innerHeight,
       };
       
-      metadata.connection = {
+      metadata['connection'] = {
         online: navigator.onLine,
         effectiveType: (navigator as any)?.connection?.effectiveType || 'unknown',
       };
@@ -480,13 +481,13 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
     console.error('Fixia Error Boundary:', error);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     if (this.retryTimeout) {
       clearTimeout(this.retryTimeout);
     }
   }
 
-  render() {
+  override render() {
     if (this.state.hasError && this.state.contextualError) {
       // Use custom fallback component if provided
       if (this.props.fallbackComponent) {
@@ -513,8 +514,8 @@ export class FixiaErrorBoundary extends Component<FixiaErrorBoundaryProps, Error
               onReload={this.handleReload}
               onContactSupport={this.handleContactSupport}
               isRecovering={this.state.isRecovering}
-              showTechnicalDetails={this.props.showTechnicalDetails}
-              compactMode={this.props.compactMode}
+              showTechnicalDetails={this.props.showTechnicalDetails || false}
+              compactMode={this.props.compactMode || false}
             />
           </motion.div>
         </AnimatePresence>

@@ -19,6 +19,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibilityPreferences } from '@/utils/accessibility';
 import { useOptimizedGlass } from '@/contexts/GlassOptimizationContext';
 import { Badge } from '@/components/ui/badge';
+import { transformUserTypeToDatabase } from '@/types';
 
 // Navigation item interface
 interface NavItem {
@@ -290,8 +291,10 @@ export const IOSBottomNavigation: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Get navigation items based on user type
-  const navItems = getNavigationItems(user?.user_type || null);
+  // Get navigation items based on user type (transform from frontend to database format)
+  const navItems = getNavigationItems(
+    user?.user_type ? transformUserTypeToDatabase(user.user_type) as 'client' | 'provider' | 'admin' : null
+  );
 
   // Get current active item
   const currentPath = router.asPath;

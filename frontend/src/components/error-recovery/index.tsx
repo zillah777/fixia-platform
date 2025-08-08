@@ -60,6 +60,7 @@ export const ErrorRecoveryUtils = {
    */
   createNetworkError: (error: Error, lastSuccessfulRequest?: string): NetworkError => ({
     id: `net_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+    name: 'NetworkError',
     category: 'network',
     severity: 'medium',
     code: `FIX_NET_${Date.now().toString(36)}`,
@@ -78,7 +79,7 @@ export const ErrorRecoveryUtils = {
     connectionType: typeof navigator !== 'undefined' && (navigator as any).connection ? 
       (navigator as any).connection.type : 'unknown',
     isOffline: typeof navigator !== 'undefined' ? !navigator.onLine : false,
-    lastSuccessfulRequest,
+    ...(lastSuccessfulRequest !== undefined && { lastSuccessfulRequest }),
     estimatedRecoveryTime: 5000,
   }),
 
@@ -87,6 +88,7 @@ export const ErrorRecoveryUtils = {
    */
   createSessionExpiredError: (redirectUrl?: string): AuthenticationError => ({
     id: `auth_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+    name: 'AuthenticationError',
     category: 'authentication',
     severity: 'critical',
     code: `FIX_AUTH_${Date.now().toString(36)}`,
@@ -118,6 +120,7 @@ export const ErrorRecoveryUtils = {
     mercadopagoErrorCode?: string
   ): PaymentError => ({
     id: `pay_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+    name: 'PaymentError',
     category: 'payment',
     severity: 'critical',
     code: `FIX_PAY_${Date.now().toString(36)}`,
@@ -138,7 +141,7 @@ export const ErrorRecoveryUtils = {
     currency: 'ARS',
     alternativeMethods: ['credit_card', 'bank_transfer', 'mercadopago_wallet'],
     canRetryPayment: true,
-    mercadopagoErrorCode,
+    ...(mercadopagoErrorCode !== undefined && { mercadopagoErrorCode }),
   }),
 
   /**
@@ -152,6 +155,7 @@ export const ErrorRecoveryUtils = {
     uploadType: 'profile_photo' | 'portfolio_image' | 'document' | 'chat_attachment' = 'portfolio_image'
   ): FileUploadError => ({
     id: `upload_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+    name: 'FileUploadError',
     category: 'file_upload',
     severity: 'medium',
     code: `FIX_UPLOAD_${Date.now().toString(36)}`,
@@ -236,10 +240,10 @@ export const withErrorRecovery = <P extends object>(
 ) => {
   const WrappedComponent = (props: P) => (
     <FixiaErrorBoundary
-      userContext={options?.userContext}
-      platformArea={options?.platformArea}
-      enableAutoRecovery={options?.enableAutoRecovery}
-      fallbackComponent={options?.fallbackComponent}
+      {...(options?.userContext !== undefined && { userContext: options.userContext })}
+      {...(options?.platformArea !== undefined && { platformArea: options.platformArea })}
+      {...(options?.enableAutoRecovery !== undefined && { enableAutoRecovery: options.enableAutoRecovery })}
+      {...(options?.fallbackComponent !== undefined && { fallbackComponent: options.fallbackComponent })}
     >
       <Component {...props} />
     </FixiaErrorBoundary>

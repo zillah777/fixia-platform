@@ -151,6 +151,11 @@ export function OnboardingHelper({ userType, onComplete, triggerText }: Onboardi
 
   const currentStepData = steps[currentStep];
 
+  // Early return if currentStepData is undefined (should not happen in normal flow)
+  if (!currentStepData) {
+    return null;
+  }
+
   if (hasCompleted && !isOpen) {
     return (
       <Button

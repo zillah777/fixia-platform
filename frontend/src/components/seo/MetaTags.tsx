@@ -23,7 +23,7 @@ const MetaTags: React.FC<MetaTagsProps> = ({
   structuredData,
 }) => {
   const fullTitle = title.includes('Fixia') ? title : `${title} - Fixia`;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://fixia.com.ar';
+  const baseUrl = process.env['NEXT_PUBLIC_BASE_URL'] || 'https://fixia.com.ar';
   const fullOgImage = ogImage.startsWith('http') ? ogImage : `${baseUrl}${ogImage}`;
   const fullCanonicalUrl = canonicalUrl || baseUrl;
 

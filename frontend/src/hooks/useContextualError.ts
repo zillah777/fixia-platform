@@ -71,6 +71,7 @@ export function useContextualError(config: UseContextualErrorConfig = {}) {
     
     const fixiaError: FixiaError = isFixiaError ? error as FixiaError : {
       id: `ctx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      name: 'FixiaError',
       category: (context?.category as ErrorCategory) || 'system',
       severity: context?.severity || 'medium',
       code: `FIX_CTX_${Date.now().toString(36)}`,
@@ -172,6 +173,7 @@ export function useContextualError(config: UseContextualErrorConfig = {}) {
   const createContextualError = useCallback((error: Error, context?: Partial<FixiaError>): FixiaError => {
     return {
       id: `ctx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      name: 'FixiaError',
       category: (context?.category as ErrorCategory) || 'system',
       severity: context?.severity || 'medium',
       code: `FIX_CTX_${Date.now().toString(36)}`,
@@ -244,6 +246,7 @@ export function useNetworkError(config: UseContextualErrorConfig = {}) {
   const reportNetworkError = useCallback((error: Error, lastSuccessfulRequest?: string) => {
     const networkError: NetworkError = {
       id: `net_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      name: 'NetworkError',
       category: 'network',
       severity: 'medium',
       code: `FIX_NET_${Date.now().toString(36)}`,
@@ -283,6 +286,7 @@ export function useAuthError(config: UseContextualErrorConfig = {}) {
   ) => {
     const authError: AuthenticationError = {
       id: `auth_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      name: 'AuthenticationError',
       category: 'authentication',
       severity: 'critical',
       code: `FIX_AUTH_${Date.now().toString(36)}`,
@@ -325,6 +329,7 @@ export function usePaymentError(config: UseContextualErrorConfig = {}) {
   ) => {
     const paymentError: PaymentError = {
       id: `payment_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      name: 'PaymentError',
       category: 'payment',
       severity: 'critical',
       code: `FIX_PAY_${Date.now().toString(36)}`,
@@ -370,6 +375,7 @@ export function useFileUploadError(config: UseContextualErrorConfig = {}) {
   ) => {
     const uploadError: FileUploadError = {
       id: `upload_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+      name: 'FileUploadError',
       category: 'file_upload',
       severity: 'medium',
       code: `FIX_UPLOAD_${Date.now().toString(36)}`,

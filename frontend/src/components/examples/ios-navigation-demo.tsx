@@ -11,7 +11,7 @@
  */
 
 import React from 'react';
-import { MarketplaceLayout } from '@/components/layouts/MarketplaceLayout';
+import MarketplaceLayout from '@/components/layouts/MarketplaceLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const IOSNavigationDemo: React.FC = () => {

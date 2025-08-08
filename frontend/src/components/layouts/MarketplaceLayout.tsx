@@ -59,8 +59,8 @@ const TabletAwareLayoutContent: React.FC<Omit<MarketplaceLayoutProps, 'enableTab
             {/* Tablet Header */}
             {showTabletHeader && (
               <TabletAdaptiveHeader
-                title={headerTitle}
-                subtitle={headerSubtitle}
+                {...(headerTitle && { title: headerTitle })}
+                {...(headerSubtitle && { subtitle: headerSubtitle })}
                 className="relative z-20"
               />
             )}

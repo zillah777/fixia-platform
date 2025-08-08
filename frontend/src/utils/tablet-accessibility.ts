@@ -197,7 +197,7 @@ export function createTabletAnnouncement(
         case 'sidebar-closed':
           return 'Navegación lateral cerrada.';
         case 'orientation-change':
-          const orientation = details?.orientation || 'desconocida';
+          const orientation = details?.['orientation'] || 'desconocida';
           return `Orientación cambiada a ${orientation}. Diseño actualizado.`;
         default:
           return `Navegación: ${context}`;
@@ -206,12 +206,12 @@ export function createTabletAnnouncement(
     case 'layout':
       switch (context) {
         case 'columns-changed':
-          const columns = details?.columns || 1;
+          const columns = details?.['columns'] || 1;
           return `Diseño cambiado a ${columns} ${columns === 1 ? 'columna' : 'columnas'}.`;
         case 'widget-expanded':
-          return `Widget ${details?.title || ''} expandido.`;
+          return `Widget ${details?.['title'] || ''} expandido.`;
         case 'widget-collapsed':
-          return `Widget ${details?.title || ''} contraído.`;
+          return `Widget ${details?.['title'] || ''} contraído.`;
         case 'split-screen-enabled':
           return 'Pantalla dividida activada.';
         case 'split-screen-disabled':
@@ -237,10 +237,10 @@ export function createTabletAnnouncement(
     case 'status':
       switch (context) {
         case 'messages-updated':
-          const count = details?.count || 0;
+          const count = details?.['count'] || 0;
           return `${count} ${count === 1 ? 'mensaje nuevo' : 'mensajes nuevos'}.`;
         case 'connection-status':
-          const status = details?.online ? 'conectado' : 'desconectado';
+          const status = details?.['online'] ? 'conectado' : 'desconectado';
           return `Estado de conexión: ${status}.`;
         default:
           return `Estado: ${context}`;

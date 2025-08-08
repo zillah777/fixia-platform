@@ -250,14 +250,14 @@ const FixiaSearchSkeleton: React.FC<FixiaSearchSkeletonProps> = ({
           <Skeleton
             width="36px"
             height="36px"
-            radius="none"
+            radius="sm"
             animation={animation}
             loadingText="Cargando vista de grilla"
           />
           <Skeleton
             width="36px"
             height="36px"
-            radius="none"
+            radius="sm"
             animation={animation}
             loadingText="Cargando vista de lista"
           />

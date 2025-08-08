@@ -110,11 +110,11 @@ export const DISTANCE_OPTIONS = [
 export const APP_CONFIG = {
   name: 'Fixia',
   description: 'Plataforma de servicios profesionales en Chubut',
-  url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-  api_url: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
-  google_maps_api_key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-  mercadopago_public_key: process.env.NEXT_PUBLIC_MP_PUBLIC_KEY,
-  fcm_vapid_key: process.env.NEXT_PUBLIC_FCM_VAPID_KEY,
+  url: process.env['NEXT_PUBLIC_APP_URL'] || 'http://localhost:3000',
+  api_url: process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:5000',
+  google_maps_api_key: process.env['NEXT_PUBLIC_GOOGLE_MAPS_API_KEY'],
+  mercadopago_public_key: process.env['NEXT_PUBLIC_MP_PUBLIC_KEY'],
+  fcm_vapid_key: process.env['NEXT_PUBLIC_FCM_VAPID_KEY'],
 };
 
 // Default coordinates (Rawson, Chubut)

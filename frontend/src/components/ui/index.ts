@@ -10,6 +10,7 @@ export { Checkbox } from './checkbox';
 export { Label } from './label';
 export { Progress } from './progress';
 export { Separator } from './separator';
+export { ScrollArea } from './scroll-area';
 export {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +28,16 @@ export {
   TableHeader,
   TableRow
 } from './table';
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  TooltipArrow,
+  TooltipWithVariants,
+  SimpleTooltip,
+  type TooltipVariantProps
+} from './tooltip';
 export { IOSBottomNavigation } from './ios-bottom-navigation';
 
 // Skeleton components

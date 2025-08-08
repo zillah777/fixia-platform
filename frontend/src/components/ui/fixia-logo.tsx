@@ -165,7 +165,7 @@ export const FixiaNavLogo: React.FC<{ onClick?: () => void }> = ({ onClick }) =>
     size="md"
     clickable={true}
     priority={true}
-    onClick={onClick}
+    {...(onClick && { onClick })}
   />
 );
 

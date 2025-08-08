@@ -108,18 +108,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setLoading(true);
       const authData = await authService.login(credentials);
-      setUser(authData.user);
-      toast.success(`¡Bienvenido, ${authData.user.first_name}!`);
       
-      // Longer delay to ensure state is updated and prevent redirect loops
-      setTimeout(() => {
-        // Redirect based on user type
-        if (authData.user.user_type === 'provider') {
-          router.push('/as/dashboard');
-        } else {
-          router.push('/explorador/dashboard');
-        }
-      }, 300);
+      // Convert undefined to null for setUser compatibility
+      const user = authData.user ?? null;
+      setUser(user);
+      
+      if (user) {
+        toast.success(`¡Bienvenido, ${user.first_name}!`);
+        
+        // Longer delay to ensure state is updated and prevent redirect loops
+        setTimeout(() => {
+          // Redirect based on user type
+          if (user.user_type === 'provider') {
+            router.push('/as/dashboard');
+          } else {
+            router.push('/explorador/dashboard');
+          }
+        }, 300);
+      } else {
+        toast.error('Error: No se pudo obtener información del usuario');
+      }
     } catch (error: unknown) {
       const message = (error && typeof error === 'object' && 'response' in error && 
         error.response && typeof error.response === 'object' && 'data' in error.response &&
@@ -143,15 +151,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         toast.success('¡Cuenta creada! Revisa tu email para verificar tu cuenta antes de iniciar sesión.');
         router.push('/auth/login?message=verification_required');
       } else {
-        // Normal registration flow
-        setUser(authData.user);
-        toast.success(`¡Cuenta creada exitosamente! Bienvenido, ${authData.user.first_name}!`);
+        // Normal registration flow - Convert undefined to null for setUser compatibility
+        const user = authData.user ?? null;
+        setUser(user);
         
-        // Redirect based on user type
-        if (authData.user.user_type === 'provider') {
-          router.push('/as/dashboard');
+        if (user) {
+          toast.success(`¡Cuenta creada exitosamente! Bienvenido, ${user.first_name}!`);
+          
+          // Redirect based on user type
+          if (user.user_type === 'provider') {
+            router.push('/as/dashboard');
+          } else {
+            router.push('/explorador/dashboard');
+          }
         } else {
-          router.push('/explorador/dashboard');
+          toast.error('Error: No se pudo obtener información del usuario');
         }
       }
     } catch (error: unknown) {
@@ -230,7 +244,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // Update user by removing photo URL
       if (user) {
-        const updatedUser = { ...user, profile_photo_url: undefined };
+        const { profile_photo_url, ...userWithoutPhoto } = user;
+        const updatedUser = userWithoutPhoto as User;
         setUser(updatedUser);
         authService.updateStoredUser(updatedUser);
       }

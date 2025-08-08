@@ -16,7 +16,7 @@ export {
   TabletNavigationProvider, 
   useTabletNavigation, 
   useIsTabletNavigation 
-} from '../contexts/TabletNavigationContext';
+} from '@/contexts/TabletNavigationContext';
 
 // Device detection utilities
 export {
@@ -24,10 +24,10 @@ export {
   shouldUseTabletNavigation,
   getTabletNavigationLayout,
   getTouchTargetSize
-} from '../utils/device-detection';
+} from '@/utils/device-detection';
 
 // Type definitions
-export type { DeviceCapabilities } from '../utils/device-detection';
+export type { DeviceCapabilities } from '@/utils/device-detection';
 
 /**
  * Usage Examples:
