@@ -27,9 +27,13 @@ interface TermsSection {
 }
 
 // Icon wrapper to fix exactOptionalPropertyTypes issues
-const IconWrapper = (Component: any) => 
-  ({ className }: { className?: string }) => 
+const IconWrapper = (Component: any) => {
+  const WrappedIcon = ({ className }: { className?: string }) => 
     <Component className={className || undefined} />;
+  
+  WrappedIcon.displayName = `IconWrapper(${Component.displayName || Component.name || 'Component'})`;
+  return WrappedIcon;
+};
 
 // Components
 const LoadingState: React.FC = () => (
