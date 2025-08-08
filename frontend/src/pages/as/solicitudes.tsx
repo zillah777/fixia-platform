@@ -54,12 +54,11 @@ const ASSolicitudes: NextPage = () => {
         duration_minutes: 120,
         customer_first_name: 'María',
         customer_last_name: 'González',
-        customer_photo: undefined,
         customer_phone: '+54 9 280 123-4567',
         provider_first_name: user?.first_name || '',
         provider_last_name: user?.last_name || '',
-        provider_photo: user?.profile_photo_url,
-        provider_phone: user?.phone
+        ...(user?.profile_photo_url && { provider_photo: user.profile_photo_url }),
+        ...(user?.phone && { provider_phone: user.phone })
       },
       {
         id: 2,
@@ -70,7 +69,7 @@ const ASSolicitudes: NextPage = () => {
         scheduled_time: '09:00',
         total_amount: 3800,
         status: 'confirmed',
-        payment_status: 'approved',
+        payment_status: 'completed',
         notes: 'Necesito instalar nuevos tomas en el living y la cocina.',
         customer_address: 'Belgrano 789, Trelew',
         customer_latitude: -43.2481,
@@ -83,12 +82,11 @@ const ASSolicitudes: NextPage = () => {
         duration_minutes: 180,
         customer_first_name: 'Carlos',
         customer_last_name: 'Rodríguez',
-        customer_photo: undefined,
         customer_phone: '+54 9 280 987-6543',
         provider_first_name: user?.first_name || '',
         provider_last_name: user?.last_name || '',
-        provider_photo: user?.profile_photo_url,
-        provider_phone: user?.phone
+        ...(user?.profile_photo_url && { provider_photo: user.profile_photo_url }),
+        ...(user?.phone && { provider_phone: user.phone })
       },
       {
         id: 3,
@@ -112,12 +110,11 @@ const ASSolicitudes: NextPage = () => {
         duration_minutes: 120,
         customer_first_name: 'Ana',
         customer_last_name: 'López',
-        customer_photo: undefined,
         customer_phone: '+54 9 280 456-7890',
         provider_first_name: user?.first_name || '',
         provider_last_name: user?.last_name || '',
-        provider_photo: user?.profile_photo_url,
-        provider_phone: user?.phone
+        ...(user?.profile_photo_url && { provider_photo: user.profile_photo_url }),
+        ...(user?.phone && { provider_phone: user.phone })
       }
     ]);
   }, [user, loading]);
@@ -406,11 +403,11 @@ const ASSolicitudes: NextPage = () => {
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600">Estado del Pago:</span>
                           <span className={`px-2 py-1 rounded text-xs font-medium ${
-                            booking.payment_status === 'approved' ? 'bg-green-100 text-green-800' :
+                            booking.payment_status === 'completed' ? 'bg-green-100 text-green-800' :
                             booking.payment_status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-red-100 text-red-800'
                           }`}>
-                            {booking.payment_status === 'approved' ? 'Pagado' :
+                            {booking.payment_status === 'completed' ? 'Pagado' :
                              booking.payment_status === 'pending' ? 'Pendiente' :
                              'Fallido'}
                           </span>
