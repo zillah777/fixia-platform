@@ -54,7 +54,7 @@ export const ImageOptimizationDemo: React.FC = () => {
           <Card className="glass border-white/10">
             <CardHeader>
               <CardTitle className="text-white flex items-center">
-                <Image className="mr-2 h-5 w-5" />
+                <Image className="mr-2 h-5 w-5" aria-label="Logo optimization icon" />
                 Logo Optimization
               </CardTitle>
             </CardHeader>
