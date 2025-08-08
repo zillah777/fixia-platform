@@ -95,7 +95,7 @@ export default function EnhancedPortafolioPage() {
   const [generalErrorState, generalErrorMethods] = useContextualError({
     userContext: 'as',
     platformArea: 'portfolio',
-    enableAutoRecovery: true,
+    enableAutoRetry: true,
     onError: (error) => {
       // Log error for analytics
       console.error('Portfolio error:', error);
@@ -490,7 +490,7 @@ export default function EnhancedPortafolioPage() {
         <div className="container mx-auto px-6 py-8">
           <FixiaNetworkError
             error={networkErrorState.error as any}
-            onRetry={() => networkErrorMethods.retry(() => loadPortfolioData())}
+            onRetry={async () => { await networkErrorMethods.retry('network_portfolio_load'); }}
             enableAutoRetry={true}
             showConnectionDetails={true}
           />
@@ -506,7 +506,7 @@ export default function EnhancedPortafolioPage() {
         <div className="container mx-auto px-6 py-8">
           <FixiaErrorRecovery
             error={fileUploadErrorState.error}
-            onRetry={() => fileUploadErrorMethods.retry(() => handleUploadImage())}
+            onRetry={() => fileUploadErrorMethods.retry('file_upload_portfolio')}
             onGoBack={() => {
               setShowUploadDialog(false);
               fileUploadErrorMethods.clearError();
@@ -578,8 +578,8 @@ export default function EnhancedPortafolioPage() {
             <div className="mb-6">
               <FixiaErrorRecovery
                 error={generalErrorState.error}
-                onRetry={() => generalErrorMethods.retry(() => handleRetryOperation('load_data'))}
-                onContactSupport={() => generalErrorMethods.escalate()}
+                onRetry={() => generalErrorMethods.retry('general_portfolio_operation')}
+                onContactSupport={() => generalErrorState.error && generalErrorMethods.escalate?.(generalErrorState.error)}
                 isRecovering={generalErrorState.isRecovering}
                 compactMode={true}
                 customActions={getRecommendedActions(generalErrorState.error).map((action, index) => ({
