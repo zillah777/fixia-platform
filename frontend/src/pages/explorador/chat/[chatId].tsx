@@ -370,8 +370,10 @@ const ChatPage: NextPage = () => {
               ) : (
                 messages.map((message, index) => {
                   const isOwnMessage = message.sender_id === user?.id;
+                  const previousMessage = messages[index - 1];
                   const showDate = index === 0 || 
-                    formatDate(message.created_at) !== formatDate(messages[index - 1].created_at);
+                    !previousMessage ||
+                    formatDate(message.created_at) !== formatDate(previousMessage.created_at);
 
                   return (
                     <div key={message.id}>
