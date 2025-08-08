@@ -240,7 +240,7 @@ const ASChatDetail: NextPage = () => {
                 {messages.map((message, index) => {
                   const isOwn = message.sender_id === user?.id;
                   const showDate = index === 0 || 
-                    formatDate(messages[index - 1]?.created_at) !== formatDate(message.created_at);
+                    (messages[index - 1]?.created_at && formatDate(messages[index - 1].created_at) !== formatDate(message.created_at));
                   
                   return (
                     <div key={message.id}>
