@@ -14,6 +14,25 @@ console.log('📍 Port:', process.env.PORT || 8080);
 const { testConnection } = require('./src/config/database');
 const { authMiddleware } = require('./src/middleware/auth');
 
+// Import required middleware
+const { requestLogger, rateLimitLogger, errorLogger, securityLogger } = require('./src/middleware/logging');
+const { securityHeaders, validateBodySize, validateContentType } = require('./src/middleware/security');
+const { warmCache } = require('./src/middleware/cache');
+const assetOptimization = require('./src/middleware/assetOptimization');
+const { testRedisConnection, disconnectRedis } = require('./src/config/redis');
+const jobQueue = require('./src/services/jobQueue');
+const swaggerConfig = require('./src/config/swagger');
+const logger = require('./src/utils/logger');
+
+// Sentry error handler
+const sentryErrorHandler = () => {
+  return (err, req, res, next) => {
+    // Log error to console for debugging
+    console.error('Sentry Error Handler:', err);
+    next(err);
+  };
+};
+
 const app = express();
 
 // Trust proxy for Railway deployment
@@ -154,7 +173,7 @@ app.use((req, res, next) => {
   }
   
   res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
+  res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma,Expires,X-Custom-Header');
   res.header('Access-Control-Max-Age', '86400');
   
   // Handle preflight
