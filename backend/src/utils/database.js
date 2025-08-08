@@ -1,4 +1,4 @@
-const { pool } = require('../config/database');
+const { pool, query: dbQuery } = require('../config/database');
 
 /**
  * PostgreSQL Database Utilities for Fixia
@@ -6,10 +6,10 @@ const { pool } = require('../config/database');
  */
 
 /**
- * Execute a query with automatic parameter conversion
+ * Execute a query with automatic parameter conversion and enhanced error handling
  * Converts MySQL-style ? placeholders to PostgreSQL $1, $2, etc.
  */
-const execute = async (sql, params = []) => {
+const execute = async (sql, params = [], options = {}) => {
   try {
     // Convert MySQL placeholders (?) to PostgreSQL placeholders ($1, $2, etc.)
     let convertedSQL = sql;
@@ -17,12 +17,18 @@ const execute = async (sql, params = []) => {
     
     convertedSQL = convertedSQL.replace(/\?/g, () => `$${paramIndex++}`);
     
-    const result = await pool.query(convertedSQL, params);
+    // Use enhanced query function with retry logic
+    const result = await dbQuery(convertedSQL, params, options);
     
     // Return in MySQL-style format [rows, fields] for compatibility
     return [result.rows, result.fields];
   } catch (error) {
-    console.error('Database query error:', error);
+    console.error('Database query error:', {
+      sql: sql.substring(0, 100) + (sql.length > 100 ? '...' : ''),
+      params: params?.length || 0,
+      error: error.message,
+      code: error.code
+    });
     throw error;
   }
 };
@@ -107,22 +113,74 @@ const exists = async (table, conditions) => {
 };
 
 /**
- * Execute a transaction
+ * Execute a transaction with enhanced error handling and retry logic
  */
-const transaction = async (callback) => {
-  const client = await pool.connect();
+const transaction = async (callback, options = {}) => {
+  const { retries = 2, retryDelay = 1000 } = options;
+  let lastError;
   
-  try {
-    await client.query('BEGIN');
-    const result = await callback(client);
-    await client.query('COMMIT');
-    return result;
-  } catch (error) {
-    await client.query('ROLLBACK');
-    throw error;
-  } finally {
-    client.release();
+  for (let attempt = 1; attempt <= retries + 1; attempt++) {
+    let client;
+    
+    try {
+      // Get current pool instance
+      const currentPool = pool();
+      if (!currentPool) {
+        throw new Error('Database pool not available');
+      }
+      
+      client = await currentPool.connect();
+      
+      await client.query('BEGIN');
+      const result = await callback(client);
+      await client.query('COMMIT');
+      
+      return result;
+      
+    } catch (error) {
+      lastError = error;
+      
+      if (client) {
+        try {
+          await client.query('ROLLBACK');
+        } catch (rollbackError) {
+          console.error('Transaction rollback failed:', rollbackError.message);
+        }
+      }
+      
+      // Check if error is retryable
+      const isRetryable = (
+        error.code === 'ECONNRESET' ||
+        error.code === 'ENOTFOUND' ||
+        error.code === 'ETIMEDOUT' ||
+        error.message.includes('Connection terminated') ||
+        error.message.includes('connection is closed')
+      );
+      
+      if (isRetryable && attempt <= retries) {
+        console.warn(`Transaction attempt ${attempt} failed, retrying in ${retryDelay}ms...`, {
+          error: error.message,
+          code: error.code
+        });
+        
+        await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+        continue;
+      }
+      
+      throw error;
+      
+    } finally {
+      if (client) {
+        try {
+          client.release();
+        } catch (releaseError) {
+          console.error('Client release failed:', releaseError.message);
+        }
+      }
+    }
   }
+  
+  throw lastError;
 };
 
 /**
@@ -173,10 +231,10 @@ const getAllTables = async () => {
 };
 
 /**
- * Raw query execution (for complex queries)
+ * Raw query execution (for complex queries) with enhanced error handling
  */
-const raw = async (sql, params = []) => {
-  const result = await pool.query(sql, params);
+const raw = async (sql, params = [], options = {}) => {
+  const result = await dbQuery(sql, params, options);
   return result.rows;
 };
 
@@ -194,5 +252,5 @@ module.exports = {
   tableExists,
   getAllTables,
   raw,
-  pool
+  pool: () => pool() // Return the pool function to get current instance
 };

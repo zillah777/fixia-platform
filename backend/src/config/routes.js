@@ -22,6 +22,7 @@ const routeConfig = [
   { path: '/api/badges', module: './routes/badges', public: true },
   { path: '/api/smart-search', module: './routes/smart-search', public: true },
   { path: '/api/system', module: './routes/system-status', public: true },
+  { path: '/api/webhooks', module: './routes/webhooks', public: true }, // Webhooks need to be public for MercadoPago
   
   // Development/testing routes
   ...(process.env.NODE_ENV !== 'production' ? [

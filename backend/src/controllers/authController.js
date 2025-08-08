@@ -4,6 +4,14 @@ const { query } = require('../config/database');
 const { validateEmail, validatePassword } = require('../utils/validation');
 const EmailService = require('../services/emailService');
 const { transformUserForFrontend, transformUserForDatabase } = require('../utils/userTypeTransformer');
+const { 
+  USER_TYPES, 
+  createApiResponse,
+  transformUserToFrontend,
+  transformUserToDatabase
+} = require('../types/index');
+const { generateTokenPair, generateAccessToken, blacklistToken } = require('../middleware/auth');
+const { logger } = require('../utils/smartLogger');
 
 // Helper function to sanitize user data
 const sanitizeUser = (user) => {
@@ -11,9 +19,9 @@ const sanitizeUser = (user) => {
   return transformUserForFrontend(sanitizedUser);
 };
 
-// Generate JWT token
+// Legacy token generation for backward compatibility
 const generateToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || '7d' });
+  return generateAccessToken(payload);
 };
 
 // Hash password
@@ -79,11 +87,20 @@ exports.register = async (req, res) => {
     // Use proper transformer for frontend compatibility
     user.user_type = transformUserForFrontend({ user_type: user.user_type }).user_type;
 
-    // Generate token
-    const token = generateToken({ 
+    // Generate token pair for enhanced security
+    const tokens = generateTokenPair({ 
       id: user.id, 
       email: user.email, 
       user_type: user.user_type 
+    });
+    
+    // Log registration for security monitoring
+    logger.info('🎉 User registration successful', {
+      userId: user.id,
+      email: user.email,
+      userType: user.user_type,
+      ip: req.ip,
+      userAgent: req.headers['user-agent']
     });
 
     // Send verification email in production only
@@ -115,7 +132,8 @@ exports.register = async (req, res) => {
         message: 'Usuario registrado exitosamente.',
         data: {
           user: sanitizeUser(user),
-          token,
+          accessToken: tokens.accessToken,
+          refreshToken: tokens.refreshToken,
           emailVerificationRequired: false
         }
       });
@@ -177,11 +195,21 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Generate token with database user_type (client)
-    const token = generateToken({ 
+    // Generate secure token pair
+    const tokens = generateTokenPair({ 
       id: user.id, 
       email: user.email, 
-      user_type: user.user_type  // Keep as 'client' for database compatibility
+      user_type: user.user_type
+    });
+    
+    // Log successful login for security monitoring
+    logger.info('🔑 User login successful', {
+      userId: user.id,
+      email: user.email,
+      userType: user.user_type,
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+      lastLogin: user.last_login
     });
 
     // Update last login AFTER token generation
@@ -225,7 +253,8 @@ exports.login = async (req, res) => {
       message: 'Inicio de sesión exitoso',
       data: {
         user: userWithStats,
-        token
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken
       }
     });
 
@@ -475,6 +504,96 @@ exports.changePassword = async (req, res) => {
 
   } catch (error) {
     console.error('Change password error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error interno del servidor'
+    });
+  }
+};
+
+// POST /api/auth/refresh
+exports.refreshToken = async (req, res) => {
+  try {
+    // The refreshTokenMiddleware has already validated the refresh token
+    // and set req.user and req.refreshToken
+    
+    const user = req.user;
+    const oldRefreshToken = req.refreshToken;
+    
+    // Generate new token pair
+    const tokens = generateTokenPair({
+      id: user.id,
+      email: user.email,
+      user_type: user.user_type
+    });
+    
+    // Blacklist the old refresh token for security
+    blacklistToken(oldRefreshToken);
+    
+    // Log token refresh for security monitoring
+    logger.info('🔄 Token refresh successful', {
+      userId: user.id,
+      email: user.email,
+      ip: req.ip,
+      userAgent: req.headers['user-agent']
+    });
+    
+    res.json({
+      success: true,
+      message: 'Tokens renovados exitosamente',
+      data: {
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken
+      }
+    });
+    
+  } catch (error) {
+    logger.error('🚨 Token refresh error', {
+      error: error.message,
+      ip: req.ip,
+      userAgent: req.headers['user-agent']
+    });
+    
+    res.status(500).json({
+      success: false,
+      error: 'Error interno del servidor'
+    });
+  }
+};
+
+// POST /api/auth/logout
+exports.logout = async (req, res) => {
+  try {
+    const token = req.token; // Set by auth middleware
+    const refreshToken = req.body.refreshToken || req.header('X-Refresh-Token');
+    
+    // Blacklist both tokens
+    if (token) {
+      blacklistToken(token);
+    }
+    if (refreshToken) {
+      blacklistToken(refreshToken);
+    }
+    
+    // Log logout for security monitoring
+    logger.info('👋 User logout successful', {
+      userId: req.user?.id,
+      ip: req.ip,
+      userAgent: req.headers['user-agent']
+    });
+    
+    res.json({
+      success: true,
+      message: 'Sesión cerrada exitosamente'
+    });
+    
+  } catch (error) {
+    logger.error('🚨 Logout error', {
+      error: error.message,
+      userId: req.user?.id,
+      ip: req.ip
+    });
+    
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'

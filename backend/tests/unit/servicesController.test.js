@@ -4,8 +4,11 @@ const servicesController = require('../../src/controllers/servicesController');
 const { query } = require('../../src/config/database');
 const { authenticate } = require('../../src/middleware/auth');
 
-// Mock database
+// Mock all external dependencies
 jest.mock('../../src/config/database');
+jest.mock('../../src/services/cacheService');
+jest.mock('../../src/utils/logger');
+jest.mock('../../src/config/redis');
 
 // Mock authentication middleware
 jest.mock('../../src/middleware/auth', () => ({
@@ -25,8 +28,12 @@ app.put('/services/:id', authenticate, servicesController.updateService);
 app.delete('/services/:id', authenticate, servicesController.deleteService);
 
 describe('Services Controller', () => {
+  const cacheService = require('../../src/services/cacheService');
+  
   beforeEach(() => {
     jest.clearAllMocks();
+    // Reset cache service mocks
+    cacheService.getCachedServicesList.mockResolvedValue(null);
   });
 
   describe('GET /services', () => {
@@ -35,42 +42,50 @@ describe('Services Controller', () => {
         rows: [
           {
             id: 1,
+            provider_id: 1,
             title: 'Test Service 1',
             description: 'Test description 1',
             price: 100.00,
             category: 'plumbing',
-            user_id: 1,
-            provider_name: 'John Doe',
+            first_name: 'John',
+            last_name: 'Doe',
             average_rating: 4.5,
-            review_count: 10,
-            is_active: true
+            total_reviews: 10,
+            is_active: true,
+            images: []
           },
           {
             id: 2,
+            provider_id: 2,
             title: 'Test Service 2',
             description: 'Test description 2',
             price: 150.00,
             category: 'electrical',
-            user_id: 2,
-            provider_name: 'Jane Smith',
+            first_name: 'Jane',
+            last_name: 'Smith',
             average_rating: 4.8,
-            review_count: 15,
-            is_active: true
+            total_reviews: 15,
+            is_active: true,
+            images: []
           }
         ]
       };
 
-      query.mockResolvedValueOnce(mockServices);
+      // Mock both queries that the controller makes
+      query
+        .mockResolvedValueOnce(mockServices) // Main services query
+        .mockResolvedValueOnce({ rows: [{ total: '2' }] }); // Count query for pagination
 
       const response = await request(app)
         .get('/services')
-        .query({ page: 1, limit: 10 })
-        .expect(200);
+        .query({ page: 1, limit: 10 });
 
+      expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
-      expect(response.body.services).toHaveLength(2);
-      expect(response.body.services[0].title).toBe('Test Service 1');
-      expect(response.body.pagination).toBeDefined();
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.services).toHaveLength(2);
+      expect(response.body.data.services[0].title).toBe('Test Service 1');
+      expect(response.body.data.pagination).toBeDefined();
     });
 
     it('should filter services by category', async () => {
@@ -78,20 +93,25 @@ describe('Services Controller', () => {
         rows: [
           {
             id: 1,
+            provider_id: 1,
             title: 'Plumbing Service',
             description: 'Test plumbing service',
             price: 100.00,
             category: 'plumbing',
-            user_id: 1,
-            provider_name: 'John Doe',
+            first_name: 'John',
+            last_name: 'Doe',
             average_rating: 4.5,
-            review_count: 10,
-            is_active: true
+            total_reviews: 10,
+            is_active: true,
+            images: []
           }
         ]
       };
 
-      query.mockResolvedValueOnce(mockServices);
+      // Mock both queries
+      query
+        .mockResolvedValueOnce(mockServices) // Main services query
+        .mockResolvedValueOnce({ rows: [{ total: '1' }] }); // Count query for pagination
 
       const response = await request(app)
         .get('/services')
@@ -99,8 +119,8 @@ describe('Services Controller', () => {
         .expect(200);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.services).toHaveLength(1);
-      expect(response.body.services[0].category).toBe('plumbing');
+      expect(response.body.data.services).toHaveLength(1);
+      expect(response.body.data.services[0].category).toBe('plumbing');
     });
 
     it('should filter services by price range', async () => {
@@ -108,20 +128,24 @@ describe('Services Controller', () => {
         rows: [
           {
             id: 1,
+            provider_id: 1,
             title: 'Affordable Service',
             description: 'Test affordable service',
             price: 75.00,
             category: 'cleaning',
-            user_id: 1,
-            provider_name: 'John Doe',
+            first_name: 'John',
+            last_name: 'Doe',
             average_rating: 4.0,
-            review_count: 5,
-            is_active: true
+            total_reviews: 5,
+            is_active: true,
+            images: []
           }
         ]
       };
 
-      query.mockResolvedValueOnce(mockServices);
+      query
+        .mockResolvedValueOnce(mockServices)
+        .mockResolvedValueOnce({ rows: [{ total: '1' }] });
 
       const response = await request(app)
         .get('/services')
@@ -129,8 +153,8 @@ describe('Services Controller', () => {
         .expect(200);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.services).toHaveLength(1);
-      expect(response.body.services[0].price).toBe(75.00);
+      expect(response.body.data.services).toHaveLength(1);
+      expect(response.body.data.services[0].price).toBe(75.00);
     });
 
     it('should search services by title and description', async () => {
@@ -138,20 +162,24 @@ describe('Services Controller', () => {
         rows: [
           {
             id: 1,
+            provider_id: 1,
             title: 'Kitchen Repair Service',
             description: 'Professional kitchen appliance repair',
             price: 120.00,
             category: 'repair',
-            user_id: 1,
-            provider_name: 'John Doe',
+            first_name: 'John',
+            last_name: 'Doe',
             average_rating: 4.7,
-            review_count: 8,
-            is_active: true
+            total_reviews: 8,
+            is_active: true,
+            images: []
           }
         ]
       };
 
-      query.mockResolvedValueOnce(mockServices);
+      query
+        .mockResolvedValueOnce(mockServices)
+        .mockResolvedValueOnce({ rows: [{ total: '1' }] });
 
       const response = await request(app)
         .get('/services')
@@ -159,8 +187,8 @@ describe('Services Controller', () => {
         .expect(200);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.services).toHaveLength(1);
-      expect(response.body.services[0].title).toContain('Kitchen');
+      expect(response.body.data.services).toHaveLength(1);
+      expect(response.body.data.services[0].title).toContain('Kitchen');
     });
 
     it('should handle database errors gracefully', async () => {
@@ -205,9 +233,10 @@ describe('Services Controller', () => {
         .expect(200);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.service).toBeDefined();
-      expect(response.body.service.id).toBe(1);
-      expect(response.body.service.title).toBe('Test Service');
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.service).toBeDefined();
+      expect(response.body.data.service.id).toBe(1);
+      expect(response.body.data.service.title).toBe('Test Service');
     });
 
     it('should return 404 for non-existent service', async () => {

@@ -1,6 +1,15 @@
 const request = require('supertest');
-const app = require('../../server'); // Your main Express app
+const app = require('../testServer'); // Test server with minimal dependencies
 const TestDatabase = require('../helpers/testDatabase');
+
+// Mock all external dependencies for integration tests
+jest.mock('../../src/config/database');
+jest.mock('../../src/services/cacheService');
+jest.mock('../../src/utils/logger');
+jest.mock('../../src/services/emailService', () => ({
+  sendVerificationEmail: jest.fn().mockResolvedValue(true),
+  sendPasswordResetEmail: jest.fn().mockResolvedValue(true)
+}));
 
 describe('Auth Integration Tests', () => {
   let testUser;

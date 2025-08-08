@@ -26,5 +26,9 @@ module.exports = {
       lines: 70,
       statements: 70
     }
+  },
+  // Module path mapping
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
   }
 };

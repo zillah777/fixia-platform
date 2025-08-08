@@ -21,6 +21,12 @@ router.get('/:id/messages', authMiddleware, chatController.getChatMessages);
 // POST /api/chats/:id/messages - Send message
 router.post('/:id/messages', authMiddleware, chatLimiter, messageValidation, chatController.sendMessage);
 
+// PUT /api/chats/:id/accept - Accept chat conversation (AS only)
+router.put('/:id/accept', authMiddleware, chatController.acceptChat);
+
+// PUT /api/chats/:id/reject - Reject chat conversation (AS only)
+router.put('/:id/reject', authMiddleware, chatController.rejectChat);
+
 // PUT /api/chats/:id/read - Mark messages as read
 router.put('/:id/read', authMiddleware, chatController.markMessagesAsRead);
 

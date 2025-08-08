@@ -1,4 +1,10 @@
 const { query } = require('../config/database');
+const { 
+  MESSAGE_TYPES, 
+  createApiResponse, 
+  createPaginatedResponse,
+  transformUserToFrontend 
+} = require('../types/index');
 
 // GET /api/chats
 exports.getChats = async (req, res) => {
@@ -14,6 +20,7 @@ exports.getChats = async (req, res) => {
         c.customer_id,
         c.provider_id,
         c.booking_id,
+        c.status,
         c.created_at,
         c.updated_at,
         CASE 
@@ -31,7 +38,11 @@ exports.getChats = async (req, res) => {
         s.title as service_title,
         last_msg.content as last_message,
         last_msg.created_at as last_message_time,
-        COALESCE(unread_count.count, 0) as unread_count
+        COALESCE(unread_count.count, 0) as unread_count,
+        CASE 
+          WHEN c.provider_id = $1 AND c.status = 'pending' THEN true
+          ELSE false
+        END as requires_acceptance
       FROM chats c
       JOIN users uc ON c.customer_id = uc.id
       JOIN users up ON c.provider_id = up.id
@@ -154,7 +165,7 @@ exports.getChatById = async (req, res) => {
 exports.createChat = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { customer_id, provider_id, booking_id } = req.body;
+    const { customer_id, provider_id, booking_id, initial_message } = req.body;
 
     // Validation
     if (!customer_id || !provider_id) {
@@ -174,7 +185,7 @@ exports.createChat = async (req, res) => {
 
     // Check if chat already exists
     const existingChatResult = await query(`
-      SELECT id FROM chats 
+      SELECT id, status FROM chats 
       WHERE customer_id = $1 AND provider_id = $2 AND (booking_id = $3 OR (booking_id IS NULL AND $3 IS NULL))
     `, [customer_id, provider_id, booking_id]);
 
@@ -182,7 +193,10 @@ exports.createChat = async (req, res) => {
       return res.json({
         success: true,
         message: 'Chat ya existe',
-        data: { id: existingChatResult.rows[0].id }
+        data: { 
+          id: existingChatResult.rows[0].id,
+          status: existingChatResult.rows[0].status 
+        }
       });
     }
 
@@ -225,17 +239,45 @@ exports.createChat = async (req, res) => {
       }
     }
 
-    // Create chat
+    // Create chat with pending status - only explorer can initiate
+    const isExplorerInitiated = userId === customer_id;
+    const chatStatus = isExplorerInitiated ? 'pending' : 'active';
+    
     const result = await query(`
-      INSERT INTO chats (customer_id, provider_id, booking_id)
-      VALUES ($1, $2, $3)
+      INSERT INTO chats (customer_id, provider_id, booking_id, status)
+      VALUES ($1, $2, $3, $4)
       RETURNING *
-    `, [customer_id, provider_id, booking_id]);
+    `, [customer_id, provider_id, booking_id, chatStatus]);
+
+    const chatId = result.rows[0].id;
+
+    // If explorer initiates with a message, add it but mark as pending
+    if (initial_message && isExplorerInitiated) {
+      await query(`
+        INSERT INTO messages (chat_id, sender_id, content, message_type, is_read)
+        VALUES ($1, $2, $3, 'text', false)
+      `, [chatId, userId, initial_message]);
+
+      // Create notification for provider
+      await query(`
+        INSERT INTO notifications (user_id, title, message, type, related_id)
+        VALUES ($1, $2, $3, $4, $5)
+      `, [
+        provider_id,
+        'Nueva solicitud de conversación',
+        `Un explorador quiere contactarte: "${initial_message.substring(0, 50)}${initial_message.length > 50 ? '...' : ''}"`,
+        'chat_request',
+        chatId
+      ]);
+    }
 
     res.status(201).json({
       success: true,
-      message: 'Chat creado exitosamente',
-      data: result.rows[0]
+      message: isExplorerInitiated ? 'Solicitud de conversación enviada' : 'Chat creado exitosamente',
+      data: {
+        ...result.rows[0],
+        requires_acceptance: isExplorerInitiated
+      }
     });
 
   } catch (error) {
@@ -329,6 +371,137 @@ exports.getChatMessages = async (req, res) => {
   }
 };
 
+// PUT /api/chats/:id/accept - Accept chat conversation (AS only)
+exports.acceptChat = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    // Check if user is the provider and chat is pending
+    const chatResult = await query(`
+      SELECT customer_id, provider_id, status FROM chats 
+      WHERE id = $1 AND provider_id = $2
+    `, [id, userId]);
+
+    if (chatResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Chat no encontrado o no tienes permisos'
+      });
+    }
+
+    const chat = chatResult.rows[0];
+
+    if (chat.status !== 'pending') {
+      return res.status(400).json({
+        success: false,
+        error: 'Esta conversación ya fue aceptada o no requiere aceptación'
+      });
+    }
+
+    // Accept the chat
+    await query(`
+      UPDATE chats 
+      SET status = 'active', updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+    `, [id]);
+
+    // Create notification for explorer
+    await query(`
+      INSERT INTO notifications (user_id, title, message, type, related_id)
+      VALUES ($1, $2, $3, $4, $5)
+    `, [
+      chat.customer_id,
+      'Conversación aceptada',
+      'El profesional AS ha aceptado tu solicitud de conversación. ¡Ya pueden chatear!',
+      'chat_accepted',
+      id
+    ]);
+
+    // Send automatic acceptance message
+    await query(`
+      INSERT INTO messages (chat_id, sender_id, content, message_type, is_read)
+      VALUES ($1, $2, $3, 'system', false)
+    `, [id, userId, '✅ He aceptado tu solicitud de conversación. ¡Hola! ¿En qué puedo ayudarte?']);
+
+    res.json({
+      success: true,
+      message: 'Conversación aceptada exitosamente',
+      data: { chat_id: id, status: 'active' }
+    });
+
+  } catch (error) {
+    console.error('Accept chat error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error interno del servidor'
+    });
+  }
+};
+
+// PUT /api/chats/:id/reject - Reject chat conversation (AS only)
+exports.rejectChat = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const { reason } = req.body;
+
+    // Check if user is the provider and chat is pending
+    const chatResult = await query(`
+      SELECT customer_id, provider_id, status FROM chats 
+      WHERE id = $1 AND provider_id = $2
+    `, [id, userId]);
+
+    if (chatResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Chat no encontrado o no tienes permisos'
+      });
+    }
+
+    const chat = chatResult.rows[0];
+
+    if (chat.status !== 'pending') {
+      return res.status(400).json({
+        success: false,
+        error: 'Esta conversación ya fue procesada'
+      });
+    }
+
+    // Reject the chat
+    await query(`
+      UPDATE chats 
+      SET status = 'rejected', updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+    `, [id]);
+
+    // Create notification for explorer
+    await query(`
+      INSERT INTO notifications (user_id, title, message, type, related_id)
+      VALUES ($1, $2, $3, $4, $5)
+    `, [
+      chat.customer_id,
+      'Solicitud no aceptada',
+      `El profesional no puede atender tu solicitud en este momento${reason ? `: ${reason}` : '.'}`,
+      'chat_rejected',
+      id
+    ]);
+
+    res.json({
+      success: true,
+      message: 'Conversación rechazada',
+      data: { chat_id: id, status: 'rejected' }
+    });
+
+  } catch (error) {
+    console.error('Reject chat error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error interno del servidor'
+    });
+  }
+};
+
 // POST /api/chats/:id/messages
 exports.sendMessage = async (req, res) => {
   try {
@@ -344,16 +517,16 @@ exports.sendMessage = async (req, res) => {
       });
     }
 
-    if (!['text', 'image'].includes(message_type)) {
+    if (!['text', 'image', 'system'].includes(message_type)) {
       return res.status(400).json({
         success: false,
         error: 'Tipo de mensaje inválido'
       });
     }
 
-    // Check if user has access to this chat
+    // Check if user has access to this chat and chat is active
     const chatResult = await query(`
-      SELECT customer_id, provider_id FROM chats 
+      SELECT customer_id, provider_id, status FROM chats 
       WHERE id = $1 AND (customer_id = $2 OR provider_id = $2)
     `, [id, userId]);
 
@@ -365,6 +538,16 @@ exports.sendMessage = async (req, res) => {
     }
 
     const chat = chatResult.rows[0];
+
+    // Check if chat is active (unless it's a system message)
+    if (chat.status !== 'active' && message_type !== 'system') {
+      return res.status(400).json({
+        success: false,
+        error: chat.status === 'pending' 
+          ? 'La conversación aún no ha sido aceptada' 
+          : 'Esta conversación no está activa'
+      });
+    }
 
     // Create message
     const result = await query(`

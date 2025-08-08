@@ -1,27 +1,32 @@
 /**
- * User Type Transformer
+ * User Type Transformer - UPDATED WITH CENTRALIZED TYPES
  * Handles the mapping between frontend ('customer') and database ('client') user types
  * This maintains compatibility without breaking existing functionality
+ * Now integrates with centralized type definitions from ../types/index.js
  */
 
-// Frontend to Database mapping
+const { USER_TYPES, transformUserToFrontend, transformUserToDatabase } = require('../types/index');
+
+// Frontend to Database mapping - using centralized types
 const FRONTEND_TO_DB = {
-  'customer': 'client',
-  'provider': 'provider',
-  'admin': 'admin'
+  [USER_TYPES.FRONTEND.CUSTOMER]: USER_TYPES.DATABASE.CLIENT,
+  [USER_TYPES.FRONTEND.PROVIDER]: USER_TYPES.DATABASE.PROVIDER,
+  [USER_TYPES.FRONTEND.AS]: USER_TYPES.DATABASE.PROVIDER,
+  [USER_TYPES.FRONTEND.ADMIN]: USER_TYPES.DATABASE.ADMIN
 };
 
-// Database to Frontend mapping
+// Database to Frontend mapping - using centralized types
 const DB_TO_FRONTEND = {
-  'client': 'customer',
-  'provider': 'provider', 
-  'admin': 'admin'
+  [USER_TYPES.DATABASE.CLIENT]: USER_TYPES.FRONTEND.CUSTOMER,
+  [USER_TYPES.DATABASE.PROVIDER]: USER_TYPES.FRONTEND.PROVIDER,
+  [USER_TYPES.DATABASE.ADMIN]: USER_TYPES.FRONTEND.ADMIN
 };
 
 /**
  * Transform user type from frontend format to database format
  * @param {string} frontendUserType - User type from frontend ('customer', 'provider', 'admin')
  * @returns {string} Database user type ('client', 'provider', 'admin')
+ * @deprecated Use transformUserToDatabase from centralized types instead
  */
 function transformToDatabase(frontendUserType) {
   return FRONTEND_TO_DB[frontendUserType] || frontendUserType;

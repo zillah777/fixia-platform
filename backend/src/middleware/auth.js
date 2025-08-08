@@ -1,23 +1,75 @@
 const jwt = require('jsonwebtoken');
 const { query } = require('../config/database');
 const crypto = require('crypto');
+const { logger } = require('../utils/smartLogger');
 
 // Import blacklist functions from auth controller
 const { isTokenBlacklisted, blacklistToken } = require('../controllers/authController');
 
-// Función para generar token con JTI
-const generateToken = (payload) => {
+// Security constants
+const JWT_CONFIG = {
+  access: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_EXPIRE || '15m', // Shorter access token lifetime
+    issuer: process.env.JWT_ISSUER || 'fixia-api',
+    audience: process.env.JWT_AUDIENCE || 'fixia-app'
+  },
+  refresh: {
+    secret: process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_REFRESH_EXPIRE || '7d',
+    issuer: process.env.JWT_ISSUER || 'fixia-api',
+    audience: process.env.JWT_AUDIENCE || 'fixia-app'
+  }
+};
+
+// Función para generar access token con JTI
+const generateAccessToken = (payload) => {
   const jti = crypto.randomUUID();
-  return jwt.sign(
-    { ...payload, jti },
-    process.env.JWT_SECRET,
-    { 
-      expiresIn: process.env.JWT_EXPIRE || '7d',
-      jwtid: jti,
-      issuer: process.env.JWT_ISSUER || 'fixia-api',
-      audience: process.env.JWT_AUDIENCE || 'fixia-app'
-    }
-  );
+  const tokenPayload = {
+    ...payload,
+    jti,
+    type: 'access',
+    iat: Math.floor(Date.now() / 1000)
+  };
+  
+  return jwt.sign(tokenPayload, JWT_CONFIG.access.secret, {
+    expiresIn: JWT_CONFIG.access.expiresIn,
+    jwtid: jti,
+    issuer: JWT_CONFIG.access.issuer,
+    audience: JWT_CONFIG.access.audience
+  });
+};
+
+// Función para generar refresh token
+const generateRefreshToken = (payload) => {
+  const jti = crypto.randomUUID();
+  const tokenPayload = {
+    id: payload.id,
+    email: payload.email,
+    jti,
+    type: 'refresh',
+    iat: Math.floor(Date.now() / 1000)
+  };
+  
+  return jwt.sign(tokenPayload, JWT_CONFIG.refresh.secret, {
+    expiresIn: JWT_CONFIG.refresh.expiresIn,
+    jwtid: jti,
+    issuer: JWT_CONFIG.refresh.issuer,
+    audience: JWT_CONFIG.refresh.audience
+  });
+};
+
+// Función para generar par de tokens
+const generateTokenPair = (payload) => {
+  return {
+    accessToken: generateAccessToken(payload),
+    refreshToken: generateRefreshToken(payload)
+  };
+};
+
+// Legacy function for backward compatibility
+const generateToken = (payload) => {
+  return generateAccessToken(payload);
 };
 
 const authMiddleware = async (req, res, next) => {
@@ -39,15 +91,53 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET, {
-      clockTolerance: 60 // 1 minuto de tolerancia para clock skew
+    // Enhanced JWT verification with additional security checks
+    const decoded = jwt.verify(token, JWT_CONFIG.access.secret, {
+      clockTolerance: 30, // Reduced tolerance for tighter security
+      issuer: JWT_CONFIG.access.issuer,
+      audience: JWT_CONFIG.access.audience
     });
+    
+    // Verify token type
+    if (decoded.type && decoded.type !== 'access') {
+      logger.warn('🚨 Invalid token type used for authentication', {
+        tokenType: decoded.type,
+        userId: decoded.id,
+        ip: req.ip
+      });
+      return res.status(401).json({
+        success: false,
+        error: 'Tipo de token inválido'
+      });
+    }
 
-    // Validar claims requeridos
-    if (!decoded.id || !decoded.email || !decoded.user_type) {
+    // Validar claims requeridos con enhanced validation
+    if (!decoded.id || !decoded.email || !decoded.user_type || !decoded.jti) {
+      logger.warn('🚨 Invalid token claims detected', {
+        hasId: !!decoded.id,
+        hasEmail: !!decoded.email,
+        hasUserType: !!decoded.user_type,
+        hasJti: !!decoded.jti,
+        ip: req.ip
+      });
       return res.status(401).json({
         success: false,
         error: 'Token inválido - claims faltantes'
+      });
+    }
+    
+    // Additional security: Check token age
+    const tokenAge = Date.now() / 1000 - decoded.iat;
+    const maxTokenAge = 24 * 60 * 60; // 24 hours maximum
+    if (tokenAge > maxTokenAge) {
+      logger.warn('🚨 Suspiciously old token detected', {
+        tokenAge: tokenAge,
+        userId: decoded.id,
+        ip: req.ip
+      });
+      return res.status(401).json({
+        success: false,
+        error: 'Token demasiado antiguo'
       });
     }
     
@@ -105,7 +195,13 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    console.error('Auth middleware error:', error);
+    logger.error('🚨 Authentication middleware error', {
+      error: error.message,
+      stack: error.stack,
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+      path: req.path
+    });
     res.status(500).json({
       success: false,
       error: 'Error de autenticación'
@@ -134,11 +230,80 @@ const requireCustomer = (req, res, next) => {
   next();
 };
 
+// Middleware for refresh token validation
+const refreshTokenMiddleware = async (req, res, next) => {
+  try {
+    const refreshToken = req.body.refreshToken || req.header('X-Refresh-Token');
+    
+    if (!refreshToken) {
+      return res.status(401).json({
+        success: false,
+        error: 'Refresh token requerido'
+      });
+    }
+    
+    // Verify refresh token
+    const decoded = jwt.verify(refreshToken, JWT_CONFIG.refresh.secret, {
+      clockTolerance: 30,
+      issuer: JWT_CONFIG.refresh.issuer,
+      audience: JWT_CONFIG.refresh.audience
+    });
+    
+    // Verify token type
+    if (decoded.type !== 'refresh') {
+      return res.status(401).json({
+        success: false,
+        error: 'Tipo de token inválido'
+      });
+    }
+    
+    // Check if refresh token is blacklisted
+    if (isTokenBlacklisted(refreshToken)) {
+      return res.status(401).json({
+        success: false,
+        error: 'Refresh token revocado'
+      });
+    }
+    
+    // Verify user still exists and is active
+    const result = await query(
+      'SELECT id, email, user_type, is_active FROM users WHERE id = $1',
+      [decoded.id]
+    );
+    
+    if (result.rows.length === 0 || !result.rows[0].is_active) {
+      return res.status(401).json({
+        success: false,
+        error: 'Usuario no válido'
+      });
+    }
+    
+    req.user = result.rows[0];
+    req.refreshToken = refreshToken;
+    next();
+  } catch (error) {
+    logger.error('🚨 Refresh token middleware error', {
+      error: error.message,
+      ip: req.ip
+    });
+    
+    return res.status(401).json({
+      success: false,
+      error: 'Refresh token inválido'
+    });
+  }
+};
+
 module.exports = {
   authMiddleware,
+  refreshTokenMiddleware,
   requireProvider,
   requireCustomer,
   generateToken,
+  generateAccessToken,
+  generateRefreshToken,
+  generateTokenPair,
   blacklistToken,
-  isTokenBlacklisted
+  isTokenBlacklisted,
+  JWT_CONFIG
 };

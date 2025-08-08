@@ -1,4 +1,5 @@
 const { query } = require('../config/database');
+const mercadopagoService = require('../services/mercadopagoService');
 
 // GET /api/payments
 exports.getPayments = async (req, res) => {
@@ -245,15 +246,27 @@ exports.createPayment = async (req, res) => {
       });
     }
 
-    // Generate external ID (in real implementation, this would be from payment processor)
-    const external_id = `PAY_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Create MercadoPago payment preference for escrow transaction
+    const paymentPreference = await mercadopagoService.createBookingPayment({
+      bookingId: booking_id,
+      customerId: customerId,
+      providerId: booking.provider_id,
+      serviceTitle: booking.service_title,
+      serviceDescription: `Servicio de ${booking.service_title}`,
+      amount: parseFloat(booking.price),
+      customerEmail: req.user.email,
+      customerName: `${req.user.first_name} ${req.user.last_name}`,
+      providerName: 'Proveedor' // You might want to join with provider data
+    });
 
-    // Create payment
+    const external_id = paymentPreference.preference_id;
+
+    // Create payment record with MercadoPago integration
     const result = await query(`
-      INSERT INTO payments (booking_id, customer_id, amount, payment_method, external_id, status)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO payments (booking_id, customer_id, amount, payment_method, external_id, status, currency)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
-    `, [booking_id, customerId, booking.total_amount, payment_method, external_id, 'pending']);
+    `, [booking_id, customerId, booking.price, payment_method, external_id, 'pending', 'ARS']);
 
     const payment = result.rows[0];
 
@@ -274,7 +287,11 @@ exports.createPayment = async (req, res) => {
       message: 'Pago creado exitosamente',
       data: {
         payment,
-        payment_url: `${process.env.FRONTEND_URL}/payments/${payment.id}/process`
+        payment_url: paymentPreference.checkout_url,
+        preference_id: paymentPreference.preference_id,
+        expires_at: paymentPreference.expires_at,
+        amount: booking.price,
+        currency: 'ARS'
       }
     });
 

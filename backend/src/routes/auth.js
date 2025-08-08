@@ -3,11 +3,14 @@ const authController = require('../controllers/authController');
 const testController = require('../../test-controller');
 const { authMiddleware } = require('../middleware/auth');
 const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
+const { validateUserData, transformResponseData } = require('../middleware/typeValidation');
 
 const router = express.Router();
 
-// Apply user type transformation to all routes
+// Apply type transformation and validation to all routes
 router.use(userTypeTransformMiddleware);
+router.use(validateUserData);
+router.use(transformResponseData);
 
 /**
  * @swagger

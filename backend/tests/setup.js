@@ -1,12 +1,19 @@
-const { query } = require('../src/config/database');
+require('dotenv').config({ path: '.env.test' });
 
 // Global test setup
 beforeAll(async () => {
-  // Set test environment variables
+  // Ensure test environment
   process.env.NODE_ENV = 'test';
+  
+  // Override any remaining production values for safety
   process.env.JWT_SECRET = 'test-jwt-secret-key-for-testing-only';
+  process.env.SENDGRID_API_KEY = 'SG.test-api-key-disabled-for-testing';
+  process.env.DISABLE_CACHE = 'true';
+  process.env.DISABLE_EMAILS = 'true';
   
   console.log('🧪 Setting up test environment...');
+  console.log('📧 Email service disabled for tests');
+  console.log('🗄️ Cache service disabled for tests');
 });
 
 afterAll(async () => {
