@@ -48,8 +48,6 @@ const BuscarServicioPage: NextPage = () => {
     locality: '',
     specific_address: '',
     urgency: 'medium',
-    budget_min: undefined,
-    budget_max: undefined,
     preferred_date: '',
     preferred_time: '',
     flexible_timing: true
@@ -592,7 +590,18 @@ const BuscarServicioPage: NextPage = () => {
                           <Input
                             type="number"
                             value={formData.budget_min || ''}
-                            onChange={(e) => setFormData(prev => ({ ...prev, budget_min: e.target.value ? parseFloat(e.target.value) : undefined }))}
+                            onChange={(e) => {
+                              const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                              setFormData(prev => {
+                                const newData = { ...prev };
+                                if (value !== undefined) {
+                                  newData.budget_min = value;
+                                } else {
+                                  delete newData.budget_min;
+                                }
+                                return newData;
+                              });
+                            }}
                             placeholder="15,000"
                             className="glass border-white/20 bg-white/5 text-white placeholder:text-white/50 pl-8"
                           />
@@ -608,7 +617,18 @@ const BuscarServicioPage: NextPage = () => {
                           <Input
                             type="number"
                             value={formData.budget_max || ''}
-                            onChange={(e) => setFormData(prev => ({ ...prev, budget_max: e.target.value ? parseFloat(e.target.value) : undefined }))}
+                            onChange={(e) => {
+                              const value = e.target.value ? parseFloat(e.target.value) : undefined;
+                              setFormData(prev => {
+                                const newData = { ...prev };
+                                if (value !== undefined) {
+                                  newData.budget_max = value;
+                                } else {
+                                  delete newData.budget_max;
+                                }
+                                return newData;
+                              });
+                            }}
                             placeholder="50,000"
                             className="glass border-white/20 bg-white/5 text-white placeholder:text-white/50 pl-8"
                           />
