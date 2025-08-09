@@ -6,11 +6,17 @@ const { requireProvider, authMiddleware } = require('../middleware/auth');
 const { formatResponse, formatError, sanitizeUser, paginate } = require('../utils/helpers');
 const { transformUserForFrontend } = require('../utils/userTypeTransformer');
 const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
+const { debugUserRoutes } = require('../middleware/debugUsers');
 
 const router = express.Router();
 
-// Apply user type transformation to all routes
-router.use(userTypeTransformMiddleware);
+// Apply debug middleware first (only in development)
+if (process.env.NODE_ENV !== 'production') {
+  router.use(debugUserRoutes);
+}
+
+// NOTE: userTypeTransformMiddleware is applied selectively per route
+// Instead of applying to all routes, we'll add it only where needed
 
 // Configure multer for profile photo uploads
 const storage = multer.diskStorage({
@@ -40,7 +46,7 @@ const upload = multer({
 });
 
 // GET /api/users/profile - Get current user profile
-router.get('/profile', authMiddleware, async (req, res) => {
+router.get('/profile', authMiddleware, userTypeTransformMiddleware, async (req, res) => {
   try {
     const result = await query(
       'SELECT * FROM users WHERE id = $1',
@@ -65,7 +71,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
 });
 
 // PUT /api/users/profile - Update user profile
-router.put('/profile', authMiddleware, async (req, res) => {
+router.put('/profile', authMiddleware, userTypeTransformMiddleware, async (req, res) => {
   try {
     const { 
       first_name, 
