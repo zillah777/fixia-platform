@@ -372,11 +372,9 @@ export const authService = {
     const formData = new FormData();
     formData.append('photo', file);
     
-    const response = await api.post('/api/users/profile/photo', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    // Don't set Content-Type manually - let axios handle it automatically
+    // This allows the auth interceptor to add the Authorization header
+    const response = await api.post('/api/users/profile/photo', formData);
     return response.data.data;
   },
 
