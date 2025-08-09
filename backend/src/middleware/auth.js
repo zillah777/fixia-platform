@@ -42,7 +42,6 @@ const generateAccessToken = (payload) => {
   const jti = crypto.randomUUID();
   const tokenPayload = {
     ...payload,
-    jti,
     type: 'access',
     iat: Math.floor(Date.now() / 1000)
   };
@@ -61,7 +60,6 @@ const generateRefreshToken = (payload) => {
   const tokenPayload = {
     id: payload.id,
     email: payload.email,
-    jti,
     type: 'refresh',
     iat: Math.floor(Date.now() / 1000)
   };
