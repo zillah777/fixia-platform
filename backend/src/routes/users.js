@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const { query } = require('../config/database');
-const { requireProvider } = require('../middleware/auth');
+const { requireProvider, authMiddleware } = require('../middleware/auth');
 const { formatResponse, formatError, sanitizeUser, paginate } = require('../utils/helpers');
 const { transformUserForFrontend } = require('../utils/userTypeTransformer');
 const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
@@ -40,7 +40,7 @@ const upload = multer({
 });
 
 // GET /api/users/profile - Get current user profile
-router.get('/profile', async (req, res) => {
+router.get('/profile', authMiddleware, async (req, res) => {
   try {
     const result = await query(
       'SELECT * FROM users WHERE id = $1',
@@ -65,7 +65,7 @@ router.get('/profile', async (req, res) => {
 });
 
 // PUT /api/users/profile - Update user profile
-router.put('/profile', async (req, res) => {
+router.put('/profile', authMiddleware, async (req, res) => {
   try {
     const { 
       first_name, 
@@ -108,7 +108,7 @@ router.put('/profile', async (req, res) => {
 });
 
 // POST /api/users/profile/photo - Upload profile photo
-router.post('/profile/photo', upload.single('photo'), async (req, res) => {
+router.post('/profile/photo', authMiddleware, upload.single('photo'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json(formatError('No se proporcionó imagen'));
@@ -142,7 +142,7 @@ router.post('/profile/photo', upload.single('photo'), async (req, res) => {
 });
 
 // DELETE /api/users/profile/photo - Remove profile photo
-router.delete('/profile/photo', async (req, res) => {
+router.delete('/profile/photo', authMiddleware, async (req, res) => {
   try {
     await query(
       'UPDATE users SET profile_image = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = $1',

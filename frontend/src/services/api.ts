@@ -5,7 +5,7 @@ import { SECURITY_CONFIG } from '@/types/security';
 // Production security: Remove development hosts in production
 const API_URL = process.env['NEXT_PUBLIC_API_URL'] || (
   process.env['NODE_ENV'] === 'production' 
-    ? 'https://api.fixia.com.ar' // Production URL only
+    ? 'https://fixia-platform-production.up.railway.app' // Railway backend URL
     : 'http://localhost:5000' // Development fallback
 );
 
