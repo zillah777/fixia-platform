@@ -37,6 +37,17 @@ const comparePassword = async (password, hash) => {
 // POST /api/auth/register
 exports.register = async (req, res) => {
   try {
+    // Log request metadata for debugging
+    logger.info('📨 Registration request metadata', {
+      method: req.method,
+      url: req.url,
+      contentType: req.headers['content-type'],
+      hasBody: !!req.body,
+      bodyType: typeof req.body,
+      bodyKeys: req.body ? Object.keys(req.body) : [],
+      userAgent: req.headers['user-agent'],
+      ip: req.ip
+    });
     const { 
       first_name, 
       last_name, 
@@ -47,50 +58,147 @@ exports.register = async (req, res) => {
       locality
     } = req.body;
 
-    // Enhanced validation
-    if (!first_name || !last_name || !email || !password || !user_type) {
+    // Log the incoming request for debugging
+    logger.info('🔄 Registration request received', {
+      email: email,
+      userType: user_type,
+      hasFirstName: !!first_name,
+      hasLastName: !!last_name,
+      hasPassword: !!password,
+      hasPhone: !!phone,
+      hasLocality: !!locality,
+      requestBody: { ...req.body, password: 'HIDDEN' }
+    });
+
+    // Enhanced validation with detailed logging
+    const missingFields = [];
+    if (!first_name) missingFields.push('first_name');
+    if (!last_name) missingFields.push('last_name');
+    if (!email) missingFields.push('email');
+    if (!password) missingFields.push('password');
+    if (!user_type) missingFields.push('user_type');
+
+    if (missingFields.length > 0) {
+      logger.error('❌ Registration failed: Missing required fields', {
+        missingFields: missingFields,
+        email: email,
+        providedFields: Object.keys(req.body)
+      });
       return res.status(400).json({
         success: false,
-        error: 'Todos los campos requeridos deben ser proporcionados'
+        error: `Faltan campos requeridos: ${missingFields.join(', ')}`,
+        details: {
+          missing_fields: missingFields,
+          required_fields: ['first_name', 'last_name', 'email', 'password', 'user_type']
+        }
+      });
+    }
+
+    // Additional data validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      logger.error('❌ Registration failed: Invalid email format', {
+        email: email,
+        emailPattern: emailRegex.toString()
+      });
+      return res.status(400).json({
+        success: false,
+        error: 'Formato de email inválido',
+        details: {
+          error_type: 'invalid_email_format',
+          provided_email: email
+        }
+      });
+    }
+
+    if (password.length < 6) {
+      logger.error('❌ Registration failed: Password too short', {
+        email: email,
+        passwordLength: password.length,
+        minLength: 6
+      });
+      return res.status(400).json({
+        success: false,
+        error: 'La contraseña debe tener al menos 6 caracteres',
+        details: {
+          error_type: 'password_too_short',
+          provided_length: password.length,
+          minimum_length: 6
+        }
       });
     }
 
     // Validate user_type is acceptable frontend value
     const allowedUserTypes = ['customer', 'provider', 'admin'];
     if (!allowedUserTypes.includes(user_type)) {
+      logger.error('❌ Registration failed: Invalid user_type', {
+        providedUserType: user_type,
+        allowedUserTypes: allowedUserTypes,
+        email: email
+      });
       return res.status(400).json({
         success: false,
-        error: 'Tipo de usuario no válido'
+        error: `Tipo de usuario no válido. Debe ser uno de: ${allowedUserTypes.join(', ')}`,
+        details: {
+          provided_user_type: user_type,
+          allowed_user_types: allowedUserTypes
+        }
       });
     }
 
     // Check if email already exists
+    logger.info('🔍 Checking email uniqueness', { email: email });
     const existingUser = await query(
       'SELECT id FROM users WHERE email = $1',
       [email]
     );
     
     if (existingUser.rows.length > 0) {
+      logger.error('❌ Registration failed: Email already exists', {
+        email: email,
+        existingUserId: existingUser.rows[0].id
+      });
       return res.status(400).json({
         success: false,
-        error: 'Ya existe una cuenta con este email'
+        error: 'Ya existe una cuenta con este email',
+        details: {
+          error_type: 'email_already_exists'
+        }
       });
     }
 
+    logger.info('✅ Email uniqueness check passed', { email: email });
+
     // Transform user_type for database (customer -> client)
+    logger.info('🔄 Transforming user_type for database', { 
+      frontendType: user_type 
+    });
     const dbUserType = transformUserForDatabase({ user_type }).user_type;
     
     // Validate database user_type matches constraints
     const validDbUserTypes = ['client', 'provider', 'admin'];
+    logger.info('✅ User type transformation complete', {
+      frontendType: user_type,
+      dbType: dbUserType,
+      isValid: validDbUserTypes.includes(dbUserType)
+    });
+    
     if (!validDbUserTypes.includes(dbUserType)) {
       logger.error('❌ Invalid database user_type after transformation', {
         frontendType: user_type,
         dbType: dbUserType,
+        validDbTypes: validDbUserTypes,
         email: email
       });
       return res.status(400).json({
         success: false,
-        error: 'Error interno: tipo de usuario no válido'
+        error: 'Error interno: tipo de usuario no válido después de la transformación',
+        details: {
+          frontend_user_type: user_type,
+          database_user_type: dbUserType,
+          valid_database_types: validDbUserTypes,
+          error_type: 'user_type_transformation_failed'
+        }
       });
     }
     
@@ -133,7 +241,19 @@ exports.register = async (req, res) => {
       userType: user_type,
       dbUserType: dbUserType,
       hasPhone: !!phone,
-      hasLocality: !!locality
+      hasLocality: !!locality,
+      insertValues: {
+        first_name: insertValues[0],
+        last_name: insertValues[1],
+        email: insertValues[2],
+        password_hash: '***HIDDEN***',
+        user_type: insertValues[4],
+        phone: insertValues[5],
+        locality: insertValues[6],
+        verification_status: insertValues[7],
+        email_verified: insertValues[8],
+        is_active: insertValues[9]
+      }
     });
 
     const result = await query(insertQuery, insertValues);
