@@ -42,14 +42,25 @@ exports.register = async (req, res) => {
       last_name, 
       email, 
       password, 
-      user_type = 'customer'
+      user_type = 'customer', // Frontend default
+      phone,
+      locality
     } = req.body;
 
-    // Basic validation
-    if (!first_name || !last_name || !email || !password) {
+    // Enhanced validation
+    if (!first_name || !last_name || !email || !password || !user_type) {
       return res.status(400).json({
         success: false,
         error: 'Todos los campos requeridos deben ser proporcionados'
+      });
+    }
+
+    // Validate user_type is acceptable frontend value
+    const allowedUserTypes = ['customer', 'provider', 'admin'];
+    if (!allowedUserTypes.includes(user_type)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Tipo de usuario no válido'
       });
     }
 
@@ -66,21 +77,66 @@ exports.register = async (req, res) => {
       });
     }
 
-    // Use the proper transformer for user_type
+    // Transform user_type for database (customer -> client)
     const dbUserType = transformUserForDatabase({ user_type }).user_type;
+    
+    // Validate database user_type matches constraints
+    const validDbUserTypes = ['client', 'provider', 'admin'];
+    if (!validDbUserTypes.includes(dbUserType)) {
+      logger.error('❌ Invalid database user_type after transformation', {
+        frontendType: user_type,
+        dbType: dbUserType,
+        email: email
+      });
+      return res.status(400).json({
+        success: false,
+        error: 'Error interno: tipo de usuario no válido'
+      });
+    }
     
     // Hash password
     const password_hash = await hashPassword(password);
 
-    // Create user with minimal fields
-    const result = await query(`
+    // Create user with validated fields - explicit column mapping
+    const insertQuery = `
       INSERT INTO users (
-        first_name, last_name, email, password_hash, user_type
-      ) VALUES ($1, $2, $3, $4, $5)
-      RETURNING id, first_name, last_name, email, user_type, created_at
-    `, [
-      first_name, last_name, email, password_hash, dbUserType
-    ]);
+        first_name, 
+        last_name, 
+        email, 
+        password_hash, 
+        user_type,
+        phone,
+        locality,
+        verification_status,
+        email_verified,
+        is_active
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      RETURNING id, first_name, last_name, email, user_type, phone, locality, 
+                verification_status, email_verified, is_active, created_at
+    `;
+    
+    const insertValues = [
+      first_name, 
+      last_name, 
+      email, 
+      password_hash, 
+      dbUserType,
+      phone || null,
+      locality || null,
+      'pending', // verification_status default
+      false,     // email_verified default
+      true       // is_active default
+    ];
+
+    logger.info('🔄 Attempting user registration', {
+      email: email,
+      userType: user_type,
+      dbUserType: dbUserType,
+      hasPhone: !!phone,
+      hasLocality: !!locality
+    });
+
+    const result = await query(insertQuery, insertValues);
 
     const user = result.rows[0];
     
@@ -140,7 +196,57 @@ exports.register = async (req, res) => {
     }
 
   } catch (error) {
-    console.error('Registration error:', error);
+    logger.error('❌ Registration error occurred', {
+      error: error.message,
+      code: error.code,
+      detail: error.detail,
+      constraint: error.constraint,
+      table: error.table,
+      column: error.column,
+      email: req.body?.email,
+      user_type: req.body?.user_type,
+      stack: error.stack
+    });
+
+    // Handle specific PostgreSQL errors
+    if (error.code === '23505') { // Unique constraint violation
+      return res.status(409).json({
+        success: false,
+        error: 'Ya existe una cuenta con este email'
+      });
+    }
+    
+    if (error.code === '23514') { // Check constraint violation
+      return res.status(400).json({
+        success: false,
+        error: 'Datos de usuario no válidos. Verifica el tipo de usuario.'
+      });
+    }
+    
+    if (error.code === '23502') { // NOT NULL constraint violation
+      return res.status(400).json({
+        success: false,
+        error: 'Faltan campos requeridos para el registro'
+      });
+    }
+    
+    if (error.code === '42P01') { // Table does not exist
+      logger.error('🚨 CRITICAL: Users table does not exist', { error: error.message });
+      return res.status(500).json({
+        success: false,
+        error: 'Error de configuración de la base de datos'
+      });
+    }
+
+    // Generic database connection errors
+    if (error.message.includes('connect') || error.message.includes('connection')) {
+      return res.status(503).json({
+        success: false,
+        error: 'Servicio temporalmente no disponible. Intenta nuevamente.'
+      });
+    }
+
+    // Default error response
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
