@@ -169,35 +169,29 @@ exports.register = async (req, res) => {
 
     logger.info('✅ Email uniqueness check passed', { email: email });
 
-    // Transform user_type for database (customer -> client)
-    logger.info('🔄 Transforming user_type for database', { 
-      frontendType: user_type 
-    });
-    const dbUserType = transformUserForDatabase({ user_type }).user_type;
+    // user_type is already transformed by middleware (customer -> client)
+    const dbUserType = user_type;  // Already transformed by userTypeTransformMiddleware
     
-    // Validate database user_type matches constraints
+    // Validate database user_type matches constraints (safety check)
     const validDbUserTypes = ['client', 'provider', 'admin'];
-    logger.info('✅ User type transformation complete', {
-      frontendType: user_type,
+    logger.info('✅ Using middleware-transformed user type', {
       dbType: dbUserType,
       isValid: validDbUserTypes.includes(dbUserType)
     });
     
     if (!validDbUserTypes.includes(dbUserType)) {
-      logger.error('❌ Invalid database user_type after transformation', {
-        frontendType: user_type,
+      logger.error('❌ Invalid database user_type from middleware', {
         dbType: dbUserType,
         validDbTypes: validDbUserTypes,
         email: email
       });
       return res.status(400).json({
         success: false,
-        error: 'Error interno: tipo de usuario no válido después de la transformación',
+        error: 'Error interno: tipo de usuario no válido',
         details: {
-          frontend_user_type: user_type,
           database_user_type: dbUserType,
           valid_database_types: validDbUserTypes,
-          error_type: 'user_type_transformation_failed'
+          error_type: 'user_type_invalid'
         }
       });
     }

@@ -7,9 +7,9 @@ const { validateUserData, transformResponseData } = require('../middleware/typeV
 
 const router = express.Router();
 
-// Apply type transformation and validation to all routes
-router.use(userTypeTransformMiddleware);
+// Apply validation first, then transformation to all routes
 router.use(validateUserData);
+router.use(userTypeTransformMiddleware);
 router.use(transformResponseData);
 
 /**
