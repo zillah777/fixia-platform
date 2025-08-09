@@ -8,7 +8,28 @@ const { transformUserForFrontend } = require('../utils/userTypeTransformer');
 const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
 const { debugUserRoutes } = require('../middleware/debugUsers');
 
+// Configure multer for profile photo uploads
+const fs = require('fs');
+
+// Ensure upload directory exists
+const uploadDir = path.join(process.cwd(), 'uploads', 'profiles');
+
 const router = express.Router();
+
+// Serve uploaded profile photos
+router.get('/uploads/profiles/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(uploadDir, filename);
+  
+  console.log('📁 Serving static file:', filePath);
+  
+  if (!fs.existsSync(filePath)) {
+    console.error('❌ File not found:', filePath);
+    return res.status(404).json({ error: 'Imagen no encontrada' });
+  }
+  
+  res.sendFile(filePath);
+});
 
 // Apply debug middleware first (only in development)
 if (process.env.NODE_ENV !== 'production') {
@@ -17,11 +38,15 @@ if (process.env.NODE_ENV !== 'production') {
 
 // NOTE: userTypeTransformMiddleware is applied selectively per route
 // Instead of applying to all routes, we'll add it only where needed
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log('✅ Created upload directory:', uploadDir);
+}
 
-// Configure multer for profile photo uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/profiles/');
+    // Use absolute path to avoid issues
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -33,13 +58,21 @@ const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
   fileFilter: (req, file, cb) => {
+    console.log('🔍 File filter check:', {
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      size: file.size
+    });
+    
     const allowedTypes = /jpeg|jpg|png|webp/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowedTypes.test(file.mimetype);
 
     if (mimetype && extname) {
+      console.log('✅ File type accepted');
       return cb(null, true);
     } else {
+      console.log('❌ File type rejected');
       cb(new Error('Solo se permiten imágenes (JPEG, JPG, PNG, WebP)'));
     }
   }
@@ -114,9 +147,37 @@ router.put('/profile', authMiddleware, userTypeTransformMiddleware, async (req, 
 });
 
 // POST /api/users/profile/photo - Upload profile photo
-router.post('/profile/photo', authMiddleware, upload.single('photo'), async (req, res) => {
+router.post('/profile/photo', authMiddleware, (req, res, next) => {
+  console.log('🔍 Starting photo upload for user:', req.user?.id);
+  console.log('🔍 Headers:', {
+    contentType: req.headers['content-type'],
+    authorization: req.headers.authorization ? 'Bearer ***' : 'none'
+  });
+  
+  upload.single('photo')(req, res, (uploadError) => {
+    if (uploadError) {
+      console.error('❌ Multer error:', uploadError);
+      if (uploadError instanceof multer.MulterError) {
+        if (uploadError.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json(formatError('Archivo demasiado grande. Máximo 5MB'));
+        }
+        return res.status(400).json(formatError(`Error de archivo: ${uploadError.message}`));
+      }
+      return res.status(400).json(formatError(uploadError.message));
+    }
+    next();
+  });
+}, async (req, res) => {
   try {
+    console.log('✅ Upload middleware passed. File info:', {
+      hasFile: !!req.file,
+      filename: req.file?.filename,
+      size: req.file?.size,
+      mimetype: req.file?.mimetype
+    });
+
     if (!req.file) {
+      console.error('❌ No file received after upload middleware');
       return res.status(400).json(formatError('No se proporcionó imagen'));
     }
 
@@ -124,17 +185,24 @@ router.post('/profile/photo', authMiddleware, upload.single('photo'), async (req
     // Force clean URL construction
     const fullPhotoUrl = `https://fixia-platform-production.up.railway.app${photoUrl}`;
 
-    console.log('📸 Photo upload:', {
+    console.log('📸 Photo upload success:', {
       filename: req.file.filename,
       photoUrl: photoUrl,
       fullPhotoUrl: fullPhotoUrl,
-      backendUrl: process.env.BACKEND_URL
+      userId: req.user.id
     });
 
-    await query(
-      'UPDATE users SET profile_image = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+    const result = await query(
+      'UPDATE users SET profile_image = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING profile_image',
       [photoUrl, req.user.id]
     );
+
+    if (result.rows.length === 0) {
+      console.error('❌ User not found during photo update:', req.user.id);
+      return res.status(404).json(formatError('Usuario no encontrado'));
+    }
+
+    console.log('✅ Database updated successfully');
 
     res.json(formatResponse({
       profile_photo_url: fullPhotoUrl,
@@ -142,8 +210,8 @@ router.post('/profile/photo', authMiddleware, upload.single('photo'), async (req
     }, 'Foto de perfil actualizada exitosamente'));
 
   } catch (error) {
-    console.error('Upload photo error:', error);
-    res.status(500).json(formatError('Error al subir foto'));
+    console.error('❌ Upload photo error:', error);
+    res.status(500).json(formatError('Error interno del servidor'));
   }
 });
 
