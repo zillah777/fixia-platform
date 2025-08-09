@@ -151,8 +151,11 @@ function validateObject(data, schema) {
 const validateUserData = (req, res, next) => {
   try {
     if (req.body && typeof req.body === 'object') {
-      // Validate user data only if user fields are present
-      if (req.body.user_type || req.body.first_name || req.body.last_name || req.body.email) {
+      // Check if this is a registration request (has user_type or name fields)
+      // Login requests only have email + password, so they should skip user validation
+      const isRegistrationData = req.body.user_type || req.body.first_name || req.body.last_name;
+      
+      if (isRegistrationData) {
         const errors = validateObject(req.body, VALIDATION_RULES.user);
         if (errors.length > 0) {
           return res.status(400).json({
@@ -167,6 +170,7 @@ const validateUserData = (req, res, next) => {
           req.body = transformUserToDatabase(req.body);
         }
       }
+      // Login requests (email + password only) skip this validation
     }
     
     next();
