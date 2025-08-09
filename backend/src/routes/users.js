@@ -7,6 +7,7 @@ const { formatResponse, formatError, sanitizeUser, paginate } = require('../util
 const { transformUserForFrontend } = require('../utils/userTypeTransformer');
 const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
 const { debugUserRoutes } = require('../middleware/debugUsers');
+const { debugAuthMiddleware } = require('../middleware/debugAuth');
 
 // Configure multer for profile photo uploads
 const fs = require('fs');
@@ -79,7 +80,7 @@ const upload = multer({
 });
 
 // GET /api/users/profile - Get current user profile
-router.get('/profile', authMiddleware, userTypeTransformMiddleware, async (req, res) => {
+router.get('/profile', debugAuthMiddleware, authMiddleware, userTypeTransformMiddleware, async (req, res) => {
   try {
     const result = await query(
       'SELECT * FROM users WHERE id = $1',
@@ -104,7 +105,7 @@ router.get('/profile', authMiddleware, userTypeTransformMiddleware, async (req, 
 });
 
 // PUT /api/users/profile - Update user profile
-router.put('/profile', authMiddleware, userTypeTransformMiddleware, async (req, res) => {
+router.put('/profile', debugAuthMiddleware, authMiddleware, userTypeTransformMiddleware, async (req, res) => {
   try {
     const { 
       first_name, 
@@ -147,7 +148,7 @@ router.put('/profile', authMiddleware, userTypeTransformMiddleware, async (req, 
 });
 
 // POST /api/users/profile/photo - Upload profile photo
-router.post('/profile/photo', authMiddleware, (req, res, next) => {
+router.post('/profile/photo', debugAuthMiddleware, authMiddleware, (req, res, next) => {
   console.log('🔍 Starting photo upload for user:', req.user?.id);
   console.log('🔍 Headers:', {
     contentType: req.headers['content-type'],
