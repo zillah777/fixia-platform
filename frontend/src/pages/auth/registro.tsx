@@ -21,6 +21,7 @@ const Registro: NextPage = () => {
     confirmPassword: '',
     user_type: 'customer' as 'customer' | 'provider'
   });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -57,6 +58,12 @@ const Registro: NextPage = () => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
+
+    if (!acceptedTerms) {
+      setError('Debes aceptar los términos y condiciones para poder crear tu cuenta.');
+      setIsLoading(false);
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError('Las dos contraseñas no son iguales. Por favor, escribe la misma contraseña en ambos campos.');
@@ -321,6 +328,43 @@ const Registro: NextPage = () => {
                     </div>
                   </div>
 
+                  {/* Terms and Conditions Acceptance */}
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3 p-4 glass border-white/20 rounded-lg">
+                      <input
+                        id="terms"
+                        type="checkbox"
+                        checked={acceptedTerms}
+                        onChange={(e) => setAcceptedTerms(e.target.checked)}
+                        className="w-4 h-4 text-primary bg-transparent border-white/30 rounded focus:ring-primary/30 focus:ring-2 focus:border-primary/50 mt-0.5"
+                        required
+                      />
+                      <Label htmlFor="terms" className="text-sm leading-relaxed cursor-pointer">
+                        <span className="text-white/90">
+                          Al crear tu cuenta, aceptas nuestros{" "}
+                          <Link 
+                            href="/legal/terms" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-primary hover:text-primary/80 underline transition-colors"
+                          >
+                            Términos y Condiciones
+                          </Link>
+                          {" "}y{" "}
+                          <Link 
+                            href="/legal/privacy" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-primary hover:text-primary/80 underline transition-colors"
+                          >
+                            Política de Privacidad
+                          </Link>
+                          . Estos documentos explican cómo funciona Fixia y cómo protegemos tu información.
+                        </span>
+                      </Label>
+                    </div>
+                  </div>
+
                   {/* Submit Button */}
                   <Button
                     type="submit"
@@ -328,8 +372,8 @@ const Registro: NextPage = () => {
                       isPromotionEligible 
                         ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600' 
                         : 'liquid-gradient hover:opacity-90'
-                    }`}
-                    disabled={isLoading}
+                    } ${!acceptedTerms ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={isLoading || !acceptedTerms}
                   >
                     {isLoading ? (
                       <>
