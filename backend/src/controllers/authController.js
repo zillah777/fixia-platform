@@ -128,8 +128,10 @@ exports.register = async (req, res) => {
       });
     }
 
-    // Validate user_type is acceptable frontend value
-    const allowedUserTypes = ['customer', 'provider', 'admin'];
+    // Validate user_type - accept both frontend and backend values
+    // Frontend: customer, provider, admin
+    // Backend: client, provider, admin (after middleware transformation)
+    const allowedUserTypes = ['customer', 'provider', 'admin', 'client'];
     if (!allowedUserTypes.includes(user_type)) {
       logger.error('❌ Registration failed: Invalid user_type', {
         providedUserType: user_type,
@@ -138,10 +140,10 @@ exports.register = async (req, res) => {
       });
       return res.status(400).json({
         success: false,
-        error: `Tipo de usuario no válido. Debe ser uno de: ${allowedUserTypes.join(', ')}`,
+        error: `Tipo de usuario no válido. Debe ser uno de: customer, provider, admin`,
         details: {
           provided_user_type: user_type,
-          allowed_user_types: allowedUserTypes
+          allowed_user_types: ['customer', 'provider', 'admin'] // Show frontend values only
         }
       });
     }
