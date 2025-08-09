@@ -49,6 +49,22 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// Debug middleware FIRST - before CORS
+app.use((req, res, next) => {
+  if (req.url.includes('/profile/photo')) {
+    console.log('🔍 EARLY DEBUG - Photo upload request:', {
+      method: req.method,
+      url: req.url,
+      contentType: req.headers['content-type'],
+      hasAuth: !!req.headers.authorization,
+      authHeader: req.headers.authorization ? req.headers.authorization.substring(0, 30) + '...' : 'none',
+      origin: req.headers.origin,
+      userAgent: req.headers['user-agent']?.substring(0, 50)
+    });
+  }
+  next();
+});
+
 // CORS middleware - working configuration
 app.use((req, res, next) => {
   const origin = req.headers.origin;
@@ -75,6 +91,40 @@ app.use((req, res, next) => {
 // Body parsing
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Response debug middleware - capture ALL responses
+app.use((req, res, next) => {
+  const originalJson = res.json;
+  const originalStatus = res.status;
+  
+  res.json = function(data) {
+    if (req.url.includes('/profile/photo') && (res.statusCode >= 400 || !data.success)) {
+      console.log('🚨 PHOTO UPLOAD ERROR RESPONSE:', {
+        url: req.url,
+        method: req.method,
+        statusCode: res.statusCode,
+        responseData: data,
+        hasUser: !!req.user,
+        userId: req.user?.id
+      });
+    }
+    return originalJson.call(this, data);
+  };
+  
+  res.status = function(code) {
+    if (req.url.includes('/profile/photo') && code >= 400) {
+      console.log('🚨 PHOTO UPLOAD STATUS ERROR:', {
+        url: req.url,
+        method: req.method,
+        statusCode: code,
+        hasUser: !!req.user
+      });
+    }
+    return originalStatus.call(this, code);
+  };
+  
+  next();
+});
 
 // Static file serving moved to AFTER API routes but BEFORE 404 handler
 
