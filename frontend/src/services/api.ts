@@ -89,17 +89,28 @@ api.interceptors.response.use(
       // Only auto-logout for specific 401 errors, not all of them
       const errorMessage = (error.response?.data as { error?: string })?.error || '';
       
-      // Auto-logout only for these specific errors (but not for "Token de acceso requerido" which can be temporary)
+      // Check if user has token but server rejects it (JWT secret regeneration scenario)
+      const hasStoredToken = localStorage.getItem('token');
+      const isSecurityUpgrade = errorMessage.includes('Token de acceso requerido') && hasStoredToken;
+      
+      // Auto-logout for authentication errors (including after JWT secret regeneration)
       if (errorMessage.includes('Token expirado') || 
           errorMessage.includes('Token inválido') || 
           errorMessage.includes('Token revocado') ||
           errorMessage.includes('Usuario no encontrado') ||
-          errorMessage.includes('Cuenta desactivada')) {
+          errorMessage.includes('Cuenta desactivada') ||
+          isSecurityUpgrade) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('loginTime');
         window.location.href = '/auth/login';
-        toast.error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+        
+        // Specific message for JWT secret regeneration scenario
+        if (isSecurityUpgrade) {
+          toast.error('🔐 Sesión invalidada por mejoras de seguridad. Por favor, inicia sesión nuevamente.');
+        } else {
+          toast.error('Sesión expirada. Por favor, inicia sesión nuevamente.');
+        }
       } else {
         // For other 401 errors, just reject without auto-logout
         console.warn('401 error without auto-logout:', errorMessage);
