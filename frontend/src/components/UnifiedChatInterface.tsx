@@ -352,7 +352,7 @@ export function UnifiedChatInterface({
     );
   }
 
-  const otherParticipant = chat.participants.find(p => p.id !== user?.id);
+  const otherParticipant = chat.participants.find(p => p.id !== user?.id?.toString());
   const isServiceCompleted = chat.status === 'completed';
   const canCompleteService = userType === 'provider' && enableServiceCompletion && chat.status === 'active';
 
