@@ -6,8 +6,6 @@ const { requireProvider, authMiddleware } = require('../middleware/auth');
 const { formatResponse, formatError, sanitizeUser, paginate } = require('../utils/helpers');
 const { transformUserForFrontend } = require('../utils/userTypeTransformer');
 const { userTypeTransformMiddleware } = require('../middleware/userTypeTransform');
-const { debugUserRoutes } = require('../middleware/debugUsers');
-const { debugAuthMiddleware } = require('../middleware/debugAuth');
 
 // Configure multer for profile photo uploads
 const fs = require('fs');
@@ -32,10 +30,7 @@ router.get('/uploads/profiles/:filename', (req, res) => {
   res.sendFile(filePath);
 });
 
-// Apply debug middleware first (only in development)
-if (process.env.NODE_ENV !== 'production') {
-  router.use(debugUserRoutes);
-}
+// Debug middleware removed - clean production build
 
 // NOTE: userTypeTransformMiddleware is applied selectively per route
 // Instead of applying to all routes, we'll add it only where needed
@@ -80,7 +75,7 @@ const upload = multer({
 });
 
 // GET /api/users/profile - Get current user profile
-router.get('/profile', debugAuthMiddleware, authMiddleware, userTypeTransformMiddleware, async (req, res) => {
+router.get('/profile', authMiddleware, userTypeTransformMiddleware, async (req, res) => {
   try {
     const result = await query(
       'SELECT * FROM users WHERE id = $1',
@@ -105,7 +100,7 @@ router.get('/profile', debugAuthMiddleware, authMiddleware, userTypeTransformMid
 });
 
 // PUT /api/users/profile - Update user profile
-router.put('/profile', debugAuthMiddleware, authMiddleware, userTypeTransformMiddleware, async (req, res) => {
+router.put('/profile', authMiddleware, userTypeTransformMiddleware, async (req, res) => {
   try {
     const { 
       first_name, 
@@ -148,7 +143,7 @@ router.put('/profile', debugAuthMiddleware, authMiddleware, userTypeTransformMid
 });
 
 // POST /api/users/profile/photo - Upload profile photo
-router.post('/profile/photo', debugAuthMiddleware, authMiddleware, (req, res, next) => {
+router.post('/profile/photo', authMiddleware, (req, res, next) => {
   console.log('🔍 Starting photo upload for user:', req.user?.id);
   console.log('🔍 Headers:', {
     contentType: req.headers['content-type'],
