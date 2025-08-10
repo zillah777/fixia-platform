@@ -1,4 +1,5 @@
 const { query } = require('../config/database');
+const { logger } = require('../utils/smartLogger');
 
 // GET /api/bookings
 exports.getBookings = async (req, res) => {
@@ -122,11 +123,8 @@ exports.getBookings = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get bookings error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Get bookings error:', error);
+    return res.error('Error interno del servidor', 500);
   }
 };
 
@@ -176,10 +174,7 @@ exports.getBookingById = async (req, res) => {
     `, [id, userId]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Reserva no encontrada'
-      });
+      return res.notFound('Reserva no encontrada');
     }
 
     res.json({
@@ -189,11 +184,8 @@ exports.getBookingById = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get booking by ID error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Get booking by ID error:', error);
+    return res.error('Error interno del servidor', 500);
   }
 };
 
@@ -228,10 +220,7 @@ exports.createBooking = async (req, res) => {
     `, [service_id]);
 
     if (serviceResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Servicio no encontrado'
-      });
+      return res.notFound('Servicio no encontrado');
     }
 
     const service = serviceResult.rows[0];
@@ -310,11 +299,8 @@ exports.createBooking = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Create booking error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Create booking error:', error);
+    return res.error('Error interno del servidor', 500);
   }
 };
 
@@ -346,10 +332,7 @@ exports.updateBookingStatus = async (req, res) => {
     `, [id]);
 
     if (bookingResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Reserva no encontrada'
-      });
+      return res.notFound('Reserva no encontrada');
     }
 
     const booking = bookingResult.rows[0];
@@ -415,11 +398,8 @@ exports.updateBookingStatus = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Update booking status error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Update booking status error:', error);
+    return res.error('Error interno del servidor', 500);
   }
 };
 
@@ -437,10 +417,7 @@ exports.deleteBooking = async (req, res) => {
     `, [id]);
 
     if (bookingResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Reserva no encontrada'
-      });
+      return res.notFound('Reserva no encontrada');
     }
 
     const booking = bookingResult.rows[0];
@@ -469,11 +446,8 @@ exports.deleteBooking = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Delete booking error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Delete booking error:', error);
+    return res.error('Error interno del servidor', 500);
   }
 };
 
@@ -538,10 +512,7 @@ exports.getBookingStats = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get booking stats error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Get booking stats error:', error);
+    return res.error('Error interno del servidor', 500);
   }
 };

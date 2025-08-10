@@ -109,7 +109,7 @@ exports.handleMercadoPagoWebhook = async (req, res) => {
     }
 
   } catch (error) {
-    console.error(`❌ [${webhookId}] Error processing webhook:`, error);
+    logger.error(`❌ [${webhookId}] Error processing webhook:`, error);
     
     // Log failed webhook for retry mechanism
     await logWebhookProcessing(webhookId, req.body, { error: error.message }, Date.now() - startTime);
@@ -195,7 +195,7 @@ exports.handlePaymentCompletion = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Error processing payment completion:', error);
+    logger.error('❌ Error processing payment completion:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -260,7 +260,7 @@ exports.handleRefundRequest = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Error processing refund request:', error);
+    logger.error('❌ Error processing refund request:', error);
     res.status(500).json({
       success: false,
       error: error.message || 'Error interno del servidor'
@@ -295,7 +295,7 @@ exports.getWebhookStatus = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Error getting webhook status:', error);
+    logger.error('❌ Error getting webhook status:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -332,7 +332,7 @@ exports.testWebhook = async (req, res) => {
     return await exports.handleMercadoPagoWebhook(req, res);
 
   } catch (error) {
-    console.error('❌ Error processing test webhook:', error);
+    logger.error('❌ Error processing test webhook:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -353,7 +353,7 @@ async function checkDuplicateWebhook(dataId, type) {
 
     return result.rows.length > 0;
   } catch (error) {
-    console.error('❌ Error checking duplicate webhook:', error);
+    logger.error('❌ Error checking duplicate webhook:', error);
     return false; // Continue processing if we can't check
   }
 }
@@ -378,7 +378,7 @@ async function logWebhookProcessing(webhookId, webhookData, result, processingTi
       result.processed ? 'processed' : (result.error ? 'failed' : 'skipped')
     ]);
   } catch (error) {
-    console.error('❌ Error logging webhook processing:', error);
+    logger.error('❌ Error logging webhook processing:', error);
     // Don't throw - logging failure shouldn't break webhook processing
   }
 }

@@ -108,7 +108,7 @@ exports.getReviews = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get reviews error:', error);
+    logger.error('Get reviews error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -161,7 +161,7 @@ exports.getReviewById = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get review by ID error:', error);
+    logger.error('Get review by ID error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -259,7 +259,7 @@ exports.createReview = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Create review error:', error);
+    logger.error('Create review error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -345,7 +345,7 @@ exports.updateReview = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Update review error:', error);
+    logger.error('Update review error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -388,7 +388,7 @@ exports.deleteReview = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Delete review error:', error);
+    logger.error('Delete review error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -454,7 +454,7 @@ exports.getProviderReviewStats = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get provider review stats error:', error);
+    logger.error('Get provider review stats error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -500,7 +500,7 @@ exports.getServiceReviewStats = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get service review stats error:', error);
+    logger.error('Get service review stats error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -534,6 +534,6 @@ async function updateServiceRatingStats(serviceId) {
     ]);
 
   } catch (error) {
-    console.error('Update service rating stats error:', error);
+    logger.error('Update service rating stats error:', error);
   }
 }

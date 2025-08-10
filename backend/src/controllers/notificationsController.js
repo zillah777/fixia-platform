@@ -76,7 +76,7 @@ exports.getNotifications = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get notifications error:', error);
+    logger.error('Get notifications error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -119,7 +119,7 @@ exports.getNotificationById = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get notification by ID error:', error);
+    logger.error('Get notification by ID error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -154,7 +154,7 @@ exports.markNotificationAsRead = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Mark notification as read error:', error);
+    logger.error('Mark notification as read error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -182,7 +182,7 @@ exports.markAllNotificationsAsRead = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Mark all notifications as read error:', error);
+    logger.error('Mark all notifications as read error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -214,7 +214,7 @@ exports.deleteNotification = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Delete notification error:', error);
+    logger.error('Delete notification error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -241,7 +241,7 @@ exports.clearAllNotifications = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Clear all notifications error:', error);
+    logger.error('Clear all notifications error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -269,7 +269,7 @@ exports.getUnreadCount = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get unread count error:', error);
+    logger.error('Get unread count error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -330,7 +330,7 @@ exports.getNotificationStats = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get notification stats error:', error);
+    logger.error('Get notification stats error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -385,7 +385,7 @@ exports.getNotificationPreferences = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get notification preferences error:', error);
+    logger.error('Get notification preferences error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -471,7 +471,7 @@ exports.updateNotificationPreferences = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Update notification preferences error:', error);
+    logger.error('Update notification preferences error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -527,7 +527,7 @@ exports.createNotification = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Create notification error:', error);
+    logger.error('Create notification error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'

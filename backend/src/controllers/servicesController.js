@@ -1,7 +1,7 @@
 const { query } = require('../config/database');
 const cacheService = require('../services/cacheService');
 const { CACHE_TTL } = require('../config/redis');
-const logger = require('../utils/logger');
+const { logger } = require('../utils/smartLogger');
 const { services: servicesHelper, users: usersHelper } = require('../utils/databaseHelpers');
 
 // GET /api/services
@@ -209,7 +209,7 @@ exports.getServices = async (req, res) => {
     );
 
   } catch (error) {
-    console.error('Get services error:', error);
+    logger.error('Get services error:', error);
     return res.dbError(error, 'Error al obtener los servicios');
   }
 };
@@ -297,7 +297,7 @@ exports.getServiceById = async (req, res) => {
     );
 
   } catch (error) {
-    console.error('Get service by ID error:', error);
+    logger.error('Get service by ID error:', error);
     return res.dbError(error, 'Error al obtener el servicio');
   }
 };
@@ -392,7 +392,7 @@ exports.createService = async (req, res) => {
     return res.success(service, 'Servicio creado exitosamente', 201);
 
   } catch (error) {
-    console.error('Create service error:', error);
+    logger.error('Create service error:', error);
     return res.dbError(error, 'Error al crear el servicio');
   }
 };
@@ -464,7 +464,7 @@ exports.updateService = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Update service error:', error);
+    logger.error('Update service error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -527,7 +527,7 @@ exports.deleteService = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Delete service error:', error);
+    logger.error('Delete service error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -581,7 +581,7 @@ exports.getServicesByProvider = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get services by provider error:', error);
+    logger.error('Get services by provider error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -612,7 +612,7 @@ exports.getCategories = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get categories error:', error);
+    logger.error('Get categories error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'

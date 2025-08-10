@@ -94,7 +94,7 @@ exports.getChats = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get chats error:', error);
+    logger.error('Get chats error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -153,7 +153,7 @@ exports.getChatById = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get chat by ID error:', error);
+    logger.error('Get chat by ID error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -281,7 +281,7 @@ exports.createChat = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Create chat error:', error);
+    logger.error('Create chat error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -363,7 +363,7 @@ exports.getChatMessages = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get chat messages error:', error);
+    logger.error('Get chat messages error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -431,7 +431,7 @@ exports.acceptChat = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Accept chat error:', error);
+    logger.error('Accept chat error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -494,7 +494,7 @@ exports.rejectChat = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Reject chat error:', error);
+    logger.error('Reject chat error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -600,7 +600,7 @@ exports.sendMessage = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Send message error:', error);
+    logger.error('Send message error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -644,7 +644,7 @@ exports.markMessagesAsRead = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Mark messages as read error:', error);
+    logger.error('Mark messages as read error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -680,7 +680,7 @@ exports.deleteChat = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Delete chat error:', error);
+    logger.error('Delete chat error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'
@@ -717,7 +717,7 @@ exports.getUnreadCount = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get unread count error:', error);
+    logger.error('Get unread count error:', error);
     res.status(500).json({
       success: false,
       error: 'Error interno del servidor'

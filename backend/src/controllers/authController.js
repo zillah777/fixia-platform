@@ -84,14 +84,10 @@ exports.register = async (req, res) => {
         email: email,
         providedFields: Object.keys(req.body)
       });
-      return res.status(400).json({
-        success: false,
-        error: `Faltan campos requeridos: ${missingFields.join(', ')}`,
-        details: {
-          missing_fields: missingFields,
-          required_fields: ['first_name', 'last_name', 'email', 'password', 'user_type']
-        }
-      });
+      return res.validation({
+        missing_fields: missingFields,
+        required_fields: ['first_name', 'last_name', 'email', 'password', 'user_type']
+      }, `Faltan campos requeridos: ${missingFields.join(', ')}`);
     }
 
     // Additional data validation
@@ -101,14 +97,10 @@ exports.register = async (req, res) => {
         email: email,
         emailPattern: emailRegex.toString()
       });
-      return res.status(400).json({
-        success: false,
-        error: 'Formato de email inválido',
-        details: {
-          error_type: 'invalid_email_format',
-          provided_email: email
-        }
-      });
+      return res.validation({
+        error_type: 'invalid_email_format',
+        provided_email: email
+      }, 'Formato de email inválido');
     }
 
     if (password.length < 6) {
@@ -117,15 +109,11 @@ exports.register = async (req, res) => {
         passwordLength: password.length,
         minLength: 6
       });
-      return res.status(400).json({
-        success: false,
-        error: 'La contraseña debe tener al menos 6 caracteres',
-        details: {
-          error_type: 'password_too_short',
-          provided_length: password.length,
-          minimum_length: 6
-        }
-      });
+      return res.validation({
+        error_type: 'password_too_short',
+        provided_length: password.length,
+        minimum_length: 6
+      }, 'La contraseña debe tener al menos 6 caracteres');
     }
 
     // Validate user_type - accept both frontend and backend values
@@ -138,14 +126,10 @@ exports.register = async (req, res) => {
         allowedUserTypes: allowedUserTypes,
         email: email
       });
-      return res.status(400).json({
-        success: false,
-        error: `Tipo de usuario no válido. Debe ser uno de: customer, provider, admin`,
-        details: {
-          provided_user_type: user_type,
-          allowed_user_types: ['customer', 'provider', 'admin'] // Show frontend values only
-        }
-      });
+      return res.validation({
+        provided_user_type: user_type,
+        allowed_user_types: ['customer', 'provider', 'admin'] // Show frontend values only
+      }, `Tipo de usuario no válido. Debe ser uno de: customer, provider, admin`);
     }
 
     // Check if email already exists
@@ -160,12 +144,8 @@ exports.register = async (req, res) => {
         email: email,
         existingUserId: existingUser.rows[0].id
       });
-      return res.status(400).json({
-        success: false,
-        error: 'Ya existe una cuenta con este email',
-        details: {
-          error_type: 'email_already_exists'
-        }
+      return res.error('Ya existe una cuenta con este email', 409, {
+        error_type: 'email_already_exists'
       });
     }
 
@@ -187,14 +167,10 @@ exports.register = async (req, res) => {
         validDbTypes: validDbUserTypes,
         email: email
       });
-      return res.status(400).json({
-        success: false,
-        error: 'Error interno: tipo de usuario no válido',
-        details: {
-          database_user_type: dbUserType,
-          valid_database_types: validDbUserTypes,
-          error_type: 'user_type_invalid'
-        }
+      return res.error('Error interno: tipo de usuario no válido', 500, {
+        database_user_type: dbUserType,
+        valid_database_types: validDbUserTypes,
+        error_type: 'user_type_invalid'
       });
     }
     
@@ -280,35 +256,27 @@ exports.register = async (req, res) => {
       try {
         const emailResult = await EmailService.sendVerificationEmail(user, user.user_type);
         if (emailResult.success) {
-          console.log(`✅ Verification email sent to ${user.email}`);
+          logger.info(`✅ Verification email sent to ${user.email}`);
         } else {
-          console.error('⚠️ Failed to send verification email:', emailResult.error);
+          logger.error('⚠️ Failed to send verification email:', emailResult.error);
         }
       } catch (emailError) {
-        console.error('⚠️ Error sending verification email:', emailError);
+        logger.error('⚠️ Error sending verification email:', emailError);
       }
 
-      res.status(201).json({
-        success: true,
-        message: 'Usuario registrado exitosamente. Revisa tu email para verificar tu cuenta.',
-        data: {
-          user: sanitizeUser(user),
-          emailVerificationRequired: true,
-          requiresVerification: true
-        }
-      });
+      return res.success({
+        user: sanitizeUser(user),
+        emailVerificationRequired: true,
+        requiresVerification: true
+      }, 'Usuario registrado exitosamente. Revisa tu email para verificar tu cuenta.', 201);
     } else {
       // Development mode - auto-login
-      res.status(201).json({
-        success: true,
-        message: 'Usuario registrado exitosamente.',
-        data: {
-          user: sanitizeUser(user),
-          accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
-          emailVerificationRequired: false
-        }
-      });
+      return res.success({
+        user: sanitizeUser(user),
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        emailVerificationRequired: false
+      }, 'Usuario registrado exitosamente.', 201);
     }
 
   } catch (error) {
@@ -324,49 +292,31 @@ exports.register = async (req, res) => {
       stack: error.stack
     });
 
-    // Handle specific PostgreSQL errors
+    // Handle specific PostgreSQL errors using responseFormatter
     if (error.code === '23505') { // Unique constraint violation
-      return res.status(409).json({
-        success: false,
-        error: 'Ya existe una cuenta con este email'
-      });
+      return res.error('Ya existe una cuenta con este email', 409);
     }
     
     if (error.code === '23514') { // Check constraint violation
-      return res.status(400).json({
-        success: false,
-        error: 'Datos de usuario no válidos. Verifica el tipo de usuario.'
-      });
+      return res.error('Datos de usuario no válidos. Verifica el tipo de usuario.', 400);
     }
     
     if (error.code === '23502') { // NOT NULL constraint violation
-      return res.status(400).json({
-        success: false,
-        error: 'Faltan campos requeridos para el registro'
-      });
+      return res.error('Faltan campos requeridos para el registro', 400);
     }
     
     if (error.code === '42P01') { // Table does not exist
       logger.error('🚨 CRITICAL: Users table does not exist', { error: error.message });
-      return res.status(500).json({
-        success: false,
-        error: 'Error de configuración de la base de datos'
-      });
+      return res.error('Error de configuración de la base de datos', 500);
     }
 
     // Generic database connection errors
     if (error.message.includes('connect') || error.message.includes('connection')) {
-      return res.status(503).json({
-        success: false,
-        error: 'Servicio temporalmente no disponible. Intenta nuevamente.'
-      });
+      return res.error('Servicio temporalmente no disponible. Intenta nuevamente.', 503);
     }
 
-    // Default error response
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    // Default error response using responseFormatter
+    return res.dbError(error);
   }
 };
 
@@ -377,10 +327,7 @@ exports.login = async (req, res) => {
 
     // Validation
     if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        error: 'Email y contraseña son requeridos'
-      });
+      return res.validation({ missing_fields: ['email', 'password'] }, 'Email y contraseña son requeridos');
     }
 
     // Find user by email
@@ -390,10 +337,7 @@ exports.login = async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res.status(401).json({
-        success: false,
-        error: 'Credenciales inválidas'
-      });
+      return res.unauthorized('Credenciales inválidas');
     }
 
     const user = result.rows[0];
@@ -401,17 +345,12 @@ exports.login = async (req, res) => {
     // Verify password
     const isPasswordValid = await comparePassword(password, user.password_hash);
     if (!isPasswordValid) {
-      return res.status(401).json({
-        success: false,
-        error: 'Credenciales inválidas'
-      });
+      return res.unauthorized('Credenciales inválidas');
     }
 
     // Check if email is verified (production security)
     if (!user.email_verified && process.env.NODE_ENV === 'production') {
-      return res.status(403).json({
-        success: false,
-        error: 'Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.',
+      return res.error('Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.', 403, {
         code: 'EMAIL_NOT_VERIFIED',
         email: user.email
       });
@@ -470,22 +409,15 @@ exports.login = async (req, res) => {
       }
     };
 
-    res.json({
-      success: true,
-      message: 'Inicio de sesión exitoso',
-      data: {
-        user: userWithStats,
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken
-      }
-    });
+    return res.success({
+      user: userWithStats,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken
+    }, 'Inicio de sesión exitoso');
 
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Login error:', error);
+    return res.dbError(error, 'Error en el inicio de sesión');
   }
 };
 
@@ -501,10 +433,7 @@ exports.getCurrentUser = async (req, res) => {
     );
 
     if (userResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Usuario no encontrado'
-      });
+      return res.notFound('Usuario no encontrado');
     }
 
     const user = userResult.rows[0];
@@ -541,18 +470,11 @@ exports.getCurrentUser = async (req, res) => {
       }
     };
 
-    res.json({
-      success: true,
-      message: 'Usuario obtenido exitosamente',
-      data: userWithStats
-    });
+    return res.success(userWithStats, 'Usuario obtenido exitosamente');
 
   } catch (error) {
-    console.error('Get current user error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Get current user error:', error);
+    return res.dbError(error, 'Error al obtener el usuario actual');
   }
 };
 
@@ -583,10 +505,7 @@ exports.updateProfile = async (req, res) => {
     });
 
     if (Object.keys(updates).length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: 'No hay campos válidos para actualizar'
-      });
+      return res.validation({ allowed_fields: allowedFields }, 'No hay campos válidos para actualizar');
     }
 
     const setClause = Object.keys(updates).map(key => `${key} = ${updates[key]}`).join(', ');
@@ -600,24 +519,14 @@ exports.updateProfile = async (req, res) => {
     `, values);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Usuario no encontrado'
-      });
+      return res.notFound('Usuario no encontrado');
     }
 
-    res.json({
-      success: true,
-      message: 'Perfil actualizado exitosamente',
-      data: sanitizeUser(result.rows[0])
-    });
+    return res.success(sanitizeUser(result.rows[0]), 'Perfil actualizado exitosamente');
 
   } catch (error) {
-    console.error('Update profile error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Update profile error:', error);
+    return res.dbError(error, 'Error al actualizar el perfil');
   }
 };
 
@@ -629,17 +538,11 @@ exports.changePassword = async (req, res) => {
 
     // Validation
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({
-        success: false,
-        error: 'Contraseña actual y nueva contraseña son requeridas'
-      });
+      return res.validation({ missing_fields: ['currentPassword', 'newPassword'] }, 'Contraseña actual y nueva contraseña son requeridas');
     }
 
     if (!validatePassword(newPassword)) {
-      return res.status(400).json({
-        success: false,
-        error: 'La nueva contraseña debe tener al menos 6 caracteres'
-      });
+      return res.validation({ error_type: 'password_too_short' }, 'La nueva contraseña debe tener al menos 6 caracteres');
     }
 
     // Get current user with password hash
@@ -649,10 +552,7 @@ exports.changePassword = async (req, res) => {
     );
 
     if (userResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Usuario no encontrado'
-      });
+      return res.notFound('Usuario no encontrado');
     }
 
     const user = userResult.rows[0];
@@ -660,10 +560,7 @@ exports.changePassword = async (req, res) => {
     // Verify current password
     const isCurrentPasswordValid = await comparePassword(currentPassword, user.password_hash);
     if (!isCurrentPasswordValid) {
-      return res.status(400).json({
-        success: false,
-        error: 'La contraseña actual es incorrecta'
-      });
+      return res.error('La contraseña actual es incorrecta', 400, { error_type: 'invalid_current_password' });
     }
 
     // Hash new password
@@ -675,17 +572,11 @@ exports.changePassword = async (req, res) => {
       [newPasswordHash, userId]
     );
 
-    res.json({
-      success: true,
-      message: 'Contraseña cambiada exitosamente'
-    });
+    return res.success(null, 'Contraseña cambiada exitosamente');
 
   } catch (error) {
-    console.error('Change password error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Change password error:', error);
+    return res.dbError(error, 'Error al cambiar la contraseña');
   }
 };
 
@@ -717,14 +608,10 @@ exports.refreshToken = async (req, res) => {
       userAgent: req.headers['user-agent']
     });
     
-    res.json({
-      success: true,
-      message: 'Tokens renovados exitosamente',
-      data: {
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken
-      }
-    });
+    return res.success({
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken
+    }, 'Tokens renovados exitosamente');
     
   } catch (error) {
     logger.error('🚨 Token refresh error', {
@@ -733,10 +620,7 @@ exports.refreshToken = async (req, res) => {
       userAgent: req.headers['user-agent']
     });
     
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    return res.error('Error interno del servidor', 500);
   }
 };
 
@@ -762,10 +646,7 @@ exports.logout = async (req, res) => {
       userAgent: req.headers['user-agent']
     });
     
-    res.json({
-      success: true,
-      message: 'Sesión cerrada exitosamente'
-    });
+    return res.success(null, 'Sesión cerrada exitosamente');
     
   } catch (error) {
     logger.error('🚨 Logout error', {
@@ -774,9 +655,6 @@ exports.logout = async (req, res) => {
       ip: req.ip
     });
     
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    return res.error('Error interno del servidor', 500);
   }
 };

@@ -1,5 +1,6 @@
 const { query } = require('../config/database');
 const mercadopagoService = require('../services/mercadopagoService');
+const { logger } = require('../utils/smartLogger');
 
 // GET /api/payments
 exports.getPayments = async (req, res) => {
@@ -107,26 +108,16 @@ exports.getPayments = async (req, res) => {
     const countResult = await query(countQuery, params.slice(0, -2));
     const total = parseInt(countResult.rows[0].total);
 
-    res.json({
-      success: true,
-      message: 'Pagos obtenidos exitosamente',
-      data: {
-        payments: result.rows,
-        pagination: {
-          page: parseInt(page),
-          limit: parseInt(limit),
-          total,
-          pages: Math.ceil(total / limit)
-        }
-      }
-    });
+    return res.paginated(result.rows, {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      total,
+      pages: Math.ceil(total / limit)
+    }, 'Pagos obtenidos exitosamente');
 
   } catch (error) {
-    console.error('Get payments error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Get payments error:', error);
+    return res.dbError(error, 'Error al obtener los pagos');
   }
 };
 
@@ -173,24 +164,14 @@ exports.getPaymentById = async (req, res) => {
     `, [id, userId]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Pago no encontrado'
-      });
+      return res.notFound('Pago no encontrado');
     }
 
-    res.json({
-      success: true,
-      message: 'Pago obtenido exitosamente',
-      data: result.rows[0]
-    });
+    return res.success(result.rows[0], 'Pago obtenido exitosamente');
 
   } catch (error) {
-    console.error('Get payment by ID error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Get payment by ID error:', error);
+    return res.dbError(error, 'Error al obtener el pago');
   }
 };
 
@@ -202,10 +183,7 @@ exports.createPayment = async (req, res) => {
 
     // Validation
     if (!booking_id || !payment_method) {
-      return res.status(400).json({
-        success: false,
-        error: 'El ID de la reserva y el método de pago son requeridos'
-      });
+      return res.validation({ missing_fields: ['booking_id', 'payment_method'] }, 'El ID de la reserva y el método de pago son requeridos');
     }
 
     // Check if booking exists and belongs to the customer
@@ -217,19 +195,16 @@ exports.createPayment = async (req, res) => {
     `, [booking_id, customerId]);
 
     if (bookingResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Reserva no encontrada'
-      });
+      return res.notFound('Reserva no encontrada');
     }
 
     const booking = bookingResult.rows[0];
 
     // Check if booking is confirmed
     if (booking.status !== 'confirmed') {
-      return res.status(400).json({
-        success: false,
-        error: 'Solo se pueden procesar pagos para reservas confirmadas'
+      return res.error('Solo se pueden procesar pagos para reservas confirmadas', 400, {
+        error_type: 'booking_not_confirmed',
+        booking_status: booking.status
       });
     }
 
@@ -240,9 +215,9 @@ exports.createPayment = async (req, res) => {
     );
 
     if (existingPaymentResult.rows.length > 0) {
-      return res.status(400).json({
-        success: false,
-        error: 'Esta reserva ya tiene un pago procesado'
+      return res.error('Esta reserva ya tiene un pago procesado', 409, {
+        error_type: 'payment_already_exists',
+        existing_payment_id: existingPaymentResult.rows[0].id
       });
     }
 
@@ -282,25 +257,18 @@ exports.createPayment = async (req, res) => {
       payment.id
     ]);
 
-    res.status(201).json({
-      success: true,
-      message: 'Pago creado exitosamente',
-      data: {
-        payment,
-        payment_url: paymentPreference.checkout_url,
-        preference_id: paymentPreference.preference_id,
-        expires_at: paymentPreference.expires_at,
-        amount: booking.price,
-        currency: 'ARS'
-      }
-    });
+    return res.success({
+      payment,
+      payment_url: paymentPreference.checkout_url,
+      preference_id: paymentPreference.preference_id,
+      expires_at: paymentPreference.expires_at,
+      amount: booking.price,
+      currency: 'ARS'
+    }, 'Pago creado exitosamente', 201);
 
   } catch (error) {
-    console.error('Create payment error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Create payment error:', error);
+    return res.dbError(error, 'Error al crear el pago');
   }
 };
 
@@ -312,10 +280,7 @@ exports.updatePaymentStatus = async (req, res) => {
 
     const validStatuses = ['pending', 'approved', 'rejected', 'cancelled', 'refunded'];
     if (!validStatuses.includes(status)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Estado de pago inválido'
-      });
+      return res.validation({ valid_statuses: validStatuses, provided_status: status }, 'Estado de pago inválido');
     }
 
     // Get payment details
@@ -328,10 +293,7 @@ exports.updatePaymentStatus = async (req, res) => {
     `, [id]);
 
     if (paymentResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Pago no encontrado'
-      });
+      return res.notFound('Pago no encontrado');
     }
 
     const payment = paymentResult.rows[0];
@@ -407,18 +369,11 @@ exports.updatePaymentStatus = async (req, res) => {
       providerNotification.type, id
     ]);
 
-    res.json({
-      success: true,
-      message: 'Estado de pago actualizado exitosamente',
-      data: result.rows[0]
-    });
+    return res.success(result.rows[0], 'Estado de pago actualizado exitosamente');
 
   } catch (error) {
-    console.error('Update payment status error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Update payment status error:', error);
+    return res.dbError(error, 'Error al actualizar el estado del pago');
   }
 };
 
@@ -439,27 +394,23 @@ exports.requestRefund = async (req, res) => {
     `, [id]);
 
     if (paymentResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Pago no encontrado'
-      });
+      return res.notFound('Pago no encontrado');
     }
 
     const payment = paymentResult.rows[0];
 
     // Check if user has permission to request refund
     if (payment.customer_id !== userId) {
-      return res.status(403).json({
-        success: false,
-        error: 'Solo el cliente puede solicitar un reembolso'
+      return res.error('Solo el cliente puede solicitar un reembolso', 403, {
+        error_type: 'unauthorized_refund_request'
       });
     }
 
     // Check if payment is eligible for refund
     if (payment.status !== 'approved') {
-      return res.status(400).json({
-        success: false,
-        error: 'Solo se pueden reembolsar pagos aprobados'
+      return res.error('Solo se pueden reembolsar pagos aprobados', 400, {
+        error_type: 'payment_not_eligible_for_refund',
+        current_status: payment.status
       });
     }
 
@@ -495,22 +446,15 @@ exports.requestRefund = async (req, res) => {
       id
     ]);
 
-    res.json({
-      success: true,
-      message: 'Reembolso procesado exitosamente',
-      data: {
-        payment_id: id,
-        status: 'refunded',
-        reason
-      }
-    });
+    return res.success({
+      payment_id: id,
+      status: 'refunded',
+      reason
+    }, 'Reembolso procesado exitosamente');
 
   } catch (error) {
-    console.error('Request refund error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Request refund error:', error);
+    return res.dbError(error, 'Error al procesar el reembolso');
   }
 };
 
@@ -559,33 +503,26 @@ exports.getPaymentStats = async (req, res) => {
       ORDER BY year DESC, month DESC
     `, [userId]);
 
-    res.json({
-      success: true,
-      message: 'Estadísticas de pagos obtenidas exitosamente',
-      data: {
-        total_payments: parseInt(stats.total_payments),
-        pending_payments: parseInt(stats.pending_payments),
-        approved_payments: parseInt(stats.approved_payments),
-        rejected_payments: parseInt(stats.rejected_payments),
-        cancelled_payments: parseInt(stats.cancelled_payments),
-        refunded_payments: parseInt(stats.refunded_payments),
-        total_earnings: parseFloat(stats.total_earnings),
-        average_payment: parseFloat(stats.average_payment),
-        monthly_breakdown: monthlyResult.rows.map(row => ({
-          year: parseInt(row.year),
-          month: parseInt(row.month),
-          payments: parseInt(row.payments),
-          earnings: parseFloat(row.earnings)
-        }))
-      }
-    });
+    return res.success({
+      total_payments: parseInt(stats.total_payments),
+      pending_payments: parseInt(stats.pending_payments),
+      approved_payments: parseInt(stats.approved_payments),
+      rejected_payments: parseInt(stats.rejected_payments),
+      cancelled_payments: parseInt(stats.cancelled_payments),
+      refunded_payments: parseInt(stats.refunded_payments),
+      total_earnings: parseFloat(stats.total_earnings),
+      average_payment: parseFloat(stats.average_payment),
+      monthly_breakdown: monthlyResult.rows.map(row => ({
+        year: parseInt(row.year),
+        month: parseInt(row.month),
+        payments: parseInt(row.payments),
+        earnings: parseFloat(row.earnings)
+      }))
+    }, 'Estadísticas de pagos obtenidas exitosamente');
 
   } catch (error) {
-    console.error('Get payment stats error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Get payment stats error:', error);
+    return res.dbError(error, 'Error al obtener estadísticas de pagos');
   }
 };
 
@@ -639,28 +576,21 @@ exports.getEarnings = async (req, res) => {
       ORDER BY year, month
     `, [userId]);
 
-    res.json({
-      success: true,
-      message: 'Ganancias obtenidas exitosamente',
-      data: {
-        total_earnings: parseFloat(earnings.total_earnings),
-        completed_payments: parseInt(earnings.completed_payments),
-        pending_payments: parseInt(earnings.pending_payments),
-        average_payment: parseFloat(earnings.average_payment),
-        monthly_breakdown: monthlyResult.rows.map(row => ({
-          year: parseInt(row.year),
-          month: parseInt(row.month),
-          earnings: parseFloat(row.earnings),
-          payments: parseInt(row.payments)
-        }))
-      }
-    });
+    return res.success({
+      total_earnings: parseFloat(earnings.total_earnings),
+      completed_payments: parseInt(earnings.completed_payments),
+      pending_payments: parseInt(earnings.pending_payments),
+      average_payment: parseFloat(earnings.average_payment),
+      monthly_breakdown: monthlyResult.rows.map(row => ({
+        year: parseInt(row.year),
+        month: parseInt(row.month),
+        earnings: parseFloat(row.earnings),
+        payments: parseInt(row.payments)
+      }))
+    }, 'Ganancias obtenidas exitosamente');
 
   } catch (error) {
-    console.error('Get earnings error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    logger.error('Get earnings error:', error);
+    return res.dbError(error, 'Error al obtener las ganancias');
   }
 };

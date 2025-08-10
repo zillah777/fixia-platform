@@ -1,5 +1,6 @@
 const { query } = require('../config/database');
 const { users: usersHelper } = require('../utils/databaseHelpers');
+const { logger } = require('../utils/smartLogger');
 
 // GET /api/dashboard/explorer-stats
 exports.getExplorerStats = async (req, res) => {
@@ -58,7 +59,7 @@ exports.getExplorerStats = async (req, res) => {
     }, 'Estadísticas del explorador obtenidas exitosamente');
 
   } catch (error) {
-    console.error('Explorer stats error:', error);
+    logger.error('Explorer stats error:', error);
     return res.dbError(error, 'Error al obtener estadísticas del explorador');
   }
 };
@@ -142,7 +143,7 @@ exports.getProviderStats = async (req, res) => {
     }, 'Estadísticas del proveedor obtenidas exitosamente');
 
   } catch (error) {
-    console.error('Provider stats error:', error);
+    logger.error('Provider stats error:', error);
     return res.dbError(error, 'Error al obtener estadísticas del proveedor');
   }
 };
@@ -184,7 +185,7 @@ exports.getGeneralStats = async (req, res) => {
     }, 'Estadísticas generales obtenidas exitosamente');
 
   } catch (error) {
-    console.error('General stats error:', error);
+    logger.error('General stats error:', error);
     return res.dbError(error, 'Error al obtener estadísticas generales');
   }
 };
