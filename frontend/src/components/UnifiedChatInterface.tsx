@@ -259,7 +259,7 @@ export function UnifiedChatInterface({
       const optimisticMessage: UnifiedMessage = {
         id: `temp-${Date.now().toString()}`,
         content: messageContent,
-        sender_id: user!.id,
+        sender_id: user!.id.toString(),
         sender_type: userType,
         timestamp: new Date().toISOString(),
         status: 'sending',
@@ -470,7 +470,7 @@ export function UnifiedChatInterface({
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         <AnimatePresence>
           {messages.map((message, index) => {
-            const isOwnMessage = message.sender_id === user?.id;
+            const isOwnMessage = message.sender_id === user?.id.toString();
             const showAvatar = index === 0 || messages[index - 1]?.sender_id !== message.sender_id;
             
             if (messageBubbleComponent) {
