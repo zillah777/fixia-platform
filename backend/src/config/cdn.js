@@ -140,9 +140,7 @@ const setCacheHeaders = (type = 'api') => {
     // Security headers for assets
     if (type === 'images' || type === 'assets') {
       res.set('X-Content-Type-Options', 'nosniff');
-      res.set('Access-Control-Allow-Origin', '*');
-      res.set('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-      res.set('Access-Control-Max-Age', '86400');
+      // CORS headers handled by main CORS middleware - no manual headers needed
     }
 
     next();

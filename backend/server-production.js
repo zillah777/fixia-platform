@@ -999,10 +999,7 @@ app.use('/uploads', (req, res, next) => {
     userAgent: req.headers['user-agent']?.substring(0, 50)
   });
   
-  // Always allow CORS for images (since origin might be undefined for direct requests)
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma, Expires, X-Custom-Header');
+  // CORS headers are handled by the main CORS middleware - no manual headers needed here
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {

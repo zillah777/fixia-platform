@@ -27,36 +27,77 @@ const securityConfig = {
 };
 
 /**
- * CORS configuration for production
+ * ENTERPRISE-GRADE CORS CONFIGURATION
+ * Unified CORS configuration with security-first approach
  */
 const corsConfig = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, etc.)
+    // Allow requests with no origin (mobile apps, Postman, direct server calls)
     if (!origin) return callback(null, true);
     
+    // Production and development allowed origins
     const allowedOrigins = [
+      // Production domains
       'https://fixia-platform.vercel.app',
       'https://fixia.com.ar',
+      'https://www.fixia.com.ar',
+      // Development domains
       'http://localhost:3000',
-      'http://localhost:3001'
+      'http://localhost:3001',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001'
     ];
     
-    // Check if origin contains our domain (for preview deployments)
-    const isAllowed = allowedOrigins.some(allowed => 
-      origin === allowed || origin.includes('fixia-platform') || origin.includes('vercel.app')
-    );
-    
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      console.warn('🚫 CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
+    // Check exact match first (most secure)
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
     }
+    
+    // Allow Vercel preview deployments (only for fixia-platform)
+    if (origin.includes('fixia-platform') && origin.includes('vercel.app') && origin.startsWith('https://')) {
+      return callback(null, true);
+    }
+    
+    // Block all other origins
+    console.warn('🚫 CORS BLOCKED - Unauthorized origin:', origin);
+    callback(new Error('CORS: Origin not allowed'));
   },
+  
+  // Enable credentials for authenticated requests
   credentials: true,
+  
+  // Allowed HTTP methods
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range']
+  
+  // Allowed headers (including Cache-Control which was causing the error)
+  allowedHeaders: [
+    'Origin', 
+    'X-Requested-With', 
+    'Content-Type', 
+    'Accept', 
+    'Authorization',
+    'Cache-Control',      // ✅ CRITICAL: Frontend sends this header
+    'Pragma',
+    'Expires',
+    'X-Custom-Header',
+    'X-CSRF-Token',
+    'X-API-Version'
+  ],
+  
+  // Headers exposed to the client (for rate limiting and pagination)
+  exposedHeaders: [
+    'X-RateLimit-Remaining',
+    'X-RateLimit-Reset', 
+    'Content-Range',
+    'X-Content-Range'
+  ],
+  
+  // Preflight cache duration (24 hours)
+  maxAge: 86400,
+  
+  // Handle preflight for all routes
+  preflightContinue: false,
+  optionsSuccessStatus: 200
 };
 
 /**
@@ -127,16 +168,14 @@ const configureBodyParsing = (app) => {
 const configureStaticFiles = (app) => {
   console.log('📁 Configuring static file serving...');
   
-  // Static files with CORS and security
+  // Static files with security headers (CORS handled by main middleware)
   app.use('/uploads', (req, res, next) => {
     // Log static file requests in development
     if (process.env.NODE_ENV === 'development') {
       console.log('📁 Static file request:', req.url);
     }
     
-    // Security headers for static files
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+    // Security headers for static files (CORS already handled by main middleware)
     res.header('X-Content-Type-Options', 'nosniff');
     
     // Cache control for different file types

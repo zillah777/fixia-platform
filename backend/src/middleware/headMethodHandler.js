@@ -24,27 +24,8 @@ const headMethodHandler = () => {
         category: 'cors'
       });
 
-      // Set the same headers as our main CORS middleware
-      const origin = req.headers.origin;
-      const allowedOrigins = [
-        'https://fixia-platform.vercel.app',
-        'https://fixia.com.ar',
-        'http://localhost:3000',
-        'http://localhost:3001'
-      ];
-
-      if (origin && allowedOrigins.includes(origin)) {
-        res.header('Access-Control-Allow-Origin', origin);
-      } else if (origin && origin.includes('fixia-platform') && origin.includes('vercel.app')) {
-        res.header('Access-Control-Allow-Origin', origin);
-      } else {
-        res.header('Access-Control-Allow-Origin', 'https://fixia-platform.vercel.app');
-      }
-
-      res.header('Access-Control-Allow-Credentials', 'true');
-      res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma,Expires,X-Custom-Header');
-      res.header('Access-Control-Max-Age', '86400');
+      // CORS headers are already handled by the main CORS middleware
+      // No need to manually set CORS headers here - just return successful HEAD response
 
       // Return successful response without executing route logic
       return res.status(200).end();
