@@ -3,23 +3,42 @@ const { query } = require('../config/database');
 const crypto = require('crypto');
 const { logger } = require('../utils/smartLogger');
 
-// In-memory blacklist for revoked tokens (in production, use Redis or database)
-const tokenBlacklist = new Set();
+// Redis-based blacklist for revoked tokens (enterprise-grade security)
+const { getRedisClient, CACHE_TTL } = require('../config/redis');
 
-// Helper function to add token to blacklist
-const blacklistToken = (token) => {
-  tokenBlacklist.add(token);
-  // Optional: Set timeout to remove token after expiration
-  // This helps prevent memory leaks
-  setTimeout(() => {
-    tokenBlacklist.delete(token);
-  }, 7 * 24 * 60 * 60 * 1000); // 7 days
+// Helper function to add token to blacklist with automatic TTL
+const blacklistToken = async (token) => {
+  try {
+    const redis = getRedisClient();
+    const key = `fixia:blacklist:token:${token}`;
+    
+    // Set with 7 days TTL (matches JWT expiration)
+    await redis.setex(key, 7 * 24 * 60 * 60, 'blacklisted');
+    console.log('✅ Token blacklisted successfully:', token.substring(0, 20) + '...');
+  } catch (error) {
+    console.error('❌ Error blacklisting token:', error);
+    // Fallback to in-memory if Redis fails
+    _memoryBlacklist.add(token);
+  }
 };
 
 // Helper function to check if token is blacklisted
-const isTokenBlacklisted = (token) => {
-  return tokenBlacklist.has(token);
+const isTokenBlacklisted = async (token) => {
+  try {
+    const redis = getRedisClient();
+    const key = `fixia:blacklist:token:${token}`;
+    
+    const result = await redis.exists(key);
+    return result > 0;
+  } catch (error) {
+    console.error('❌ Error checking token blacklist:', error);
+    // Fallback to in-memory if Redis fails
+    return _memoryBlacklist.has(token);
+  }
 };
+
+// In-memory fallback blacklist (only used if Redis fails)
+const _memoryBlacklist = new Set();
 
 // Security constants
 const JWT_CONFIG = {
@@ -96,8 +115,9 @@ const authMiddleware = async (req, res, next) => {
       });
     }
 
-    // Verificar si el token está en blacklist
-    if (isTokenBlacklisted(token)) {
+    // Verificar si el token está en blacklist (Redis check)
+    const isBlacklisted = await isTokenBlacklisted(token);
+    if (isBlacklisted) {
       return res.status(401).json({
         success: false,
         error: 'Token revocado'
@@ -270,8 +290,9 @@ const refreshTokenMiddleware = async (req, res, next) => {
       });
     }
     
-    // Check if refresh token is blacklisted
-    if (isTokenBlacklisted(refreshToken)) {
+    // Check if refresh token is blacklisted (Redis check)
+    const isBlacklisted = await isTokenBlacklisted(refreshToken);
+    if (isBlacklisted) {
       return res.status(401).json({
         success: false,
         error: 'Refresh token revocado'

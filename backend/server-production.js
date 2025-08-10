@@ -65,28 +65,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS middleware - working configuration
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  console.log('🌐 Request from:', origin, req.method, req.url);
-  
-  if (origin && origin.includes('fixia-platform.vercel.app')) {
-    res.header('Access-Control-Allow-Origin', origin);
-  } else {
-    res.header('Access-Control-Allow-Origin', 'https://fixia-platform.vercel.app');
-  }
-  
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization,Cache-Control,Pragma,Expires,X-Custom-Header');
-  
-  if (req.method === 'OPTIONS') {
-    console.log('✅ Handling OPTIONS preflight');
-    return res.status(200).end();
-  }
-  
-  next();
-});
+// CORS middleware - use secure configured CORS from middleware.js
+const { corsMiddleware } = require('./src/config/middleware');
+app.use(corsMiddleware);
 
 // Body parsing
 app.use(express.json({ limit: '5mb' }));

@@ -76,10 +76,10 @@ class MercadoPagoService {
     } = bookingData;
 
     try {
-      // Calculate platform fee (5% default)
-      const platformFeeRate = parseFloat(process.env.PLATFORM_FEE_RATE || '0.05');
-      const platformFee = Math.round(amount * platformFeeRate * 100) / 100;
-      const providerAmount = amount - platformFee;
+      // NO PLATFORM FEE - Fixia doesn't charge commissions (per terms & conditions)
+      const platformFeeRate = parseFloat(process.env.PLATFORM_FEE_RATE || '0.0');
+      const platformFee = Math.round(amount * platformFeeRate * 100) / 100; // Should be 0
+      const providerAmount = amount - platformFee; // Full amount goes to provider
 
       const preference = {
         items: [

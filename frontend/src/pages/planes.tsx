@@ -64,7 +64,7 @@ const plans: Plan[] = [
       { text: 'Perfil básico de profesional', included: true },
       { text: 'Comunicación directa con clientes', included: true },
       { text: 'Acceso al marketplace', included: true },
-      { text: 'Comisión del 8% por transacción', included: true, highlight: true },
+      { text: 'Sin comisiones por transacciones', included: true, highlight: true },
       { text: 'Posición estándar en búsquedas', included: false },
       { text: 'Badge de profesional verificado', included: false },
       { text: 'Estadísticas avanzadas', included: false },
@@ -90,7 +90,7 @@ const plans: Plan[] = [
       { text: 'Perfil premium con portafolio', included: true },
       { text: 'Badge de profesional verificado', included: true, highlight: true },
       { text: 'Prioridad en resultados de búsqueda', included: true, highlight: true },
-      { text: 'Comisión reducida del 5%', included: true, highlight: true },
+      { text: 'Sin comisiones por transacciones', included: true, highlight: true },
       { text: 'Estadísticas detalladas y análisis', included: true },
       { text: 'Soporte prioritario 24/7', included: true },
       { text: 'Promoción en redes sociales', included: true },
@@ -163,7 +163,7 @@ const faqs = [
   },
   {
     question: '¿Cuál es la diferencia en las comisiones?',
-    answer: 'Plan Básico: 8% de comisión. Plan Profesional: 5% de comisión. Plan Plus: 0% de comisión. Esto significa que con planes premium conservas más de tus ganancias.'
+    answer: 'Fixia NO cobra comisiones sobre transacciones. Todos los planes permiten que conserves el 100% de tus ganancias. La diferencia entre planes está en las funcionalidades adicionales, visibilidad y herramientas profesionales.'
   },
   {
     question: '¿Cómo funciona la prioridad en búsquedas?',
@@ -207,14 +207,15 @@ export default function PlanesPage() {
 
   const calculateROI = (plan: Plan) => {
     if (plan.id === 'basic') {
-      const commission = monthlyEarnings * 0.08;
-      return monthlyEarnings - commission;
+      // No commission - all earnings are kept
+      return monthlyEarnings;
     } else if (plan.id === 'professional') {
-      const commission = monthlyEarnings * 0.05;
-      const increased = monthlyEarnings * 1.5; // 50% more earnings
-      return increased - commission - plan.price;
+      // No commission + 50% more earnings due to better visibility
+      const increased = monthlyEarnings * 1.5;
+      return increased - plan.price;
     } else {
-      const increased = monthlyEarnings * 2; // 100% more earnings
+      // No commission + 100% more earnings due to premium features
+      const increased = monthlyEarnings * 2;
       return increased - plan.price;
     }
   };
@@ -341,7 +342,7 @@ export default function PlanesPage() {
                 aria-describedby="hero-description"
               >
                 <span id="hero-description">
-                  Más visibilidad, menos comisiones, mayores ingresos. 
+                  Más visibilidad, mejores herramientas, mayores ingresos. 
                   Elige el plan que impulse tu carrera profesional al siguiente nivel.
                 </span>
               </p>

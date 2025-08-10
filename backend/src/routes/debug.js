@@ -7,7 +7,9 @@ const router = express.Router();
 const { query } = require('../config/database');
 const { comparePassword } = require('../utils/helpers');
 
-// Middleware to restrict debug routes to non-production environments
+// Middleware to restrict debug routes to non-production environments with admin auth
+const { authMiddleware } = require('../middleware/auth');
+
 const debugOnly = (req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
     return res.status(404).json({ error: 'Debug endpoints not available in production' });
@@ -15,8 +17,26 @@ const debugOnly = (req, res, next) => {
   next();
 };
 
-// Apply debug restriction to all routes in this router
+// Admin authentication required for debug endpoints
+const requireAdmin = async (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ error: 'Authentication required for debug endpoints' });
+  }
+  
+  // Check if user is admin - for now, check for specific admin emails or roles
+  const isAdmin = req.user.email?.includes('admin@fixia.com.ar') || req.user.user_type === 'admin';
+  
+  if (!isAdmin) {
+    return res.status(403).json({ error: 'Admin access required for debug endpoints' });
+  }
+  
+  next();
+};
+
+// Apply debug restriction and admin auth to all routes in this router
 router.use(debugOnly);
+router.use(authMiddleware);
+router.use(requireAdmin);
 
 /**
  * @swagger

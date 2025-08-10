@@ -154,7 +154,7 @@ export function PromotionWelcomeEmail({
               <li style={{ marginBottom: '8px' }}>🚀 <strong>Servicios ilimitados</strong> durante 2 meses</li>
               <li style={{ marginBottom: '8px' }}>⭐ <strong>Badge de profesional verificado</strong></li>
               <li style={{ marginBottom: '8px' }}>🔝 <strong>Prioridad en resultados de búsqueda</strong></li>
-              <li style={{ marginBottom: '8px' }}>💰 <strong>Comisión reducida del 5%</strong> (vs 8% plan básico)</li>
+              <li style={{ marginBottom: '8px' }}>💰 <strong>Sin comisiones</strong> - conserva el 100% de tus ganancias</li>
               <li style={{ marginBottom: '8px' }}>📊 <strong>Estadísticas detalladas y análisis</strong></li>
               <li style={{ marginBottom: '8px' }}>🏆 <strong>Soporte prioritario 24/7</strong></li>
             </ul>

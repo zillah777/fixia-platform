@@ -705,9 +705,9 @@ exports.refreshToken = async (req, res) => {
       user_type: user.user_type
     });
     
-    // Blacklist the old refresh token for security
+    // Blacklist the old refresh token for security (Redis-based)
     const { blacklistToken } = require('../middleware/auth');
-    blacklistToken(oldRefreshToken);
+    await blacklistToken(oldRefreshToken);
     
     // Log token refresh for security monitoring
     logger.info('🔄 Token refresh successful', {
@@ -746,13 +746,13 @@ exports.logout = async (req, res) => {
     const token = req.token; // Set by auth middleware
     const refreshToken = req.body.refreshToken || req.header('X-Refresh-Token');
     
-    // Blacklist both tokens
+    // Blacklist both tokens (Redis-based)
     const { blacklistToken } = require('../middleware/auth');
     if (token) {
-      blacklistToken(token);
+      await blacklistToken(token);
     }
     if (refreshToken) {
-      blacklistToken(refreshToken);
+      await blacklistToken(refreshToken);
     }
     
     // Log logout for security monitoring

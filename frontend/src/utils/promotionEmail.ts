@@ -89,7 +89,7 @@ Felicitaciones! Te has registrado exitosamente como ${userTypeLabel} en Fixia y 
 • 🚀 Servicios ilimitados durante 2 meses
 • ⭐ Badge de profesional verificado
 • 🔝 Prioridad en resultados de búsqueda
-• 💰 Comisión reducida del 5% (vs 8% plan básico)
+• 💰 Sin comisiones - conserva el 100% de tus ganancias
 • 📊 Estadísticas detalladas y análisis
 • 🏆 Soporte prioritario 24/7
 

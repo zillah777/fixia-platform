@@ -188,8 +188,14 @@ const configureMiddleware = (app) => {
   console.log('✅ All middleware configured successfully');
 };
 
+/**
+ * Standalone CORS middleware for secure usage
+ */
+const corsMiddleware = cors(corsConfig);
+
 module.exports = {
   configureMiddleware,
   securityConfig,
-  corsConfig
+  corsConfig,
+  corsMiddleware
 };
