@@ -212,6 +212,20 @@ const configureLogging = (app) => {
 };
 
 /**
+ * Configure response formatting and error handling
+ * @param {Express} app - Express application instance
+ */
+const configureResponseFormatting = (app) => {
+  console.log('📋 Configuring response formatting...');
+  
+  // Response formatter middleware - adds success(), error(), etc. to res object
+  const { responseFormatter } = require('../middleware/responseFormatter');
+  app.use(responseFormatter);
+  
+  console.log('✅ Response formatting configured');
+};
+
+/**
  * Apply all middleware in the correct order
  * @param {Express} app - Express application instance
  */
@@ -219,10 +233,11 @@ const configureMiddleware = (app) => {
   console.log('⚙️ Configuring Express middleware...');
   
   // Order is important!
-  configureLogging(app);        // 1. Logging (first to catch everything)
-  configureSecurity(app);       // 2. Security (helmet, rate limiting, CORS)
-  configureBodyParsing(app);    // 3. Body parsing
-  configureStaticFiles(app);    // 4. Static files (after security, before routes)
+  configureLogging(app);              // 1. Logging (first to catch everything)
+  configureSecurity(app);             // 2. Security (helmet, rate limiting, CORS)
+  configureBodyParsing(app);          // 3. Body parsing
+  configureResponseFormatting(app);   // 4. Response formatting (before routes)
+  configureStaticFiles(app);          // 5. Static files (after security, before routes)
   
   console.log('✅ All middleware configured successfully');
 };

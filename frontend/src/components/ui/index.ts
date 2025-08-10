@@ -81,6 +81,42 @@ export {
   type FixiaLogoProps
 } from './fixia-logo';
 
-// Clean UI exports - removed legacy corporate aliases to prevent confusion
+// Unified Design System Exports
+// All components use the consolidated Liquid Glass Design System
 
-// No more corporate components - use MarketplaceLayout instead
+// Export accessibility components
+export {
+  ARIA_LABELS,
+  ScreenReaderOnly,
+  SkipToContent,
+  AccessibleLoadingIndicator,
+  AccessibleAlert,
+  AccessibleFormField,
+  useFocusManagement,
+  validateColorContrast,
+  announceToScreenReader,
+  checkWCAGCompliance,
+} from '@/utils/accessibility';
+
+// Export unified glass system hooks  
+export {
+  useGlassSystem,
+  useButtonGlassSystem,
+  useCardGlassSystem,
+  useInputGlassSystem,
+  useNavigationGlassSystem,
+  GLASS_TOKENS,
+  COMPONENT_GLASS,
+  USER_TYPE_GLASS,
+} from '@/hooks/useGlassSystem';
+
+// Export unified navigation system
+export {
+  useUnifiedNavigation,
+  useMobileNavigation,
+  useDropdownNavigation,
+  useBreadcrumbNavigation,
+} from '@/hooks/useUnifiedNavigation';
+
+// Clean UI exports - no more duplicate adaptive components
+// All components are now unified with the glass design system

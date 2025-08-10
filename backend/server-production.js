@@ -73,6 +73,11 @@ app.use(corsMiddleware);
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// Response formatting middleware - adds success(), error(), etc. methods to res
+const { responseFormatter } = require('./src/middleware/responseFormatter');
+app.use(responseFormatter);
+console.log('✅ Response formatting middleware enabled');
+
 // Response debug middleware - capture ALL responses
 app.use((req, res, next) => {
   const originalJson = res.json;
@@ -1030,14 +1035,10 @@ app.use('*', (req, res) => {
   });
 });
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error('💥 Server error:', err.message);
-  res.status(500).json({
-    error: 'Error interno del servidor',
-    ...(process.env.NODE_ENV === 'development' && { details: err.message })
-  });
-});
+// Global error handler - Enterprise-grade error handling
+const { globalErrorHandler } = require('./src/middleware/responseFormatter');
+app.use(globalErrorHandler);
+console.log('✅ Global error handling enabled');
 
 // Start server
 const startServer = async () => {

@@ -1,4 +1,5 @@
 const { query } = require('../config/database');
+const { users: usersHelper } = require('../utils/databaseHelpers');
 
 // GET /api/dashboard/explorer-stats
 exports.getExplorerStats = async (req, res) => {
@@ -45,26 +46,20 @@ exports.getExplorerStats = async (req, res) => {
       average_rating_given: 0
     };
 
-    res.json({
-      success: true,
-      data: {
-        stats: {
-          total_bookings: parseInt(result.total_bookings) || 0,
-          completed_bookings: parseInt(result.completed_bookings) || 0,
-          pending_bookings: parseInt(result.pending_bookings) || 0,
-          total_reviews_given: parseInt(result.total_reviews_given) || 0,
-          average_rating_given: parseFloat(result.average_rating_given) || 0
-        },
-        recent_bookings: recentBookings.rows || []
-      }
-    });
+    return res.success({
+      stats: {
+        total_bookings: parseInt(result.total_bookings) || 0,
+        completed_bookings: parseInt(result.completed_bookings) || 0,
+        pending_bookings: parseInt(result.pending_bookings) || 0,
+        total_reviews_given: parseInt(result.total_reviews_given) || 0,
+        average_rating_given: parseFloat(result.average_rating_given) || 0
+      },
+      recent_bookings: recentBookings.rows || []
+    }, 'Estadísticas del explorador obtenidas exitosamente');
 
   } catch (error) {
     console.error('Explorer stats error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error al obtener estadísticas del explorador'
-    });
+    return res.dbError(error, 'Error al obtener estadísticas del explorador');
   }
 };
 
@@ -133,28 +128,22 @@ exports.getProviderStats = async (req, res) => {
       total_earnings: 0
     };
 
-    res.json({
-      success: true,
-      data: {
-        stats: {
-          total_services: parseInt(result.total_services) || 0,
-          total_bookings: parseInt(result.total_bookings) || 0,
-          completed_bookings: parseInt(result.completed_bookings) || 0,
-          total_reviews: parseInt(result.total_reviews) || 0,
-          average_rating: parseFloat(result.average_rating) || 0,
-          total_earnings: parseFloat(result.total_earnings) || 0
-        },
-        recent_bookings: recentBookings.rows || [],
-        popular_services: popularServices.rows || []
-      }
-    });
+    return res.success({
+      stats: {
+        total_services: parseInt(result.total_services) || 0,
+        total_bookings: parseInt(result.total_bookings) || 0,
+        completed_bookings: parseInt(result.completed_bookings) || 0,
+        total_reviews: parseInt(result.total_reviews) || 0,
+        average_rating: parseFloat(result.average_rating) || 0,
+        total_earnings: parseFloat(result.total_earnings) || 0
+      },
+      recent_bookings: recentBookings.rows || [],
+      popular_services: popularServices.rows || []
+    }, 'Estadísticas del proveedor obtenidas exitosamente');
 
   } catch (error) {
     console.error('Provider stats error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error al obtener estadísticas del proveedor'
-    });
+    return res.dbError(error, 'Error al obtener estadísticas del proveedor');
   }
 };
 
@@ -186,22 +175,16 @@ exports.getGeneralStats = async (req, res) => {
       platform_rating: 0
     };
 
-    res.json({
-      success: true,
-      data: {
-        total_clients: parseInt(result.total_clients) || 0,
-        total_providers: parseInt(result.total_providers) || 0,
-        total_services: parseInt(result.total_services) || 0,
-        total_bookings: parseInt(result.total_bookings) || 0,
-        platform_rating: parseFloat(result.platform_rating) || 0
-      }
-    });
+    return res.success({
+      total_clients: parseInt(result.total_clients) || 0,
+      total_providers: parseInt(result.total_providers) || 0,
+      total_services: parseInt(result.total_services) || 0,
+      total_bookings: parseInt(result.total_bookings) || 0,
+      platform_rating: parseFloat(result.platform_rating) || 0
+    }, 'Estadísticas generales obtenidas exitosamente');
 
   } catch (error) {
     console.error('General stats error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error al obtener estadísticas generales'
-    });
+    return res.dbError(error, 'Error al obtener estadísticas generales');
   }
 };

@@ -42,11 +42,105 @@ export const PAYMENT_STATUS_COLORS = {
   refunded: 'bg-gray-100 text-gray-800',
 };
 
-// User Types
+// User Types - Unified terminology
 export const USER_TYPE_LABELS = {
-  customer: 'Cliente',
+  customer: 'Explorador',
+  provider: 'AS (Agente de Servicio)',
+  client: 'Explorador', // Legacy support
+  professional: 'AS (Agente de Servicio)', // Legacy support
+} as const;
+
+// User Type Navigation Labels
+export const USER_TYPE_NAV_LABELS = {
+  customer: 'Explorador',
   provider: 'Profesional',
-};
+} as const;
+
+// User Type Paths - Unified routing system
+export const USER_TYPE_PATHS = {
+  customer: {
+    dashboard: '/explorador/dashboard',
+    profile: '/explorador/perfil',
+    chats: '/explorador/chats',
+    marketplace: '/explorador/marketplace',
+    settings: '/explorador/cambiar-password',
+  },
+  provider: {
+    dashboard: '/as/dashboard',
+    profile: '/as/perfil', 
+    chats: '/as/chats',
+    services: '/as/servicios',
+    portfolio: '/as/portafolio',
+    settings: '/as/configuracion',
+  },
+} as const;
+
+// Navigation Items - Dynamic per user type
+export const NAVIGATION_ITEMS = {
+  customer: [
+    {
+      key: 'dashboard',
+      label: 'Inicio',
+      icon: 'Home',
+      path: '/explorador/dashboard',
+      description: 'Tu panel principal para buscar profesionales',
+    },
+    {
+      key: 'marketplace',
+      label: 'Encontrar Profesional',
+      icon: 'Search',
+      path: '/explorador/marketplace',
+      description: 'Encuentra profesionales verificados para tu proyecto',
+    },
+    {
+      key: 'chats',
+      label: 'Mensajes',
+      icon: 'MessageSquare',
+      path: '/explorador/chats',
+      description: 'Conversaciones con profesionales',
+    },
+  ],
+  provider: [
+    {
+      key: 'dashboard',
+      label: 'Inicio',
+      icon: 'Home', 
+      path: '/as/dashboard',
+      description: 'Tu panel principal con resumen de trabajos y solicitudes',
+    },
+    {
+      key: 'services',
+      label: 'Mis Trabajos',
+      icon: 'Briefcase',
+      path: '/as/servicios',
+      description: 'Agrega, edita y gestiona los trabajos que ofreces',
+    },
+    {
+      key: 'portfolio',
+      label: 'Mis Fotos',
+      icon: 'Images',
+      path: '/as/portafolio',
+      description: 'Sube fotos de trabajos que hayas hecho para mostrar tu calidad',
+    },
+    {
+      key: 'chats',
+      label: 'Mensajes',
+      icon: 'MessageSquare',
+      path: '/as/chats',
+      description: 'Conversaciones con exploradores',
+    },
+  ],
+  common: [
+    {
+      key: 'plans',
+      label: 'Mejorar Cuenta',
+      icon: 'Crown',
+      path: '/planes',
+      description: 'Mejora tu cuenta para más beneficios',
+      badge: 'Nuevo',
+    },
+  ],
+} as const;
 
 // Notification Types
 export const NOTIFICATION_TYPE_LABELS = {

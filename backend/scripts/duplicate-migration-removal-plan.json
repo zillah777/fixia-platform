@@ -1,0 +1,56 @@
+{
+  "timestamp": "2025-08-10T16:43:19.074Z",
+  "recommendations": [
+    {
+      "filename": "migrate-frontend-compatible.js",
+      "action": "remove",
+      "reason": "Multiple frontend-compatible versions - keeping fixed version",
+      "keepInstead": "migrate-frontend-compatible-fixed.js",
+      "type": "frontend_compatible"
+    },
+    {
+      "filename": "migrate.js",
+      "action": "remove",
+      "reason": "Complete system migration supersedes specialized migrations",
+      "keepInstead": "migrate-complete-system.js",
+      "type": "complete_vs_specialized"
+    },
+    {
+      "filename": "migrate-extended.js",
+      "action": "remove",
+      "reason": "Complete system migration supersedes specialized migrations",
+      "keepInstead": "migrate-complete-system.js",
+      "type": "complete_vs_specialized"
+    }
+  ],
+  "safeToRemove": [
+    {
+      "filename": "migrate-frontend-compatible.js",
+      "action": "remove",
+      "reason": "Multiple frontend-compatible versions - keeping fixed version",
+      "keepInstead": "migrate-frontend-compatible-fixed.js",
+      "type": "frontend_compatible"
+    }
+  ],
+  "requiresReview": [
+    {
+      "filename": "migrate.js",
+      "action": "remove",
+      "reason": "Complete system migration supersedes specialized migrations",
+      "keepInstead": "migrate-complete-system.js",
+      "type": "complete_vs_specialized"
+    },
+    {
+      "filename": "migrate-extended.js",
+      "action": "remove",
+      "reason": "Complete system migration supersedes specialized migrations",
+      "keepInstead": "migrate-complete-system.js",
+      "type": "complete_vs_specialized"
+    }
+  ],
+  "backupRequired": [
+    "migrate-frontend-compatible.js",
+    "migrate.js",
+    "migrate-extended.js"
+  ]
+}

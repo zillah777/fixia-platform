@@ -58,18 +58,26 @@ const paginate = (page = 1, limit = 10) => {
   return { limit: parseInt(limit), offset };
 };
 
+// DEPRECATED: Use responseFormatter middleware instead
+// Keeping for backward compatibility
 const formatResponse = (data, message = 'Éxito', success = true) => {
+  console.warn('DEPRECATED: formatResponse is deprecated, use res.success() instead');
   return {
     success,
     message,
-    data
+    data,
+    timestamp: new Date().toISOString()
   };
 };
 
+// DEPRECATED: Use responseFormatter middleware instead
+// Keeping for backward compatibility
 const formatError = (message = 'Error interno del servidor', details = null) => {
+  console.warn('DEPRECATED: formatError is deprecated, use res.error() instead');
   return {
     success: false,
     error: message,
+    timestamp: new Date().toISOString(),
     ...(details && { details })
   };
 };
@@ -116,8 +124,8 @@ module.exports = {
   calculateDistance,
   sanitizeUser,
   paginate,
-  formatResponse,
-  formatError,
+  formatResponse, // DEPRECATED: Use res.success() instead
+  formatError,    // DEPRECATED: Use res.error() instead
   generateSlug,
   isValidTimeSlot,
   isValidDate

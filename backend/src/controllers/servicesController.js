@@ -2,6 +2,7 @@ const { query } = require('../config/database');
 const cacheService = require('../services/cacheService');
 const { CACHE_TTL } = require('../config/redis');
 const logger = require('../utils/logger');
+const { services: servicesHelper, users: usersHelper } = require('../utils/databaseHelpers');
 
 // GET /api/services
 exports.getServices = async (req, res) => {
@@ -41,12 +42,12 @@ exports.getServices = async (req, res) => {
         filters
       });
       
-      return res.json({
-        success: true,
-        services: cachedServices.services,
-        pagination: cachedServices.pagination,
-        cached: true
-      });
+      return res.success(
+        cachedServices.services,
+        'Servicios obtenidos exitosamente',
+        200,
+        { pagination: cachedServices.pagination, cached: true }
+      );
     }
 
     let whereConditions = ['s.is_active = true'];
@@ -199,19 +200,17 @@ exports.getServices = async (req, res) => {
       count: result.rows.length
     });
 
-    res.json({
-      success: true,
-      message: 'Servicios obtenidos exitosamente',
-      data: responseData,
-      cached: false
-    });
+    return res.paginated(
+      responseData.services,
+      responseData.pagination,
+      'Servicios obtenidos exitosamente',
+      200,
+      { cached: false }
+    );
 
   } catch (error) {
     console.error('Get services error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    return res.dbError(error, 'Error al obtener los servicios');
   }
 };
 
@@ -228,12 +227,12 @@ exports.getServiceById = async (req, res) => {
         serviceId: id
       });
       
-      return res.json({
-        success: true,
-        message: 'Servicio obtenido exitosamente',
-        data: { service: cachedService },
-        cached: true
-      });
+      return res.success(
+        { service: cachedService },
+        'Servicio obtenido exitosamente',
+        200,
+        { cached: true }
+      );
     }
 
     const result = await query(`
@@ -271,10 +270,7 @@ exports.getServiceById = async (req, res) => {
     `, [id]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Servicio no encontrado'
-      });
+      return res.notFound('Servicio no encontrado');
     }
 
     // Update views count
@@ -293,19 +289,16 @@ exports.getServiceById = async (req, res) => {
       serviceId: id
     });
 
-    res.json({
-      success: true,
-      message: 'Servicio obtenido exitosamente',
-      data: { service: serviceData },
-      cached: false
-    });
+    return res.success(
+      { service: serviceData },
+      'Servicio obtenido exitosamente',
+      200,
+      { cached: false }
+    );
 
   } catch (error) {
     console.error('Get service by ID error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    return res.dbError(error, 'Error al obtener el servicio');
   }
 };
 
@@ -325,55 +318,60 @@ exports.createService = async (req, res) => {
       images = []
     } = req.body;
 
-    // Validation
-    if (!title || !description || !category || !price || !duration_minutes) {
-      return res.status(400).json({
-        success: false,
-        error: 'Todos los campos requeridos deben ser proporcionados'
-      });
+    // Validation using standardized error responses
+    const missingFields = [];
+    if (!title) missingFields.push('title');
+    if (!description) missingFields.push('description');
+    if (!category) missingFields.push('category');
+    if (!price) missingFields.push('price');
+    if (!duration_minutes) missingFields.push('duration_minutes');
+    
+    if (missingFields.length > 0) {
+      return res.validation(
+        { missing_fields: missingFields },
+        'Todos los campos requeridos deben ser proporcionados'
+      );
     }
 
     const validCategories = ['plomeria', 'electricidad', 'limpieza', 'reparaciones', 'belleza', 'otros'];
     if (!validCategories.includes(category)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Categoría inválida'
-      });
+      return res.validation(
+        { invalid_category: category, valid_categories: validCategories },
+        'Categoría inválida'
+      );
     }
 
     if (price <= 0 || duration_minutes <= 0) {
-      return res.status(400).json({
-        success: false,
-        error: 'Precio y duración deben ser mayores a 0'
-      });
+      return res.validation(
+        { invalid_values: { price, duration_minutes } },
+        'Precio y duración deben ser mayores a 0'
+      );
     }
 
-    // Verify user is a provider
-    const userResult = await query(
-      'SELECT user_type FROM users WHERE id = $1',
-      [userId]
-    );
-
-    if (userResult.rows.length === 0 || userResult.rows[0].user_type !== 'provider') {
-      return res.status(403).json({
-        success: false,
-        error: 'Solo los profesionales pueden crear servicios'
-      });
+    // Verify user is a provider using helper
+    const user = await usersHelper.findById(userId);
+    if (!user) {
+      return res.notFound('Usuario no encontrado');
+    }
+    
+    if (user.user_type !== 'provider') {
+      return res.unauthorized('Solo los profesionales pueden crear servicios');
     }
 
-    // Create service
-    const result = await query(`
-      INSERT INTO services (
-        provider_id, title, description, category, price, 
-        duration_minutes, address, latitude, longitude
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-      RETURNING *
-    `, [
-      userId, title, description, category, price,
-      duration_minutes, address, latitude, longitude
-    ]);
-
-    const service = result.rows[0];
+    // Create service using helper
+    const serviceData = {
+      provider_id: userId,
+      title,
+      description,
+      category,
+      price,
+      duration_minutes,
+      address,
+      latitude,
+      longitude
+    };
+    
+    const service = await servicesHelper.create(serviceData);
 
     // Add images if provided
     if (images.length > 0) {
@@ -391,18 +389,11 @@ exports.createService = async (req, res) => {
       [userId]
     );
 
-    res.status(201).json({
-      success: true,
-      message: 'Servicio creado exitosamente',
-      data: service
-    });
+    return res.success(service, 'Servicio creado exitosamente', 201);
 
   } catch (error) {
     console.error('Create service error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Error interno del servidor'
-    });
+    return res.dbError(error, 'Error al crear el servicio');
   }
 };
 

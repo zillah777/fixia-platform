@@ -4,6 +4,8 @@ import { IOSBottomNavigation } from '@/components/ui/ios-bottom-navigation';
 import { TabletNavigationProvider, useIsTabletNavigation } from '@/contexts/TabletNavigationContext';
 import { TabletSideNavigation } from '@/components/tablet/TabletSideNavigation';
 import { TabletAdaptiveHeader } from '@/components/tablet/TabletAdaptiveHeader';
+import { UnifiedNavigation } from '@/components/navigation/UnifiedNavigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface MarketplaceLayoutProps {
   children: React.ReactNode;
@@ -19,6 +21,10 @@ interface MarketplaceLayoutProps {
   headerTitle?: string;
   headerSubtitle?: string;
   enableTabletOptimizations?: boolean;
+  // Unified navigation props
+  showUnifiedNavigation?: boolean;
+  enableUserTypeSwitching?: boolean;
+  navigationVariant?: 'desktop' | 'mobile' | 'tablet';
 }
 
 // Internal component that handles tablet navigation
@@ -34,8 +40,12 @@ const TabletAwareLayoutContent: React.FC<Omit<MarketplaceLayoutProps, 'enableTab
   showTabletSidebar = true,
   headerTitle,
   headerSubtitle,
+  showUnifiedNavigation = true,
+  enableUserTypeSwitching = true,
+  navigationVariant = 'desktop'
 }) => {
   const isTabletNavigation = useIsTabletNavigation();
+  const { user } = useAuth();
 
   return (
     <>
@@ -53,8 +63,17 @@ const TabletAwareLayoutContent: React.FC<Omit<MarketplaceLayoutProps, 'enableTab
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}} />
         </div>
         
-        {/* Tablet Navigation Components */}
-        {isTabletNavigation && (
+        {/* Unified Navigation - Replaces all other navigation systems */}
+        {showUnifiedNavigation && user && (
+          <UnifiedNavigation
+            variant={isTabletNavigation ? 'tablet' : navigationVariant}
+            enableUserTypeSwitching={enableUserTypeSwitching}
+            className="relative z-30"
+          />
+        )}
+        
+        {/* Legacy Tablet Navigation Components (conditionally shown) */}
+        {isTabletNavigation && !showUnifiedNavigation && (
           <>
             {/* Tablet Header */}
             {showTabletHeader && (
@@ -76,18 +95,19 @@ const TabletAwareLayoutContent: React.FC<Omit<MarketplaceLayoutProps, 'enableTab
         <main 
           className={`
             relative z-10 transition-all duration-300
-            ${isTabletNavigation ? 'tablet-layout-content' : ''}
+            ${isTabletNavigation && !showUnifiedNavigation ? 'tablet-layout-content' : ''}
+            ${showUnifiedNavigation ? 'pt-20' : ''}
           `}
           style={{
-            marginLeft: isTabletNavigation ? 'var(--tablet-sidebar-width, 0)' : '0',
-            paddingTop: isTabletNavigation && showTabletHeader ? 'var(--tablet-header-height, 0)' : '0'
+            marginLeft: isTabletNavigation && !showUnifiedNavigation ? 'var(--tablet-sidebar-width, 0)' : '0',
+            paddingTop: isTabletNavigation && showTabletHeader && !showUnifiedNavigation ? 'var(--tablet-header-height, 0)' : '0'
           }}
         >
           {children}
         </main>
         
-        {/* iOS-style Bottom Navigation for mobile (hidden on tablets) */}
-        {showBottomNav && !isTabletNavigation && <IOSBottomNavigation />}
+        {/* iOS-style Bottom Navigation for mobile (hidden when unified nav is active) */}
+        {showBottomNav && !isTabletNavigation && !showUnifiedNavigation && <IOSBottomNavigation />}
       </div>
     </>
   );
@@ -95,6 +115,9 @@ const TabletAwareLayoutContent: React.FC<Omit<MarketplaceLayoutProps, 'enableTab
 
 const MarketplaceLayout: React.FC<MarketplaceLayoutProps> = ({
   enableTabletOptimizations = true,
+  showUnifiedNavigation = true,
+  enableUserTypeSwitching = true,
+  navigationVariant = 'desktop',
   ...props
 }) => {
   // If tablet optimizations are disabled, use the original layout
@@ -134,7 +157,12 @@ const MarketplaceLayout: React.FC<MarketplaceLayoutProps> = ({
   // With tablet optimizations enabled, wrap in tablet navigation provider
   return (
     <TabletNavigationProvider>
-      <TabletAwareLayoutContent {...props} />
+      <TabletAwareLayoutContent 
+        {...props} 
+        showUnifiedNavigation={showUnifiedNavigation}
+        enableUserTypeSwitching={enableUserTypeSwitching}
+        navigationVariant={navigationVariant}
+      />
       
       {/* Add CSS variables for layout calculations */}
       <style jsx global>{`
@@ -190,6 +218,17 @@ const MarketplaceLayout: React.FC<MarketplaceLayoutProps> = ({
           .glass-tablet-strong {
             backdrop-filter: blur(36px);
             -webkit-backdrop-filter: blur(36px);
+          }
+        }
+        
+        /* Unified navigation spacing adjustments */
+        .unified-nav-active {
+          padding-top: 80px;
+        }
+        
+        @media (max-width: 768px) {
+          .unified-nav-active {
+            padding-top: 64px;
           }
         }
       `}</style>
