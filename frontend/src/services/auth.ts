@@ -367,15 +367,91 @@ export const authService = {
     return transformedUser;
   },
 
-  // Upload profile photo
+  // Upload profile photo with enhanced error handling
   async uploadProfilePhoto(file: File): Promise<{ profile_photo_url: string }> {
+    console.log('📸 Starting photo upload process...');
+    
+    // Validate file before upload
+    if (!file) {
+      throw new Error('No file provided for upload');
+    }
+    
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      throw new Error('File size too large. Maximum size is 5MB');
+    }
+    
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error('Invalid file type. Only JPEG, PNG, and WebP images are allowed');
+    }
+    
     const formData = new FormData();
     formData.append('photo', file);
     
-    // Don't set Content-Type manually - let axios handle it automatically
-    // This allows the auth interceptor to add the Authorization header
-    const response = await api.post('/api/users/profile/photo', formData);
-    return response.data.data;
+    console.log('📸 File validation passed:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      lastModified: new Date(file.lastModified).toISOString()
+    });
+    
+    // Get token manually as backup in case interceptor fails
+    const token = safeLocalStorage.getItem('token');
+    const headers: Record<string, string> = {};
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+      console.log('🔐 Manual auth header added for photo upload:', token.substring(0, 20) + '...');
+      
+      // Validate token format
+      if (token.split('.').length !== 3) {
+        console.error('❌ Invalid JWT token format detected');
+        throw new Error('Invalid authentication token. Please log in again.');
+      }
+    } else {
+      console.error('❌ No token found in localStorage for photo upload');
+      throw new Error('No authentication token found. Please log in again.');
+    }
+    
+    try {
+      console.log('📸 Sending photo upload request...');
+      
+      // Don't set Content-Type manually - let axios handle it automatically
+      const response = await api.post('/api/users/profile/photo', formData, {
+        headers,
+        timeout: 60000, // 60 seconds for file upload
+      });
+      
+      console.log('✅ Photo upload successful:', response.data);
+      return response.data.data;
+    } catch (error: any) {
+      console.error('❌ Photo upload failed:', error);
+      
+      // Enhanced error handling for photo uploads
+      if (error.response?.status === 401) {
+        const errorMessage = error.response?.data?.error || 'Authentication failed';
+        console.error('🚨 Authentication error during photo upload:', errorMessage);
+        
+        if (errorMessage.includes('Token de acceso requerido')) {
+          throw new Error('Authentication token is missing. Please refresh the page and try again.');
+        } else if (errorMessage.includes('Token expirado')) {
+          throw new Error('Your session has expired. Please log in again.');
+        } else {
+          throw new Error('Authentication failed. Please try logging in again.');
+        }
+      } else if (error.response?.status === 400) {
+        const errorMessage = error.response?.data?.error || 'Bad request';
+        throw new Error(errorMessage);
+      } else if (error.response?.status === 413) {
+        throw new Error('File too large. Please choose a smaller image.');
+      } else if (error.code === 'ECONNABORTED') {
+        throw new Error('Upload timed out. Please try again with a smaller file.');
+      } else if (!navigator.onLine) {
+        throw new Error('No internet connection. Please check your connection and try again.');
+      } else {
+        throw new Error('Upload failed. Please try again later.');
+      }
+    }
   },
 
   // Remove profile photo

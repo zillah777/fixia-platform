@@ -32,14 +32,27 @@ api.interceptors.request.use(
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token && typeof token === 'string' && token.length > 10) {
-        // Validate token format before using it
-        if (/^[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]*$/.test(token)) {
+        // Validate token format before using it (JWT tokens have 3 parts separated by dots)
+        if (token.split('.').length === 3) {
           config.headers.Authorization = `Bearer ${token}`;
           
-          // Debug log for auth endpoints (only in development)
-          if (process.env['NODE_ENV'] !== 'production' && 
-              (config.url?.includes('/dashboard/') || config.url?.includes('/profile'))) {
+          // Debug log for auth endpoints (always log for profile/photo)
+          if (config.url?.includes('/profile/photo') || 
+              (process.env['NODE_ENV'] !== 'production' && 
+               (config.url?.includes('/dashboard/') || config.url?.includes('/profile')))) {
             console.log('🔐 Auth token added to request:', config.url, token.substring(0, 20) + '...');
+            console.log('🔐 Headers after token:', Object.keys(config.headers || {}));
+            
+            // Special logging for FormData photo uploads
+            if (config.url?.includes('/profile/photo') && config.data instanceof FormData) {
+              console.log('📸 FormData photo upload detected');
+              console.log('📸 FormData entries:');
+              for (const [key, value] of config.data.entries()) {
+                console.log(`  ${key}:`, value instanceof File ? `File(${value.name})` : value);
+              }
+              console.log('📸 Content-Type header:', config.headers['Content-Type'] || 'not set');
+              console.log('📸 Authorization header set:', !!config.headers.Authorization);
+            }
           }
         } else {
           // Invalid token format, remove it
@@ -47,9 +60,15 @@ api.interceptors.request.use(
           localStorage.removeItem('user');
           localStorage.removeItem('loginTime');
         }
-      } else if (process.env['NODE_ENV'] !== 'production' &&
-                 (config.url?.includes('/dashboard/') || config.url?.includes('/profile'))) {
+      } else if (config.url?.includes('/profile/photo') || 
+                 (process.env['NODE_ENV'] !== 'production' &&
+                  (config.url?.includes('/dashboard/') || config.url?.includes('/profile')))) {
         console.warn('⚠️ No valid auth token found for protected endpoint:', config.url);
+        console.warn('⚠️ Token details:', { 
+          hasToken: !!token, 
+          tokenType: typeof token, 
+          tokenLength: token?.length 
+        });
       }
     }
     
@@ -70,11 +89,10 @@ api.interceptors.response.use(
       // Only auto-logout for specific 401 errors, not all of them
       const errorMessage = (error.response?.data as { error?: string })?.error || '';
       
-      // Auto-logout only for these specific errors
+      // Auto-logout only for these specific errors (but not for "Token de acceso requerido" which can be temporary)
       if (errorMessage.includes('Token expirado') || 
           errorMessage.includes('Token inválido') || 
           errorMessage.includes('Token revocado') ||
-          errorMessage.includes('Token de acceso requerido') ||
           errorMessage.includes('Usuario no encontrado') ||
           errorMessage.includes('Cuenta desactivada')) {
         localStorage.removeItem('token');
@@ -85,6 +103,18 @@ api.interceptors.response.use(
       } else {
         // For other 401 errors, just reject without auto-logout
         console.warn('401 error without auto-logout:', errorMessage);
+        
+        // Special debugging for photo upload 401 errors
+        if (error.config?.url?.includes('/profile/photo')) {
+          console.error('🚨 Photo upload 401 error details:', {
+            url: error.config.url,
+            method: error.config.method,
+            hasAuthHeader: !!error.config.headers?.Authorization,
+            contentType: error.config.headers?.['Content-Type'],
+            errorMessage: errorMessage,
+            requestData: error.config.data instanceof FormData ? 'FormData' : 'Other',
+          });
+        }
       }
     } else if (error.response?.status === 403) {
       toast.error('No tienes permisos para realizar esta acción.');
