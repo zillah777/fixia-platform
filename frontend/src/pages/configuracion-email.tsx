@@ -3,7 +3,8 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/AuthContext';
-import { CorporateLayout, CorporateCard, CorporateButton, CorporateHeader, CorporateFooter } from '@/components/ui';
+import { Button, Card } from '@/components/ui';
+import MarketplaceLayout from '@/components/layouts/MarketplaceLayout';
 
 interface EmailPreferences {
   serviceNotifications: boolean;
@@ -36,12 +37,12 @@ const ConfiguracionEmail: NextPage = () => {
 
   if (loading) {
     return (
-      <CorporateLayout variant="centered">
+      <MarketplaceLayout>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-3 border-primary-600 mx-auto mb-6"></div>
           <p className="text-secondary-600 font-semibold">Cargando configuración...</p>
         </div>
-      </CorporateLayout>
+      </MarketplaceLayout>
     );
   }
 
@@ -138,7 +139,7 @@ const ConfiguracionEmail: NextPage = () => {
         <meta name="keywords" content="configuración email, notificaciones, FIXIA, preferencias" />
       </Head>
 
-      <CorporateLayout variant="default">
+      <MarketplaceLayout>
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
             <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -294,7 +295,7 @@ const ConfiguracionEmail: NextPage = () => {
         <div className="mt-12 text-center text-gray-500 text-sm">
           © 2025 FIXIA. Todos los derechos reservados.
         </div>
-      </CorporateLayout>
+      </MarketplaceLayout>
     </>
   );
 };
