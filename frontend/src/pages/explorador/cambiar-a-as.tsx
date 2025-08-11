@@ -388,7 +388,6 @@ const CambiarAASPage: NextPage = () => {
               </div>
             </div>
           </motion.div>
-          </div>
 
           {/* Promotional Banner */}
           <motion.div 
@@ -420,14 +419,25 @@ const CambiarAASPage: NextPage = () => {
           </motion.div>
 
           {/* Important Notes */}
-          <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="rounded-xl p-6 mb-8 border-0"
+            style={{
+              background: 'rgba(251, 191, 36, 0.15)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(251, 191, 36, 0.3)',
+              boxShadow: '0 20px 40px rgba(251, 191, 36, 0.1)'
+            }}
+          >
             <div className="flex items-start">
-              <AlertTriangle className="h-6 w-6 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+              <AlertTriangle className="h-6 w-6 text-yellow-300 mt-0.5 mr-3 flex-shrink-0" />
               <div>
-                <h3 className="text-lg font-semibold text-yellow-800 mb-2">
+                <h3 className="text-lg font-semibold text-yellow-100 mb-2">
                   Importante: Mantén Ambos Roles
                 </h3>
-                <div className="text-yellow-700 space-y-2 text-sm">
+                <div className="text-yellow-200/90 space-y-2 text-sm">
                   <p>• <strong>Podrás seguir siendo Explorador:</strong> Tu rol de cliente se mantiene activo</p>
                   <p>• <strong>Cambio de interfaz:</strong> Al convertirte en AS, accederás al panel de profesionales</p>
                   <p>• <strong>Puedes volver:</strong> Siempre podrás cambiar entre tus roles de Explorador y AS</p>
@@ -435,90 +445,229 @@ const CambiarAASPage: NextPage = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Action Section */}
-          <div className="bg-white rounded-xl shadow-sm border p-8 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="rounded-xl p-8 text-center border-0"
+            style={{
+              background: 'rgba(30, 41, 59, 0.6)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 32px 64px rgba(0, 0, 0, 0.3)'
+            }}
+          >
             <div className="max-w-2xl mx-auto">
-              <Lightbulb className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                ¿Listo para Empezar tu Carrera como AS?
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Al hacer clic en "Convertirse en AS" se activará tu perfil profesional y podrás empezar a recibir solicitudes de servicios inmediatamente.
-              </p>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.9, type: "spring", stiffness: 200 }}
+                className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+                style={{
+                  background: 'linear-gradient(135deg, #F59E0B, #D97706)',
+                  boxShadow: '0 20px 40px rgba(245, 158, 11, 0.3)'
+                }}
+              >
+                <Lightbulb className="h-10 w-10 text-white" />
+              </motion.div>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.h3 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+                className="text-2xl font-bold text-white mb-4"
+              >
+                ¿Listo para Empezar tu Carrera como AS?
+              </motion.h3>
+              
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.1 }}
+                className="text-white/80 mb-6"
+              >
+                Al hacer clic en "Convertirse en AS" se activará tu perfil profesional y podrás empezar a recibir solicitudes de servicios inmediatamente.
+              </motion.p>
+              
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center"
+              >
                 <Link href="/explorador/dashboard">
-                  <button className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                  <motion.button 
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-3 rounded-xl text-white/90 hover:text-white transition-all duration-300 font-medium"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)'
+                    }}
+                  >
                     Volver al Panel Explorador
-                  </button>
+                  </motion.button>
                 </Link>
                 
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setShowConfirmModal(true)}
-                  className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors font-medium flex items-center justify-center"
+                  className="px-8 py-3 text-white rounded-xl transition-all duration-300 font-medium flex items-center justify-center"
+                  style={{
+                    background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)',
+                    boxShadow: '0 20px 40px rgba(59, 130, 246, 0.3)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)'
+                  }}
                 >
                   <Users className="h-5 w-5 mr-2" />
                   Convertirse en AS
                   <ArrowRight className="h-5 w-5 ml-2" />
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
               
-              <div className="flex items-center justify-center mt-4 text-sm text-gray-500">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.3 }}
+                className="flex items-center justify-center mt-4 text-sm text-white/60"
+              >
                 <Clock className="h-4 w-4 mr-1" />
                 <span>El cambio es instantáneo y reversible</span>
-              </div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Confirmation Modal */}
-        {showConfirmModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl max-w-md w-full p-6">
-              <div className="text-center">
-                <Users className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  ¿Confirmar Conversión a AS?
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  Tu cuenta se convertirá en un perfil profesional AS. Podrás ofrecer servicios y seguir siendo Explorador cuando quieras.
-                </p>
-                
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                  <div className="flex items-center text-sm text-green-700">
-                    <Flame className="h-4 w-4 mr-2" />
-                    <span className="font-medium">¡Incluye 2 meses gratis de suscripción premium!</span>
+        <AnimatePresence>
+          {showConfirmModal && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 p-4"
+              style={{
+                background: 'rgba(15, 23, 42, 0.8)',
+                backdropFilter: 'blur(8px)'
+              }}
+              onClick={(e) => {
+                if (e.target === e.currentTarget && !switching) {
+                  setShowConfirmModal(false);
+                }
+              }}
+            >
+              <div className="flex items-center justify-center min-h-full">
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  className="max-w-md w-full p-6 rounded-2xl border-0"
+                  style={{
+                    background: 'rgba(30, 41, 59, 0.95)',
+                    backdropFilter: 'blur(24px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    boxShadow: '0 32px 64px rgba(0, 0, 0, 0.5)'
+                  }}
+                >
+                  <div className="text-center">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+                      className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+                      style={{
+                        background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)',
+                        boxShadow: '0 20px 40px rgba(59, 130, 246, 0.3)'
+                      }}
+                    >
+                      <Users className="h-10 w-10 text-white" />
+                    </motion.div>
+                    
+                    <motion.h3 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="text-xl font-bold text-white mb-4"
+                    >
+                      ¿Confirmar Conversión a AS?
+                    </motion.h3>
+                    
+                    <motion.p 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="text-white/80 mb-6"
+                    >
+                      Tu cuenta se convertirá en un perfil profesional AS. Podrás ofrecer servicios y seguir siendo Explorador cuando quieras.
+                    </motion.p>
+                    
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="rounded-lg p-4 mb-6 border-0"
+                      style={{
+                        background: 'rgba(16, 185, 129, 0.15)',
+                        border: '1px solid rgba(16, 185, 129, 0.3)'
+                      }}
+                    >
+                      <div className="flex items-center text-sm text-green-300">
+                        <Flame className="h-4 w-4 mr-2" />
+                        <span className="font-medium">¡Incluye 2 meses gratis de suscripción premium!</span>
+                      </div>
+                    </motion.div>
+                    
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="flex space-x-4"
+                    >
+                      <motion.button
+                        whileHover={{ scale: switching ? 1 : 1.02, y: switching ? 0 : -1 }}
+                        whileTap={{ scale: switching ? 1 : 0.98 }}
+                        onClick={() => setShowConfirmModal(false)}
+                        disabled={switching}
+                        className="flex-1 py-3 px-4 rounded-xl text-white/90 hover:text-white transition-all duration-300 font-medium disabled:opacity-50"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          backdropFilter: 'blur(10px)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)'
+                        }}
+                      >
+                        Cancelar
+                      </motion.button>
+                      
+                      <motion.button
+                        whileHover={{ scale: switching ? 1 : 1.02, y: switching ? 0 : -1 }}
+                        whileTap={{ scale: switching ? 1 : 0.98 }}
+                        onClick={handleSwitchToAS}
+                        disabled={switching}
+                        className="flex-1 py-3 px-4 rounded-xl text-white transition-all duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        style={{
+                          background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)',
+                          boxShadow: switching ? '0 10px 20px rgba(59, 130, 246, 0.2)' : '0 20px 40px rgba(59, 130, 246, 0.3)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)'
+                        }}
+                      >
+                        {switching ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        ) : (
+                          'Sí, Convertir a AS'
+                        )}
+                      </motion.button>
+                    </motion.div>
                   </div>
-                </div>
-                
-                <div className="flex space-x-4">
-                  <button
-                    onClick={() => setShowConfirmModal(false)}
-                    className="flex-1 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors"
-                    disabled={switching}
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={handleSwitchToAS}
-                    disabled={switching}
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-                  >
-                    {switching ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mx-auto"></div>
-                      </>
-                    ) : (
-                      'Sí, Convertir a AS'
-                    )}
-                  </button>
-                </div>
+                </motion.div>
               </div>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </>
   );
