@@ -151,7 +151,7 @@ export function UnifiedSummaryCards({
         icon: Clock,
         colorClass: "text-primary",
         getValue: (stats: ASStats, loading: boolean) => loading ? "..." : (stats?.active_services || 0),
-        getProgress: (stats: ASStats) => stats?.total_services > 0 ? (stats.active_services || 0) / stats.total_services * 100 : 0,
+        getProgress: (stats: ASStats) => (stats?.total_services || 0) > 0 ? (stats?.active_services || 0) / (stats?.total_services || 1) * 100 : 0,
         getDetails: (stats: ASStats, loading: boolean) => [
           { label: "Total servicios", value: loading ? "..." : String(stats?.total_services || 0) },
           { label: "Solicitudes pendientes", value: loading ? "..." : String(stats?.pending_requests || 0) }
@@ -164,7 +164,7 @@ export function UnifiedSummaryCards({
         icon: Star,
         colorClass: "text-yellow-400",
         getValue: (stats: ASStats, loading: boolean) => loading ? "..." : (stats?.average_rating || 0).toFixed(1),
-        getProgress: (stats: ASStats) => stats?.average_rating > 0 ? (stats.average_rating / 5) * 100 : 0,
+        getProgress: (stats: ASStats) => (stats?.average_rating || 0) > 0 ? ((stats?.average_rating || 0) / 5) * 100 : 0,
         getDetails: (stats: ASStats, loading: boolean) => [
           { 
             label: loading ? "..." : `${stats?.total_reviews || 0} reseñas totales`, 
@@ -184,7 +184,7 @@ export function UnifiedSummaryCards({
         icon: TrendingUp,
         colorClass: "text-green-400",
         getValue: (stats: ASStats, loading: boolean) => loading ? "..." : `$${(stats?.total_earnings || 0).toLocaleString('es-AR')} ARS`,
-        getProgress: (stats: ASStats) => stats?.total_earnings > 0 ? Math.min((stats.total_earnings / 50000) * 100, 100) : 0,
+        getProgress: (stats: ASStats) => (stats?.total_earnings || 0) > 0 ? Math.min(((stats?.total_earnings || 0) / 50000) * 100, 100) : 0,
         getDetails: (stats: ASStats, loading: boolean) => [
           { label: "Servicios completados", value: loading ? "..." : String(stats?.completed_bookings || 0) },
           { label: "Comisión plataforma", value: loading ? "..." : "0%" },
@@ -252,7 +252,7 @@ export function UnifiedSummaryCards({
         icon: Search,
         colorClass: "text-primary",
         getValue: (stats: ExplorerStats, loading: boolean) => loading ? "..." : (stats?.activeBookings || 0),
-        getProgress: (stats: ExplorerStats) => stats?.activeBookings > 0 ? Math.min((stats.activeBookings / 10) * 100, 100) : 0,
+        getProgress: (stats: ExplorerStats) => (stats?.activeBookings || 0) > 0 ? Math.min(((stats?.activeBookings || 0) / 10) * 100, 100) : 0,
         getDetails: (stats: ExplorerStats, loading: boolean) => [
           { label: "En proceso", value: loading ? "..." : String(Math.floor((stats?.activeBookings || 0) * 0.6)) },
           { label: "Esperando propuestas", value: loading ? "..." : String(Math.ceil((stats?.activeBookings || 0) * 0.4)) }
@@ -265,7 +265,7 @@ export function UnifiedSummaryCards({
         icon: CheckCircle,
         colorClass: "text-green-400",
         getValue: (stats: ExplorerStats, loading: boolean) => loading ? "..." : (stats?.completedBookings || 0),
-        getProgress: (stats: ExplorerStats) => stats?.completedBookings > 0 ? Math.min((stats.completedBookings / 50) * 100, 100) : 0,
+        getProgress: (stats: ExplorerStats) => (stats?.completedBookings || 0) > 0 ? Math.min(((stats?.completedBookings || 0) / 50) * 100, 100) : 0,
         getDetails: (stats: ExplorerStats, loading: boolean) => [
           { 
             label: "Este mes", 
@@ -288,7 +288,7 @@ export function UnifiedSummaryCards({
         icon: TrendingUp,
         colorClass: "text-blue-400",
         getValue: (stats: ExplorerStats, loading: boolean) => loading ? "..." : `$${(stats?.totalSpent || 0).toLocaleString()}`,
-        getProgress: (stats: ExplorerStats) => stats?.totalSpent > 0 ? Math.min((stats.totalSpent / 10000) * 100, 100) : 0,
+        getProgress: (stats: ExplorerStats) => (stats?.totalSpent || 0) > 0 ? Math.min(((stats?.totalSpent || 0) / 10000) * 100, 100) : 0,
         getDetails: (stats: ExplorerStats, loading: boolean) => [
           { 
             label: "Total gastado", 
