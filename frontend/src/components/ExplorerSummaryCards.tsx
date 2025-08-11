@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import { dashboardService } from "@/services/dashboard";
 
 interface ExplorerStats {
   activeBookings: number;
@@ -29,26 +30,19 @@ export function ExplorerSummaryCards() {
 
   useEffect(() => {
     const fetchExplorerStats = async () => {
-      if (!user?.id) return;
+      if (!user?.id) {
+        setLoading(false);
+        return;
+      }
       
       try {
-        const response = await fetch('/api/dashboard/explorer-stats', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.data.stats) {
-            setStats(data.data.stats);
-          }
-        } else {
-          console.error('Error fetching explorer stats:', response.statusText);
+        const data = await dashboardService.getExploradorDashboardStats();
+        if (data.stats) {
+          setStats(data.stats);
         }
       } catch (error) {
         console.error('Error fetching explorer stats:', error);
+        // Keep default stats on error
       } finally {
         setLoading(false);
       }

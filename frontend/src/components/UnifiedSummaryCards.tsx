@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useASDashboardData } from "@/hooks/useDashboardData";
 import { useOptimizedGlass } from "@/contexts/GlassOptimizationContext";
+import { dashboardService } from "@/services/dashboard";
 import { useState, useEffect } from "react";
 
 // Types
@@ -116,21 +117,13 @@ export function UnifiedSummaryCards({
       }
       
       try {
-        const response = await fetch('/api/dashboard/explorer-stats', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.data.stats) {
-            setExplorerStats(data.data.stats);
-          }
+        const data = await dashboardService.getExploradorDashboardStats();
+        if (data.stats) {
+          setExplorerStats(data.stats);
         }
       } catch (error) {
         console.error('Error fetching explorer stats:', error);
+        // Keep default stats on error
       } finally {
         setExplorerLoading(false);
       }

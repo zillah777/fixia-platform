@@ -273,7 +273,7 @@ exports.register = async (req, res) => {
       // Development mode - auto-login
       return res.success({
         user: sanitizeUser(user),
-        accessToken: tokens.accessToken,
+        token: tokens.accessToken, // Keep 'token' for frontend compatibility
         refreshToken: tokens.refreshToken,
         emailVerificationRequired: false
       }, 'Usuario registrado exitosamente.', 201);
@@ -411,7 +411,7 @@ exports.login = async (req, res) => {
 
     return res.success({
       user: userWithStats,
-      accessToken: tokens.accessToken,
+      token: tokens.accessToken, // Keep 'token' for frontend compatibility
       refreshToken: tokens.refreshToken
     }, 'Inicio de sesión exitoso');
 
