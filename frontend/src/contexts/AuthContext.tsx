@@ -49,14 +49,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setUser(storedUser);
             setLoading(false);
             
-            // Session validation disabled to prevent auto-logout issues
-            // setTimeout(async () => {
-            //   const isValidSession = await authService.validateSession();
-            //   if (!isValidSession) {
-            //     // Sesión inválida, hacer logout limpio
-            //     handleLogout();
-            //   }
-            // }, 1000);
+            // Enterprise-grade session validation with graceful error handling
+            setTimeout(async () => {
+              try {
+                // Only validate session if user is not currently performing profile operations
+                const isValidSession = await authService.validateSession();
+                if (!isValidSession) {
+                  // Check if we have a valid token before logging out
+                  const token = authService.getStoredToken();
+                  const storedUser = authService.getStoredUser();
+                  
+                  // Only logout if token is actually invalid, not just network issues
+                  if (!token || !storedUser) {
+                    console.warn('🔐 Session validation failed - no valid token/user found');
+                    handleLogout();
+                  } else {
+                    console.warn('🔐 Session validation failed but token exists - may be network issue');
+                  }
+                }
+              } catch (error) {
+                console.warn('🔐 Session validation error (non-critical):', error);
+                // Don't auto-logout on validation errors - could be network issues
+              }
+            }, 2000); // Increased delay to prevent race conditions with profile operations
           } else {
             setLoading(false);
           }

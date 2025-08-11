@@ -42,7 +42,7 @@ interface ProfileData {
 }
 
 const ASPerfil: NextPage = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, uploadProfilePhoto, updateProfile } = useAuth();
   const router = useRouter();
   
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -130,28 +130,17 @@ const ASPerfil: NextPage = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const response = await fetch('/api/users/profile', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(profileData)
+      // Use AuthContext updateProfile method for consistent security validation
+      await updateProfile({
+        first_name: profileData.first_name,
+        last_name: profileData.last_name,
+        phone: profileData.phone,
+        address: profileData.address,
+        bio: profileData.about_me
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        setIsEditing(false);
-        alert('Perfil actualizado exitosamente');
-        
-        // Update profile data with response
-        if (data.data) {
-          setProfileData(prev => ({ ...prev, ...data.data }));
-        }
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || 'Error al guardar el perfil');
-      }
+      
+      setIsEditing(false);
+      alert('Perfil actualizado exitosamente');
     } catch (error) {
       console.error('Error saving profile:', error);
       alert('Error al guardar el perfil');
@@ -177,28 +166,13 @@ const ASPerfil: NextPage = () => {
 
     setUploadingPhoto(true);
     try {
-      const formData = new FormData();
-      formData.append('photo', file);
-
-      const response = await fetch('/api/users/upload-photo', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: formData
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setProfileData(prev => ({ 
-          ...prev, 
-          profile_photo_url: data.data.photoUrl 
-        }));
-        alert('Foto de perfil actualizada exitosamente');
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || 'Error al subir la foto');
-      }
+      // Use AuthContext upload method for consistent security validation
+      const photoUrl = await uploadProfilePhoto(file);
+      setProfileData(prev => ({ 
+        ...prev, 
+        profile_photo_url: photoUrl
+      }));
+      alert('Foto de perfil actualizada exitosamente');
     } catch (error) {
       console.error('Error uploading photo:', error);
       alert('Error al subir la foto');
