@@ -553,25 +553,23 @@ const TermsPage: NextPage = () => {
                     no dudes en contactarnos.
                   </p>
                   <div className="flex justify-center space-x-4">
-                    <Button 
-                      asChild
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
-                      style={{ borderRadius: '12px' }}
-                    >
-                      <Link href="/contacto">
+                    <Link href="/contacto">
+                      <Button 
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                        style={{ borderRadius: '12px' }}
+                      >
                         Contactar Soporte
-                      </Link>
-                    </Button>
-                    <Button 
-                      asChild
-                      variant="outline"
-                      className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-                      style={{ borderRadius: '12px' }}
-                    >
-                      <Link href="/">
+                      </Button>
+                    </Link>
+                    <Link href="/">
+                      <Button 
+                        variant="outline"
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                        style={{ borderRadius: '12px' }}
+                      >
                         Volver al Inicio
-                      </Link>
-                    </Button>
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
