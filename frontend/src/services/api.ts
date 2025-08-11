@@ -28,6 +28,12 @@ const api: AxiosInstance = axios.create({
 // Request interceptor to add auth token with validation
 api.interceptors.request.use(
   (config) => {
+    // Fix for file uploads: Remove Content-Type header for FormData to allow browser to set multipart/form-data with boundary
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+      console.log('📸 Removed Content-Type header for FormData upload');
+    }
+    
     // Safe localStorage access for SSR compatibility
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
@@ -50,7 +56,7 @@ api.interceptors.request.use(
               for (const [key, value] of config.data.entries()) {
                 console.log(`  ${key}:`, value instanceof File ? `File(${value.name})` : value);
               }
-              console.log('📸 Content-Type header:', config.headers['Content-Type'] || 'not set');
+              console.log('📸 Content-Type header:', config.headers['Content-Type'] || 'not set (good for FormData)');
               console.log('📸 Authorization header set:', !!config.headers.Authorization);
             }
           }
