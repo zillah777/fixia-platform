@@ -281,7 +281,7 @@ export function UnifiedSummaryCards({
           }
         ],
         getDescription: (stats: ExplorerStats, loading: boolean) => 
-          loading ? "Cargando..." : `${(stats?.completedBookings || 0) > 0 ? Math.floor(((stats.completedBookings) / ((stats.completedBookings) + (stats?.activeBookings || 0) + 1)) * 100) : 0}% de proyectos exitosos`
+          loading ? "Cargando..." : `${(stats?.completedBookings || 0) > 0 ? Math.floor(((stats?.completedBookings || 0) / ((stats?.completedBookings || 0) + (stats?.activeBookings || 0) + 1)) * 100) : 0}% de proyectos exitosos`
       },
       {
         title: "Presupuesto del Mes",
@@ -296,7 +296,7 @@ export function UnifiedSummaryCards({
           }
         ],
         getDescription: (stats: ExplorerStats, loading: boolean) => 
-          loading ? "Cargando..." : `Promedio: $${(stats?.completedBookings || 0) > 0 ? Math.floor((stats?.totalSpent || 0) / stats.completedBookings).toLocaleString() : 0} por proyecto`
+          loading ? "Cargando..." : `Promedio: $${(stats?.completedBookings || 0) > 0 ? Math.floor((stats?.totalSpent || 0) / (stats?.completedBookings || 1)).toLocaleString() : 0} por proyecto`
       },
       {
         title: "Conversaciones",
