@@ -485,21 +485,47 @@ exports.getCurrentUser = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
+    
+    // Enterprise-grade input validation and sanitization
     const allowedFields = [
       'first_name', 'last_name', 'phone', 'address', 'city',
-      'latitude', 'longitude', 'birth_date', 'about_me', 
-      'has_mobility', 'profile_image', 'professional_info'
+      'latitude', 'longitude', 'birth_date', 'about_me', 'bio',
+      'has_mobility', 'profile_image', 'professional_info', 'locality'
     ];
     
     const updates = {};
     const values = [];
     let paramIndex = 1;
 
-    // Build dynamic update query
+    // Enhanced security validation for each field
     Object.keys(req.body).forEach(key => {
       if (allowedFields.includes(key) && req.body[key] !== undefined) {
+        let value = req.body[key];
+        
+        // Input sanitization and validation
+        if (typeof value === 'string') {
+          value = value.trim();
+          
+          // Prevent XSS attacks
+          value = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+          value = value.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+          
+          // Length validation
+          if (['first_name', 'last_name'].includes(key) && (value.length < 2 || value.length > 100)) {
+            return res.validation({ field: key, error: 'invalid_length' }, `${key} debe tener entre 2 y 100 caracteres`);
+          }
+          
+          if (key === 'bio' && value.length > 1000) {
+            return res.validation({ field: key, error: 'too_long' }, 'La biografía no puede exceder 1000 caracteres');
+          }
+          
+          if (key === 'phone' && value.length > 20) {
+            return res.validation({ field: key, error: 'invalid_phone' }, 'Número de teléfono inválido');
+          }
+        }
+        
         updates[key] = `$${paramIndex}`;
-        values.push(req.body[key]);
+        values.push(value);
         paramIndex++;
       }
     });
@@ -507,6 +533,15 @@ exports.updateProfile = async (req, res) => {
     if (Object.keys(updates).length === 0) {
       return res.validation({ allowed_fields: allowedFields }, 'No hay campos válidos para actualizar');
     }
+
+    // Log profile update for security monitoring
+    logger.info('👤 Profile update initiated', {
+      userId: userId,
+      updatedFields: Object.keys(updates),
+      userEmail: req.user.email,
+      ip: req.ip,
+      userAgent: req.headers['user-agent']
+    });
 
     const setClause = Object.keys(updates).map(key => `${key} = ${updates[key]}`).join(', ');
     values.push(userId);
@@ -522,10 +557,24 @@ exports.updateProfile = async (req, res) => {
       return res.notFound('Usuario no encontrado');
     }
 
-    return res.success(sanitizeUser(result.rows[0]), 'Perfil actualizado exitosamente');
+    const updatedUser = sanitizeUser(result.rows[0]);
+    
+    // Log successful update
+    logger.info('✅ Profile update completed successfully', {
+      userId: userId,
+      updatedFields: Object.keys(updates),
+      userEmail: req.user.email
+    });
+
+    return res.success(updatedUser, 'Perfil actualizado exitosamente');
 
   } catch (error) {
-    logger.error('Update profile error:', error);
+    logger.error('❌ Update profile error:', {
+      error: error.message,
+      userId: req.user?.id,
+      userEmail: req.user?.email,
+      stack: error.stack
+    });
     return res.dbError(error, 'Error al actualizar el perfil');
   }
 };

@@ -142,20 +142,39 @@ router.put('/profile', authMiddleware, userTypeTransformMiddleware, async (req, 
   }
 });
 
-// POST /api/users/profile/photo - Upload profile photo
+// POST /api/users/profile/photo - Upload profile photo with enhanced security
 router.post('/profile/photo', authMiddleware, (req, res, next) => {
-  console.log('🔍 Starting photo upload for user:', req.user?.id);
-  console.log('🔍 Headers:', {
+  // Log security audit trail for photo uploads
+  const { logger } = require('../utils/smartLogger');
+  logger.info('📸 Photo upload security audit', {
+    userId: req.user?.id,
+    userEmail: req.user?.email,
     contentType: req.headers['content-type'],
-    authorization: req.headers.authorization ? 'Bearer ***' : 'none'
+    hasAuth: !!req.headers.authorization,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'],
+    timestamp: new Date().toISOString()
   });
   
+  // Enhanced multer security validation
   upload.single('photo')(req, res, (uploadError) => {
     if (uploadError) {
-      console.error('❌ Multer error:', uploadError);
+      logger.error('❌ Photo upload security error:', {
+        error: uploadError.message,
+        code: uploadError.code,
+        userId: req.user?.id,
+        ip: req.ip
+      });
+      
       if (uploadError instanceof multer.MulterError) {
         if (uploadError.code === 'LIMIT_FILE_SIZE') {
           return res.status(400).json(formatError('Archivo demasiado grande. Máximo 5MB'));
+        }
+        if (uploadError.code === 'LIMIT_FILE_COUNT') {
+          return res.status(400).json(formatError('Solo se permite subir un archivo a la vez'));
+        }
+        if (uploadError.code === 'LIMIT_UNEXPECTED_FILE') {
+          return res.status(400).json(formatError('Campo de archivo no válido. Use "photo"'));
         }
         return res.status(400).json(formatError(`Error de archivo: ${uploadError.message}`));
       }
