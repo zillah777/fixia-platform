@@ -169,7 +169,7 @@ export function UnifiedSummaryCards({
           { 
             label: loading ? "..." : `${stats?.total_reviews || 0} reseñas totales`, 
             value: "",
-            badge: stats?.total_reviews > 0 
+            badge: (stats?.total_reviews || 0) > 0 
               ? { text: "Verificado", className: "bg-green-500/20 text-green-400" }
               : { text: "Sin reseñas", className: "bg-gray-500/20 text-gray-400" }
           }
