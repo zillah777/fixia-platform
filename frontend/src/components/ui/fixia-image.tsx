@@ -23,6 +23,10 @@ export interface FixiaImageProps {
   onLoadingComplete?: (result: { naturalWidth: number; naturalHeight: number }) => void;
   onError?: () => void;
   children?: React.ReactNode;
+  lazy?: boolean;
+  webpOptimization?: boolean;
+  placeholder?: 'blur' | 'empty';
+  blurDataURL?: string;
 }
 
 const aspectRatioClasses = {
@@ -63,10 +67,28 @@ export const FixiaImage: React.FC<FixiaImageProps> = ({
   onLoadingComplete,
   onError,
   children,
+  lazy = true,
+  webpOptimization = true,
+  placeholder,
+  blurDataURL,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [currentSrc, setCurrentSrc] = useState(src);
+  
+  // WebP optimization - append format if supported and enabled
+  const optimizedSrc = React.useMemo(() => {
+    if (!webpOptimization || !currentSrc) return currentSrc;
+    
+    // Check if it's an external URL or already optimized
+    if (currentSrc.startsWith('http') && !currentSrc.includes('/api/image-proxy')) {
+      return currentSrc;
+    }
+    
+    // Add WebP optimization parameters for internal images
+    const separator = currentSrc.includes('?') ? '&' : '?';
+    return `${currentSrc}${separator}format=webp&quality=${quality}`;
+  }, [currentSrc, webpOptimization, quality]);
 
   const handleLoadingComplete = (result: { naturalWidth: number; naturalHeight: number }) => {
     setIsLoading(false);
@@ -132,13 +154,14 @@ export const FixiaImage: React.FC<FixiaImageProps> = ({
 
       {/* Next.js Optimized Image */}
       <Image
-        src={currentSrc}
+        src={optimizedSrc}
         alt={alt}
         width={fill ? undefined : width}
         height={fill ? undefined : height}
         fill={fill}
         sizes={defaultSizes}
         priority={priority}
+        loading={priority ? "eager" : (lazy ? "lazy" : "eager")}
         quality={quality}
         className={cn(
           imageClasses,
@@ -149,8 +172,8 @@ export const FixiaImage: React.FC<FixiaImageProps> = ({
         style={fill ? { objectFit } : undefined}
         onLoadingComplete={handleLoadingComplete}
         onError={handleError}
-        placeholder={loadingType === 'blur' ? 'blur' : 'empty'}
-        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+        placeholder={placeholder || (loadingType === 'blur' ? 'blur' : 'empty')}
+        blurDataURL={blurDataURL || "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="}
       />
 
       {/* Overlay Content */}

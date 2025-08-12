@@ -3,17 +3,19 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { PromotionProvider } from '@/contexts/PromotionContext';
 import { GlassOptimizationProvider } from '@/contexts/GlassOptimizationContext';
 import { ErrorRecoveryProvider } from '@/contexts/ErrorRecoveryContext';
+import { QueryProvider } from '@/contexts/QueryProvider';
 import { Toaster } from 'react-hot-toast';
 import '@/styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ErrorRecoveryProvider>
-      <AuthProvider>
-        <PromotionProvider>
-          <GlassOptimizationProvider>
-            <div className="min-h-screen bg-background text-foreground">
-              <Component {...pageProps} />
+    <QueryProvider>
+      <ErrorRecoveryProvider>
+        <AuthProvider>
+          <PromotionProvider>
+            <GlassOptimizationProvider>
+              <div className="min-h-screen bg-background text-foreground">
+                <Component {...pageProps} />
           
           {/* Toast notifications with Fixia styling */}
           <Toaster
@@ -50,10 +52,11 @@ export default function App({ Component, pageProps }: AppProps) {
             },
           }}
           />
-          </div>
-        </GlassOptimizationProvider>
-      </PromotionProvider>
-    </AuthProvider>
-    </ErrorRecoveryProvider>
+              </div>
+            </GlassOptimizationProvider>
+          </PromotionProvider>
+        </AuthProvider>
+      </ErrorRecoveryProvider>
+    </QueryProvider>
   );
 }

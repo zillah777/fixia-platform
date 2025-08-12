@@ -62,7 +62,7 @@ const ASDashboard: NextPage = () => {
             <h2 className="text-xl font-semibold mb-2">Error al cargar datos</h2>
             <p className="text-muted-foreground mb-6">{error}</p>
             <button 
-              onClick={refetch}
+              onClick={() => refetch()}
               className="btn btn-primary liquid-gradient hover:opacity-90 transition-all duration-300"
             >
               Reintentar

@@ -1,79 +1,88 @@
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { dashboardService, landingService, DashboardStats, ServiceCategory, FeaturedProfessional, Testimonial } from '@/services/dashboard';
+import { QUERY_KEYS } from './useOptimizedQueries';
+import { useAuth } from '@/contexts/AuthContext';
 
 /**
- * Custom Hook for AS Dashboard Data
- * Handles loading states, error handling, and data fetching
+ * Custom Hook for AS Dashboard Data with React Query Optimization
+ * Handles loading states, error handling, and intelligent caching
  */
 export const useASDashboardData = () => {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchStats = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  const { user } = useAuth();
+  
+  const query = useQuery({
+    queryKey: QUERY_KEYS.dashboardStats('provider', user?.id),
+    queryFn: async () => {
       const data = await dashboardService.getASDashboardStats();
-      setStats(data);
-    } catch (err: any) {
-      setError(err.message || 'Error al cargar estadísticas');
-      console.error('Dashboard stats error:', err);
-    } finally {
-      setLoading(false);
-    }
+      return data;
+    },
+    enabled: !!user?.id && user.user_type === 'provider',
+    staleTime: 1000 * 60 * 2, // 2 minutes
+    refetchOnWindowFocus: true,
+    refetchInterval: 1000 * 60 * 5, // Refetch every 5 minutes
+  });
+
+  return { 
+    stats: query.data, 
+    loading: query.isLoading, 
+    error: query.error?.message || null, 
+    refetch: query.refetch 
   };
-
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const refetch = async () => {
-    await fetchStats();
-  };
-
-  return { stats, loading, error, refetch };
 };
 
 /**
- * Custom Hook for Landing Page Data
- * Manages service categories, professionals, and testimonials
+ * Custom Hook for Landing Page Data with React Query Optimization
+ * Manages service categories, professionals, and testimonials with intelligent caching
  */
 export const useLandingData = () => {
-  const [categories, setCategories] = useState<ServiceCategory[]>([]);
-  const [professionals, setProfessionals] = useState<FeaturedProfessional[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Categories query with longer cache time (categories change infrequently)
+  const categoriesQuery = useQuery({
+    queryKey: ['landing', 'categories'],
+    queryFn: () => landingService.getServiceCategories(),
+    staleTime: 1000 * 60 * 15, // 15 minutes
+    gcTime: 1000 * 60 * 30, // 30 minutes
+  });
 
-  useEffect(() => {
-    const fetchLandingData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Fetch all data in parallel for better performance
-        const [categoriesData, professionalsData, testimonialsData] = await Promise.all([
-          landingService.getServiceCategories(),
-          landingService.getFeaturedProfessionals(),
-          landingService.getTestimonials()
-        ]);
+  // Professionals query with medium cache time
+  const professionalsQuery = useQuery({
+    queryKey: ['landing', 'professionals'],
+    queryFn: () => landingService.getFeaturedProfessionals(),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: true,
+  });
 
-        setCategories(categoriesData);
-        setProfessionals(professionalsData);
-        setTestimonials(testimonialsData);
-      } catch (err: any) {
-        setError(err.message || 'Error al cargar datos');
-        console.error('Landing data error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Testimonials query with longer cache time (testimonials change infrequently)
+  const testimonialsQuery = useQuery({
+    queryKey: ['landing', 'testimonials'],
+    queryFn: () => landingService.getTestimonials(),
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  });
 
-    fetchLandingData();
-  }, []);
+  // Combine loading states for progressive loading
+  const isInitialLoading = categoriesQuery.isLoading || professionalsQuery.isLoading;
+  const isFullyLoaded = categoriesQuery.isSuccess && professionalsQuery.isSuccess && testimonialsQuery.isSuccess;
 
-  return { categories, professionals, testimonials, loading, error };
+  // Combine errors
+  const error = categoriesQuery.error?.message || 
+                professionalsQuery.error?.message || 
+                testimonialsQuery.error?.message || 
+                null;
+
+  return { 
+    categories: categoriesQuery.data || [], 
+    professionals: professionalsQuery.data || [], 
+    testimonials: testimonialsQuery.data || [], 
+    loading: isInitialLoading,
+    testimonialsLoading: testimonialsQuery.isLoading,
+    isFullyLoaded,
+    error,
+    refetch: () => {
+      categoriesQuery.refetch();
+      professionalsQuery.refetch(); 
+      testimonialsQuery.refetch();
+    }
+  };
 };
 
 // Type for Explorador Dashboard Data
@@ -89,34 +98,27 @@ interface ExploradorDashboardData {
 }
 
 /**
- * Custom Hook for Explorador Dashboard Data
+ * Custom Hook for Explorador Dashboard Data with React Query Optimization
  */
 export const useExploradorDashboardData = () => {
-  const [stats, setStats] = useState<ExploradorDashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchStats = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  const { user } = useAuth();
+  
+  const query = useQuery({
+    queryKey: QUERY_KEYS.dashboardStats('customer', user?.id),
+    queryFn: async () => {
       const data = await dashboardService.getExploradorDashboardStats();
-      setStats(data);
-    } catch (err: any) {
-      setError(err.message || 'Error al cargar estadísticas');
-      console.error('Explorador dashboard stats error:', err);
-    } finally {
-      setLoading(false);
-    }
+      return data;
+    },
+    enabled: !!user?.id && user.user_type === 'customer',
+    staleTime: 1000 * 60 * 2, // 2 minutes
+    refetchOnWindowFocus: true,
+    refetchInterval: 1000 * 60 * 5, // Refetch every 5 minutes
+  });
+
+  return { 
+    stats: query.data, 
+    loading: query.isLoading, 
+    error: query.error?.message || null, 
+    refetch: query.refetch 
   };
-
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const refetch = async () => {
-    await fetchStats();
-  };
-
-  return { stats, loading, error, refetch };
 };
