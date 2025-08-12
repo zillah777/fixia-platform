@@ -74,7 +74,7 @@ export function FixiaNavigation() {
             </Link>
           </motion.div>
           
-          <nav className="hidden lg:flex items-center space-x-1">
+          <nav className="hidden lg:flex items-center space-x-1" aria-label="Navegación principal">
             <Link href={user?.user_type === 'provider' ? '/as/dashboard' : '/explorador/dashboard'}>
               <SimpleTooltip content={user?.user_type === 'provider' ? "Tu panel principal con resumen de trabajos y solicitudes" : "Tu panel principal para buscar profesionales"}>
                 <Button variant="secondary">
@@ -135,6 +135,7 @@ export function FixiaNavigation() {
             <Input
               placeholder={user?.user_type === 'customer' ? "Buscar en marketplace..." : "Buscar profesionales o servicios..."}
               className="w-64 xl:w-80 pl-12 glass border-white/20 focus:border-primary/50 focus:ring-primary/30 transition-all duration-300"
+              aria-label={user?.user_type === 'customer' ? "Buscar servicios en marketplace" : "Buscar profesionales o servicios"}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && user?.user_type === 'customer') {
                   const searchTerm = (e.target as HTMLInputElement).value;
@@ -286,6 +287,7 @@ export function FixiaNavigation() {
                 <Input
                   placeholder={user?.user_type === 'customer' ? "Buscar en marketplace..." : "Buscar profesionales o servicios..."}
                   className="pl-12 glass border-white/20 focus:border-primary/50"
+                  aria-label={user?.user_type === 'customer' ? "Buscar servicios en marketplace (móvil)" : "Buscar profesionales o servicios (móvil)"}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && user?.user_type === 'customer') {
                       const searchTerm = (e.target as HTMLInputElement).value;
@@ -299,7 +301,7 @@ export function FixiaNavigation() {
               </div>
 
               {/* Mobile Navigation Links */}
-              <div className="space-y-2">
+              <div className="space-y-2" role="navigation" aria-label="Navegación móvil">
                 <Link href={user?.user_type === 'provider' ? '/as/dashboard' : '/explorador/dashboard'}>
                   <Button 
                     variant="secondary"

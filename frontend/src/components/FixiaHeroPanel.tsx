@@ -27,8 +27,9 @@ export function FixiaHeroPanel() {
       >
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-              ¡Hola {userName}! 👋
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent flex items-center gap-3">
+              ¡Hola {userName}!
+              <Zap className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-green-400/80" />
             </h1>
             <p className="text-muted-foreground text-base sm:text-lg">
               Tu tiempo vale. Fixia lo cuida. Aquí está tu resumen de actividad.
@@ -36,19 +37,19 @@ export function FixiaHeroPanel() {
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
             <Link href="/as/oportunidades" className="w-full sm:w-auto">
-              <Button className="w-full sm:w-auto liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg text-sm px-3 py-2">
+              <Button size="default" className="w-full sm:w-auto liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
                 <Target className="mr-2 h-4 w-4" />
                 Ver Oportunidades
               </Button>
             </Link>
             <Link href="/as/centro-confianza" className="w-full sm:w-auto">
-              <Button className="w-full sm:w-auto glass-medium hover:glass-strong transition-all duration-300 shadow-lg border border-white/20 text-sm px-3 py-2">
+              <Button size="default" className="w-full sm:w-auto glass-medium hover:glass-strong transition-all duration-300 shadow-lg border border-white/20">
                 <Shield className="mr-2 h-4 w-4" />
                 Centro de Confianza
               </Button>
             </Link>
             <Link href="/as/cambiar-a-explorador" className="w-full sm:w-auto">
-              <Button className="w-full sm:w-auto glass-light hover:glass-medium transition-all duration-300 shadow-lg border border-white/10 text-white/80 hover:text-white text-sm px-3 py-2">
+              <Button size="default" className="w-full sm:w-auto glass-light hover:glass-medium transition-all duration-300 shadow-lg border border-white/10 text-white/80 hover:text-white">
                 <User className="mr-2 h-4 w-4" />
                 Cambiar a Explorador
               </Button>
@@ -157,7 +158,7 @@ export function FixiaHeroPanel() {
                   Tu actividad aparecerá aquí cuando comiences a ofrecer servicios
                 </p>
                 <Link href="/as/servicios">
-                  <Button className="liquid-gradient hover:opacity-90 transition-all duration-300">
+                  <Button size="default" className="liquid-gradient hover:opacity-90 transition-all duration-300">
                     Crear Mi Primer Servicio
                   </Button>
                 </Link>
@@ -220,7 +221,7 @@ export function FixiaHeroPanel() {
                   Completa servicios y gana reputación para desbloquear logros
                 </p>
                 <Link href="/as/oportunidades">
-                  <Button className="glass-medium hover:glass-strong transition-all duration-300 border border-white/20">
+                  <Button size="default" className="glass-medium hover:glass-strong transition-all duration-300 border border-white/20">
                     Explorar Oportunidades
                   </Button>
                 </Link>

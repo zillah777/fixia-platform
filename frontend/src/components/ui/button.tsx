@@ -19,10 +19,10 @@ const buttonVariants = cva(
         default: "", // Maps to primary
       },
       size: {
-        xs: "h-8 rounded-md px-2 text-xs",
-        sm: "h-9 rounded-md px-3",
-        default: "h-10 px-4 py-2",
-        lg: "h-11 rounded-md px-8",
+        xs: "h-8 rounded-md px-3 text-xs",
+        sm: "h-9 rounded-md px-4",
+        default: "h-10 px-6 py-2",
+        lg: "h-11 rounded-md px-10",
         icon: "h-10 w-10",
         "icon-sm": "h-9 w-9",
         "icon-lg": "h-11 w-11",

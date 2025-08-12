@@ -368,6 +368,7 @@ const Registro: NextPage = () => {
                   {/* Submit Button */}
                   <Button
                     type="submit"
+                    size="lg"
                     className={`w-full transition-all duration-300 shadow-lg ${
                       isPromotionEligible 
                         ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600' 

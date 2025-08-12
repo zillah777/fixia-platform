@@ -23,7 +23,7 @@ interface OnboardingStep {
 }
 
 interface OnboardingHelperProps {
-  steps: OnboardingStep[];
+  steps?: OnboardingStep[];
   userType: 'provider' | 'customer';
   onComplete?: () => void;
   triggerText?: string;
@@ -107,12 +107,12 @@ const customerOnboardingSteps: OnboardingStep[] = [
   }
 ];
 
-export function OnboardingHelper({ userType, onComplete, triggerText }: OnboardingHelperProps) {
+export function OnboardingHelper({ steps: propSteps, userType, onComplete, triggerText }: OnboardingHelperProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [hasCompleted, setHasCompleted] = useState(false);
 
-  const steps = userType === 'provider' ? providerOnboardingSteps : customerOnboardingSteps;
+  const steps = propSteps || (userType === 'provider' ? providerOnboardingSteps : customerOnboardingSteps);
   
   useEffect(() => {
     // Check if user has completed onboarding

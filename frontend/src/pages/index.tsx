@@ -282,7 +282,8 @@ function HeroSection() {
                 </div>
                 <Button 
                   type="submit" 
-                  className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg m-1 px-8 py-3"
+                  size="lg"
+                  className="liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg m-1"
                 >
                   Buscar Ahora
                 </Button>
@@ -489,13 +490,13 @@ function CTASection() {
             
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
               <Link href="/auth/registro">
-                <Button size="lg" className="bg-blue-500 hover:bg-blue-600 text-white px-10 py-4 text-lg rounded-2xl transition-all duration-300 shadow-lg">
+                <Button size="lg" className="bg-blue-500 hover:bg-blue-600 text-white text-lg rounded-2xl transition-all duration-300 shadow-lg">
                   Buscar Profesionales
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/auth/registro?type=provider">
-                <Button size="lg" className="glass-medium border-white/20 text-white hover:glass-strong transition-all duration-300 px-10 py-4 text-lg rounded-2xl">
+                <Button size="lg" className="glass-medium border-white/20 text-white hover:glass-strong transition-all duration-300 text-lg rounded-2xl">
                   Ofrecer Servicios
                   <Zap className="ml-2 h-5 w-5" />
                 </Button>
@@ -687,11 +688,11 @@ function FeaturedProfessionals() {
                   </div>
                   
                   <div className="flex space-x-2">
-                    <Button size="sm" className="flex-1 liquid-gradient hover:opacity-90">
+                    <Button size="sm" className="flex-1 liquid-gradient hover:opacity-90 px-4">
                       <MessageSquare className="h-4 w-4 mr-2" />
                       Contactar
                     </Button>
-                    <Button size="sm" variant="outline" className="glass border-white/20 text-white hover:bg-white/10">
+                    <Button size="sm" variant="outline" className="glass border-white/20 text-white hover:bg-white/10 px-4">
                       Ver Perfil
                     </Button>
                   </div>
