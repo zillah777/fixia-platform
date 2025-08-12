@@ -82,28 +82,28 @@ export function SimpleError({
 
   const colorClasses = {
     orange: {
-      bg: 'bg-orange-500/20',
-      border: 'border-orange-500/30',
-      text: 'text-orange-400',
-      button: 'bg-orange-500 hover:bg-orange-600'
+      bg: 'glass-light bg-warning/30',
+      border: 'border-warning/40',
+      text: 'text-warning',
+      button: 'glass-medium bg-warning/60 hover:bg-warning/70 backdrop-blur-lg'
     },
     red: {
-      bg: 'bg-red-500/20',
-      border: 'border-red-500/30',
-      text: 'text-red-400',
-      button: 'bg-red-500 hover:bg-red-600'
+      bg: 'glass-light bg-destructive/30',
+      border: 'border-destructive/40',
+      text: 'text-destructive',
+      button: 'glass-medium bg-destructive/60 hover:bg-destructive/70 backdrop-blur-lg'
     },
     green: {
-      bg: 'bg-green-500/20',
-      border: 'border-green-500/30',
-      text: 'text-green-400',
-      button: 'bg-green-500 hover:bg-green-600'
+      bg: 'glass-light bg-success/30',
+      border: 'border-success/40',
+      text: 'text-success',
+      button: 'glass-medium bg-success/60 hover:bg-success/70 backdrop-blur-lg'
     },
     gray: {
-      bg: 'bg-gray-500/20',
-      border: 'border-gray-500/30',
-      text: 'text-gray-400',
-      button: 'bg-gray-500 hover:bg-gray-600'
+      bg: 'glass-light bg-muted/30',
+      border: 'border-muted/40',
+      text: 'text-muted-foreground',
+      button: 'glass-medium bg-muted/60 hover:bg-muted/70 backdrop-blur-lg'
     }
   };
 
@@ -113,7 +113,7 @@ export function SimpleError({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`glass-medium rounded-xl p-8 border ${colors.border} ${colors.bg} text-center ${className}`}
+      className={`glass-strong rounded-xl p-8 border backdrop-blur-xl ${colors.border} ${colors.bg} text-center transition-all duration-300 ${className}`}
     >
       {/* Icon */}
       <div className={`${colors.text} mx-auto mb-6`}>
@@ -133,7 +133,7 @@ export function SimpleError({
         {onAction && (
           <Button
             onClick={onAction}
-            className={`${colors.button} text-white px-6 py-3 font-medium transition-all duration-200`}
+            className={`${colors.button} text-white px-6 py-3 font-medium transition-all duration-300 border-0`}
           >
             {displayActionText}
           </Button>
@@ -149,7 +149,7 @@ export function SimpleError({
               <Button
                 variant="outline"
                 size="sm"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="glass-light border-white/30 text-white hover:glass-medium transition-all duration-300"
                 onClick={() => window.open('https://wa.me/5492965123456', '_blank')}
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
@@ -158,7 +158,7 @@ export function SimpleError({
               <Button
                 variant="outline"
                 size="sm"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="glass-light border-white/30 text-white hover:glass-medium transition-all duration-300"
                 onClick={() => window.open('tel:+5492965123456', '_blank')}
               >
                 <Phone className="h-4 w-4 mr-2" />

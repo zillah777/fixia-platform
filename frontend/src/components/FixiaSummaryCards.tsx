@@ -7,14 +7,11 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useASDashboardData } from "@/hooks/useDashboardData";
-import { useOptimizedGlass } from "@/contexts/GlassOptimizationContext";
 
 export function FixiaSummaryCards() {
   const { user } = useAuth();
   const { stats, loading, error } = useASDashboardData();
-  const { glassClasses: cardGlass } = useOptimizedGlass('light');
-  const { glassClasses: badgeGlass } = useOptimizedGlass('medium');
-  const { glassClasses: buttonGlass } = useOptimizedGlass('medium');
+  // Using proper UI component system with built-in glass effects
 
   return (
     <motion.div 
@@ -30,7 +27,7 @@ export function FixiaSummaryCards() {
             Transparencia líquida: ves todo lo que necesitas saber
           </p>
         </div>
-        <Badge className={`${badgeGlass} border-white/20`}>
+        <Badge variant="secondary">
           Últimos 30 días
         </Badge>
       </div>
@@ -42,7 +39,7 @@ export function FixiaSummaryCards() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 0.9 }}
         >
-          <Card className={`${cardGlass} hover:glass-medium transition-all duration-300 border-white/10 group`}>
+          <Card variant="interactive" className="group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <Clock className="h-4 w-4 text-primary group-hover:animate-spin transition-all duration-300" />
@@ -84,7 +81,7 @@ export function FixiaSummaryCards() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 1.0 }}
         >
-          <Card className={`${cardGlass} hover:glass-medium transition-all duration-300 border-white/10 group`}>
+          <Card variant="interactive" className="group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <Star className="h-4 w-4 text-yellow-400 group-hover:text-yellow-300 transition-colors duration-300" />
@@ -106,7 +103,7 @@ export function FixiaSummaryCards() {
                   {stats && stats.total_reviews > 0 ? (
                     <Badge className="bg-green-500/20 text-green-400 text-xs border-0">Verificado</Badge>
                   ) : (
-                    <Badge className="bg-gray-500/20 text-gray-400 text-xs border-0">Sin reseñas</Badge>
+                    <Badge variant="outline" className="text-xs">Sin reseñas</Badge>
                   )}
                 </div>
                 <Progress 
@@ -129,7 +126,7 @@ export function FixiaSummaryCards() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 1.1 }}
         >
-          <Card className={`${cardGlass} hover:glass-medium transition-all duration-300 border-white/10 group`}>
+          <Card variant="interactive" className="group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <TrendingUp className="h-4 w-4 text-green-400 group-hover:scale-110 transition-transform duration-300" />
@@ -198,7 +195,7 @@ export function FixiaSummaryCards() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 1.2 }}
         >
-          <Card className={`${cardGlass} hover:glass-medium transition-all duration-300 border-white/10 group`}>
+          <Card variant="interactive" className="group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <MessageSquare className="h-4 w-4 text-primary group-hover:animate-bounce transition-all duration-300" />
@@ -213,15 +210,15 @@ export function FixiaSummaryCards() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Mensajes sin leer</span>
-                    <Badge className="text-xs bg-gray-500/20 text-gray-400 border-0">0</Badge>
+                    <Badge variant="outline" className="text-xs">0</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Chats activos</span>
-                    <Badge className="bg-gray-500/20 text-gray-400 text-xs border-0">0</Badge>
+                    <Badge variant="outline" className="text-xs">0</Badge>
                   </div>
                 </div>
                 <Link href={user?.user_type === 'provider' ? '/as/chats' : '/explorador/chats'}>
-                  <Button className={`w-full ${buttonGlass} hover:glass-strong transition-all duration-300 h-9 px-3`}>
+                  <Button variant="primary" size="sm" fullWidth>
                     Ver Mensajes
                   </Button>
                 </Link>
@@ -236,7 +233,7 @@ export function FixiaSummaryCards() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 1.3 }}
         >
-          <Card className={`${cardGlass} hover:glass-medium transition-all duration-300 border-white/10 group`}>
+          <Card variant="interactive" className="group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <Users className="h-4 w-4 text-blue-400 group-hover:rotate-12 transition-transform duration-300" />
@@ -276,7 +273,7 @@ export function FixiaSummaryCards() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 1.4 }}
         >
-          <Card className={`${cardGlass} hover:glass-medium transition-all duration-300 border-white/10 group`}>
+          <Card variant="interactive" className="group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
                 <Shield className="h-4 w-4 text-blue-400 group-hover:animate-pulse transition-all duration-300" />
@@ -286,7 +283,7 @@ export function FixiaSummaryCards() {
             <CardContent>
               <div className="text-3xl font-bold mb-2 flex items-center space-x-2">
                 <span>{loading ? "..." : (stats?.total_reviews || 0) > 0 ? "85%" : "0%"}</span>
-                <Badge className={`text-xs border-0 ${(stats?.total_reviews || 0) > 0 ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'}`}>
+                <Badge variant={(stats?.total_reviews || 0) > 0 ? "default" : "outline"} className="text-xs">
                   {loading ? "..." : (stats?.total_reviews || 0) > 0 ? "Activo" : "Nuevo"}
                 </Badge>
               </div>
@@ -307,7 +304,7 @@ export function FixiaSummaryCards() {
                 </div>
                 <Progress value={(stats?.total_reviews || 0) > 0 ? 85 : 0} className="h-2" />
                 <Link href="/as/centro-confianza" className="block">
-                  <Button className={`w-full text-xs ${buttonGlass} hover:glass-strong transition-all duration-300 h-8`}>
+                  <Button variant="primary" size="xs" fullWidth>
                     Ver Centro de Confianza
                   </Button>
                 </Link>

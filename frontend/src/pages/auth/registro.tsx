@@ -286,7 +286,7 @@ const Registro: NextPage = () => {
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-transparent"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
@@ -316,7 +316,7 @@ const Registro: NextPage = () => {
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-transparent"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       >
                         {showConfirmPassword ? (

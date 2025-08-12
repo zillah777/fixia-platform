@@ -138,7 +138,9 @@ const Login: NextPage = () => {
                       />
                       <Button
                         type="button"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-transparent"
+                        variant="ghost"
+                        size="icon-sm"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (

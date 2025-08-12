@@ -118,7 +118,7 @@ export function ExplorerSummaryCards() {
           <Card className="glass hover:glass-medium transition-all duration-300 border-white/10 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
-                <CheckCircle className="h-4 w-4 text-green-400 group-hover:animate-pulse transition-all duration-300" />
+                <CheckCircle className="h-4 w-4 text-success group-hover:animate-pulse transition-all duration-300" />
                 <span>Proyectos Completados</span>
               </CardTitle>
             </CardHeader>
@@ -129,7 +129,7 @@ export function ExplorerSummaryCards() {
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Este mes</span>
-                  <Badge className="bg-green-500/20 text-green-400 text-xs border-0">
+                  <Badge className="text-xs glass-light bg-success/30 border-success/40 text-success">
                     {loading ? "..." : `+${Math.max(1, Math.floor(stats.completedBookings * 0.2))}`}
                   </Badge>
                 </div>
@@ -160,7 +160,7 @@ export function ExplorerSummaryCards() {
           <Card className="glass hover:glass-medium transition-all duration-300 border-white/10 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
-                <TrendingUp className="h-4 w-4 text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                <TrendingUp className="h-4 w-4 text-primary group-hover:scale-110 transition-transform duration-300" />
                 <span>Presupuesto del Mes</span>
               </CardTitle>
             </CardHeader>
@@ -171,7 +171,7 @@ export function ExplorerSummaryCards() {
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Total gastado</span>
-                  <span className="text-blue-400 font-medium">
+                  <span className="text-primary font-medium">
                     {loading ? "..." : `$${stats.totalSpent.toLocaleString()}`}
                   </span>
                 </div>
@@ -208,13 +208,13 @@ export function ExplorerSummaryCards() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Mensajes sin leer</span>
-                    <Badge className={`text-xs ${stats.unreadMessages > 0 ? 'bg-red-500 text-white' : 'bg-gray-500/20 text-gray-400'}`}>
+                    <Badge className={`text-xs glass-light ${stats.unreadMessages > 0 ? 'bg-red-500/30 border-red-500/40 text-red-300' : 'text-muted-foreground'}`}>
                       {loading ? "..." : stats.unreadMessages}
                     </Badge>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Chats activos</span>
-                    <Badge className="bg-primary/20 text-primary text-xs border-0">
+                    <Badge className="text-xs glass-light bg-primary/30 border-primary/40 text-primary">
                       {loading ? "..." : Math.max(stats.activeBookings, 1)}
                     </Badge>
                   </div>
@@ -238,7 +238,7 @@ export function ExplorerSummaryCards() {
           <Card className="glass hover:glass-medium transition-all duration-300 border-white/10 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
-                <Heart className="h-4 w-4 text-red-400 group-hover:animate-pulse transition-all duration-300" />
+                <Heart className="h-4 w-4 text-destructive group-hover:animate-pulse transition-all duration-300" />
                 <span>Solicitudes de Servicio</span>
               </CardTitle>
             </CardHeader>
@@ -250,13 +250,13 @@ export function ExplorerSummaryCards() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Solicitudes enviadas</span>
-                    <Badge className="bg-green-500/20 text-green-400 text-xs border-0">
+                    <Badge className="text-xs glass-light bg-success/30 border-success/40 text-success">
                       {loading ? "..." : stats.favoriteServices}
                     </Badge>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Activos</span>
-                    <Badge className="bg-blue-500/20 text-blue-400 text-xs border-0">
+                    <Badge className="text-xs glass-light bg-primary/30 border-primary/40 text-primary">
                       {loading ? "..." : Math.floor(stats.favoriteServices * 0.7)}
                     </Badge>
                   </div>
@@ -278,7 +278,7 @@ export function ExplorerSummaryCards() {
           <Card className="glass hover:glass-medium transition-all duration-300 border-white/10 group">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="flex items-center space-x-2">
-                <Search className="h-4 w-4 text-purple-400 group-hover:rotate-12 transition-transform duration-300" />
+                <Search className="h-4 w-4 text-primary group-hover:rotate-12 transition-transform duration-300" />
                 <span>Explorar Servicios</span>
               </CardTitle>
             </CardHeader>
@@ -288,11 +288,11 @@ export function ExplorerSummaryCards() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Búsquedas realizadas</span>
-                    <Badge className="bg-gray-500/20 text-gray-400 text-xs border-0">0</Badge>
+                    <Badge className="text-xs glass-light text-muted-foreground">0</Badge>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Profesionales vistos</span>
-                    <Badge className="bg-gray-500/20 text-gray-400 text-xs border-0">0</Badge>
+                    <Badge className="text-xs glass-light text-muted-foreground">0</Badge>
                   </div>
                 </div>
                 <Link href="/explorador/marketplace" className="block">

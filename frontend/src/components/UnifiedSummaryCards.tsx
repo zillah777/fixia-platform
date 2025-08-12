@@ -163,8 +163,8 @@ export function UnifiedSummaryCards({
             label: loading ? "..." : `${stats?.total_reviews || 0} reseñas totales`, 
             value: "",
             badge: (stats?.total_reviews || 0) > 0 
-              ? { text: "Verificado", className: "bg-green-500/20 text-green-400" }
-              : { text: "Sin reseñas", className: "bg-gray-500/20 text-gray-400" }
+              ? { text: "Verificado", className: "glass-light bg-success/30 border-success/40 text-success" }
+              : { text: "Sin reseñas", className: "glass-light text-muted-foreground" }
           }
         ],
         getDescription: (stats: ASStats, loading: boolean) => 
@@ -175,7 +175,7 @@ export function UnifiedSummaryCards({
       {
         title: "Ingresos Reales",
         icon: TrendingUp,
-        colorClass: "text-green-400",
+        colorClass: "text-success",
         getValue: (stats: ASStats, loading: boolean) => loading ? "..." : `$${(stats?.total_earnings || 0).toLocaleString('es-AR')} ARS`,
         getProgress: (stats: ASStats) => (stats?.total_earnings || 0) > 0 ? Math.min(((stats?.total_earnings || 0) / 50000) * 100, 100) : 0,
         getDetails: (stats: ASStats, loading: boolean) => [
@@ -199,8 +199,8 @@ export function UnifiedSummaryCards({
         getValue: (stats: ASStats, loading: boolean) => loading ? "..." : "0",
         getProgress: () => 0,
         getDetails: (stats: ASStats, loading: boolean) => [
-          { label: "Mensajes sin leer", value: "", badge: { text: "0", className: "bg-gray-500/20 text-gray-400" } },
-          { label: "Chats activos", value: "", badge: { text: "0", className: "bg-gray-500/20 text-gray-400" } }
+          { label: "Mensajes sin leer", value: "", badge: { text: "0", className: "glass-light text-muted-foreground" } },
+          { label: "Chats activos", value: "", badge: { text: "0", className: "glass-light text-muted-foreground" } }
         ],
         getDescription: () => "",
         action: { label: "Ver Mensajes", href: "/as/chats" }
@@ -208,7 +208,7 @@ export function UnifiedSummaryCards({
       {
         title: "Perfil",
         icon: Users,
-        colorClass: "text-blue-400",
+        colorClass: "text-primary",
         getValue: (stats: ASStats, loading: boolean) => loading ? "..." : `${stats?.profile_completion || 0}%`,
         getProgress: (stats: ASStats) => stats?.profile_completion || 0,
         getDetails: (stats: ASStats, loading: boolean) => [
@@ -217,7 +217,7 @@ export function UnifiedSummaryCards({
             value: "",
             badge: {
               text: loading ? "..." : (stats?.profile_completion || 0) >= 80 ? "Completo" : "En progreso",
-              className: (stats?.profile_completion || 0) >= 80 ? "bg-green-500/20 text-green-400" : "bg-yellow-500/20 text-yellow-400"
+              className: (stats?.profile_completion || 0) >= 80 ? "glass-light bg-success/30 border-success/40 text-success" : "glass-light bg-warning/30 border-warning/40 text-warning"
             }
           }
         ],
@@ -228,7 +228,7 @@ export function UnifiedSummaryCards({
       {
         title: "Confianza",
         icon: Shield,
-        colorClass: "text-blue-400",
+        colorClass: "text-primary",
         getValue: (stats: ASStats, loading: boolean) => loading ? "..." : (stats?.total_reviews || 0) > 0 ? "85%" : "0%",
         getProgress: (stats: ASStats) => (stats?.total_reviews || 0) > 0 ? 85 : 0,
         getDetails: (stats: ASStats, loading: boolean) => [
@@ -256,7 +256,7 @@ export function UnifiedSummaryCards({
       {
         title: "Proyectos Completados",
         icon: CheckCircle,
-        colorClass: "text-green-400",
+        colorClass: "text-success",
         getValue: (stats: ExplorerStats, loading: boolean) => loading ? "..." : (stats?.completedBookings || 0),
         getProgress: (stats: ExplorerStats) => (stats?.completedBookings || 0) > 0 ? Math.min(((stats?.completedBookings || 0) / 50) * 100, 100) : 0,
         getDetails: (stats: ExplorerStats, loading: boolean) => [
@@ -265,7 +265,7 @@ export function UnifiedSummaryCards({
             value: "",
             badge: { 
               text: loading ? "..." : `+${Math.max(1, Math.floor((stats?.completedBookings || 0) * 0.2))}`,
-              className: "bg-green-500/20 text-green-400"
+              className: "glass-light bg-success/30 border-success/40 text-success"
             }
           },
           { 
@@ -279,7 +279,7 @@ export function UnifiedSummaryCards({
       {
         title: "Presupuesto del Mes",
         icon: TrendingUp,
-        colorClass: "text-blue-400",
+        colorClass: "text-primary",
         getValue: (stats: ExplorerStats, loading: boolean) => loading ? "..." : `$${(stats?.totalSpent || 0).toLocaleString()}`,
         getProgress: (stats: ExplorerStats) => (stats?.totalSpent || 0) > 0 ? Math.min(((stats?.totalSpent || 0) / 10000) * 100, 100) : 0,
         getDetails: (stats: ExplorerStats, loading: boolean) => [
@@ -303,7 +303,7 @@ export function UnifiedSummaryCards({
             value: "",
             badge: { 
               text: loading ? "..." : String(stats?.unreadMessages || 0),
-              className: (stats?.unreadMessages || 0) > 0 ? "bg-red-500 text-white" : "bg-gray-500/20 text-gray-400"
+              className: (stats?.unreadMessages || 0) > 0 ? "glass-medium bg-destructive/60 border-destructive/40 text-white" : "glass-light text-muted-foreground"
             }
           },
           { 
@@ -321,19 +321,19 @@ export function UnifiedSummaryCards({
       {
         title: "Solicitudes de Servicio",
         icon: Heart,
-        colorClass: "text-red-400",
+        colorClass: "text-destructive",
         getValue: (stats: ExplorerStats, loading: boolean) => loading ? "..." : (stats?.favoriteServices || 0),
         getProgress: () => 0,
         getDetails: (stats: ExplorerStats, loading: boolean) => [
           { 
             label: "Solicitudes enviadas", 
             value: "",
-            badge: { text: loading ? "..." : String(stats?.favoriteServices || 0), className: "bg-green-500/20 text-green-400" }
+            badge: { text: loading ? "..." : String(stats?.favoriteServices || 0), className: "glass-light bg-success/30 border-success/40 text-success" }
           },
           { 
             label: "Activos", 
             value: "",
-            badge: { text: loading ? "..." : String(Math.floor((stats?.favoriteServices || 0) * 0.7)), className: "bg-blue-500/20 text-blue-400" }
+            badge: { text: loading ? "..." : String(Math.floor((stats?.favoriteServices || 0) * 0.7)), className: "glass-light bg-primary/30 border-primary/40 text-primary" }
           }
         ],
         getDescription: (stats: ExplorerStats, loading: boolean) => 
@@ -342,12 +342,12 @@ export function UnifiedSummaryCards({
       {
         title: "Explorar Servicios",
         icon: Search,
-        colorClass: "text-purple-400",
+        colorClass: "text-primary",
         getValue: () => "0",
         getProgress: () => 0,
         getDetails: () => [
-          { label: "Búsquedas realizadas", value: "", badge: { text: "0", className: "bg-gray-500/20 text-gray-400" } },
-          { label: "Profesionales vistos", value: "", badge: { text: "0", className: "bg-gray-500/20 text-gray-400" } }
+          { label: "Búsquedas realizadas", value: "", badge: { text: "0", className: "glass-light text-muted-foreground" } },
+          { label: "Profesionales vistos", value: "", badge: { text: "0", className: "glass-light text-muted-foreground" } }
         ],
         getDescription: () => "",
         action: { label: "Explorar Marketplace", href: "/explorador/marketplace" }

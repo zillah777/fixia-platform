@@ -66,7 +66,7 @@ export function FixiaNavigation() {
           <nav className="hidden lg:flex items-center space-x-1">
             <Link href={user?.user_type === 'provider' ? '/as/dashboard' : '/explorador/dashboard'}>
               <SimpleTooltip content={user?.user_type === 'provider' ? "Tu panel principal con resumen de trabajos y solicitudes" : "Tu panel principal para buscar profesionales"}>
-                <Button className="glass-medium hover:glass-strong transition-all duration-300">
+                <Button variant="secondary">
                   <Home className="mr-2 h-4 w-4" />
                   Inicio
                 </Button>
@@ -76,7 +76,7 @@ export function FixiaNavigation() {
               <>
                 <Link href="/explorador/marketplace">
                   <SimpleTooltip content="Encuentra profesionales verificados para tu proyecto">
-                    <Button className="hover:glass-medium transition-all duration-300">
+                    <Button variant="ghost">
                       <Search className="mr-2 h-4 w-4" />
                       Encontrar Profesional
                     </Button>
@@ -88,7 +88,7 @@ export function FixiaNavigation() {
               <>
                 <Link href="/as/servicios">
                   <SimpleTooltip content="Agrega, edita y gestiona los trabajos que ofreces">
-                    <Button className="hover:glass-medium transition-all duration-300">
+                    <Button variant="ghost">
                       <Briefcase className="mr-2 h-4 w-4" />
                       Mis Trabajos
                     </Button>
@@ -96,7 +96,7 @@ export function FixiaNavigation() {
                 </Link>
                 <Link href="/as/portafolio">
                   <SimpleTooltip content="Sube fotos de trabajos que hayas hecho para mostrar tu calidad">
-                    <Button className="hover:glass-medium transition-all duration-300">
+                    <Button variant="ghost">
                       <Images className="mr-2 h-4 w-4" />
                       Mis Fotos
                     </Button>
@@ -105,7 +105,7 @@ export function FixiaNavigation() {
               </>
             )}
             <Link href="/planes">
-              <Button className="hover:glass-medium transition-all duration-300 relative" title="Mejora tu cuenta para más beneficios">
+              <Button variant="ghost" className="relative" title="Mejora tu cuenta para más beneficios">
                 <Crown className="mr-2 h-4 w-4" />
                 Mejorar Cuenta
                 <Badge className="ml-2 bg-primary/20 text-primary text-xs border-0 animate-pulse">
@@ -138,7 +138,7 @@ export function FixiaNavigation() {
           {/* Quick Actions */}
           <div className="flex items-center space-x-1 sm:space-x-2">
 
-            <Button className="relative hover:glass-medium transition-all duration-300 h-9 w-9 sm:h-10 sm:w-10">
+            <Button variant="ghost" size="icon-sm" className="relative">
               <Bell className="h-4 w-4" />
               {/* Badge will only show when there are real notifications */}
             </Button>
@@ -147,7 +147,7 @@ export function FixiaNavigation() {
           {/* User Avatar Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full hover:glass-medium transition-all duration-300">
+              <Button variant="ghost" size="icon-sm" className="relative rounded-full">
                 <FixiaAvatar
                   {...(user?.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` })}
                   alt="Usuario"
@@ -159,7 +159,7 @@ export function FixiaNavigation() {
                 />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64 glass border-white/20" align="end">
+            <DropdownMenuContent className="w-64" align="end">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center space-x-3">
@@ -188,14 +188,14 @@ export function FixiaNavigation() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-white/10" />
               <Link href={user?.user_type === 'provider' ? '/as/perfil' : '/explorador/perfil'}>
-                <DropdownMenuItem className="hover:glass-medium">
+                <DropdownMenuItem>
                   <User className="mr-3 h-4 w-4" />
                   Mi Perfil
                 </DropdownMenuItem>
               </Link>
               {user?.user_type === 'customer' && (
                 <Link href="/explorador/marketplace">
-                  <DropdownMenuItem className="hover:glass-medium">
+                  <DropdownMenuItem>
                     <Search className="mr-3 h-4 w-4" />
                     Encontrar Profesional
                   </DropdownMenuItem>
@@ -204,13 +204,13 @@ export function FixiaNavigation() {
               {user?.user_type === 'provider' && (
                 <>
                   <Link href="/as/servicios">
-                    <DropdownMenuItem className="hover:glass-medium">
+                    <DropdownMenuItem>
                       <Briefcase className="mr-3 h-4 w-4" />
                       Mis Trabajos
                     </DropdownMenuItem>
                   </Link>
                   <Link href="/as/portafolio">
-                    <DropdownMenuItem className="hover:glass-medium">
+                    <DropdownMenuItem>
                       <Images className="mr-3 h-4 w-4" />
                       Mis Fotos
                     </DropdownMenuItem>
@@ -218,7 +218,7 @@ export function FixiaNavigation() {
                 </>
               )}
               <Link href="/planes">
-                <DropdownMenuItem className="hover:glass-medium">
+                <DropdownMenuItem>
                   <Crown className="mr-3 h-4 w-4" />
                   Planes Premium
                   <Badge className="ml-auto bg-primary/20 text-primary text-xs border-0">
@@ -227,7 +227,7 @@ export function FixiaNavigation() {
                 </DropdownMenuItem>
               </Link>
               <Link href={user?.user_type === 'provider' ? '/as/configuracion' : '/explorador/cambiar-password'}>
-                <DropdownMenuItem className="hover:glass-medium">
+                <DropdownMenuItem>
                   <Shield className="mr-3 h-4 w-4" />
                   Configuración
                 </DropdownMenuItem>
@@ -246,7 +246,9 @@ export function FixiaNavigation() {
           {/* Mobile Menu Button */}
           <Button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden hover:glass-medium h-9 w-9 sm:h-10 sm:w-10"
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
           >
             {isMobileMenuOpen ? (
               <X className="h-5 w-5" />
@@ -289,7 +291,8 @@ export function FixiaNavigation() {
               <div className="space-y-2">
                 <Link href={user?.user_type === 'provider' ? '/as/dashboard' : '/explorador/dashboard'}>
                   <Button 
-                    className="w-full justify-start glass-medium hover:glass-strong transition-all duration-300"
+                    variant="secondary"
+                    className="w-full justify-start"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <Home className="mr-3 h-4 w-4" />
@@ -301,7 +304,8 @@ export function FixiaNavigation() {
                   <>
                     <Link href="/explorador/marketplace">
                       <Button 
-                        className="w-full justify-start hover:glass-medium transition-all duration-300"
+                        variant="ghost"
+                        className="w-full justify-start"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Search className="mr-3 h-4 w-4" />
@@ -315,7 +319,8 @@ export function FixiaNavigation() {
                   <>
                     <Link href="/as/servicios">
                       <Button 
-                        className="w-full justify-start hover:glass-medium transition-all duration-300"
+                        variant="ghost"
+                        className="w-full justify-start"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Briefcase className="mr-3 h-4 w-4" />
@@ -324,7 +329,8 @@ export function FixiaNavigation() {
                     </Link>
                     <Link href="/as/portafolio">
                       <Button 
-                        className="w-full justify-start hover:glass-medium transition-all duration-300"
+                        variant="ghost"
+                        className="w-full justify-start"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Images className="mr-3 h-4 w-4" />
@@ -339,7 +345,8 @@ export function FixiaNavigation() {
 
                 <Link href="/planes">
                   <Button 
-                    className="w-full justify-start hover:glass-medium transition-all duration-300"
+                    variant="ghost"
+                    className="w-full justify-start"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <Crown className="mr-3 h-4 w-4" />
@@ -356,7 +363,8 @@ export function FixiaNavigation() {
                 {/* Profile Section */}
                 <Link href={user?.user_type === 'provider' ? '/as/perfil' : '/explorador/perfil'}>
                   <Button 
-                    className="w-full justify-start hover:glass-medium transition-all duration-300"
+                    variant="ghost"
+                    className="w-full justify-start"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <User className="mr-3 h-4 w-4" />
@@ -366,7 +374,8 @@ export function FixiaNavigation() {
 
                 <Link href={user?.user_type === 'provider' ? '/as/configuracion' : '/explorador/cambiar-password'}>
                   <Button 
-                    className="w-full justify-start hover:glass-medium transition-all duration-300"
+                    variant="ghost"
+                    className="w-full justify-start"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <Shield className="mr-3 h-4 w-4" />
@@ -380,7 +389,8 @@ export function FixiaNavigation() {
                     setIsMobileMenuOpen(false);
                     handleLogout();
                   }}
-                  className="w-full justify-start hover:glass-medium text-destructive focus:text-destructive transition-all duration-300"
+                  variant="ghost"
+                  className="w-full justify-start text-destructive focus:text-destructive"
                 >
                   <LogOut className="mr-3 h-4 w-4" />
                   Cerrar Sesión

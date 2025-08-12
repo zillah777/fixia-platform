@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
+import { Upload, FileCheck, Camera, Shield } from 'lucide-react';
+
 import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import MarketplaceLayout from '@/components/layouts/MarketplaceLayout';
 
 const VerificacionDNI: NextPage = () => {
   const { user, loading } = useAuth();
@@ -80,12 +87,14 @@ const VerificacionDNI: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando...</p>
+      <MarketplaceLayout>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Cargando...</p>
+          </div>
         </div>
-      </div>
+      </MarketplaceLayout>
     );
   }
 
@@ -101,51 +110,69 @@ const VerificacionDNI: NextPage = () => {
         <meta name="description" content="Verificación de identidad para profesionales AS" />
       </Head>
 
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-2xl mx-auto px-4">
+      <MarketplaceLayout>
+        <div className="max-w-2xl mx-auto px-4 py-8">
           {/* Header */}
-          <div className="text-center mb-8">
-            <span className="block text-6xl text-blue-600 mb-4">🛡</span>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Verificación de Identidad
-            </h1>
-            <p className="text-gray-600">
-              Verifica tu identidad para ofrecer servicios como AS profesional
-            </p>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-8"
+          >
+            <div className="glass-medium rounded-2xl p-6 mb-6">
+              <Shield className="w-16 h-16 text-primary mx-auto mb-4" />
+              <h1 className="text-3xl font-bold text-foreground mb-2">
+                Verificación de Identidad
+              </h1>
+              <p className="text-muted-foreground">
+                Verifica tu identidad para ofrecer servicios como AS profesional
+              </p>
+            </div>
+          </motion.div>
 
           {/* Progress */}
-          <div className="mb-8">
-            <div className="flex items-center justify-center space-x-8">
-              <div className={`flex items-center ${step >= 1 ? 'text-blue-600' : 'text-gray-400'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
-                  1
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8"
+          >
+            <div className="glass rounded-lg p-4">
+              <div className="flex items-center justify-center space-x-4 md:space-x-8">
+                <div className={`flex items-center transition-all duration-300 ${step >= 1 ? 'text-primary' : 'text-muted-foreground'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${step >= 1 ? 'liquid-gradient text-white shadow-lg' : 'glass-light'}`}>
+                    1
+                  </div>
+                  <span className="ml-2 text-sm font-medium">Instrucciones</span>
                 </div>
-                <span className="ml-2 text-sm font-medium">Instrucciones</span>
-              </div>
-              <div className={`flex items-center ${step >= 2 ? 'text-blue-600' : 'text-gray-400'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
-                  2
+                <div className={`flex items-center transition-all duration-300 ${step >= 2 ? 'text-primary' : 'text-muted-foreground'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${step >= 2 ? 'liquid-gradient text-white shadow-lg' : 'glass-light'}`}>
+                    2
+                  </div>
+                  <span className="ml-2 text-sm font-medium hidden sm:inline">Documentos</span>
                 </div>
-                <span className="ml-2 text-sm font-medium">Documentos</span>
-              </div>
-              <div className={`flex items-center ${step >= 3 ? 'text-blue-600' : 'text-gray-400'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
-                  3
+                <div className={`flex items-center transition-all duration-300 ${step >= 3 ? 'text-primary' : 'text-muted-foreground'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${step >= 3 ? 'liquid-gradient text-white shadow-lg' : 'glass-light'}`}>
+                    3
+                  </div>
+                  <span className="ml-2 text-sm font-medium hidden sm:inline">Selfie</span>
                 </div>
-                <span className="ml-2 text-sm font-medium">Selfie</span>
-              </div>
-              <div className={`flex items-center ${step >= 4 ? 'text-green-600' : 'text-gray-400'}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 4 ? 'bg-green-600 text-white' : 'bg-gray-200'}`}>
-                  ✓
+                <div className={`flex items-center transition-all duration-300 ${step >= 4 ? 'text-green-400' : 'text-muted-foreground'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${step >= 4 ? 'bg-green-500 text-white shadow-lg' : 'glass-light'}`}>
+                    ✓
+                  </div>
+                  <span className="ml-2 text-sm font-medium hidden sm:inline">Completado</span>
                 </div>
-                <span className="ml-2 text-sm font-medium">Completado</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Content */}
-          <div className="bg-white rounded-xl shadow-sm border p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card className="glass-medium border-white/20">
             {step === 1 && (
               <div className="text-center">
                 <span className="block text-4xl text-blue-600 mb-4">🆔</span>
@@ -164,12 +191,14 @@ const VerificacionDNI: NextPage = () => {
                     <span className="text-gray-700">Buena iluminación y calidad</span>
                   </div>
                 </div>
-                <button
+                <Button
                   onClick={() => setStep(2)}
-                  className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                  variant="primary"
+                  size="lg"
+                  className="mt-6"
                 >
                   Comenzar Verificación
-                </button>
+                </Button>
               </div>
             )}
 
@@ -224,19 +253,21 @@ const VerificacionDNI: NextPage = () => {
                 </div>
 
                 <div className="flex justify-between mt-8">
-                  <button
+                  <Button
                     onClick={() => setStep(1)}
-                    className="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors"
+                    variant="secondary"
+                    size="lg"
                   >
                     Anterior
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => setStep(3)}
                     disabled={!documents.dniFront || !documents.dniBack}
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    variant="primary"
+                    size="lg"
                   >
                     Siguiente
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
@@ -281,19 +312,23 @@ const VerificacionDNI: NextPage = () => {
                 )}
 
                 <div className="flex justify-between mt-8">
-                  <button
+                  <Button
                     onClick={() => setStep(2)}
-                    className="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors"
+                    variant="secondary"
+                    size="lg"
                   >
                     Anterior
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={handleSubmit}
                     disabled={!documents.selfie || isSubmitting}
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    variant="primary"
+                    size="lg"
+                    loading={isSubmitting}
+                    loadingText="Enviando..."
                   >
-                    {isSubmitting ? 'Enviando...' : 'Enviar Verificación'}
-                  </button>
+                    Enviar Verificación
+                  </Button>
                 </div>
               </div>
             )}
@@ -308,17 +343,19 @@ const VerificacionDNI: NextPage = () => {
                   Revisaremos tu documentación en un plazo de 24-48 horas.
                   Te notificaremos por email cuando el proceso esté completo.
                 </p>
-                <button
+                <Button
                   onClick={() => router.push('/as/dashboard')}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                  variant="primary"
+                  size="lg"
                 >
                   Volver al Dashboard
-                </button>
+                </Button>
               </div>
             )}
-          </div>
+            </Card>
+          </motion.div>
         </div>
-      </div>
+      </MarketplaceLayout>
     </>
   );
 };

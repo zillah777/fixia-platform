@@ -46,7 +46,7 @@ export function FixiaServicesTable() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 1.5 }}
     >
-      <Card className="glass border-white/10">
+      <Card variant="default">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Clock className="h-5 w-5 text-primary" />
