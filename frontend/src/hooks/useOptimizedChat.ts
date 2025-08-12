@@ -237,6 +237,8 @@ export function useOptimizedChatRoom(chatId: string | null) {
       const timer = setTimeout(markAsRead, 1000); // 1 second delay
       return () => clearTimeout(timer);
     }
+    // Always return cleanup function to satisfy TypeScript
+    return () => {};
   }, [messagesQuery.data, chatId, markAsRead]);
 
   const retryFailedMessage = useCallback((tempId: string) => {

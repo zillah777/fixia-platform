@@ -55,6 +55,9 @@ export function ConnectionStatus({
     } else if (!autoHide || !isConnected || connectionQuality !== 'excellent') {
       setIsVisible(true);
     }
+    
+    // Always return a cleanup function to satisfy TypeScript
+    return () => {};
   }, [autoHide, isConnected, connectionQuality, autoHideDelay]);
 
   const getStatusConfig = () => {

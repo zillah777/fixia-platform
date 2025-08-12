@@ -335,8 +335,8 @@ export function OptimizedWebSocketProvider({ children }: { children: React.React
 
   // Performance monitoring methods
   const getLatency = useCallback((): number => {
-    const history = statsRef.current.latencyHistory;
-    return history.length > 0 ? history[history.length - 1] : 0;
+    const history = statsRef.current?.latencyHistory || [];
+    return history.length > 0 ? (history[history.length - 1] || 0) : 0;
   }, []);
 
   const getConnectionStats = useCallback(() => {
