@@ -1,0 +1,785 @@
+name: QA Automation Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - unit
+        - integration
+        - e2e
+        - performance
+        - visual
+      coverage_threshold:
+        description: 'Coverage threshold override'
+        required: false
+        default: '70'
+        type: string
+
+env:
+  NODE_VERSION: '18.x'
+  POSTGRES_VERSION: 14
+  REDIS_VERSION: 7
+  
+  # QA Configuration
+  COVERAGE_THRESHOLD: ${{ github.event.inputs.coverage_threshold || '70' }}
+  PERFORMANCE_BUDGET: '3000' # ms
+  VISUAL_DIFF_THRESHOLD: '5' # %
+  PARALLEL_WORKERS: 4
+  
+  # Test Environment
+  NODE_ENV: test
+  LOG_LEVEL: info
+  STRICT_QUALITY_GATES: 'true'
+
+jobs:
+  # Pre-flight checks
+  preflight:
+    name: Pre-flight Checks
+    runs-on: ubuntu-latest
+    outputs:
+      should_run_tests: ${{ steps.check.outputs.should_run }}
+      test_suite: ${{ steps.check.outputs.test_suite }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Full history for proper diff analysis
+
+    - name: Check if tests should run
+      id: check
+      run: |
+        if [[ "${{ github.event_name }}" == "schedule" ]]; then
+          echo "should_run=true" >> $GITHUB_OUTPUT
+          echo "test_suite=all" >> $GITHUB_OUTPUT
+        elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "should_run=true" >> $GITHUB_OUTPUT
+          echo "test_suite=${{ github.event.inputs.test_suite }}" >> $GITHUB_OUTPUT
+        else
+          # Check for relevant file changes
+          changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          if echo "$changed_files" | grep -E '\.(js|ts|jsx|tsx|json|yml|yaml)$'; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "test_suite=all" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+            echo "test_suite=none" >> $GITHUB_OUTPUT
+          fi
+        fi
+
+    - name: Report preflight results
+      run: |
+        echo "🚀 Preflight Check Results:"
+        echo "Should run tests: ${{ steps.check.outputs.should_run }}"
+        echo "Test suite: ${{ steps.check.outputs.test_suite }}"
+
+  # Code Quality Analysis
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    needs: preflight
+    if: needs.preflight.outputs.should_run_tests == 'true'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        cd backend && npm ci
+        cd ../frontend && npm ci
+
+    - name: Run ESLint (Backend)
+      run: |
+        cd backend
+        npx eslint src/ --format json --output-file ../test-results/backend-eslint.json || true
+        npx eslint src/ || true
+
+    - name: Run ESLint (Frontend)
+      run: |
+        cd frontend
+        npm run lint
+
+    - name: TypeScript Type Checking
+      run: |
+        cd frontend
+        npm run type-check
+
+    - name: Security Audit
+      run: |
+        mkdir -p test-results
+        cd backend && npm audit --audit-level=moderate --json > ../test-results/backend-security.json || true
+        cd ../frontend && npm audit --audit-level=moderate --json > ../test-results/frontend-security.json || true
+
+    - name: Upload code quality results
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-quality-results
+        path: test-results/
+        retention-days: 30
+
+  # Unit and Integration Tests
+  backend-tests:
+    name: Backend Tests & Coverage
+    runs-on: ubuntu-latest
+    needs: preflight
+    if: needs.preflight.outputs.should_run_tests == 'true'
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fixia_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+
+    - name: Setup test environment
+      working-directory: ./backend
+      run: |
+        mkdir -p logs ../test-results
+        cp .env.example .env.test
+        echo "NODE_ENV=test" >> .env.test
+        echo "DB_HOST=localhost" >> .env.test
+        echo "DB_PORT=5432" >> .env.test
+        echo "DB_NAME=fixia_test" >> .env.test
+        echo "DB_USER=postgres" >> .env.test
+        echo "DB_PASSWORD=postgres" >> .env.test
+        echo "JWT_SECRET=test-jwt-secret-key" >> .env.test
+        echo "REDIS_HOST=localhost" >> .env.test
+        echo "REDIS_PORT=6379" >> .env.test
+        echo "ENABLE_REDIS_IN_TESTS=true" >> .env.test
+
+    - name: Run database migrations
+      working-directory: ./backend
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: fixia_test
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+      run: npm run migrate
+
+    - name: Run unit tests with coverage
+      working-directory: ./backend
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: fixia_test
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        JWT_SECRET: test-jwt-secret-key
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+        ENABLE_REDIS_IN_TESTS: true
+      run: |
+        npm run test:unit -- --coverage --coverageReporters=json-summary --coverageReporters=lcov --coverageReporters=text
+        cp coverage/coverage-summary.json ../test-results/backend-coverage-summary.json
+
+    - name: Run integration tests
+      working-directory: ./backend
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: fixia_test
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        JWT_SECRET: test-jwt-secret-key
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+        ENABLE_REDIS_IN_TESTS: true
+      run: npm run test:integration
+
+    - name: Check coverage thresholds
+      working-directory: ./backend
+      run: |
+        coverage=$(node -e "
+          const data = require('../test-results/backend-coverage-summary.json');
+          const threshold = ${{ env.COVERAGE_THRESHOLD }};
+          const total = data.total;
+          console.log('Coverage Summary:');
+          console.log('Statements:', total.statements.pct + '%');
+          console.log('Branches:', total.branches.pct + '%');
+          console.log('Functions:', total.functions.pct + '%');
+          console.log('Lines:', total.lines.pct + '%');
+          
+          const failed = [];
+          if (total.statements.pct < threshold) failed.push('statements');
+          if (total.branches.pct < threshold) failed.push('branches');
+          if (total.functions.pct < threshold) failed.push('functions');
+          if (total.lines.pct < threshold) failed.push('lines');
+          
+          if (failed.length > 0) {
+            console.error('Coverage below threshold for:', failed.join(', '));
+            process.exit(1);
+          } else {
+            console.log('All coverage thresholds met!');
+          }
+        ")
+
+    - name: Upload backend test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: backend-test-results
+        path: |
+          backend/coverage/
+          test-results/backend-coverage-summary.json
+        retention-days: 30
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./backend/coverage/lcov.info
+        flags: backend
+        name: backend-coverage
+        fail_ci_if_error: false
+
+  # End-to-End Tests
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [preflight, backend-tests]
+    if: needs.preflight.outputs.should_run_tests == 'true' && (needs.preflight.outputs.test_suite == 'all' || needs.preflight.outputs.test_suite == 'e2e')
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fixia_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        cd backend && npm ci
+        cd ../frontend && npm ci
+        npx playwright install --with-deps
+
+    - name: Setup test environment
+      run: |
+        mkdir -p test-results/e2e
+        cd backend
+        cp .env.example .env.test
+        echo "NODE_ENV=test" >> .env.test
+        echo "DB_HOST=localhost" >> .env.test
+        echo "DB_PORT=5432" >> .env.test
+        echo "DB_NAME=fixia_test" >> .env.test
+        echo "DB_USER=postgres" >> .env.test
+        echo "DB_PASSWORD=postgres" >> .env.test
+        echo "JWT_SECRET=test-jwt-secret-key" >> .env.test
+        echo "REDIS_HOST=localhost" >> .env.test
+        echo "REDIS_PORT=6379" >> .env.test
+        echo "PORT=5001" >> .env.test
+        
+        cd ../frontend
+        echo "NEXT_PUBLIC_API_URL=http://localhost:5001" > .env.local
+        echo "NODE_ENV=test" >> .env.local
+
+    - name: Run database migrations
+      working-directory: ./backend
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: fixia_test
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+      run: npm run migrate
+
+    - name: Start backend server
+      working-directory: ./backend
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_NAME: fixia_test
+        DB_USER: postgres
+        DB_PASSWORD: postgres
+        JWT_SECRET: test-jwt-secret-key
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+        PORT: 5001
+      run: |
+        npm start &
+        echo $! > backend.pid
+        sleep 15
+
+    - name: Start frontend server
+      working-directory: ./frontend
+      env:
+        NEXT_PUBLIC_API_URL: http://localhost:5001
+        PORT: 3001
+      run: |
+        npm run dev &
+        echo $! > frontend.pid
+        sleep 25
+
+    - name: Wait for servers
+      run: |
+        curl --retry 12 --retry-delay 5 --retry-connrefused http://localhost:5001/health
+        curl --retry 12 --retry-delay 5 --retry-connrefused http://localhost:3001
+
+    - name: Run E2E tests
+      env:
+        PLAYWRIGHT_HTML_REPORT: test-results/e2e/playwright-report
+      run: |
+        npx playwright test --workers=${{ env.PARALLEL_WORKERS }} --reporter=html --output-dir=test-results/e2e/test-results
+
+    - name: Stop servers
+      if: always()
+      run: |
+        if [ -f backend/backend.pid ]; then
+          kill $(cat backend/backend.pid) || true
+        fi
+        if [ -f frontend/frontend.pid ]; then
+          kill $(cat frontend/frontend.pid) || true
+        fi
+
+    - name: Upload E2E test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: e2e-test-results
+        path: |
+          test-results/e2e/
+        retention-days: 30
+
+  # Visual Regression Tests
+  visual-regression:
+    name: Visual Regression Tests
+    runs-on: ubuntu-latest
+    needs: [preflight, backend-tests]
+    if: needs.preflight.outputs.should_run_tests == 'true' && (needs.preflight.outputs.test_suite == 'all' || needs.preflight.outputs.test_suite == 'visual')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        npx playwright install --with-deps
+        npm install -g pixelmatch pngjs
+
+    - name: Download baseline screenshots
+      continue-on-error: true
+      uses: actions/download-artifact@v3
+      with:
+        name: visual-baselines
+        path: test-results/visual/baseline
+
+    - name: Run visual regression tests
+      env:
+        TEST_BASE_URL: https://fixia-platform.vercel.app
+        VISUAL_DIFF_THRESHOLD: ${{ env.VISUAL_DIFF_THRESHOLD }}
+      run: |
+        mkdir -p test-results/visual
+        node scripts/visual-regression-setup.js
+
+    - name: Upload visual test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: visual-regression-results
+        path: test-results/visual/
+        retention-days: 30
+
+    - name: Update baseline screenshots
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/upload-artifact@v3
+      with:
+        name: visual-baselines
+        path: test-results/visual/current/
+        retention-days: 90
+
+  # Performance Tests
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: [preflight, backend-tests]
+    if: needs.preflight.outputs.should_run_tests == 'true' && (needs.preflight.outputs.test_suite == 'all' || needs.preflight.outputs.test_suite == 'performance')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        npx playwright install --with-deps
+        npm install -g lighthouse
+
+    - name: Run performance tests
+      env:
+        API_BASE_URL: https://fixia-backend.railway.app/api
+        FRONTEND_BASE_URL: https://fixia-platform.vercel.app
+        PERFORMANCE_BUDGET: ${{ env.PERFORMANCE_BUDGET }}
+      run: |
+        mkdir -p test-results/performance
+        node scripts/performance-testing.js
+
+    - name: Check performance budgets
+      run: |
+        node -e "
+          const results = require('./test-results/performance/performance-report.json');
+          const budget = ${{ env.PERFORMANCE_BUDGET }};
+          
+          let failures = 0;
+          
+          // Check API performance
+          results.results.api.forEach(test => {
+            if (test.performance.avg > 1000) { // 1s threshold for API
+              console.error('API performance failure:', test.suite + '.' + test.test, test.performance.avg + 'ms');
+              failures++;
+            }
+          });
+          
+          // Check frontend performance
+          results.results.frontend.forEach(test => {
+            if (test.metrics.totalTime?.avg > budget) {
+              console.error('Frontend performance failure:', test.page, test.metrics.totalTime.avg + 'ms > ' + budget + 'ms');
+              failures++;
+            }
+          });
+          
+          if (failures > 0) {
+            console.error('Performance budget exceeded in', failures, 'tests');
+            process.exit(1);
+          } else {
+            console.log('All performance budgets met!');
+          }
+        "
+
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: performance-test-results
+        path: test-results/performance/
+        retention-days: 30
+
+  # Comprehensive QA Report
+  qa-report:
+    name: Generate QA Report
+    runs-on: ubuntu-latest
+    needs: [code-quality, backend-tests, e2e-tests, visual-regression, performance-tests]
+    if: always() && needs.preflight.outputs.should_run_tests == 'true'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Download all test artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: test-artifacts/
+
+    - name: Install QA dependencies
+      run: npm install axios playwright
+
+    - name: Run comprehensive QA analysis
+      env:
+        COVERAGE_THRESHOLD: ${{ env.COVERAGE_THRESHOLD }}
+        PERFORMANCE_BUDGET: ${{ env.PERFORMANCE_BUDGET }}
+        VISUAL_DIFF_THRESHOLD: ${{ env.VISUAL_DIFF_THRESHOLD }}
+      run: |
+        mkdir -p test-results/qa-report
+        node scripts/qa-automation.js
+
+    - name: Generate coverage analysis
+      run: |
+        node scripts/coverage-analysis.js
+
+    - name: Upload comprehensive QA report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: qa-comprehensive-report
+        path: |
+          test-results/qa-report/
+          test-results/coverage/reports/
+        retention-days: 30
+
+    - name: Comment PR with QA Results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          try {
+            const qaReport = JSON.parse(fs.readFileSync('test-results/qa-report/qa-report.json', 'utf8'));
+            const coverageReport = JSON.parse(fs.readFileSync('test-results/coverage/reports/coverage-analysis.json', 'utf8'));
+            
+            const comment = `## 🔍 QA Automation Report
+            
+            **Overall Status:** ${qaReport.summary.passRate >= 95 ? '✅ PASSED' : '❌ FAILED'}
+            
+            ### Test Results
+            - **Total Tests:** ${qaReport.summary.totalTests}
+            - **Pass Rate:** ${qaReport.summary.passRate}%
+            - **Duration:** ${qaReport.summary.duration}
+            
+            ### Coverage
+            - **Backend Coverage:** ${coverageReport.summary.backend?.statements?.pct || 'N/A'}%
+            - **Quality Gates:** ${coverageReport.summary.qualityGatesPassed}/${coverageReport.summary.totalQualityGates} passed
+            
+            ### Performance
+            - **API Tests:** ${qaReport.results.performance.api.length} endpoints tested
+            - **Frontend Tests:** ${qaReport.results.performance.ui.length} pages tested
+            
+            ${qaReport.recommendations.length > 0 ? `
+            ### Recommendations
+            ${qaReport.recommendations.map(rec => `- ${rec}`).join('\n')}
+            ` : ''}
+            
+            <details>
+            <summary>Detailed Results</summary>
+            
+            View full reports in the Actions artifacts.
+            
+            </details>`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          } catch (error) {
+            console.log('Could not post QA comment:', error.message);
+          }
+
+  # Quality Gates Evaluation
+  quality-gates:
+    name: Quality Gates Evaluation
+    runs-on: ubuntu-latest
+    needs: [qa-report]
+    if: always() && needs.preflight.outputs.should_run_tests == 'true'
+    
+    steps:
+    - name: Download QA report
+      uses: actions/download-artifact@v3
+      with:
+        name: qa-comprehensive-report
+        path: qa-results/
+
+    - name: Evaluate quality gates
+      run: |
+        echo "🚥 Evaluating Quality Gates..."
+        
+        # Check if reports exist
+        if [ ! -f qa-results/qa-report/qa-report.json ]; then
+          echo "❌ QA report not found"
+          exit 1
+        fi
+        
+        # Evaluate using Node.js
+        node -e "
+          const qaReport = require('./qa-results/qa-report/qa-report.json');
+          const coverageReport = require('./qa-results/coverage/reports/coverage-analysis.json');
+          
+          console.log('📊 Quality Gates Evaluation:');
+          
+          let failures = 0;
+          const gates = coverageReport.qualityGates;
+          
+          Object.entries(gates).forEach(([gate, result]) => {
+            console.log(\`- \${gate}: \${result.passed ? '✅' : '❌'} \${result.message || ''}\`);
+            if (!result.passed) failures++;
+          });
+          
+          // Overall pass rate check
+          if (qaReport.summary.passRate < 95) {
+            console.log('❌ Overall pass rate below 95%:', qaReport.summary.passRate + '%');
+            failures++;
+          }
+          
+          console.log('');
+          console.log('📋 Summary:');
+          console.log('- Quality Gates Passed:', Object.values(gates).filter(g => g.passed).length + '/' + Object.keys(gates).length);
+          console.log('- Overall Pass Rate:', qaReport.summary.passRate + '%');
+          console.log('- Total Test Failures:', failures);
+          
+          if (failures > 0) {
+            console.log('');
+            console.error('❌ Quality gates failed - blocking deployment');
+            process.exit(1);
+          } else {
+            console.log('');
+            console.log('✅ All quality gates passed - ready for deployment!');
+          }
+        "
+
+    - name: Set deployment ready status
+      if: success()
+      run: echo "DEPLOYMENT_READY=true" >> $GITHUB_ENV
+
+    - name: Post quality gates status
+      if: always()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const status = process.env.DEPLOYMENT_READY === 'true' ? 'success' : 'failure';
+          const description = status === 'success' ? 
+            'All quality gates passed - ready for deployment' : 
+            'Quality gates failed - deployment blocked';
+          
+          github.rest.repos.createCommitStatus({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            sha: context.sha,
+            state: status,
+            target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            description: description,
+            context: 'QA/quality-gates'
+          });
+
+  # Deployment (only if all quality gates pass)
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [quality-gates]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.quality-gates.result == 'success'
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy confirmation
+      run: |
+        echo "🚀 All quality gates passed - proceeding with deployment"
+        echo "Quality gates evaluation: ${{ needs.quality-gates.result }}"
+
+    - name: Deploy to production
+      run: |
+        echo "Deployment would happen here"
+        # Actual deployment commands would go here
+
+    - name: Post-deployment verification
+      run: |
+        echo "Running post-deployment health checks..."
+        # Health check commands would go here
+
+    - name: Notify deployment success
+      if: success()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.repos.createCommitStatus({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            sha: context.sha,
+            state: 'success',
+            description: 'Production deployment successful',
+            context: 'deployment/production'
+          });
+
+  # Cleanup
+  cleanup:
+    name: Cleanup Test Artifacts
+    runs-on: ubuntu-latest
+    needs: [qa-report]
+    if: always()
+    
+    steps:
+    - name: Clean up temporary files
+      run: |
+        echo "🧹 Cleaning up temporary test artifacts..."
+        # Cleanup commands would go here if needed

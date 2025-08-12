@@ -7,6 +7,7 @@
     "build": "cd frontend && npm run build",
     "dev": "cd frontend && npm run dev",
     "start": "cd frontend && npm run start",
+    
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
@@ -20,7 +21,25 @@
     "test:e2e:critical": "playwright test e2e-tests/auth/ e2e-tests/explorador/service-requests.spec.ts e2e-tests/as/service-management.spec.ts",
     "test:e2e:report": "playwright show-report",
     "test:e2e:install": "playwright install",
-    "test:e2e:install-deps": "playwright install-deps"
+    "test:e2e:install-deps": "playwright install-deps",
+    
+    "qa:full": "node scripts/qa-automation.js",
+    "qa:coverage": "node scripts/coverage-analysis.js",
+    "qa:performance": "node scripts/performance-testing.js",
+    "qa:visual": "node scripts/visual-regression-setup.js",
+    "qa:report": "npm run qa:coverage && npm run qa:performance && npm run qa:visual && npm run qa:full",
+    
+    "test:all": "cd backend && npm test && cd ../frontend && npm run test:e2e:critical",
+    "test:unit": "cd backend && npm run test:unit",
+    "test:integration": "cd backend && npm run test:integration",
+    "test:coverage": "cd backend && npm run test:coverage",
+    
+    "quality:check": "npm run test:coverage && npm run qa:performance && npm run test:e2e:critical",
+    "quality:gates": "node scripts/coverage-analysis.js && node scripts/qa-automation.js",
+    
+    "setup:qa": "npm run test:e2e:install-deps && npm install -g pixelmatch pngjs lighthouse",
+    "ci:test": "npm run test:unit && npm run test:integration && npm run test:e2e:critical",
+    "ci:qa": "npm run qa:report"
   },
   "engines": {
     "node": ">=18.0.0",
