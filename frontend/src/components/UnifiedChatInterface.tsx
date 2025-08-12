@@ -376,7 +376,7 @@ export function UnifiedChatInterface({
               {otherParticipant && (
                 <div className="flex items-center space-x-3">
                   <FixiaAvatar
-                    {...(otherParticipant.profile_image && { src: otherParticipant.profile_image })}
+                    {...(otherParticipant.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(otherParticipant.profile_image)}` })}
                     alt={`${otherParticipant.first_name} ${otherParticipant.last_name}`}
                     fallbackText={`${otherParticipant.first_name[0]}${otherParticipant.last_name[0]}`}
                     size="lg"
@@ -490,7 +490,7 @@ export function UnifiedChatInterface({
                 }`}>
                   {!isOwnMessage && showAvatar && otherParticipant && (
                     <FixiaAvatar
-                      {...(otherParticipant.profile_image && { src: otherParticipant.profile_image })}
+                      {...(otherParticipant.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(otherParticipant.profile_image)}` })}
                       alt={`${otherParticipant.first_name} ${otherParticipant.last_name}`}
                       fallbackText={`${otherParticipant.first_name[0]}${otherParticipant.last_name[0]}`}
                       size="sm"

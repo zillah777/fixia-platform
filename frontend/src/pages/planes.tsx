@@ -619,7 +619,7 @@ export default function PlanesPage() {
                             />
                           ) : (
                             <div 
-                              className="h-5 w-5 mt-0.5 flex-shrink-0 rounded-full bg-gray-300 dark:bg-gray-600"
+                              className="h-5 w-5 mt-0.5 flex-shrink-0 rounded-full glass-light bg-muted/30 border border-muted/40"
                               aria-label="Característica no incluida"
                               role="img"
                             />

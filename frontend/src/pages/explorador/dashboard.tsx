@@ -9,6 +9,7 @@ import { FixiaNavigation } from '@/components/FixiaNavigation';
 import { ExplorerHeroPanel } from '@/components/ExplorerHeroPanel';
 import { ExplorerSummaryCards } from '@/components/ExplorerSummaryCards';
 import { ExplorerRequestsTable } from '@/components/ExplorerRequestsTable';
+import { OnboardingHelper } from '@/components/OnboardingHelper';
 
 const ExplorerDashboard: NextPage = () => {
   const { user, loading } = useAuth();
@@ -102,6 +103,9 @@ const ExplorerDashboard: NextPage = () => {
             </div>
           </motion.footer>
         </main>
+
+        {/* Onboarding Helper for new explorers */}
+        <OnboardingHelper userType="customer" />
       </div>
     </>
   );

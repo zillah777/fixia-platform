@@ -126,7 +126,18 @@ export function UnifiedNavigation({
   const getInitials = () => {
     const firstName = user?.first_name || '';
     const lastName = user?.last_name || '';
-    return `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase() || 'U';
+    const initials = `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase();
+    return initials || 'U';
+  };
+
+  const getAvatarSrc = () => {
+    if (!user?.profile_image) return undefined;
+    try {
+      return `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}`;
+    } catch (error) {
+      console.warn('Error encoding profile image URL:', error);
+      return undefined;
+    }
   };
 
   // Render navigation item with proper icon
@@ -283,8 +294,8 @@ export function UnifiedNavigation({
             <DropdownMenuTrigger asChild>
               <Button className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full hover:glass-medium transition-all duration-300">
                 <FixiaAvatar
-                  {...(user?.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` })}
-                  alt="Usuario"
+                  {...(getAvatarSrc() && { src: getAvatarSrc() })}
+                  alt={`Avatar de ${user?.first_name || 'Usuario'}`}
                   fallbackText={getInitials()}
                   size="md"
                   variant={navigation.userType === 'provider' ? 'professional' : 'client'}
@@ -298,8 +309,8 @@ export function UnifiedNavigation({
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center space-x-3">
                     <FixiaAvatar
-                      {...(user?.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` })}
-                      alt="Usuario"
+                      {...(getAvatarSrc() && { src: getAvatarSrc() })}
+                      alt={`Avatar de ${user?.first_name || 'Usuario'}`}
                       fallbackText={getInitials()}
                       size="lg"
                       variant={navigation.userType === 'provider' ? 'professional' : 'client'}
@@ -499,8 +510,8 @@ export function UnifiedNavigation({
               <div className="mt-4 pt-4 border-t border-white/10">
                 <div className="flex items-center space-x-3 glass-light rounded-lg p-3">
                   <FixiaAvatar
-                    {...(user?.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` })}
-                    alt="Usuario"
+                    {...(getAvatarSrc() && { src: getAvatarSrc() })}
+                    alt={`Avatar de ${user?.first_name || 'Usuario'}`}
                     fallbackText={getInitials()}
                     size="md"
                     variant={navigation.userType === 'provider' ? 'professional' : 'client'}

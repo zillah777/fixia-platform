@@ -25,7 +25,18 @@ export function FixiaNavigation() {
   const getInitials = () => {
     const firstName = user?.first_name || '';
     const lastName = user?.last_name || '';
-    return `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase() || 'U';
+    const initials = `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase();
+    return initials || 'U';
+  };
+
+  const getAvatarSrc = (): string | undefined => {
+    if (!user?.profile_image) return undefined;
+    try {
+      return `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}`;
+    } catch (error) {
+      console.warn('Error encoding profile image URL:', error);
+      return undefined;
+    }
   };
 
   return (
@@ -149,8 +160,8 @@ export function FixiaNavigation() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon-sm" className="relative rounded-full">
                 <FixiaAvatar
-                  {...(user?.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` })}
-                  alt="Usuario"
+                  {...(getAvatarSrc() && { src: getAvatarSrc() })}
+                  alt={`Avatar de ${user?.first_name || 'Usuario'}`}
                   fallbackText={getInitials()}
                   size="md"
                   variant={user?.user_type === 'provider' ? 'professional' : 'client'}
@@ -164,8 +175,8 @@ export function FixiaNavigation() {
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center space-x-3">
                     <FixiaAvatar
-                      {...(user?.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` })}
-                      alt="Usuario"
+                      {...(getAvatarSrc() && { src: getAvatarSrc() })}
+                      alt={`Avatar de ${user?.first_name || 'Usuario'}`}
                       fallbackText={getInitials()}
                       size="lg"
                       variant={user?.user_type === 'provider' ? 'professional' : 'client'}
@@ -401,8 +412,8 @@ export function FixiaNavigation() {
               <div className="mt-4 pt-4 border-t border-white/10">
                 <div className="flex items-center space-x-3 glass-light rounded-lg p-3">
                   <FixiaAvatar
-                    {...(user?.profile_image && { src: `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}` })}
-                    alt="Usuario"
+                    {...(getAvatarSrc() && { src: getAvatarSrc() })}
+                    alt={`Avatar de ${user?.first_name || 'Usuario'}`}
                     fallbackText={getInitials()}
                     size="md"
                     variant={user?.user_type === 'provider' ? 'professional' : 'client'}

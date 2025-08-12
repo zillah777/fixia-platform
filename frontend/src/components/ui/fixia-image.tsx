@@ -76,7 +76,7 @@ export const FixiaImage: React.FC<FixiaImageProps> = ({
   const handleError = () => {
     setHasError(true);
     setIsLoading(false);
-    if (currentSrc !== fallbackSrc) {
+    if (currentSrc !== fallbackSrc && fallbackSrc !== '/images/placeholder.jpg') {
       setCurrentSrc(fallbackSrc);
       setHasError(false);
     } else {
@@ -116,8 +116,8 @@ export const FixiaImage: React.FC<FixiaImageProps> = ({
         </div>
       )}
 
-      {/* Error State */}
-      {hasError && currentSrc === fallbackSrc && (
+      {/* Error State - Only show for non-avatar images */}
+      {hasError && currentSrc === fallbackSrc && !className?.includes('rounded-full') && (
         <div className="absolute inset-0 z-10 flex items-center justify-center glass-light rounded-lg">
           <div className="text-center text-white/70">
             <div className="w-12 h-12 mx-auto mb-2 opacity-50">

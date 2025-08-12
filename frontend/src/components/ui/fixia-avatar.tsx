@@ -1,13 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Avatar, AvatarFallback } from './avatar';
 import { FixiaImage } from './fixia-image';
 import { cn } from '@/lib/utils';
 import { User } from 'lucide-react';
 
 export interface FixiaAvatarProps {
-  src?: string;
+  src?: string | undefined;
   alt?: string;
   fallbackText?: string;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -59,6 +59,9 @@ export const FixiaAvatar: React.FC<FixiaAvatarProps> = ({
   isOnline = false,
   quality = 90,
 }) => {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   // Extract initials from fallbackText or alt
   const getInitials = (text: string = '') => {
     return text
@@ -81,7 +84,7 @@ export const FixiaAvatar: React.FC<FixiaAvatarProps> = ({
           className
         )}
       >
-        {src ? (
+        {src && !imageError ? (
           <FixiaImage
             src={src}
             alt={alt}
@@ -90,17 +93,21 @@ export const FixiaAvatar: React.FC<FixiaAvatarProps> = ({
             quality={quality}
             aspectRatio="square"
             objectFit="cover"
-            loadingType="blur"
-            fallbackSrc="/images/default-avatar.png"
+            loadingType="none"
+            fallbackSrc=""
             sizes="(max-width: 768px) 64px, 96px"
             className="rounded-full"
+            onLoadingComplete={() => setImageLoaded(true)}
+            onError={() => setImageError(true)}
           />
         ) : (
           <AvatarFallback 
             className={cn(
-              'glass-light text-white/90 font-medium',
-              variant === 'professional' && 'bg-gradient-to-br from-blue-500/20 to-blue-600/20',
-              variant === 'client' && 'bg-gradient-to-br from-purple-500/20 to-purple-600/20'
+              'text-white font-medium border-0',
+              variant === 'default' && 'bg-gradient-to-br from-white/20 to-white/10',
+              variant === 'glass' && 'glass-light text-white/90',
+              variant === 'professional' && 'bg-gradient-to-br from-blue-500/30 to-blue-600/30 border border-blue-400/30',
+              variant === 'client' && 'bg-gradient-to-br from-purple-500/30 to-purple-600/30 border border-purple-400/30'
             )}
           >
             {initials || <User className="h-1/2 w-1/2" />}
