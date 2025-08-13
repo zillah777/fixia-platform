@@ -678,8 +678,8 @@ function HowItWorksSection() {
             ¿Cómo Funciona Fixia?
           </h2>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">
-            Transparencia líquida en cada paso. Nuestro proceso es simple, seguro y diseñado para
-            garantizar resultados excepcionales.
+            Explora un marketplace de servicios y microservicios pensado para vos: encontrá lo que necesitás, 
+            pedilo en segundos y calificá tu experiencia. Todo con precios justos, rapidez y un ambiente de confianza total.
           </p>
         </div>
 
