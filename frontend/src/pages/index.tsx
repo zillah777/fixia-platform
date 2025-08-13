@@ -386,102 +386,7 @@ function HeroSection() {
             )}
           </div>
 
-          {/* Enhanced Trust Indicators */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12 max-w-4xl mx-auto">
-            <div className="glass-medium border border-white/20 rounded-xl p-4 text-center group hover:glass-strong transition-all duration-300">
-              <div className="flex items-center justify-center mb-2">
-                <div className="bg-green-500/20 p-2 rounded-lg">
-                  <Check className="h-5 w-5 text-green-400" />
-                </div>
-              </div>
-              <div className="text-white font-semibold text-lg">1,247+</div>
-              <div className="text-white/60 text-sm">Profesionales Verificados</div>
-              <div className="text-green-400 text-xs mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Con cédula profesional</div>
-            </div>
-            
-            <div className="glass-medium border border-white/20 rounded-xl p-4 text-center group hover:glass-strong transition-all duration-300">
-              <div className="flex items-center justify-center mb-2">
-                <div className="bg-blue-500/20 p-2 rounded-lg">
-                  <Shield className="h-5 w-5 text-blue-400" />
-                </div>
-              </div>
-              <div className="text-white font-semibold text-lg">100%</div>
-              <div className="text-white/60 text-sm">Pagos Protegidos</div>
-              <div className="text-blue-400 text-xs mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Garantía de devolución</div>
-            </div>
-            
-            <div className="glass-medium border border-white/20 rounded-xl p-4 text-center group hover:glass-strong transition-all duration-300">
-              <div className="flex items-center justify-center mb-2">
-                <div className="bg-yellow-500/20 p-2 rounded-lg">
-                  <Star className="h-5 w-5 text-yellow-400" />
-                </div>
-              </div>
-              <div className="text-white font-semibold text-lg">4.9★</div>
-              <div className="text-white/60 text-sm">Calificación Promedio</div>
-              <div className="text-yellow-400 text-xs mt-1 opacity-0 group-hover:opacity-100 transition-opacity">+2,500 reseñas reales</div>
-            </div>
-            
-            <div className="glass-medium border border-white/20 rounded-xl p-4 text-center group hover:glass-strong transition-all duration-300">
-              <div className="flex items-center justify-center mb-2">
-                <div className="bg-purple-500/20 p-2 rounded-lg">
-                  <Clock className="h-5 w-5 text-purple-400" />
-                </div>
-              </div>
-              <div className="text-white font-semibold text-lg">2 hrs</div>
-              <div className="text-white/60 text-sm">Tiempo Respuesta</div>
-              <div className="text-purple-400 text-xs mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Promedio de contacto</div>
-            </div>
-          </div>
           
-          {/* Social Proof Section */}
-          <div className="glass-light border border-white/10 rounded-2xl p-6 mb-12 max-w-4xl mx-auto">
-            <div className="text-center mb-4">
-              <h3 className="text-white font-semibold text-lg mb-2">Lo que dicen nuestros usuarios</h3>
-              <div className="flex items-center justify-center space-x-6 text-sm text-white/60">
-                <div className="flex items-center">
-                  <span className="text-green-400 font-bold text-lg mr-1">98%</span>
-                  <span>Recomiendan Fixia</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="text-blue-400 font-bold text-lg mr-1">24h</span>
-                  <span>Resolución promedio</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="text-purple-400 font-bold text-lg mr-1">+150</span>
-                  <span>Servicios semanales</span>
-                </div>
-              </div>
-            </div>
-            <div className="grid md:grid-cols-3 gap-4 text-center">
-              <div className="space-y-2">
-                <div className="flex justify-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-white/80 text-sm italic">"Encontré mi plomero en 30 minutos. Excelente trabajo y precio justo."</p>
-                <p className="text-white/60 text-xs">- María C., Rawson</p>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-white/80 text-sm italic">"Como electricista, Fixia me cambió la vida. Más clientes, menos estrés."</p>
-                <p className="text-white/60 text-xs">- Jorge M., Profesional AS</p>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="text-white/80 text-sm italic">"Pagos seguros y comunicación directa. No más intermediarios confusos."</p>
-                <p className="text-white/60 text-xs">- Carlos R., Trelew</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -491,99 +396,41 @@ function HeroSection() {
 function StatsSection() {
   const stats = [
     {
-      value: "1,247+",
-      label: "Profesionales Activos",
-      sublabel: "Crecimiento +15% mensual",
-      color: "text-blue-400",
-      icon: Users,
-      bgColor: "bg-blue-500/10"
+      value: "1,200+",
+      label: "Profesionales",
+      color: "text-blue-400"
     },
     {
-      value: "4.9★",
-      label: "Satisfacción Cliente",
-      sublabel: "De +2,500 reseñas verificadas",
-      color: "text-yellow-400",
-      icon: Star,
-      bgColor: "bg-yellow-500/10"
+      value: "4.8★",
+      label: "Calificación",
+      color: "text-blue-400"
     },
     {
-      value: "<2hrs",
-      label: "Tiempo Respuesta",
-      sublabel: "Conectamos rápido",
-      color: "text-green-400",
-      icon: Clock,
-      bgColor: "bg-green-500/10"
+      value: "24/7",
+      label: "Soporte",
+      color: "text-blue-400"
     },
     {
-      value: "$180M",
-      label: "Transacciones Seguras",
-      sublabel: "Protección total garantizada",
-      color: "text-purple-400",
-      icon: Shield,
-      bgColor: "bg-purple-500/10"
+      value: "2,500+",
+      label: "Trabajos",
+      color: "text-blue-400"
     }
   ];
 
   return (
-    <section className="py-20 relative">
+    <section className="py-16 relative">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-            Números que hablan por sí solos
-          </h2>
-          <p className="text-white/70 text-lg max-w-2xl mx-auto">
-            Transparencia total en cada métrica. Estos son los resultados reales de nuestra comunidad de confianza.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => {
-            const IconComponent = stat.icon;
-            return (
-              <div key={index} className="glass-medium border border-white/20 rounded-2xl p-6 text-center hover:glass-strong transition-all duration-300 group">
-                <div className={`inline-flex items-center justify-center w-16 h-16 ${stat.bgColor} rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <IconComponent className={`h-8 w-8 ${stat.color}`} />
-                </div>
-                <div className={`text-3xl lg:text-4xl font-bold ${stat.color} mb-2 group-hover:scale-105 transition-transform duration-300`}>
-                  {stat.value}
-                </div>
-                <div className="text-white font-semibold text-lg mb-1">
-                  {stat.label}
-                </div>
-                <div className="text-white/60 text-sm leading-relaxed">
-                  {stat.sublabel}
-                </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+          {stats.map((stat, index) => (
+            <div key={index} className="animate-fade-in">
+              <div className={`text-4xl lg:text-5xl font-bold ${stat.color} mb-2`}>
+                {stat.value}
               </div>
-            );
-          })}
-        </div>
-        
-        {/* Additional Trust Badges */}
-        <div className="mt-12 flex flex-wrap justify-center items-center gap-8 opacity-60">
-          <div className="flex items-center space-x-2 text-white/60">
-            <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-              <Check className="h-5 w-5 text-green-400" />
+              <div className="text-white/70 text-lg font-medium">
+                {stat.label}
+              </div>
             </div>
-            <span className="text-sm">Certificado SSL</span>
-          </div>
-          <div className="flex items-center space-x-2 text-white/60">
-            <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
-              <Shield className="h-5 w-5 text-blue-400" />
-            </div>
-            <span className="text-sm">PCI Compliant</span>
-          </div>
-          <div className="flex items-center space-x-2 text-white/60">
-            <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-              <Star className="h-5 w-5 text-purple-400" />
-            </div>
-            <span className="text-sm">Verificación Manual</span>
-          </div>
-          <div className="flex items-center space-x-2 text-white/60">
-            <div className="w-8 h-8 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-              <DollarSign className="h-5 w-5 text-yellow-400" />
-            </div>
-            <span className="text-sm">Garantía de Depósito</span>
-          </div>
+          ))}
         </div>
       </div>
     </section>
