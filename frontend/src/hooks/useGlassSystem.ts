@@ -9,11 +9,11 @@ import { useOptimizedGlass } from '@/contexts/GlassOptimizationContext';
 // Design Tokens - Central system constants
 export const GLASS_TOKENS = {
   variants: {
-    minimal: 'bg-white/5 backdrop-blur-[2px]',
-    light: 'bg-white/10 backdrop-blur-md border-white/20',
-    medium: 'bg-white/15 backdrop-blur-lg border-white/30 shadow-lg',
-    strong: 'bg-white/20 backdrop-blur-xl border-white/40 shadow-xl',
-    intense: 'bg-white/25 backdrop-blur-2xl border-white/50 shadow-2xl'
+    minimal: 'bg-white/5 backdrop-blur-[1px]',
+    light: 'bg-white/8 backdrop-blur-[4px] border-white/20',
+    medium: 'bg-white/12 backdrop-blur-[6px] border-white/30 shadow-lg',
+    strong: 'bg-white/15 backdrop-blur-[8px] border-white/40 shadow-xl',
+    intense: 'bg-white/18 backdrop-blur-[10px] border-white/50 shadow-2xl'
   },
   gradients: {
     liquid: 'bg-gradient-to-br from-primary via-primary/80 to-secondary',
@@ -65,8 +65,8 @@ export const COMPONENT_GLASS = {
     success: `${GLASS_TOKENS.variants.light} border-green-500/50 ${GLASS_TOKENS.interactions.focus}`
   },
   modal: {
-    backdrop: 'bg-black/50 backdrop-blur-sm',
-    content: `${GLASS_TOKENS.variants.strong} rounded-xl shadow-2xl`,
+    backdrop: 'bg-black/30 backdrop-blur-[2px]',
+    content: `${GLASS_TOKENS.variants.light} rounded-xl shadow-2xl`,
     overlay: 'fixed inset-0 z-50'
   }
 } as const;

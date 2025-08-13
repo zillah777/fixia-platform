@@ -18,17 +18,17 @@ const TooltipContent = React.forwardRef<
     ref={ref}
     sideOffset={sideOffset}
     className={cn(
-      // Liquid Glass Design System styles
-      "z-50 overflow-hidden rounded-lg glass-medium border border-white/20",
-      "px-3 py-1.5 text-sm text-white/90 backdrop-blur-xl",
+      // Enhanced readability with solid background and high contrast
+      "z-50 overflow-hidden rounded-lg border border-gray-200 shadow-lg",
+      "px-3 py-1.5 text-sm text-gray-900 bg-white/95 backdrop-blur-sm",
       "animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out",
       "data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
       "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
       "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-      // Additional glass morphism effects
-      "shadow-lg shadow-black/25 backdrop-saturate-150",
-      "before:absolute before:inset-0 before:rounded-lg before:border before:border-white/10",
-      "after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-r after:from-white/5 after:to-transparent after:pointer-events-none",
+      // Dark mode support
+      "dark:bg-gray-800/95 dark:text-gray-100 dark:border-gray-700",
+      // Better contrast for accessibility
+      "font-medium max-w-xs text-center",
       className
     )}
     {...props}
@@ -63,11 +63,11 @@ const TooltipWithVariants = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> & TooltipVariantProps
 >(({ className, variant = 'default', size = 'md', ...props }, ref) => {
   const variantClasses = {
-    default: 'text-white/90',
-    info: 'text-blue-100 border-blue-400/20 bg-blue-500/10',
-    success: 'text-green-100 border-green-400/20 bg-green-500/10',
-    warning: 'text-yellow-100 border-yellow-400/20 bg-yellow-500/10',
-    error: 'text-red-100 border-red-400/20 bg-red-500/10'
+    default: 'text-gray-900 dark:text-gray-100',
+    info: 'text-blue-900 bg-blue-50/95 border-blue-200 dark:bg-blue-900/95 dark:text-blue-100 dark:border-blue-700',
+    success: 'text-green-900 bg-green-50/95 border-green-200 dark:bg-green-900/95 dark:text-green-100 dark:border-green-700',
+    warning: 'text-yellow-900 bg-yellow-50/95 border-yellow-200 dark:bg-yellow-900/95 dark:text-yellow-100 dark:border-yellow-700',
+    error: 'text-red-900 bg-red-50/95 border-red-200 dark:bg-red-900/95 dark:text-red-100 dark:border-red-700'
   }
 
   const sizeClasses = {

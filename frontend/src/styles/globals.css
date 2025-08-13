@@ -147,8 +147,8 @@
   /* Base glass effects with mobile optimization */
   .glass {
     background: var(--glass-light);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     border: 1px solid var(--border);
     will-change: transform;
     transform: translateZ(0);
@@ -156,8 +156,8 @@
   
   .glass-medium {
     background: var(--glass-medium);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     border: 1px solid var(--border);
     will-change: transform;
     transform: translateZ(0);
@@ -165,8 +165,8 @@
   
   .glass-strong {
     background: var(--glass-strong);
-    backdrop-filter: blur(32px);
-    -webkit-backdrop-filter: blur(32px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     will-change: transform;
     transform: translateZ(0);
@@ -183,8 +183,8 @@
   }
   
   .glass-enhanced {
-    backdrop-filter: saturate(180%) blur(32px);
-    -webkit-backdrop-filter: saturate(180%) blur(32px);
+    backdrop-filter: saturate(150%) blur(8px);
+    -webkit-backdrop-filter: saturate(150%) blur(8px);
   }
   
   /* Hardware acceleration utility */

@@ -648,7 +648,7 @@ export default function EnhancedPortafolioPage() {
                     Agregar Imagen
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="glass border-white/20">
+                <DialogContent className="">
                   <DialogHeader>
                     <DialogTitle>Agregar Nueva Imagen al Portafolio</DialogTitle>
                     <DialogDescription>
@@ -758,10 +758,10 @@ export default function EnhancedPortafolioPage() {
                         value={newImage.category}
                         onValueChange={(value) => setNewImage(prev => ({ ...prev, category: value }))}
                       >
-                        <SelectTrigger className="glass border-white/20">
+                        <SelectTrigger className="">
                           <SelectValue placeholder="Selecciona una categoría" />
                         </SelectTrigger>
-                        <SelectContent className="glass border-white/20">
+                        <SelectContent className="">
                           {categories.map(category => (
                             <SelectItem key={category.id} value={category.name}>
                               {category.icon} {category.name}
@@ -780,7 +780,7 @@ export default function EnhancedPortafolioPage() {
                           fileUploadErrorMethods.clearError();
                         }}
                         variant="outline"
-                        className="glass border-white/20"
+                        className=""
                       >
                         Cancelar
                       </Button>
@@ -1040,7 +1040,7 @@ export default function EnhancedPortafolioPage() {
                 <Button
                   onClick={() => setShowPrivacySettings(false)}
                   variant="outline"
-                  className="glass border-white/20"
+                  className=""
                 >
                   Cancelar
                 </Button>

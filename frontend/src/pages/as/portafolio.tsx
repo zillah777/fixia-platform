@@ -383,7 +383,7 @@ export default function PortafolioPage() {
                   <span className="sm:hidden">Agregar</span>
                 </Button>
               </DialogTrigger>
-            <DialogContent className="glass border-white/20 max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <DialogContent className="glass border-white/20 w-[95vw] max-w-2xl max-h-[85vh] md:max-h-[90vh] overflow-hidden flex flex-col">
               <DialogHeader>
                 <DialogTitle className="flex items-center text-lg sm:text-xl text-white">
                   <UploadCloud className="mr-2 h-5 w-5" />
@@ -549,7 +549,7 @@ export default function PortafolioPage() {
                       value={newImage.title}
                       onChange={(e) => setNewImage(prev => ({ ...prev, title: e.target.value }))}
                       placeholder="Ej: Instalación de Sistema de Calefacción"
-                      className="glass border-white/20 focus:border-primary/50 mt-2 h-10 sm:h-12 text-black placeholder:text-gray-500"
+                      className="fixia-input mt-2 h-10 sm:h-12"
                       maxLength={100}
                     />
                     <p className="text-xs text-muted-foreground mt-1">
@@ -566,10 +566,10 @@ export default function PortafolioPage() {
                         value={newImage.category}
                         onValueChange={(value) => setNewImage(prev => ({ ...prev, category: value }))}
                       >
-                        <SelectTrigger className="glass border-white/20 mt-2 h-10 sm:h-12 text-black">
+                        <SelectTrigger className="fixia-select mt-2 h-10 sm:h-12">
                           <SelectValue placeholder="Selecciona categoría" className="text-gray-500" />
                         </SelectTrigger>
-                        <SelectContent className="glass border-white/20">
+                        <SelectContent className="">
                           {categories.length > 0 ? categories.map(category => (
                             <SelectItem key={category.id} value={category.name}>
                               <span className="flex items-center space-x-2">
@@ -592,7 +592,7 @@ export default function PortafolioPage() {
                         value={newImage.tags}
                         onChange={(e) => setNewImage(prev => ({ ...prev, tags: e.target.value }))}
                         placeholder="plomería, urgente, garantía"
-                        className="glass border-white/20 focus:border-primary/50 mt-2 h-10 sm:h-12 text-black placeholder:text-gray-500"
+                        className="fixia-input mt-2 h-10 sm:h-12"
                       />
                       <p className="text-xs text-muted-foreground mt-1">
                         Separa las etiquetas con comas
@@ -608,7 +608,7 @@ export default function PortafolioPage() {
                       value={newImage.description}
                       onChange={(e) => setNewImage(prev => ({ ...prev, description: e.target.value }))}
                       placeholder="Describe el trabajo realizado, materiales utilizados, tiempo de ejecución, desafíos superados..."
-                      className="glass border-white/20 focus:border-primary/50 min-h-[80px] sm:min-h-[100px] mt-2 resize-none text-black placeholder:text-gray-500"
+                      className="fixia-textarea min-h-[80px] sm:min-h-[100px] mt-2 resize-none"
                       maxLength={500}
                     />
                     <p className="text-xs text-muted-foreground mt-1 flex justify-between">
@@ -654,7 +654,7 @@ export default function PortafolioPage() {
             {/* Image Preview Modal */}
             {previewImage && (
               <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
-                <DialogContent className="glass border-white/20 max-w-4xl max-h-[90vh] p-2">
+                <DialogContent className="glass border-white/20 w-[95vw] max-w-3xl max-h-[85vh] md:max-h-[90vh] p-2">
                   <div className="relative">
                     <img
                       src={previewImage}
@@ -933,7 +933,7 @@ export default function PortafolioPage() {
 
       {/* Enhanced Privacy Settings Dialog */}
       <Dialog open={showPrivacySettings} onOpenChange={setShowPrivacySettings}>
-        <DialogContent className="glass border-white/20 max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogContent className="glass border-white/20 w-[95vw] max-w-2xl max-h-[85vh] md:max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader className="pb-4 border-b border-white/10">
             <DialogTitle className="flex items-center text-lg sm:text-xl text-white">
               <Shield className="mr-3 h-5 w-5 text-primary" />

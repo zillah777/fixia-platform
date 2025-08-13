@@ -591,10 +591,10 @@ export default function MarketplacePage() {
           
           <div className="flex items-center space-x-2">
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-40 glass-medium border-white/20">
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
-              <SelectContent className="glass border-white/20">
+              <SelectContent className="">
                 <SelectItem value="relevance">Relevancia</SelectItem>
                 <SelectItem value="rating">Mejor calificado</SelectItem>
                 <SelectItem value="price_low">Precio menor</SelectItem>
@@ -649,10 +649,10 @@ export default function MarketplacePage() {
                   <div>
                     <label className="text-sm font-medium mb-2 block">Categoría</label>
                     <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                      <SelectTrigger className="glass border-white/20">
+                      <SelectTrigger className="">
                         <SelectValue placeholder="Todas las categorías" />
                       </SelectTrigger>
-                      <SelectContent className="glass border-white/20">
+                      <SelectContent className="">
                         <SelectItem value="all">Todas las categorías</SelectItem>
                         {categories.map(category => (
                           <SelectItem key={category.id} value={category.name.toLowerCase()}>
@@ -682,10 +682,10 @@ export default function MarketplacePage() {
                   <div>
                     <label className="text-sm font-medium mb-2 block">Ubicación</label>
                     <Select value={selectedLocality} onValueChange={setSelectedLocality}>
-                      <SelectTrigger className="glass border-white/20">
+                      <SelectTrigger className="">
                         <SelectValue placeholder="Todas las ubicaciones" />
                       </SelectTrigger>
-                      <SelectContent className="glass border-white/20">
+                      <SelectContent className="">
                         <SelectItem value="all">Todas las ubicaciones</SelectItem>
                         <SelectItem value="Comodoro Rivadavia">Comodoro Rivadavia</SelectItem>
                         <SelectItem value="Puerto Madryn">Puerto Madryn</SelectItem>
@@ -699,10 +699,10 @@ export default function MarketplacePage() {
                   <div>
                     <label className="text-sm font-medium mb-2 block">Disponibilidad</label>
                     <Select value={availabilityFilter} onValueChange={setAvailabilityFilter}>
-                      <SelectTrigger className="glass border-white/20">
+                      <SelectTrigger className="">
                         <SelectValue placeholder="Cualquier disponibilidad" />
                       </SelectTrigger>
-                      <SelectContent className="glass border-white/20">
+                      <SelectContent className="">
                         <SelectItem value="all">Cualquier disponibilidad</SelectItem>
                         <SelectItem value="available">Disponible ahora</SelectItem>
                         <SelectItem value="busy">Ocupado</SelectItem>
@@ -729,10 +729,10 @@ export default function MarketplacePage() {
                   <div>
                     <label className="text-sm font-medium mb-2 block">Verificación</label>
                     <Select value={verificationFilter} onValueChange={setVerificationFilter}>
-                      <SelectTrigger className="glass border-white/20">
+                      <SelectTrigger className="">
                         <SelectValue placeholder="Cualquier estado" />
                       </SelectTrigger>
-                      <SelectContent className="glass border-white/20">
+                      <SelectContent className="">
                         <SelectItem value="all">Cualquier estado</SelectItem>
                         <SelectItem value="verified">Solo verificados</SelectItem>
                         <SelectItem value="unverified">No verificados</SelectItem>
@@ -744,10 +744,10 @@ export default function MarketplacePage() {
                   <div>
                     <label className="text-sm font-medium mb-2 block">Portafolio</label>
                     <Select value={portfolioFilter} onValueChange={setPortfolioFilter}>
-                      <SelectTrigger className="glass border-white/20">
+                      <SelectTrigger className="">
                         <SelectValue placeholder="Cualquier portafolio" />
                       </SelectTrigger>
-                      <SelectContent className="glass border-white/20">
+                      <SelectContent className="">
                         <SelectItem value="all">Cualquier portafolio</SelectItem>
                         <SelectItem value="with_portfolio">Con portafolio</SelectItem>
                         <SelectItem value="featured_work">Con trabajos destacados</SelectItem>
@@ -885,7 +885,7 @@ export default function MarketplacePage() {
 
       {/* Wishlist Dialog */}
       <Dialog open={showWishlistDialog} onOpenChange={setShowWishlistDialog}>
-        <DialogContent className="glass border-white/20">
+        <DialogContent className="">
           <DialogHeader>
             <DialogTitle>Agregar a Lista de Deseos</DialogTitle>
             <DialogDescription>
@@ -901,10 +901,10 @@ export default function MarketplacePage() {
                 value={wishlistForm.category} 
                 onValueChange={(value) => setWishlistForm(prev => ({ ...prev, category: value }))}
               >
-                <SelectTrigger className="glass border-white/20">
+                <SelectTrigger className="">
                   <SelectValue placeholder="Selecciona una categoría" />
                 </SelectTrigger>
-                <SelectContent className="glass border-white/20">
+                <SelectContent className="">
                   <SelectItem value="urgent">🔥 Urgente - Necesito ahora</SelectItem>
                   <SelectItem value="future">📅 Futuro - Para más adelante</SelectItem>
                   <SelectItem value="inspiration">💡 Inspiración - Ideas para proyectos</SelectItem>
@@ -951,7 +951,7 @@ export default function MarketplacePage() {
               <Button
                 onClick={() => setShowWishlistDialog(false)}
                 variant="outline"
-                className="glass border-white/20"
+                className=""
               >
                 Cancelar
               </Button>
