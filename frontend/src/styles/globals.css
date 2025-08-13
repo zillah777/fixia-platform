@@ -608,3 +608,95 @@ html {
     box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
   }
 }
+
+/* Standardized Input Field Styling */
+@layer components {
+  /* Fixia Standard Input - Black text on white background with glass morphism */
+  .fixia-input {
+    @apply w-full px-3 py-3 text-black placeholder-gray-400 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #000000 !important; /* Force black text */
+  }
+  
+  /* Fixia Standard Textarea */
+  .fixia-textarea {
+    @apply w-full px-3 py-3 text-black placeholder-gray-400 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #000000 !important; /* Force black text */
+    resize: vertical;
+  }
+  
+  /* Fixia Standard Select */
+  .fixia-select {
+    @apply w-full px-3 py-3 text-black rounded-xl transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #000000 !important; /* Force black text */
+    cursor: pointer;
+  }
+  
+  /* Override for all input types to ensure black text */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  textarea,
+  select {
+    color: #000000 !important;
+  }
+  
+  /* Special focus states for Fixia inputs */
+  .fixia-input:focus,
+  .fixia-textarea:focus,
+  .fixia-select:focus {
+    outline: none;
+    ring-offset-color: transparent;
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 
+      0 0 0 2px rgba(59, 130, 246, 0.2),
+      0 4px 12px rgba(59, 130, 246, 0.1);
+  }
+  
+  /* Mobile optimizations for inputs */
+  @media (max-width: 768px) {
+    .fixia-input,
+    .fixia-textarea,
+    .fixia-select {
+      font-size: 16px; /* Prevents zoom on iOS */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  }
+  
+  /* High contrast mode support for inputs */
+  @media (prefers-contrast: high) {
+    .fixia-input,
+    .fixia-textarea,
+    .fixia-select {
+      background: rgba(255, 255, 255, 1);
+      border: 2px solid rgba(0, 0, 0, 0.3);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+  
+  /* Reduced motion support for inputs */
+  @media (prefers-reduced-motion: reduce) {
+    .fixia-input,
+    .fixia-textarea,
+    .fixia-select {
+      transition: none;
+    }
+  }
+}

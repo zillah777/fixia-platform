@@ -24,6 +24,7 @@ import {
 
 import { useAuth } from '@/contexts/AuthContext';
 import { Service, ServiceCategory, CreateServiceData } from '@/types';
+import api from '@/services/api';
 
 
 const categories = [
@@ -69,20 +70,8 @@ const ASServicios: NextPage = () => {
     // Fetch real services from API
     const fetchServices = async () => {
       try {
-        const response = await fetch(`/api/services/provider/${user?.id}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          setServices(data.data || []);
-        } else {
-          console.error('Error fetching services:', response.statusText);
-          setServices([]);
-        }
+        const response = await api.get(`/api/services/provider/${user?.id}`);
+        setServices(response.data?.data || []);
       } catch (error) {
         console.error('Error fetching services:', error);
         setServices([]);
@@ -97,19 +86,10 @@ const ASServicios: NextPage = () => {
   const handleCreateService = async () => {
     setSaving(true);
     try {
-      const response = await fetch('/api/services', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newService)
-      });
+      const response = await api.post('/api/services', newService);
+      const createdService = response.data?.data;
       
-      if (response.ok) {
-        const data = await response.json();
-        const createdService = data.data;
-        
+      if (createdService) {
         // Add user data for display
         createdService.first_name = user?.first_name || '';
         createdService.last_name = user?.last_name || '';
@@ -128,9 +108,6 @@ const ASServicios: NextPage = () => {
         });
         
         alert('¡Perfecto! Tu trabajo ya está publicado y los clientes pueden verlo.');
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || 'Error al crear el servicio');
       }
     } catch (error) {
       console.error('Error creating service:', error);
@@ -145,25 +122,13 @@ const ASServicios: NextPage = () => {
       const service = services.find(s => s.id === serviceId);
       if (!service) return;
 
-      const response = await fetch(`/api/services/${serviceId}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ is_active: !service.is_active })
-      });
-
-      if (response.ok) {
-        setServices(prev => prev.map(service => 
-          service.id === serviceId 
-            ? { ...service, is_active: !service.is_active }
-            : service
-        ));
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || 'Error al actualizar el servicio');
-      }
+      await api.patch(`/api/services/${serviceId}`, { is_active: !service.is_active });
+      
+      setServices(prev => prev.map(service => 
+        service.id === serviceId 
+          ? { ...service, is_active: !service.is_active }
+          : service
+      ));
     } catch (error) {
       console.error('Error toggling service status:', error);
       alert('Error al actualizar el servicio');
@@ -174,21 +139,9 @@ const ASServicios: NextPage = () => {
     if (!confirm('¿Estás seguro de que quieres borrar este trabajo? No podrás recuperarlo.')) return;
     
     try {
-      const response = await fetch(`/api/services/${serviceId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.ok) {
-        setServices(prev => prev.filter(service => service.id !== serviceId));
-        alert('¡Trabajo borrado correctamente!');
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || 'Error al eliminar el servicio');
-      }
+      await api.delete(`/api/services/${serviceId}`);
+      setServices(prev => prev.filter(service => service.id !== serviceId));
+      alert('¡Trabajo borrado correctamente!');
     } catch (error) {
       console.error('Error deleting service:', error);
       alert('Error al eliminar el servicio');
@@ -428,7 +381,7 @@ const ASServicios: NextPage = () => {
                     placeholder="Buscar en tus trabajos..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="fixia-input pl-10"
                   />
                 </div>
               </div>
@@ -437,7 +390,7 @@ const ASServicios: NextPage = () => {
                 <select
                   value={filterCategory}
                   onChange={(e) => setFilterCategory(e.target.value as ServiceCategory | 'all')}
-                  className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="fixia-select"
                 >
                   <option value="all">Todas las categorías</option>
                   {categories.map(category => (
@@ -715,11 +668,11 @@ const ASServicios: NextPage = () => {
                       type="text"
                       value={newService.title}
                       onChange={(e) => setNewService(prev => ({ ...prev, title: e.target.value }))}
-                      className="w-full px-3 py-3 text-gray-900 placeholder-gray-400 rounded-xl transition-all duration-200"
+                      className="w-full px-3 py-3 text-black placeholder-gray-400 rounded-xl transition-all duration-200"
                       style={{
-                        background: 'rgba(30, 41, 59, 0.4)',
+                        background: 'rgba(255, 255, 255, 0.95)',
                         backdropFilter: 'blur(16px)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)'
+                        border: '1px solid rgba(255, 255, 255, 0.3)'
                       }}
                       placeholder="Escribe qué sabes hacer (ej: Arreglo cañerías que gotean)"
                     />
@@ -733,7 +686,12 @@ const ASServicios: NextPage = () => {
                     value={newService.description}
                     onChange={(e) => setNewService(prev => ({ ...prev, description: e.target.value }))}
                     rows={4}
-                    className="w-full px-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-3 text-black placeholder-gray-400 rounded-xl transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.95)',
+                      backdropFilter: 'blur(16px)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)'
+                    }}
                     placeholder="Ejemplo: Reviso la cañería, cambio las piezas rotas, dejo todo funcionando y limpio el lugar..."
                   />
                 </div>
@@ -746,7 +704,7 @@ const ASServicios: NextPage = () => {
                     <select
                       value={newService.category}
                       onChange={(e) => setNewService(prev => ({ ...prev, category: e.target.value as ServiceCategory }))}
-                      className="w-full px-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="fixia-select"
                     >
                       {categories.map(category => (
                         <option key={category.value} value={category.value}>
@@ -767,7 +725,7 @@ const ASServicios: NextPage = () => {
                         value={newService.price}
                         onChange={(e) => setNewService(prev => ({ ...prev, price: parseInt(e.target.value) || 0 }))}
                         min="0"
-                        className="w-full pl-10 pr-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="fixia-input pl-10"
                         placeholder="3000 (ejemplo)"
                       />
                     </div>
@@ -785,7 +743,7 @@ const ASServicios: NextPage = () => {
                         onChange={(e) => setNewService(prev => ({ ...prev, duration_minutes: parseInt(e.target.value) || 60 }))}
                         min="15"
                         step="15"
-                        className="w-full pl-10 pr-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="fixia-input pl-10"
                         placeholder="120 (2 horas)"
                       />
                     </div>
@@ -801,7 +759,7 @@ const ASServicios: NextPage = () => {
                         type="text"
                         value={newService.address || ''}
                         onChange={(e) => setNewService(prev => ({ ...prev, address: e.target.value }))}
-                        className="w-full pl-10 pr-3 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className="fixia-input pl-10"
                         placeholder="Rawson, Puerto Madryn, Trelew..."
                       />
                     </div>
