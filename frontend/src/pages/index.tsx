@@ -255,15 +255,14 @@ function HeroSection() {
           </div>
           
           <h1 className="text-5xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-            Conecta con los mejores
+            Expertos a un clic,
             <br />
-            profesionales
+            soluciones a tu medida
           </h1>
 
           <p className="text-xl lg:text-2xl text-white/70 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Tu tiempo vale. Fixia lo cuida. Encuentra profesionales altamente calificados
-            para resolver tus necesidades con transparencia líquida y resultados
-            garantizados.
+            Tu tiempo vale. Fixia lo cuida. Encuentra expertos en cualquier profesión u oficio, 
+            confianza, precios justos y transparencia total.
           </p>
 
           {/* Search Bar */}
