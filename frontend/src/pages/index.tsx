@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from "next/link";
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { Search, Star, Shield, Zap, Users, ArrowRight, Play, Check, ChevronDown, MessageSquare, Clock, DollarSign } from "lucide-react";
+import { Search, Star, Shield, Users, Check, Clock, ArrowRight, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -208,19 +208,19 @@ function Header() {
           <div className="flex items-center space-x-2 sm:space-x-4">
             {isAuthenticated ? (
               <Link href={user?.user_type === 'provider' ? '/as/dashboard' : '/explorador/dashboard'}>
-                <Button variant="primary" className="px-4 sm:px-6 py-2 text-sm sm:text-base inline-flex items-center justify-center whitespace-nowrap">
+                <Button variant="primary" className="px-4 sm:px-6 py-2 text-sm sm:text-base whitespace-nowrap">
                   Mi Panel
                 </Button>
               </Link>
             ) : (
               <>
                 <Link href="/auth/login">
-                  <Button variant="ghost" className="px-4 sm:px-6 py-2 text-sm sm:text-base inline-flex items-center justify-center whitespace-nowrap">
+                  <Button variant="ghost" className="px-4 sm:px-6 py-2 text-sm sm:text-base whitespace-nowrap">
                     Iniciar Sesión
                   </Button>
                 </Link>
                 <Link href="/auth/registro">
-                  <Button variant="primary" className="px-4 sm:px-6 py-2 text-sm sm:text-base inline-flex items-center justify-center whitespace-nowrap">
+                  <Button variant="primary" className="px-4 sm:px-6 py-2 text-sm sm:text-base whitespace-nowrap">
                     Únete Gratis
                   </Button>
                 </Link>
@@ -332,7 +332,7 @@ function HeroSection() {
                     type="submit" 
                     size="lg"
                     variant="primary"
-                    className="m-1 relative overflow-hidden group px-8 py-3 inline-flex items-center justify-center whitespace-nowrap font-semibold"
+                    className="m-1 relative overflow-hidden group px-8 py-3 whitespace-nowrap font-semibold"
                   >
                     <span className="relative z-10">Buscar Ahora</span>
                     <div className="absolute inset-0 bg-white/20 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
@@ -566,15 +566,13 @@ function CTASection() {
             
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
               <Link href="/auth/registro">
-                <Button size="lg" variant="primary" className="text-lg rounded-2xl px-8 py-4 w-full sm:w-auto min-w-[220px] inline-flex items-center justify-center gap-3 whitespace-nowrap">
+                <Button size="lg" variant="primary" className="text-lg rounded-2xl px-8 py-4 w-full sm:w-auto min-w-[200px] whitespace-nowrap">
                   Buscar Profesionales
-                  <ArrowRight className="h-5 w-5 flex-shrink-0" />
                 </Button>
               </Link>
               <Link href="/auth/registro?type=provider">
-                <Button size="lg" variant="outline" className="text-lg rounded-2xl px-8 py-4 w-full sm:w-auto min-w-[220px] inline-flex items-center justify-center gap-3 whitespace-nowrap">
+                <Button size="lg" variant="outline" className="text-lg rounded-2xl px-8 py-4 w-full sm:w-auto min-w-[200px] whitespace-nowrap">
                   Ofrecer Servicios
-                  <Zap className="h-5 w-5 flex-shrink-0" />
                 </Button>
               </Link>
             </div>
@@ -764,8 +762,7 @@ function FeaturedProfessionals() {
                   </div>
                   
                   <div className="flex space-x-2">
-                    <Button size="sm" variant="primary" className="flex-1 px-3 py-2 text-sm inline-flex items-center justify-center gap-2 whitespace-nowrap">
-                      <MessageSquare className="h-4 w-4 flex-shrink-0" />
+                    <Button size="sm" variant="primary" className="flex-1 px-3 py-2 text-sm whitespace-nowrap">
                       Contactar
                     </Button>
                     <Button size="sm" variant="outline" className="px-4 py-2 text-sm whitespace-nowrap">
@@ -786,9 +783,8 @@ function FeaturedProfessionals() {
           className="text-center mt-12"
         >
           <Link href="/explorador/buscar-servicio">
-            <Button variant="outline" className="group px-6 py-3 inline-flex items-center gap-3 whitespace-nowrap">
+            <Button variant="outline" className="px-6 py-3 whitespace-nowrap">
               Ver Todos los Profesionales
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform flex-shrink-0" />
             </Button>
           </Link>
         </motion.div>
