@@ -96,12 +96,20 @@ export const FixiaImage: React.FC<FixiaImageProps> = ({
   };
 
   const handleError = () => {
+    console.warn('Image loading failed for:', currentSrc);
     setHasError(true);
     setIsLoading(false);
-    if (currentSrc !== fallbackSrc && fallbackSrc !== '/images/placeholder.jpg') {
+    
+    // Try fallback only if we haven't tried it yet and it's different
+    if (currentSrc !== fallbackSrc && fallbackSrc && fallbackSrc !== '/images/placeholder.jpg') {
+      console.log('Trying fallback image:', fallbackSrc);
       setCurrentSrc(fallbackSrc);
       setHasError(false);
     } else {
+      // For avatar images, don't show error state - let the fallback handle it
+      if (className?.includes('rounded-full')) {
+        setHasError(false);
+      }
       onError?.();
     }
   };

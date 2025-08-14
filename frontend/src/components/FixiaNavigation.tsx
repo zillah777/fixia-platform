@@ -32,7 +32,13 @@ export function FixiaNavigation() {
   const getAvatarSrc = (): string | undefined => {
     if (!user?.profile_photo_url) return undefined;
     try {
-      return `/api/image-proxy?url=${encodeURIComponent(user.profile_photo_url)}`;
+      // Si la URL ya es absoluta, úsala directamente con el proxy
+      if (user.profile_photo_url.startsWith('http')) {
+        return `/api/image-proxy?url=${encodeURIComponent(user.profile_photo_url)}`;
+      }
+      // Si es una ruta relativa, construye la URL completa
+      const fullUrl = `${process.env['NEXT_PUBLIC_API_URL']}${user.profile_photo_url}`;
+      return `/api/image-proxy?url=${encodeURIComponent(fullUrl)}`;
     } catch (error) {
       console.warn('Error encoding profile image URL:', error);
       return undefined;

@@ -97,8 +97,14 @@ export const FixiaAvatar: React.FC<FixiaAvatarProps> = ({
             fallbackSrc=""
             sizes="(max-width: 768px) 64px, 96px"
             className="rounded-full"
-            onLoadingComplete={() => setImageLoaded(true)}
-            onError={() => setImageError(true)}
+            onLoadingComplete={() => {
+              setImageLoaded(true);
+              setImageError(false);
+            }}
+            onError={() => {
+              console.warn('Avatar image failed to load:', src);
+              setImageError(true);
+            }}
           />
         ) : (
           <AvatarFallback 
