@@ -30,9 +30,9 @@ export function FixiaNavigation() {
   };
 
   const getAvatarSrc = (): string | undefined => {
-    if (!user?.profile_image) return undefined;
+    if (!user?.profile_photo_url) return undefined;
     try {
-      return `/api/image-proxy?url=${encodeURIComponent(user.profile_image)}`;
+      return `/api/image-proxy?url=${encodeURIComponent(user.profile_photo_url)}`;
     } catch (error) {
       console.warn('Error encoding profile image URL:', error);
       return undefined;

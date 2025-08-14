@@ -154,7 +154,7 @@ const EditarPerfil: NextPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen relative overflow-hidden" style={{
+      <div className="min-h-screen relative overflow-hidden text-white" style={{
         background: 'radial-gradient(ellipse at top, #1e293b 0%, #0f172a 50%, #020617 100%)'
       }}>
         <div className="absolute inset-0 overflow-hidden">
@@ -189,7 +189,7 @@ const EditarPerfil: NextPage = () => {
         <meta name="keywords" content="perfil, explorador, FIXIA, editar información, configuración cuenta" />
       </Head>
 
-      <div className="min-h-screen relative overflow-hidden" style={{
+      <div className="min-h-screen relative overflow-hidden text-white" style={{
         background: 'radial-gradient(ellipse at top, #1e293b 0%, #0f172a 50%, #020617 100%)'
       }}>
         {/* Floating Orbs Background */}
