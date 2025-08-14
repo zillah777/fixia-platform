@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
-import { SimpleTooltip } from "./OnboardingHelper";
+import { SimpleTooltip } from "./ui/tooltip";
 
 export function FixiaNavigation() {
   const { user, logout } = useAuth();
@@ -116,13 +116,15 @@ export function FixiaNavigation() {
               </>
             )}
             <Link href="/planes">
-              <Button variant="ghost" className="relative" title="Mejora tu cuenta para más beneficios">
-                <Crown className="mr-2 h-4 w-4" />
-                Mejorar Cuenta
-                <Badge className="ml-2 bg-primary/20 text-primary text-xs border-0 animate-pulse">
-                  Nuevo
-                </Badge>
-              </Button>
+              <SimpleTooltip content="Mejora tu cuenta para más beneficios">
+                <Button variant="ghost" className="relative">
+                  <Crown className="mr-2 h-4 w-4" />
+                  Mejorar Cuenta
+                  <Badge className="ml-2 bg-primary/20 text-primary text-xs border-0 animate-pulse">
+                    Nuevo
+                  </Badge>
+                </Button>
+              </SimpleTooltip>
             </Link>
           </nav>
         </div>

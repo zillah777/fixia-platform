@@ -363,7 +363,7 @@ export function SimpleTooltip({ content, children, position = 'top' }: SimpleToo
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             className={`
-              absolute z-50 px-3 py-2 text-sm text-white glass-strong border border-white/20 rounded-lg shadow-lg whitespace-nowrap
+              absolute z-50 px-3 py-1.5 text-xs text-white bg-gray-900 border border-gray-700 rounded-md shadow-md whitespace-nowrap
               ${position === 'top' && '-top-2 left-1/2 transform -translate-x-1/2 -translate-y-full'}
               ${position === 'bottom' && '-bottom-2 left-1/2 transform -translate-x-1/2 translate-y-full'}
               ${position === 'left' && 'top-1/2 -left-2 transform -translate-x-full -translate-y-1/2'}
@@ -372,7 +372,7 @@ export function SimpleTooltip({ content, children, position = 'top' }: SimpleToo
           >
             {content}
             <div className={`
-              absolute w-2 h-2 glass-strong border border-white/20 transform rotate-45
+              absolute w-2 h-2 bg-gray-900 border border-gray-700 transform rotate-45
               ${position === 'top' && 'top-full left-1/2 transform -translate-x-1/2 -translate-y-1/2'}
               ${position === 'bottom' && 'bottom-full left-1/2 transform -translate-x-1/2 translate-y-1/2'}
               ${position === 'left' && 'left-full top-1/2 transform -translate-x-1/2 -translate-y-1/2'}
