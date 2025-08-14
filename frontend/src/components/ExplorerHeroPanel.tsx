@@ -32,7 +32,7 @@ export function ExplorerHeroPanel() {
           </div>
           <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-2 sm:gap-3 lg:gap-2 xl:gap-3 w-full sm:w-auto lg:w-full xl:w-auto lg:max-w-xs xl:max-w-none">
             <Link href="/explorador/marketplace" className="flex-1 sm:flex-initial">
-              <Button size="default" className="w-full liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg">
+              <Button size="default" className="w-full liquid-gradient hover:opacity-90 transition-all duration-300 shadow-lg flex items-center justify-center">
                 <Search className="mr-2 h-4 w-4" />
                 Encontrar Profesional
               </Button>
@@ -130,7 +130,7 @@ export function ExplorerHeroPanel() {
                   Tu actividad con profesionales aparecerá aquí
                 </p>
                 <Link href="/explorador/marketplace">
-                  <Button size="default" className="liquid-gradient hover:opacity-90 transition-all duration-300">
+                  <Button size="default" className="liquid-gradient hover:opacity-90 transition-all duration-300 flex items-center justify-center">
                     <Search className="mr-2 h-4 w-4" />
                     Encontrar Profesional
                   </Button>
@@ -198,7 +198,7 @@ export function ExplorerHeroPanel() {
                   Explora profesionales y recibirás recomendaciones personalizadas
                 </p>
                 <Link href="/explorador/marketplace">
-                  <Button size="default" className="glass-medium hover:glass-strong transition-all duration-300 border border-white/20">
+                  <Button size="default" className="glass-medium hover:glass-strong transition-all duration-300 border border-white/20 flex items-center justify-center">
                     <Users className="mr-2 h-4 w-4" />
                     Ver Profesionales
                   </Button>

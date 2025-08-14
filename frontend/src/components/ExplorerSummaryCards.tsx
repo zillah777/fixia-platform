@@ -220,7 +220,7 @@ export function ExplorerSummaryCards() {
                   </div>
                 </div>
                 <Link href="/explorador/chats">
-                  <Button className="w-full glass-medium hover:glass-strong transition-all duration-300 h-9 px-3">
+                  <Button className="w-full glass-medium hover:glass-strong transition-all duration-300 h-9 px-3 flex items-center justify-center">
                     Ver Mensajes
                   </Button>
                 </Link>
@@ -296,7 +296,7 @@ export function ExplorerSummaryCards() {
                   </div>
                 </div>
                 <Link href="/explorador/marketplace" className="block">
-                  <Button className="w-full text-xs glass-medium hover:glass-strong transition-all duration-300 h-8">
+                  <Button className="w-full text-xs glass-medium hover:glass-strong transition-all duration-300 h-8 flex items-center justify-center">
                     Explorar Marketplace
                   </Button>
                 </Link>
