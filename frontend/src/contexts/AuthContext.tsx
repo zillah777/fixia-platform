@@ -64,7 +64,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     console.warn('🔐 Session validation failed - no valid token/user found');
                     handleLogout();
                   } else {
-                    console.warn('🔐 Session validation failed but token exists - may be network issue');
+                    console.warn('🔐 Session validation failed but token exists - treating as network issue');
+                    // Schedule a retry validation in 30 seconds
+                    setTimeout(async () => {
+                      try {
+                        const retryValidation = await authService.validateSession();
+                        if (!retryValidation) {
+                          console.warn('🔐 Retry validation also failed - checking token validity');
+                          // Double-check token before forcing logout
+                          if (!authService.getStoredToken()) {
+                            handleLogout();
+                          }
+                        }
+                      } catch (retryError) {
+                        console.warn('🔐 Retry validation error (ignoring):', retryError);
+                      }
+                    }, 30000);
                   }
                 }
               } catch (error) {

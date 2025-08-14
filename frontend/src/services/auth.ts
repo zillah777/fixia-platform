@@ -93,9 +93,19 @@ export const authService = {
     safeLocalStorage.setItem('user', JSON.stringify(transformedUser));
     safeLocalStorage.setItem('loginTime', new Date().toISOString());
     
-    // Also store token in cookie for middleware access
+    // Store token in cookie for middleware access with Railway-compatible settings
     if (typeof document !== 'undefined') {
-      document.cookie = `auth-token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
+      const isProduction = process.env.NODE_ENV === 'production';
+      const cookieOptions = [
+        `auth-token=${token}`,
+        'path=/',
+        `max-age=${7 * 24 * 60 * 60}`, // 7 days
+        isProduction ? 'secure' : '', // Only secure in production
+        'samesite=lax', // Changed from strict to lax for Railway compatibility
+        isProduction ? 'domain=.vercel.app' : '' // Railway/Vercel domain compatibility
+      ].filter(Boolean).join('; ');
+      
+      document.cookie = cookieOptions;
     }
     
     return { user: transformedUser, token };
@@ -166,10 +176,27 @@ export const authService = {
     };
   },
 
-  // Get current user with validation
-  async getCurrentUser(): Promise<User> {
-    const response = await api.get<ApiResponse<RawBackendUser>>('/api/auth/me');
-    return transformUserForFrontend(response.data.data);
+  // Get current user with validation and retry mechanism
+  async getCurrentUser(retryCount = 0): Promise<User> {
+    try {
+      const response = await api.get<ApiResponse<RawBackendUser>>('/api/auth/me');
+      return transformUserForFrontend(response.data.data);
+    } catch (error: unknown) {
+      // Retry logic for network/server errors
+      if (retryCount < 2 && error && typeof error === 'object' && 'response' in error) {
+        const httpError = error as { response: { status: number } };
+        
+        // Retry on 500, 502, 503, 504 (server errors)
+        if ([500, 502, 503, 504].includes(httpError.response?.status)) {
+          console.warn(`🔄 Retrying getCurrentUser due to ${httpError.response.status} error (attempt ${retryCount + 1}/3)`);
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000)); // Exponential backoff
+          return this.getCurrentUser(retryCount + 1);
+        }
+      }
+      
+      // Re-throw error if not retryable or max retries reached
+      throw error;
+    }
   },
 
   // Logout with proper cleanup
@@ -279,6 +306,13 @@ export const authService = {
       // Type-safe error handling
       if (error && typeof error === 'object' && 'response' in error) {
         const httpError = error as { response: { status: number; data?: { error?: string } } };
+        
+        // Handle 500 errors differently - these are server issues, not auth issues
+        if (httpError.response?.status === 500) {
+          console.warn('🔐 Server error during session validation (500) - treating as network issue');
+          // Return true to avoid logout on server errors - keep user session
+          return true;
+        }
         
         // Only logout for auth-related errors, not network/server errors
         if (httpError.response?.status === 401) {
