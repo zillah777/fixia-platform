@@ -13,24 +13,21 @@ const TooltipTrigger = TooltipPrimitive.Trigger
 const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 8, ...props }, ref) => (
+>(({ className, sideOffset = 4, ...props }, ref) => (
   <TooltipPrimitive.Content
     ref={ref}
     sideOffset={sideOffset}
     className={cn(
-      // Liquid Glass Design System "Confianza Líquida"
-      "z-50 overflow-hidden rounded-xl glass-medium border border-white/20",
-      "px-3 py-2 text-sm text-white font-medium backdrop-blur-xl",
-      "shadow-2xl shadow-black/25",
-      // Smooth animations
+      // Basic tooltip design - no special effects
+      "z-50 overflow-hidden rounded-md bg-gray-900 px-3 py-1.5 text-xs text-white",
+      "shadow-md border border-gray-700",
+      // Simple animations
       "animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out",
       "data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
-      "data-[side=bottom]:slide-in-from-top-3 data-[side=left]:slide-in-from-right-3",
-      "data-[side=right]:slide-in-from-left-3 data-[side=top]:slide-in-from-bottom-3",
-      // Enhanced readability 
-      "max-w-xs text-center leading-relaxed",
-      // Glass morphism glow effect
-      "before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-br before:from-white/10 before:to-transparent before:pointer-events-none",
+      "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
+      "data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      // Basic readability
+      "max-w-xs text-center font-normal",
       className
     )}
     {...props}
@@ -38,7 +35,7 @@ const TooltipContent = React.forwardRef<
 ))
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-// Enhanced TooltipArrow with Liquid Glass styling
+// Basic TooltipArrow - simple design
 const TooltipArrow = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Arrow>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Arrow>
@@ -46,7 +43,7 @@ const TooltipArrow = React.forwardRef<
   <TooltipPrimitive.Arrow
     ref={ref}
     className={cn(
-      "fill-white/10 backdrop-blur-xl drop-shadow-lg",
+      "fill-gray-900",
       className
     )}
     {...props}
@@ -54,7 +51,7 @@ const TooltipArrow = React.forwardRef<
 ))
 TooltipArrow.displayName = TooltipPrimitive.Arrow.displayName
 
-// Simplified tooltip sizes for unified design
+// Basic tooltip sizes - simplified
 export interface TooltipVariantProps {
   size?: 'sm' | 'md' | 'lg'
 }
@@ -64,9 +61,9 @@ const TooltipWithVariants = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> & TooltipVariantProps
 >(({ className, size = 'md', ...props }, ref) => {
   const sizeClasses = {
-    sm: 'px-2 py-1.5 text-xs',
-    md: 'px-3 py-2 text-sm',
-    lg: 'px-4 py-2.5 text-base'
+    sm: 'px-2 py-1 text-xs',
+    md: 'px-3 py-1.5 text-xs',
+    lg: 'px-3 py-2 text-sm'
   }
 
   return (
@@ -82,7 +79,7 @@ const TooltipWithVariants = React.forwardRef<
 })
 TooltipWithVariants.displayName = "TooltipWithVariants"
 
-// Helper component for simple tooltips with Liquid Glass design
+// Helper component for simple tooltips - basic design
 interface SimpleTooltipProps {
   content: string
   children: React.ReactNode
@@ -97,8 +94,8 @@ const SimpleTooltip: React.FC<SimpleTooltipProps> = ({
   children,
   size = 'md',
   side = 'top',
-  delayDuration = 300,
-  withArrow = true
+  delayDuration = 700,
+  withArrow = false
 }) => {
   return (
     <TooltipProvider>
