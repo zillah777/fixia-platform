@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Gift, Clock, Users, Zap, ArrowRight, Sparkles } from 'lucide-react';
+import { Gift, Clock, Users, Zap, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -58,7 +58,7 @@ export function PromotionBanner({ className = "", variant = "hero" }: PromotionB
                 </div>
               </div>
               <Link href="/auth/registro">
-                <Button size="sm" className="liquid-gradient hover:opacity-90 text-xs px-3 py-1">
+                <Button size="sm" className="liquid-gradient hover:opacity-90 text-xs px-3 py-1 whitespace-nowrap">
                   Registrarse
                 </Button>
               </Link>
@@ -232,10 +232,9 @@ export function PromotionBanner({ className = "", variant = "hero" }: PromotionB
               <Link href="/auth/registro?type=provider&promo=200-primeras">
                 <Button 
                   size="lg" 
-                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-8 py-3 text-lg rounded-2xl shadow-xl transition-all duration-300 group"
+                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold px-8 py-3 text-lg rounded-2xl shadow-xl transition-all duration-300 whitespace-nowrap"
                 >
                   Registrarme como AS
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               
@@ -243,10 +242,9 @@ export function PromotionBanner({ className = "", variant = "hero" }: PromotionB
                 <Button 
                   size="lg" 
                   variant="outline"
-                  className="glass-medium border-amber-500/30 text-amber-300 hover:glass-strong transition-all duration-300 px-8 py-3 text-lg rounded-2xl group"
+                  className="glass-medium border-amber-500/30 text-amber-300 hover:glass-strong transition-all duration-300 px-8 py-3 text-lg rounded-2xl whitespace-nowrap"
                 >
                   Registrarme como Explorador
-                  <Users className="ml-2 h-5 w-5 group-hover:scale-110 transition-transform" />
                 </Button>
               </Link>
             </motion.div>
