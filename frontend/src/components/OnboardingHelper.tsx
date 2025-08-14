@@ -254,7 +254,7 @@ export function OnboardingHelper({ steps: propSteps, userType, onComplete, trigg
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
