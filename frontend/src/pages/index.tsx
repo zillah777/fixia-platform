@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FixiaAvatar } from "@/components/ui/fixia-avatar";
 import { Badge } from "@/components/ui/badge";
+import { SimpleTooltip } from "@/components/ui/tooltip";
 import { useAuth } from '@/contexts/AuthContext';
 import { PromotionBanner } from '@/components/PromotionBanner';
 
@@ -565,16 +566,20 @@ function CTASection() {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
-              <Link href="/auth/registro">
-                <Button size="lg" variant="primary" className="text-lg rounded-2xl px-8 py-4 w-full sm:w-auto min-w-[200px] whitespace-nowrap">
-                  Buscar Profesionales
-                </Button>
-              </Link>
-              <Link href="/auth/registro?type=provider">
-                <Button size="lg" variant="outline" className="text-lg rounded-2xl px-8 py-4 w-full sm:w-auto min-w-[200px] whitespace-nowrap">
-                  Ofrecer Servicios
-                </Button>
-              </Link>
+              <SimpleTooltip content="Registrate como Explorador para encontrar profesionales verificados" side="top">
+                <Link href="/auth/registro">
+                  <Button size="lg" variant="primary" className="text-lg rounded-2xl px-8 py-4 w-full sm:w-auto min-w-[200px] whitespace-nowrap">
+                    Buscar Profesionales
+                  </Button>
+                </Link>
+              </SimpleTooltip>
+              <SimpleTooltip content="Registrate como AS (Agente de Servicios) y monetiza tus habilidades" side="top">
+                <Link href="/auth/registro?type=provider">
+                  <Button size="lg" variant="outline" className="text-lg rounded-2xl px-8 py-4 w-full sm:w-auto min-w-[200px] whitespace-nowrap">
+                    Ofrecer Servicios
+                  </Button>
+                </Link>
+              </SimpleTooltip>
             </div>
 
             {/* Trust indicators */}
@@ -762,12 +767,16 @@ function FeaturedProfessionals() {
                   </div>
                   
                   <div className="flex space-x-2">
-                    <Button size="sm" variant="primary" className="flex-1 px-3 py-2 text-sm whitespace-nowrap">
-                      Contactar
-                    </Button>
-                    <Button size="sm" variant="outline" className="px-4 py-2 text-sm whitespace-nowrap">
-                      Ver Perfil
-                    </Button>
+                    <SimpleTooltip content="Envía un mensaje directo al profesional" side="bottom" size="sm">
+                      <Button size="sm" variant="primary" className="flex-1 px-3 py-2 text-sm whitespace-nowrap">
+                        Contactar
+                      </Button>
+                    </SimpleTooltip>
+                    <SimpleTooltip content="Ve el perfil completo y trabajos anteriores" side="bottom" size="sm">
+                      <Button size="sm" variant="outline" className="px-4 py-2 text-sm whitespace-nowrap">
+                        Ver Perfil
+                      </Button>
+                    </SimpleTooltip>
                   </div>
                 </CardContent>
               </Card>
@@ -782,11 +791,13 @@ function FeaturedProfessionals() {
           viewport={{ once: true }}
           className="text-center mt-12"
         >
-          <Link href="/explorador/buscar-servicio">
-            <Button variant="outline" className="px-6 py-3 whitespace-nowrap">
-              Ver Todos los Profesionales
-            </Button>
-          </Link>
+          <SimpleTooltip content="Explora nuestra base completa de profesionales verificados" side="top">
+            <Link href="/explorador/buscar-servicio">
+              <Button variant="outline" className="px-6 py-3 whitespace-nowrap">
+                Ver Todos los Profesionales
+              </Button>
+            </Link>
+          </SimpleTooltip>
         </motion.div>
       </div>
     </section>
